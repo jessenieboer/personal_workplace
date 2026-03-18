@@ -1,0 +1,11 @@
+test
+
+curl https://api.x.ai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $(secretspec get 'Productivity&Education/grok-api-key')" \
+  -d '{
+    "model": "grok-4-1-fast-reasoning",
+    "messages": [{"role": "user", "content": "Say hello from ai toolbox!"}],
+    "temperature": 0.7,
+    "max_tokens": 50
+  }'
