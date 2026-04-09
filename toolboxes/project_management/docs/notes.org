@@ -1,0 +1,5 @@
+enter project name and path in project_info.org
+
+org-export-to-org static_config.org, which will pick up project_info.org and produce project_config.org
+
+tangle project_config.org, which will produce .dir-locals.el
