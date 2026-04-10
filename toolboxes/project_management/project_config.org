@@ -1,0 +1,6 @@
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+* project config
+** dir-locals
+#+BEGIN_SRC emacs-lisp :tangle ./templates/dir-locals.el.in :noweb tangle
+  ((nil . ((project-name . "@PROJECT_NAME@"))))
+#+END_SRC
