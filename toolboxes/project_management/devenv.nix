@@ -1,47 +1,59 @@
 { pkgs, lib, config, inputs, ... }:
 
 {
-  # files = {
-    # ".envrc".text = ''
-    #   #!/usr/bin/env bash
+  config = {
+    enterShell = ''
+      echo "jessenieboer's project management toolbox available"
+    '';
 
-    #   eval "$(devenv direnvrc)"
-    # '';
-    # };
+    files = {
+      ".envrc".text = ''
+        #!/usr/bin/env bash
 
-    config = {
-      enterShell = ''
-        echo "jessenieboer's project management toolbox available"
+        eval "$(devenv direnvrc)"
       '';
-
-      project_management = {
-        project_name = "my-super-app";
-      };
-
-      # todo use pkgs.replaceVars instead of sed?
-      tasks = {
-        "project_management_toolbox:setup" = {
-          before = [ "devenv:enterShell" ];
-          exec = ''
-            echo "Generating .dir-locals.el (project_name: ${config.project_management.project_name})"
-
-            sed "s|@PROJECT_NAME@|${config.project_management.project_name}|g" \
-            templates/dir-locals.el.in > .dir-locals.el
-
-            echo ".dir-locals.el generated successfully"
-          '';
-          showOutput = true;
-        };
-      };
     };
 
-    options = {
-      project_management = {
-        project_name = lib.mkOption {
-          description = "The name of this project";
-          example = "My cool project";
-          type = lib.types.str;
-        };
+    project_management = {
+      project_name = "project_management_toolbox";
+    };
+
+    # todo use pkgs.replaceVars instead of sed?
+    tasks = {
+      "project_management_toolbox:generate_dir_locals" = {
+        before = [ "devenv:enterShell" ];
+        exec = let
+          subprojectDirs = lib.concatStringsSep " " config.project_management.subproject_directories;
+        in ''
+          sed -e "s|@PROJECT_NAME@|${config.project_management.project_name}|g" \
+          -e "s|@PROJECT_DIRECTORY@|${config.devenv.root}|g" \
+          -e "s|@SUBPROJECT_DIRECTORIES@|${subprojectDirs}|g" \
+          ./templates/dir-locals.el.in > .dir-locals.el
+
+          echo ".dir-locals.el generated successfully"
+        '';
+        execIfModified = [
+          "devenv.nix"
+        ];        
+        showOutput = true;
       };
     };
+  };
+
+  options = {
+    project_management = {
+      project_name = lib.mkOption {
+        description = "The name of this project";
+        example = "My cool project";
+        type = lib.types.str;
+      };
+
+      subproject_directories = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        description = "List of directories to subprojects";
+        example = [ "/path/to/subproj1/" "/path/to/subproj2/"];
+      };
+    };
+  };
 }
