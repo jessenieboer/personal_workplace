@@ -1,5 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
-
+let
+  dirLocalsTemplate = ./templates/dir-locals.el.in;
+in
 {
   config = {
     enterShell = ''
@@ -28,7 +30,7 @@
           sed -e "s|@PROJECT_NAME@|${config.project_management.project_name}|g" \
           -e "s|@PROJECT_DIRECTORY@|${config.devenv.root}|g" \
           -e "s|@SUBPROJECT_DIRECTORIES@|${subprojectDirs}|g" \
-          ./templates/dir-locals.el.in > .dir-locals.el
+          ${dirLocalsTemplate} > .dir-locals.el
 
           echo ".dir-locals.el generated successfully"
         '';
