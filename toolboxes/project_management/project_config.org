@@ -1,6 +1,9 @@
 #+PROPERTY: header-args:emacs-lisp :tangle yes
 * project config
-I tangle this file to generate templates/dir-locals.el.in rather than editing that file directly, so i can use org to organize the lisp code nicely 
+I tangle this file to generate templates/dir-locals.el.in rather than editing that file directly, so i can use org to organize the lisp code nicely
+
+must have this in emacs config for agenda to work, and adding it to this file requires eval,
+(add-hook 'org-agenda-mode-hook 'hack-dir-local-variables-non-file-buffer)
 ** dir-locals
 :PROPERTIES:
 :ID:       30db7c2d-345a-4875-9b98-c2ee15c92282
