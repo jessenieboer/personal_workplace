@@ -10,11 +10,11 @@ must have this in emacs config for agenda to work, and adding it to this file re
 :END:
 #+BEGIN_SRC emacs-lisp :tangle ./templates/dir-locals.el.in :noweb tangle 
   ((nil . ((project-name . "@PROJECT_NAME@")
-  	 (org-agenda-files . ("@PROJECT_DIRECTORY@/project_management/@PROJECT_NAME@.org" @SUBPROJECT_DIRECTORIES@))
+  	 (org-agenda-files . ("@PROJECT_MANAGEMENT_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_MANAGEMENT_DIRECTORIES@))
   	 (org-agenda-custom-commands . (<<hard_dates_view>> <<initial_scheduling_view>> <<all_dependencies_view>> <<initial_dependencies_view>> <<strategic_evaluation_view>> <<tactical_evaluation_view>> <<effort_estimation_view>> <<activity_view>> <<basics_view>> <<focus_view>> <<calendar_view>> <<dependent_items_view>> <<done_items_view>> <<all_items_view>>))
   	 (org-archive-location . "%s_archive::")
   	 (org-archive-mark-done . t)
-  	 (org-directory . "@PROJECT_DIRECTORY@/project_management/")
+  	 (org-directory . "@PROJECT_MANAGEMENT_DIRECTORY@/")
   	 (org-capture-templates . (("s" "Task" entry
   				    (file+headline "@PROJECT_NAME@.org" "Tasks")
   				    <<task_capture_template>>)
