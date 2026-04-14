@@ -1,7 +1,6 @@
 { pkgs, lib, config, inputs, ... }:
 let
   dirLocalsTemplate = ./templates/dir-locals.el.in;
-  #gitIgnore = ./configs/.gitignore;
 in
 {
   config = {
