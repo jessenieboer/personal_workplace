@@ -17,9 +17,9 @@ in
       '';
     };
 
-    project_management = {
-      project_name = "project_management_toolbox";
-    };
+    # project_management = {
+    #   project_name = "project_management_toolbox";
+    # };
 
     # todo use pkgs.replaceVars instead of sed?
     tasks = {
