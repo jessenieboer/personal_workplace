@@ -104,12 +104,12 @@ must have this in emacs config for agenda to work, and adding it to this file re
 *** working views
 #+NAME: hard_dates_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("\\" "Hard Dates" tags "HAS_HARD_START_DATE=\"\"|HAS_HARD_START_DATE=\"\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hard start?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hard due?) %DEADLINE(Due date) %15CATEGORY(Category)") (org-agenda-overriding-header "Are there hard dates we need to be aware of?") (org-agenda-skip-function 'my-skip-references) (org-agenda-view-columns-initially t)))
+("\\" "Hard Dates" tags "HAS_HARD_START_DATE=\"\"|HAS_HARD_START_DATE=\"\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hard start?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hard due?) %DEADLINE(Due date) %15CATEGORY(Project)") (org-agenda-overriding-header "Are there hard dates we need to be aware of?") (org-agenda-skip-function 'my-skip-references) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: initial_scheduling_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("w" "Initial Scheduling" tags "HAS_HARD_START_DATE=\"yes\"|HAS_HARD_DUE_DATE=\"yes\"|FREQUENCY=\"repetitive\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hard start?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hard due?) %DEADLINE(Due date) %15CATEGORY(Category)") (org-agenda-overriding-header "What do we know is on the calendar?") (org-agenda-skip-function 'my-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))) (org-agenda-view-columns-initially t)))
+("w" "Initial Scheduling" tags "HAS_HARD_START_DATE=\"yes\"|HAS_HARD_DUE_DATE=\"yes\"|FREQUENCY=\"repetitive\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hard start?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hard due?) %DEADLINE(Due date) %15CATEGORY(Project)") (org-agenda-overriding-header "What do we know is on the calendar?") (org-agenda-skip-function 'my-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 # #+NAME: soft_dates_view
@@ -124,27 +124,27 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: initial_dependencies_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("g" "Initial Dependencies" tags "HARD_INTERNAL_DEPENDENCY=\"\"&SOFT_INTERNAL_DEPENDENCY=\"\"HARD_EXTERNAL_DEPENDENCY=\"\"SOFT_EXTERNAL_DEPENDENCY=\"\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %HARD_INTERNAL_DEPENDENCY(Hard Int) %SOFT_INTERNAL_DEPENDENCY(Soft Int) %HARD_EXTERNAL_DEPENDENCY(Hard Ext) %SOFT_EXTERNAL_DEPENDENCY(Soft Ext) %15CATEGORY(Category)") (org-agenda-overriding-header "Are there dependencies for these tasks?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags alpha-up))) (org-agenda-view-columns-initially t)))
+("g" "Initial Dependencies" tags "HARD_INTERNAL_DEPENDENCY=\"\"&SOFT_INTERNAL_DEPENDENCY=\"\"HARD_EXTERNAL_DEPENDENCY=\"\"SOFT_EXTERNAL_DEPENDENCY=\"\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %HARD_INTERNAL_DEPENDENCY(Hard Int) %SOFT_INTERNAL_DEPENDENCY(Soft Int) %HARD_EXTERNAL_DEPENDENCY(Hard Ext) %SOFT_EXTERNAL_DEPENDENCY(Soft Ext) %15CATEGORY(Project)") (org-agenda-overriding-header "Are there dependencies for these tasks?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags alpha-up))) (org-agenda-view-columns-initially t)))
 #+END_SRC               
 
 #+NAME: all_dependencies_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("[" "All Dependencies" tags "*" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %HARD_INTERNAL_DEPENDENCY(Hard Int) %SOFT_INTERNAL_DEPENDENCY(Soft Int) %HARD_EXTERNAL_DEPENDENCY(Hard Ext) %SOFT_EXTERNAL_DEPENDENCY(Soft Ext) %15CATEGORY(Category)") (org-agenda-overriding-header "Are there dependencies for these tasks?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags alpha-up))) (org-agenda-view-columns-initially t)))
+("[" "All Dependencies" tags "*" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %HARD_INTERNAL_DEPENDENCY(Hard Int) %SOFT_INTERNAL_DEPENDENCY(Soft Int) %HARD_EXTERNAL_DEPENDENCY(Hard Ext) %SOFT_EXTERNAL_DEPENDENCY(Soft Ext) %15CATEGORY(Project)") (org-agenda-overriding-header "Are there dependencies for these tasks?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags alpha-up))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: tactical_evaluation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("l" "Tactial Evaluation" ((tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'my-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"" ((org-agenda-cmp-user-defined 'my-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this routine be if it were finished now?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %DEADLINE(Due date) %HAS_HARD_DUE_DATE(Hard due?) %15CATEGORY(Category)")))
+("l" "Tactial Evaluation" ((tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'my-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"" ((org-agenda-cmp-user-defined 'my-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this routine be if it were finished now?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %DEADLINE(Due date) %HAS_HARD_DUE_DATE(Hard due?) %15CATEGORY(Project)")))
 #+END_SRC
 
 #+NAME: strategic_evaluation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("/" "Strategic Evaluation" tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'my-org-cmp-strategic-value) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %STRATEGIC_VALUE(Strat Val) %15CATEGORY(Category)") (org-agenda-overriding-header "How beneficial would this be if all tasks were finished?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))) (org-agenda-view-columns-initially t)))
+("/" "Strategic Evaluation" tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'my-org-cmp-strategic-value) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %STRATEGIC_VALUE(Strat Val) %15CATEGORY(Project)") (org-agenda-overriding-header "How beneficial would this be if all tasks were finished?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: effort_estimation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("a" "Effort Estimation" tags "TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'my-org-cmp-estimated-effort) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Tac Valuable, Doable Task) %ESTIMATED_EFFORT(Effort) %15CATEGORY(Category)") (org-agenda-overriding-header "How much of our effort would this take to finish?") (org-agenda-skip-function 'my-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-up))) (org-agenda-view-columns-initially t)))
+("a" "Effort Estimation" tags "TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'my-org-cmp-estimated-effort) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Tac Valuable, Doable Task) %ESTIMATED_EFFORT(Effort) %15CATEGORY(Project)") (org-agenda-overriding-header "How much of our effort would this take to finish?") (org-agenda-skip-function 'my-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-up))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 # #+NAME: cost_estimation_view
@@ -159,7 +159,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: activity_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("t" "Activity" tags "TACTICAL_VALUE<>\"less\"&DEADLINE=\"\"|DEADLINE<=\"<+2w>\"" ((org-agenda-cmp-user-defined 'my-org-cmp-estimated-effort) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %DEADLINE(Due date) %HAS_HARD_DUE_DATE(Hard due?) %15CATEGORY(Category)") (org-agenda-overriding-header "When are we doing these things?") (org-agenda-skip-function 'my-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags todo-state-down))) (org-agenda-view-columns-initially t)))
+("t" "Activity" tags "TACTICAL_VALUE<>\"less\"&DEADLINE=\"\"|DEADLINE<=\"<+2w>\"" ((org-agenda-cmp-user-defined 'my-org-cmp-estimated-effort) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %DEADLINE(Due date) %HAS_HARD_DUE_DATE(Hard due?) %15CATEGORY(Project)") (org-agenda-overriding-header "When are we doing these things?") (org-agenda-skip-function 'my-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags todo-state-down))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 # # resource_assignment
@@ -170,13 +170,13 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: basics_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("q" "Basics" tags "*" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %FREQUENCY(Freq) %HAS_HARD_START_DATE(Hard start?) %HAS_HARD_DUE_DATE(Hard due?) %15CATEGORY(Category)") (org-agenda-overriding-header "What are the basics?") (org-agenda-skip-function 'my-skip-top-level-headlines) (org-agenda-view-columns-initially t)))
+("q" "Basics" tags "*" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %FREQUENCY(Freq) %HAS_HARD_START_DATE(Hard start?) %HAS_HARD_DUE_DATE(Hard due?) %15CATEGORY(Project)") (org-agenda-overriding-header "What are the basics?") (org-agenda-skip-function 'my-skip-top-level-headlines) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 *** reporting views
 #+NAME: focus_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("s" "Focus" tags "TODO=\"now\"" ((org-agenda-cmp-user-defined 'my-org-cmp-estimated-effort) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %15CATEGORY(Category)") (org-agenda-overriding-header "What are we focusing on right now?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-up))) (org-agenda-view-columns-initially t)))
+("s" "Focus" tags "TODO=\"now\"" ((org-agenda-cmp-user-defined 'my-org-cmp-estimated-effort) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %15CATEGORY(Project)") (org-agenda-overriding-header "What are we focusing on right now?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-up))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: calendar_view
@@ -186,7 +186,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: dependent_items_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("n" "Dependent Tasks" tags "HARD_INTERNAL_DEPENDENCY=\"yes\"|SOFT_INTERNAL_DEPENDENCY=\"yes\"|HARD_EXTERNAL_DEPENDENCY=\"yes\"|SOFT_EXTERNAL_DEPENDENCY=\"yes\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %HARD_INTERNAL_DEPENDENCY(Hard Int) %SOFT_INTERNAL_DEPENDENCY(Soft Int) %HARD_EXTERNAL_DEPENDENCY(Hard Ext) %SOFT_EXTERNAL_DEPENDENCY(Soft Ext) %15CATEGORY(Category)") (org-agenda-overriding-header "What tasks have outstanding dependencies?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags alpha-up))) (org-agenda-view-columns-initially t)))
+("n" "Dependent Tasks" tags "HARD_INTERNAL_DEPENDENCY=\"yes\"|SOFT_INTERNAL_DEPENDENCY=\"yes\"|HARD_EXTERNAL_DEPENDENCY=\"yes\"|SOFT_EXTERNAL_DEPENDENCY=\"yes\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %HARD_INTERNAL_DEPENDENCY(Hard Int) %SOFT_INTERNAL_DEPENDENCY(Soft Int) %HARD_EXTERNAL_DEPENDENCY(Hard Ext) %SOFT_EXTERNAL_DEPENDENCY(Soft Ext) %15CATEGORY(Project)") (org-agenda-overriding-header "What tasks have outstanding dependencies?") (org-agenda-skip-function 'my-skip-non-tasks) (org-agenda-sorting-strategy '((tags alpha-up))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: done_items_view

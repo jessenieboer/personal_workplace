@@ -1,0 +1,9 @@
+inputs:
+  personal_workplace:
+    flake: false
+    url: github:jessenieboer/personal_workplace/main
+    
+imports:
+  - personal_workplace/toolboxes/git
+  - personal_workplace/toolboxes/project_management
+  - personal_workplace/toolboxes/secrets
