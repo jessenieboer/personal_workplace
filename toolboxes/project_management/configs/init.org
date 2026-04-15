@@ -1,0 +1,123 @@
+# https://www.beorg.app/manual/scripting/
+# https://www.beorgapp.com/manual/library-org/
+* Sync
+#+BEGIN_SRC scheme
+  (set! show-notes-tab #f)
+  (set! sync-subfolders #t)
+  #+END_SRC
+* Priorities
+#+BEGIN_SRC scheme
+  (set! org-priorities '("A" "B" "C"))
+  (set! org-priority-default "B")
+#+END_SRC
+* Tags
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Item state
+#+BEGIN_SRC scheme
+  (set! org-log-done #f)
+  (set! org-log-done-transition #f)
+  (set! org-log-repeat #f)
+  (set! org-repeat-update-show-banner #f)
+  (set! org-todo-action-keywords '("future" "next" "now"))
+  (set! org-todo-done-keywords '("past"))
+  (set! org-todo-repeat-to-state "future")
+#+END_SRC
+
+* Templates
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Dates
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Agenda tab
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Tasks tab
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* UI
+#+BEGIN_SRC scheme
+  (set! ui-start-tab "todo")
+#+END_SRC
+
+* Enrcyption
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Search
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* App badge
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Text editor
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Files
+#+BEGIN_SRC scheme
+  (set! file-disable-delete #t)
+  (set! file-read-only-list '("init.org"))
+#+END_SRC
+
+* Outliner
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Calendar to .org file
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Reminders to .org file
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* .org file entries to calendar
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* REPL
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Export/Rendering
+#+BEGIN_SRC scheme
+
+#+END_SRC
+* Settings
+#+BEGIN_SRC scheme
+
+#+END_SRC
+
+* Custom
+#+BEGIN_SRC scheme
+  ;; (filter-add "Now" (lambda (item) (string=? (item-state item) "now")))
+  ;; (filter-add "Now+Next" (lambda (item) (or (string=? (item-state item) "now") (string=? (item-state item) "next"))))
+  ;;(filter-add "Top Priority" (lambda (item) (string=? (item-priority item) "A")))
+  (set! editor-toolbar-items '())
+  (set! filter-include-default #f)
+  (set! filter-min-chars 2)
+  (set! todo-default-filter "")
+#+END_SRC
