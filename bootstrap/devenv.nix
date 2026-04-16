@@ -2,8 +2,8 @@
 
 {
   enterShell = ''
-    echo "management for ${config.project_management.project_name} available"
+    echo "managing ${config.project_management.project_name}"
   '';
 
-  project_management.project_name = "my_project";
+  project_management.project_name = ;
 }

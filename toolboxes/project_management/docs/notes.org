@@ -1,5 +1,31 @@
-enter project name and path in project_info.org
+- <<project>> :: an ordering of resources (labor, money, materials, etc...) aimed at some defined or definable benefit
+
+enter into nix-config
+- project name
+- benefit (optional)
+- workers (optional)
 
 org-export-to-org static_config.org, which will pick up project_info.org and produce project_config.org
 
 tangle project_config.org, which will produce .dir-locals.el
+
+directory structure:
+- Kingdom (who has access/control, who reigns, start with capitol)
+- _collection (multiple things, prefix with underscore)
+- project (organized effort towards a benefit, start with lowercase)
+
+processes:
+- curation, capture
+
+practices/disciplines:
+- capture everything
+- manage on computer, go-mode on phone
+
+
+
+org repeating tasks:
+
++1w - repeats on this day every week
++1w -3d - repeats with warning period
+++1w - marking as done makes sure the next date is in the future
+.+1w - marking as done shifts the date to 1 week after today

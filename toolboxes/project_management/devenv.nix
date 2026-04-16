@@ -18,6 +18,7 @@ in
 
     # project_management = {
     #   project_name = "project_management_toolbox";
+    #   subproject_agenda_files = [ "/test.org" "test/test.org" ];
     # };
 
     # todo use pkgs.replaceVars instead of sed?
@@ -25,19 +26,21 @@ in
       "project_management_toolbox:generate_dir_locals" = {
         before = [ "devenv:enterShell" ];
         exec = let
-          subprojectManagementDirs = lib.concatStringsSep " " config.project_management.subproject_management_directories;
+          # annoying to produce a series of double-quoted strings
+          subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management.subproject_agenda_files;
         in ''
-          sed -e "s|@PROJECT_NAME@|${config.project_management.project_name}|g" \
-          -e "s|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g" \
-          -e "s|@SUBPROJECT_MANAGEMENT_DIRECTORIES@|${subprojectManagementDirs}|g" \
+          sed -e 's|@PROJECT_NAME@|${config.project_management.project_name}|g' \
+          -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
+          -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
           ${dirLocalsTemplate} > .dir-locals.el
 
           echo ".dir-locals.el generated successfully"
+          echo ${subprojectAgendaFiles}
         '';
-        execIfModified = [
-          "devenv.nix"
-        ];        
-        showOutput = true;
+        # execIfModified = [
+          #   "devenv.nix"
+          # ];
+          showOutput = true;
       };
     };
   };
@@ -50,11 +53,11 @@ in
         type = lib.types.str;
       };
 
-      subproject_management_directories = lib.mkOption {
+      subproject_agenda_files = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
         description = "List of project management directories of subprojects";
-        example = [ "/path/to/subproj1/" "/path/to/subproj2/"];
+        example = [ "/path/to/subproj1/subproj1.org" "/path/to/subproj2/subproj2.org"];
       };
     };
   };
