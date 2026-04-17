@@ -9,88 +9,96 @@ must have this in emacs config for agenda to work, and adding it to this file re
 :ID:       30db7c2d-345a-4875-9b98-c2ee15c92282
 :END:
 #+BEGIN_SRC emacs-lisp :tangle ./templates/dir-locals.el.in :noweb tangle 
-    ((nil . ((project-name . "@PROJECT_NAME@")
-    	 (org-agenda-files . ("@PROJECT_MANAGEMENT_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
-    	 (org-agenda-custom-commands . (<<hard_dates_view>> <<initial_scheduling_view>> <<all_dependencies_view>> <<initial_dependencies_view>> <<strategic_evaluation_view>> <<tactical_evaluation_view>> <<effort_estimation_view>> <<activity_view>> <<basics_view>> <<focus_view>> <<calendar_view>> <<dependent_items_view>> <<done_items_view>> <<all_items_view>>))
-    	 (org-archive-location . "%s_archive::")
-    	 (org-archive-mark-done . t)
-    	 (org-directory . "@PROJECT_MANAGEMENT_DIRECTORY@/")
-    	 (org-capture-templates . (("s" "Task" entry
-    				    (file+headline "@PROJECT_NAME@.org" "Tasks")
-    				    <<task_capture_template>>)
-    				   ("." "Task with due date" entry
-    				    (file+headline "@PROJECT_NAME@.org" "Tasks")
-    				    <<time_bound_task_capture_template>>)
-    				   ("e" "Routine" entry
-    				    (file+headline "@PROJECT_NAME@.org" "Tasks")
-    				    <<routine_capture_template>>)
-    				   (")" "Routine with due date" entry
-    				    (file+headline "@PROJECT_NAME@.org" "Tasks")
-    				    <<time_bound_routine_capture_template>>)
-    				   ("n" "Occurance" entry
-    				    (file+headline "@PROJECT_NAME@.org" "Occurances")
-    				    <<occurance_capture_template>>)
-    				   ("y" "Reference" entry
-    				    (file+headline "@PROJECT_NAME@.org" "References")
-    				    <<reference_capture_template>>)
-    				   ("o" "User story" entry
-    				    (file+headline "@PROJECT_NAME@.org" "User stories")
-    				    <<task_capture_template>>)
-    				   ("i" "Idea" item
-    				    (file+headline "@PROJECT_NAME@.org" "Ideas")
-    				    <<item_capture_template>> :immediate-finish t)
-    				   ("c" "Journal entry" plain
-    				    (file+olp+datetree "journal.org")
-    				    "%?")))
-    	 (org-deadline-warning-days . 0)
-    	 ;; (org-priority-highest . 2)
-    	 ;; (org-priority-default . 2)
-    	 ;; (org-priority-lowest . 2)
-    	 (org-global-properties . (("FREQUENCY_ALL" . "once repetitive continuous")
-    				   ("HAS_HARD_START_DATE_ALL" . "no yes")
-          				   ("HAS_HARD_DUE_DATE_ALL" . "no yes")
-    				   ("HAS_SOFT_START_DATE_ALL" . "no yes")
-          				   ("HAS_SOFT_DUE_DATE_ALL" . "no yes")
-    				   ;; SCHEDULED functions as start date
-          				   ;; DEADLINE functions as due date
-    				   ("HARD_INTERNAL_DEPENDENCY_ALL" . "no yes")
-    				   ("SOFT_INTERNAL_DEPENDENCY_ALL" . "no yes")
-    				   ("HARD_EXTERNAL_DEPENDENCY_ALL" . "no yes")
-    				   ("SOFT_EXTERNAL_DEPENDENCY_ALL" . "no yes")
-    				   ("STRATEGIC_VALUE_ALL" . "less average more")
-    				   ("TACTICAL_VALUE_ALL" . "less average more")
-    				   ("ESTIMATED_EFFORT_ALL" . "less average more")
-          				   ;; ("ESTIMATED_EFFORT_ALL" . "1h 4h 1d 2d 3d 5d 8d 13d 21d 34d 55d 89d 144d 233d")
-          				   ("ESTIMATED_$_COST_ALL" . "trivial small medium large")
-          				   ("ACTUAL_EFFORT")
-          				   ;; ("ACTUAL_$_COST")
-    				   )))))
-#+END_SRC
+  ((nil . ((project-name . "@PROJECT_NAME@")
+  	 (org-agenda-files . ("@PROJECT_MANAGEMENT_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
+  	 (org-agenda-custom-commands . (<<hard_dates_view>> <<initial_scheduling_view>> <<all_dependencies_view>> <<initial_dependencies_view>> <<strategic_evaluation_view>> <<tactical_evaluation_view>> <<effort_estimation_view>> <<activity_view>> <<basics_view>> <<focus_view>> <<calendar_view>> <<dependent_items_view>> <<done_items_view>> <<all_items_view>>))
+  	 (org-archive-location . "%s_archive::")
+  	 (org-archive-mark-done . t)
+  	 (org-directory . "@PROJECT_MANAGEMENT_DIRECTORY@/")
+  	 (org-capture-templates . (("s" "Task" entry
+  				    (file+headline "@PROJECT_NAME@.org" "Tasks")
+  				    <<task_capture_template>>)
+  				   ("." "Task with due date" entry
+  				    (file+headline "@PROJECT_NAME@.org" "Tasks")
+  				    <<time_bound_task_capture_template>>)
+  				   ("e" "Routine" entry
+  				    (file+headline "@PROJECT_NAME@.org" "Tasks")
+  				    <<routine_capture_template>>)
+  				   (")" "Routine with due date" entry
+  				    (file+headline "@PROJECT_NAME@.org" "Tasks")
+  				    <<time_bound_routine_capture_template>>)
+  				   ("n" "Occurrence" entry
+  				    (file+headline "@PROJECT_NAME@.org" "Occurrences")
+  				    <<occurrence_capture_template>>)
+  				   (";" "Recurrence" entry
+    				      (file+headline "@PROJECT_NAME@.org" "Recurrences")
+    				      <<recurrence_capture_template>>)
+  				   ("y" "Reference" entry
+  				    (file+headline "@PROJECT_NAME@.org" "References")
+  				    <<reference_capture_template>>)
+  				   ("o" "User story" entry
+  				    (file+headline "@PROJECT_NAME@.org" "User stories")
+  				    <<task_capture_template>>)
+  				   ("i" "Idea" item
+  				    (file+headline "@PROJECT_NAME@.org" "Ideas")
+  				    <<item_capture_template>> :immediate-finish t)
+  				   ("c" "Journal entry" plain
+  				    (file+olp+datetree "journal.org")
+  				    "%?")))
+  	 (org-deadline-warning-days . 0)
+  	 ;; (org-priority-highest . 2)
+  	 ;; (org-priority-default . 2)
+  	 ;; (org-priority-lowest . 2)
+  	 (org-global-properties . (("FREQUENCY_ALL" . "once repetitive continuous")
+  				   ("HAS_HARD_START_DATE_ALL" . "no yes")
+        				   ("HAS_HARD_DUE_DATE_ALL" . "no yes")
+  				   ("HAS_SOFT_START_DATE_ALL" . "no yes")
+        				   ("HAS_SOFT_DUE_DATE_ALL" . "no yes")
+  				   ;; SCHEDULED functions as start date
+        				   ;; DEADLINE functions as due date
+  				   ("HARD_INTERNAL_DEPENDENCY_ALL" . "no yes")
+  				   ("SOFT_INTERNAL_DEPENDENCY_ALL" . "no yes")
+  				   ("HARD_EXTERNAL_DEPENDENCY_ALL" . "no yes")
+  				   ("SOFT_EXTERNAL_DEPENDENCY_ALL" . "no yes")
+  				   ("STRATEGIC_VALUE_ALL" . "less average more")
+  				   ("TACTICAL_VALUE_ALL" . "less average more")
+  				   ("ESTIMATED_EFFORT_ALL" . "less average more")
+        				   ;; ("ESTIMATED_EFFORT_ALL" . "1h 4h 1d 2d 3d 5d 8d 13d 21d 34d 55d 89d 144d 233d")
+        				   ("ESTIMATED_$_COST_ALL" . "trivial small medium large")
+        				   ("ACTUAL_EFFORT")
+        				   ;; ("ACTUAL_$_COST")
+  				   )))))
+				    #+END_SRC
 			     
 ** capture templates
 #+NAME: task_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-"* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: time_bound_task_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-"* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: routine_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-"* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: time_bound_routine_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-"* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
-#+NAME: occurance_capture_template
+#+NAME: occurrence_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-"* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+#+END_SRC
+
+#+NAME: recurrence_capture_template
+#+BEGIN_SRC text :tangle no :noweb yes
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: reference_capture_template

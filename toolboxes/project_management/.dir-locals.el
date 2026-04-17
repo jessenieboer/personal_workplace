@@ -16,9 +16,12 @@
 				   (")" "Routine with due date" entry
 				    (file+headline "project_management_toolbox.org" "Tasks")
 				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
-				   ("n" "Occurance" entry
-				    (file+headline "project_management_toolbox.org" "Occurances")
-				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:END:\n%?")
+				   ("n" "Occurrence" entry
+				    (file+headline "project_management_toolbox.org" "Occurrences")
+				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
+				   (";" "Recurrence" entry
+  				      (file+headline "project_management_toolbox.org" "Recurrences")
+  				      "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
 				   ("y" "Reference" entry
 				    (file+headline "project_management_toolbox.org" "References")
 				    "* %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:END:\n%?")
@@ -28,7 +31,7 @@
 				   ("i" "Idea" item
 				    (file+headline "project_management_toolbox.org" "Ideas")
 				    "%^{Title}\n" :immediate-finish t)
-				   ("j" "Journal entry" plain
+				   ("c" "Journal entry" plain
 				    (file+olp+datetree "journal.org")
 				    "%?")))
 	 (org-deadline-warning-days . 0)
