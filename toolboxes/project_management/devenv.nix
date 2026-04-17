@@ -18,7 +18,6 @@ in
 
     # project_management = {
     #   project_name = "project_management_toolbox";
-    #   subproject_agenda_files = [ "/test.org" "test/test.org" ];
     # };
 
     # todo use pkgs.replaceVars instead of sed?
@@ -35,7 +34,6 @@ in
           ${dirLocalsTemplate} > .dir-locals.el
 
           echo ".dir-locals.el generated successfully"
-          echo ${subprojectAgendaFiles}
         '';
         # execIfModified = [
           #   "devenv.nix"

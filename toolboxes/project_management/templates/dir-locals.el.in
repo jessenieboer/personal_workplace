@@ -27,7 +27,10 @@
 				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
 				   ("i" "Idea" item
 				    (file+headline "@PROJECT_NAME@.org" "Ideas")
-				    "%^{Title}\n" :immediate-finish t)))
+				    "%^{Title}\n" :immediate-finish t)
+				   ("c" "Journal entry" plain
+				    (file+olp+datetree "journal.org")
+				    "%?")))
 	 (org-deadline-warning-days . 0)
 	 ;; (org-priority-highest . 2)
 	 ;; (org-priority-default . 2)
