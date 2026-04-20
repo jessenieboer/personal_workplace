@@ -6,34 +6,37 @@
 	 (org-directory . "/home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/toolboxes/project_management/")
 	 (org-capture-templates . (("s" "Task" entry
 				    (file+headline "project_management_toolbox.org" "Tasks")
-				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
-				   ("." "Task with due date" entry
+				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
+				   ("." "Time-bound task" entry
 				    (file+headline "project_management_toolbox.org" "Tasks")
-				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
+				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
 				   ("e" "Routine" entry
 				    (file+headline "project_management_toolbox.org" "Tasks")
-				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
-				   (")" "Routine with due date" entry
+				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
+				   (")" "Time-bound routine" entry
 				    (file+headline "project_management_toolbox.org" "Tasks")
-				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
-				   ("n" "Occurrence" entry
+				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
+				   ("n" "Practice" entry
+  				      (file+headline "project_management_toolbox.org" "Tasks")
+  				      "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: continuous\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
+				   ("c" "Occurrence" entry
 				    (file+headline "project_management_toolbox.org" "Occurrences")
-				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
-				   (";" "Recurrence" entry
-  				      (file+headline "project_management_toolbox.org" "Recurrences")
-  				      "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
+				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
+				   ("," "Recurrence" entry
+  				      (file+headline "project_management_toolbox.org" "Occurrences")
+  				      "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
 				   ("y" "Reference" entry
 				    (file+headline "project_management_toolbox.org" "References")
 				    "* %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:END:\n%?")
+				   ("|" "Journal entry" plain
+				    (file+olp+datetree "journal.org")
+				    "%?")
 				   ("o" "User story" entry
 				    (file+headline "project_management_toolbox.org" "User stories")
-				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
+				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?")
 				   ("i" "Idea" item
 				    (file+headline "project_management_toolbox.org" "Ideas")
-				    "%^{Title}\n" :immediate-finish t)
-				   ("c" "Journal entry" plain
-				    (file+olp+datetree "journal.org")
-				    "%?")))
+				    "%^{Title}\n" :immediate-finish t)))
 	 (org-deadline-warning-days . 0)
 	 ;; (org-priority-highest . 2)
 	 ;; (org-priority-default . 2)

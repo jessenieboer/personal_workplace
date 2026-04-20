@@ -8,24 +8,26 @@ enter into nix-config
 org-export-to-org static_config.org, which will pick up project_info.org and produce project_config.org
 
 tangle project_config.org, which will produce .dir-locals.el
-
-directory structure:
+* directory structure:
 - Kingdom (who has access/control, who reigns, start with capitol)
 - _collection (multiple things, prefix with underscore)
 - project (organized effort towards a benefit, start with lowercase)
-
-processes:
+* processes:
 - curation, capture
-
-practices/disciplines:
+  - curate for tomorrow at end of day
+* practices/disciplines:
 - capture everything
 - manage on computer, go-mode on phone
-
-
-
-org repeating tasks:
+* documentation
+- definitions of capture templates
+  - tasks: things you do
+  - occurrences: things that happen
+- how to use views
+- process of working through the views
+* org repeating tasks:
 
 +1w - repeats on this day every week
 +1w -3d - repeats with warning period
 ++1w - marking as done makes sure the next date is in the future
 .+1w - marking as done shifts the date to 1 week after today
+

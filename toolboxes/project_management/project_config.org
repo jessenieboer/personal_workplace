@@ -18,33 +18,36 @@ must have this in emacs config for agenda to work, and adding it to this file re
   	 (org-capture-templates . (("s" "Task" entry
   				    (file+headline "@PROJECT_NAME@.org" "Tasks")
   				    <<task_capture_template>>)
-  				   ("." "Task with due date" entry
+  				   ("." "Time-bound task" entry
   				    (file+headline "@PROJECT_NAME@.org" "Tasks")
   				    <<time_bound_task_capture_template>>)
   				   ("e" "Routine" entry
   				    (file+headline "@PROJECT_NAME@.org" "Tasks")
   				    <<routine_capture_template>>)
-  				   (")" "Routine with due date" entry
+  				   (")" "Time-bound routine" entry
   				    (file+headline "@PROJECT_NAME@.org" "Tasks")
   				    <<time_bound_routine_capture_template>>)
-  				   ("n" "Occurrence" entry
+  				   ("n" "Practice" entry
+    				      (file+headline "@PROJECT_NAME@.org" "Tasks")
+    				      <<practice_capture_template>>)
+  				   ("c" "Occurrence" entry
   				    (file+headline "@PROJECT_NAME@.org" "Occurrences")
   				    <<occurrence_capture_template>>)
-  				   (";" "Recurrence" entry
-    				      (file+headline "@PROJECT_NAME@.org" "Recurrences")
+  				   ("," "Recurrence" entry
+    				      (file+headline "@PROJECT_NAME@.org" "Occurrences")
     				      <<recurrence_capture_template>>)
   				   ("y" "Reference" entry
   				    (file+headline "@PROJECT_NAME@.org" "References")
   				    <<reference_capture_template>>)
+  				   ("|" "Journal entry" plain
+  				    (file+olp+datetree "journal.org")
+  				    "%?")
   				   ("o" "User story" entry
   				    (file+headline "@PROJECT_NAME@.org" "User stories")
   				    <<task_capture_template>>)
   				   ("i" "Idea" item
   				    (file+headline "@PROJECT_NAME@.org" "Ideas")
-  				    <<item_capture_template>> :immediate-finish t)
-  				   ("c" "Journal entry" plain
-  				    (file+olp+datetree "journal.org")
-  				    "%?")))
+  				    <<item_capture_template>> :immediate-finish t)))
   	 (org-deadline-warning-days . 0)
   	 ;; (org-priority-highest . 2)
   	 ;; (org-priority-default . 2)
@@ -73,32 +76,37 @@ must have this in emacs config for agenda to work, and adding it to this file re
 ** capture templates
 #+NAME: task_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: time_bound_task_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: routine_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: time_bound_routine_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: occurrence_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: recurrence_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: \n:SOFT_INTERNAL_DEPENDENCY: \n:HARD_EXTERNAL_DEPENDENCY: \n:SOFT_EXTERNAL_DEPENDENCY: \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+#+END_SRC
+
+#+NAME: practice_capture_template
+#+BEGIN_SRC :tangle no :noweb yes
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: continuous\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: reference_capture_template
