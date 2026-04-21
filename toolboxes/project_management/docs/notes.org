@@ -1,5 +1,3 @@
-- <<project>> :: an ordering of resources (labor, money, materials, etc...) aimed at some defined or definable benefit
-
 enter into nix-config
 - project name
 - benefit (optional)
@@ -13,10 +11,18 @@ tangle project_config.org, which will produce .dir-locals.el
 - _collection (multiple things, prefix with underscore)
 - project (organized effort towards a benefit, start with lowercase)
 * processes:
-- curation, capture
-  - curate for tomorrow at end of day
+** capture: record things that need your attention so that you can keep track of everything
+  - navigate to project where capture makes sense
+  - get out whatever is in your head, perhaps using capture templates as a tool
+  - continue what you were doing
+** curate: process captured items so that you can prioritize what needs to be done and when
+  - use agenda views as tools
+  - keep moving things to more value and less effort, compared to other things
+*** daily curation (set up work for today or the next)
+- activity view: move desired items to "now" 
 * practices/disciplines:
 - capture everything
+- when something out-of current scope comes up, capture and continue
 - manage on computer, go-mode on phone
 * documentation
 - definitions of capture templates
@@ -24,10 +30,25 @@ tangle project_config.org, which will produce .dir-locals.el
   - occurrences: things that happen
 - how to use views
 - process of working through the views
+  
 * org repeating tasks:
 
 +1w - repeats on this day every week
 +1w -3d - repeats with warning period
 ++1w - marking as done makes sure the next date is in the future
 .+1w - marking as done shifts the date to 1 week after today
+* tools
+** capture templates
+Task: something that requires work
+- time bound: has date attached
+- routine: repeats regularly
+- practice: something you do continously
+Occurrance: something that just happens
+- recurrence: something that happens regularly
+** views
+*** activity view
+When are we doing these things?
+- not dependent on anything
+- if item has deadline, must be due within 2 weeks
+- if no deadline, must be tactical value = more or effort = less
 

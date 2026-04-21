@@ -1,0 +1,9 @@
+- benefit :: something good
+- practice :: instructions that a worker performs habitually
+- process :: well-ordered instructions about how to do something
+- project :: an arrangement of resources aimed at bringing about some definable benefit 
+- resource :: something that's either occupied or consumed for work (workers, time, money, materials, etc...)
+- tool :: something that makes work easier and/or more productive
+- work :: the act of applying energy and knowledge in order to bring about some benefit
+- worker :: a person (or ai agent) capable of doing work
+- workplace :: an organization in which workers work

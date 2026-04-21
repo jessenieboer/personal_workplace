@@ -9,7 +9,7 @@ in
     '';
 
     tasks = {
-      "project_management_toolbox:update_gitignore" = {
+      "git_toolbox:update_gitignore" = {
         before = [ "devenv:enterShell" ];
         exec = ''
           if [ ! -f .gitignore ]; then
