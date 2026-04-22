@@ -118,6 +118,9 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 ** agenda views
 *** working views
+:PROPERTIES:
+:ID:       f878e871-e980-4537-8124-4b9a91023bea
+:END:
 #+NAME: hard_dates_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
   ("\\" "Hard Dates" tags "HAS_HARD_START_DATE=\"\"|HAS_HARD_START_DATE=\"\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hard start?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hard due?) %DEADLINE(Due date) %15CATEGORY(Project)") (org-agenda-overriding-header "Are there hard dates we need to be aware of?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-view-columns-initially t)))
@@ -175,7 +178,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: activity_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("t" "Activity" tags "DEADLINE<=\"<+1w>\"|TACTICAL_VALUE=\"more\"&DEADLINE=\"\"ESTIMATED_EFFORT=\"less\"&DEADLINE=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)") (org-agenda-overriding-header "When are we doing these tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))) (org-agenda-view-columns-initially t)))
+  ("t" "Activity" tags "DEADLINE<=\"<+1w>\"|TACTICAL_VALUE=\"more\"|ESTIMATED_EFFORT=\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)") (org-agenda-overriding-header "When are we doing these tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 # # resource_assignment
