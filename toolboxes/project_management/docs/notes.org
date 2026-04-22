@@ -19,7 +19,8 @@ tangle project_config.org, which will produce .dir-locals.el
   - use agenda views as tools
   - keep moving things to more value and less effort, compared to other things
 *** daily curation (set up work for today or the next)
-- activity view: move desired items to "now" 
+- clear out inboxes
+- activity view: move desired items to "now"
 * practices/disciplines:
 - capture everything
 - when something out-of current scope comes up, capture and continue
@@ -39,16 +40,34 @@ tangle project_config.org, which will produce .dir-locals.el
 .+1w - marking as done shifts the date to 1 week after today
 * tools
 ** capture templates
-Task: something that requires work
-- time bound: has date attached
-- routine: repeats regularly
-- practice: something you do continously
-Occurrance: something that just happens
-- recurrence: something that happens regularly
+Task: work you do once
+Routine: work you do repeatedly
+Practice: work you do continuously
+Occurrance: something that happens
+Recurrence: something that happens regularly
+Reference: information that needs to be saved for later
+Journal entry: freeform writing stored in a date tree
 ** views
-*** activity view
-When are we doing these things?
-- not dependent on anything
+*** all dependencies
+"Are there dependencies for these tasks?"
+- everything
+
+*** relevant dependencies
+"Are there dependencies for these tasks?"
+- anything that is "now" or "next", otherwise
 - if item has deadline, must be due within 2 weeks
+- if no deadline, must be tactical value = more
+  
+*** tactical evaluation view
+"How beneficial would this task be if it were finished now?"
+- non-repeating tasks
+
+"How beneficial would this routine be if it were finished now?"
+- repeating tasks
+
+*** activity view
+"When are we doing these things?"
+- not dependent on anything
+- if item has deadline, must be due within 1 week
 - if no deadline, must be tactical value = more or effort = less
 

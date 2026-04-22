@@ -8,20 +8,20 @@ must have this in emacs config for agenda to work, and adding it to this file re
 #+BEGIN_SRC emacs-lisp :tangle ./templates/dir-locals.el.in :noweb tangle 
   ((nil . ((project-name . "@PROJECT_NAME@")
     	 (org-agenda-files . ("@PROJECT_MANAGEMENT_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
-    	 (org-agenda-custom-commands . (<<hard_dates_view>> <<initial_scheduling_view>> <<all_dependencies_view>> <<initial_dependencies_view>> <<strategic_evaluation_view>> <<tactical_evaluation_view>> <<effort_estimation_view>> <<activity_view>> <<basics_view>> <<focus_view>> <<calendar_view>> <<dependent_items_view>> <<done_items_view>> <<all_items_view>>))
+    	 (org-agenda-custom-commands . (<<hard_dates_view>> <<initial_scheduling_view>> <<all_dependencies_view>> <<relevant_dependencies_view>> <<strategic_evaluation_view>> <<tactical_evaluation_view>> <<effort_estimation_view>> <<activity_view>> <<basics_view>> <<focus_view>> <<calendar_view>> <<dependent_items_view>> <<done_items_view>> <<all_items_view>>))
     	 (org-archive-location . "%s_archive::")
     	 (org-archive-mark-done . t)
     	 (org-directory . "@PROJECT_MANAGEMENT_DIRECTORY@/")
     	 (org-capture-templates . (("s" "Task" entry
     				    (file+headline "@PROJECT_NAME@.org" "Tasks")
     				    <<task_capture_template>>)
-    				   ("." "Time-bound task" entry
+    				   ("." "--Time-bound task" entry
     				    (file+headline "@PROJECT_NAME@.org" "Tasks")
     				    <<time_bound_task_capture_template>>)
     				   ("e" "Routine" entry
     				    (file+headline "@PROJECT_NAME@.org" "Tasks")
     				    <<routine_capture_template>>)
-    				   (")" "Time-bound routine" entry
+    				   (")" "--Time-bound routine" entry
     				    (file+headline "@PROJECT_NAME@.org" "Tasks")
     				    <<time_bound_routine_capture_template>>)
     				   ("n" "Practice" entry
@@ -138,9 +138,9 @@ must have this in emacs config for agenda to work, and adding it to this file re
 # ("w" "Soft Scheduling" tags "HAS_SOFT_START_DATE=\"yes\"|HAS_SOFT_DUE_DATE=\"yes\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_SOFT_START_DATE(Soft start?) %SCHEDULED(Start date) %HAS_SOFT_DUE_DATE(Soft due?) %DEADLINE(Due date)") (org-agenda-overriding-header "What soft dates to we still need?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags alpha-up))) (org-agenda-view-columns-initially t)))
 # #+END_SRC
 
-#+NAME: initial_dependencies_view
+#+NAME: relevant_dependencies_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("g" "Initial Dependencies" tags "HARD_INTERNAL_DEPENDENCY=\"\"&SOFT_INTERNAL_DEPENDENCY=\"\"HARD_EXTERNAL_DEPENDENCY=\"\"SOFT_EXTERNAL_DEPENDENCY=\"\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %HARD_INTERNAL_DEPENDENCY(Hard Int) %SOFT_INTERNAL_DEPENDENCY(Soft Int) %HARD_EXTERNAL_DEPENDENCY(Hard Ext) %SOFT_EXTERNAL_DEPENDENCY(Soft Ext) %15CATEGORY(Project)") (org-agenda-overriding-header "Are there dependencies for these tasks?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags alpha-up))) (org-agenda-view-columns-initially t)))
+  ("g" "Relevant Dependencies" tags "DEADLINE<=\"<+2w>\"|TACTICAL_VALUE=\"more\"&DEADLINE=\"\"|TODO=\"next\"|TODO=\"now\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %HARD_INTERNAL_DEPENDENCY(Hard Int) %SOFT_INTERNAL_DEPENDENCY(Soft Int) %HARD_EXTERNAL_DEPENDENCY(Hard Ext) %SOFT_EXTERNAL_DEPENDENCY(Soft Ext) %15CATEGORY(Project)") (org-agenda-overriding-header "Are there dependencies for these tasks?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags alpha-up))) (org-agenda-view-columns-initially t)))
 #+END_SRC               
 
 #+NAME: all_dependencies_view
@@ -150,7 +150,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: tactical_evaluation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("l" "Tactial Evaluation" ((tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this routine be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %DEADLINE(Due date) %HAS_HARD_DUE_DATE(Hard due?) %15CATEGORY(Project)")))
+  ("l" "Tactical Evaluation" ((tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this routine be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)")))
 #+END_SRC
 
 #+NAME: strategic_evaluation_view
@@ -175,7 +175,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: activity_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("t" "Activity" tags "DEADLINE<=\"<+2w>\"|TACTICAL_VALUE=\"more\"&DEADLINE=\"\"ESTIMATED_EFFORT=\"less\"&DEADLINE=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)") (org-agenda-overriding-header "When are we doing these tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-up))) (org-agenda-view-columns-initially t)))
+  ("t" "Activity" tags "DEADLINE<=\"<+1w>\"|TACTICAL_VALUE=\"more\"&DEADLINE=\"\"ESTIMATED_EFFORT=\"less\"&DEADLINE=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)") (org-agenda-overriding-header "When are we doing these tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 # # resource_assignment
