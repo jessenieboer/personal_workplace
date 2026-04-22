@@ -35,9 +35,9 @@ in
 
             echo ".dir-locals.el generated successfully"
           '';
-          execIfModified = [
-            "devenv.nix"
-          ];
+          # execIfModified = [
+          #   "devenv.nix"
+          # ];
           showOutput = true;
         };
       };
