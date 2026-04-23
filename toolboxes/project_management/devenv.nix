@@ -16,7 +16,7 @@ in
       '';
     };
 
-    # project_management = {
+    # project_management_toolbox = {
     #     project_name = "project_management_toolbox";
     #   };
 
@@ -44,7 +44,7 @@ in
   };
 
   options = {
-    project_management = {
+    project_management_toolbox = {
       project_name = lib.mkOption {
         description = "The name of this project";
         example = "My cool project";
