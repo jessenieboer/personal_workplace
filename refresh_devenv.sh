@@ -58,12 +58,12 @@ while IFS= read -r -d '' dir; do
             echo "   ✅ Success: devenv update"
         fi
 
-        echo "   🔄 Running: devenv shell --refresh-eval-cache"
-        if ! devenv shell --refresh-eval-cache -- \
+        echo "   🔄 Running: devenv shell --refresh-eval-cache --refresh-task-cache "
+        if ! devenv shell --refresh-eval-cache --refresh-task-cache -- \
              echo "✅ devenv shell cache refreshed successfully"; then
-             echo "   ❌ Failed: devenv shell --refresh-eval-cache"
+             echo "   ❌ Failed: devenv shell --refresh-eval-cache --refresh-task-cache "
         else
-            echo "   ✅ Success: devenv shell --refresh-eval-cache"
+            echo "   ✅ Success: devenv shell --refresh-eval-cache --refresh-task-cache "
         fi
     )
 
