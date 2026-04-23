@@ -120,12 +120,12 @@ must have this in emacs config for agenda to work, and adding it to this file re
 *** working views
 #+NAME: hard_dates_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("\\" "Hard Dates" tags "HAS_HARD_START_DATE=\"\"|HAS_HARD_START_DATE=\"\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hard start?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hard due?) %DEADLINE(Due date) %15CATEGORY(Project)") (org-agenda-overriding-header "Are there hard dates we need to be aware of?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-view-columns-initially t)))
+  ("\\" "Hard Dates Check" tags "HAS_HARD_START_DATE=\"\"|HAS_HARD_START_DATE=\"\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hard start?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hard due?) %DEADLINE(Due date) %15CATEGORY(Project)") (org-agenda-overriding-header "Are there any hard dates we need to be aware of?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: initial_scheduling_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("w" "Initial Scheduling" tags "HAS_HARD_START_DATE=\"yes\"|HAS_HARD_DUE_DATE=\"yes\"|FREQUENCY=\"repetitive\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hard start?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hard due?) %DEADLINE(Due date) %15CATEGORY(Project)") (org-agenda-overriding-header "What do we know is on the calendar?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))) (org-agenda-view-columns-initially t)))
+  ("w" "Hard Scheduling" tags "HAS_HARD_START_DATE=\"yes\"|HAS_HARD_DUE_DATE=\"yes\"" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hard start?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hard due?) %DEADLINE(Due date) %15CATEGORY(Project)") (org-agenda-overriding-header "What hard dates do we know about?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 # #+NAME: soft_dates_view
@@ -150,7 +150,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: tactical_evaluation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("l" "Tactical Evaluation" ((tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this routine be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)")))
+  ("l" "Tactical Evaluation" ((tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this routine be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"continuous\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this practice be if it were practiced now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)")))
 #+END_SRC
 
 #+NAME: strategic_evaluation_view
@@ -160,7 +160,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: effort_estimation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("a" "Effort Estimation" tags "TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Tac Valuable, Doable Task) %ESTIMATED_EFFORT(Effort) %15CATEGORY(Project)") (org-agenda-overriding-header "How much of our effort would this take to finish?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-up))) (org-agenda-view-columns-initially t)))
+("a" "Effort Estimation" ((tags "FREQUENCY=\"once\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to finish this task now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to finish this routine now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"continuous\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to practice this now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)")))
 #+END_SRC
 
 # #+NAME: cost_estimation_view

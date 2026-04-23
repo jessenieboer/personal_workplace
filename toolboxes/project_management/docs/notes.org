@@ -21,6 +21,9 @@ tangle project_config.org, which will produce .dir-locals.el
 *** daily curation (set up work for today or the next)
 - clear out inboxes
 - activity view: move desired items to "now"
+*** regular curation (go through a sequence to determine what to do)
+1. Hard Dates Check: check to see if any captured items have hard date requirements; fill in date if known. ususally unnecessary as capture templates mark time-bound items as having hard dates
+2. Hard Scheduling: fill in dates for items with hard dates
 * practices/disciplines:
 - capture everything
 - when something out-of current scope comes up, capture and continue
@@ -47,7 +50,17 @@ Occurrance: something that happens
 Recurrence: something that happens regularly
 Reference: information that needs to be saved for later
 Journal entry: freeform writing stored in a date tree
+
+All are "items"
 ** views
+*** Hard Dates Check
+"Do these items have any hard dates we need to be aware of?"
+
+- anything that doesn't have a yes/no value for has_hard_start/due_date
+*** Hard Scheduling
+"What hard dates do we know about?"
+
+- anything that is yes for hard_start or hard_due
 *** all dependencies
 "Are there dependencies for these tasks?"
 - everything
