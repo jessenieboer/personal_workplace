@@ -1,3 +1,18 @@
+this is about recording (capturing) and organizing (curating) all relevant information for a project so that we can work efficiently on what is most valuable
+
+we use tools (capture templates, curation views) to help do this efficiently
+
+have 2 levels of docs: overview and details
+
+Overview 
+- capture everything out of your brain quickly and easily 
+- make sure any hard dates are accounted for
+- sort items into more/average/less valuable
+- check for dependencies of hard-dated and valuable items
+- sort items into more/average/less effort required for hard-dated, valuable items that don't have dependencies
+
+
+* nix and emacs stuff
 enter into nix-config
 - project name
 - benefit (optional)
@@ -21,9 +36,116 @@ tangle project_config.org, which will produce .dir-locals.el
 *** daily curation (set up work for today or the next)
 - clear out inboxes
 - activity view: move desired items to "now"
-*** regular curation (go through a sequence to determine what to do)
+*** regular curation (go through a sequence or bounce around between views to determine what to do)
+For any given project or group of projects:
 1. Hard Dates Check: check to see if any captured items have hard date requirements; fill in date if known. ususally unnecessary as capture templates mark time-bound items as having hard dates
 2. Hard Scheduling: fill in dates for items with hard dates
+3. Tactical Evaluation: per project, for things we can actually work on now, determine what's more/average/less beneficial right now
+4. Relevant Dependencies: determine if there are things that need to be done before we can get to the most important stuff: the most valuable stuff, stuff due soon, or stuff we are already doing
+5. Effort Estimation: per project, of the important stuff, determine what will take more/average/less effort to finish
+*** doing stuff views
+1. Focus: what are we focusing on right now?
+2. Calendar
+*** reviews
+- dependencies
+- missing hard dates
+
+* tools
+** capture templates
+Task: work you do once
+Routine: work you do repeatedly
+Practice: work you do continuously
+Occurrance: something that happens
+Recurrence: something that happens regularly
+Reference: information that needs to be saved for later
+Journal entry: freeform writing stored in a date tree
+
+All are "items"
+** curation views
+
+*** Hard Dates Check (\)
+- Purpose :: Make sure we know which items will have a hard start or due date attached so we don't miss any
+
+- Question :: "Do these items have any hard dates we need to be aware of?"
+
+What's included:
+- anything that doesn't have a yes/no value for has_hard_start/due_date
+
+Notes:
+- this question is usually taken care of by using a capture template
+  
+*** Hard Scheduling (w)
+- Purpose :: Capture the hard dates we already know about so that we don't miss any
+
+- Question :: "What hard dates do we know about?"
+
+What's included:
+- anything that should have a hard start or due date
+
+*** Missing Hard Dates ([)
+- Purpose :: Make sure everything that should have a hard date has one
+
+- Question :: "What hard dates are we missing?"
+
+What's included:
+- anything that should have a hard start or due date but doesn't have one yet
+
+Notes:
+  
+*** Tactical Evaluation (l)
+- Purpose :: Figure out what's most beneficial to work on right now so we can focus our efforts on that 
+
+- Question :: "How beneficial would this be if it were finished now?"
+
+What's included:
+- tasks that don't have a hard start date or that have a hard start date up to a week from now (stuff we can actually work on in the near future)
+  
+*** Relevant Dependencies (g)
+- Purpose :: Note anything that needs to be done before we get to the valuable stuff
+
+- Question :: "Are there any tasks that should or must be done prior to these?"
+
+What's included:
+- anything that is "now" or "next", otherwise
+- if item has deadline, must be due within 1 month
+- if no deadline, must be tactical value = more
+
+*** Effort Estimation (a)
+- Purpose :: Get a rough idea of how much effort relevant items take so we can take that into account when we decide what to work on
+
+- Question :: "How much of our effort would it take to finish this now?"
+
+What's included:
+- independent items that is "now" or "next", otherwise
+- if an idependent item has a deadline, must be due within 1 month
+- if an independent item has no deadline, must be tactical value = more or average (so we can catch small easy things)
+
+*** Activity (t)
+- Purpose :: Set when we will work on items (now, next, or in the future?)
+
+- Question :: "When are we doing this?"
+
+What's included:
+- if independent item has deadline, must be due within 1 week
+- if no deadline, must be tactical value = more or effort = less
+
+** reporting views
+*** Focus (s)
+- Purpose :: Show only what we are working on right now
+
+- Question :: "What are we focusing on right now?"
+
+What's included:
+- anything "now"
+
+*** Calendar (e)
+- Purpose :: See what's coming up
+
+- Question :: "What's on the calendar?"
+
+What's included:
+- anything "now"
+
 * practices/disciplines:
 - capture everything
 - when something out-of current scope comes up, capture and continue
@@ -41,46 +163,3 @@ tangle project_config.org, which will produce .dir-locals.el
 +1w -3d - repeats with warning period
 ++1w - marking as done makes sure the next date is in the future
 .+1w - marking as done shifts the date to 1 week after today
-* tools
-** capture templates
-Task: work you do once
-Routine: work you do repeatedly
-Practice: work you do continuously
-Occurrance: something that happens
-Recurrence: something that happens regularly
-Reference: information that needs to be saved for later
-Journal entry: freeform writing stored in a date tree
-
-All are "items"
-** views
-*** Hard Dates Check
-"Do these items have any hard dates we need to be aware of?"
-
-- anything that doesn't have a yes/no value for has_hard_start/due_date
-*** Hard Scheduling
-"What hard dates do we know about?"
-
-- anything that is yes for hard_start or hard_due
-*** all dependencies
-"Are there dependencies for these tasks?"
-- everything
-
-*** relevant dependencies
-"Are there dependencies for these tasks?"
-- anything that is "now" or "next", otherwise
-- if item has deadline, must be due within 2 weeks
-- if no deadline, must be tactical value = more
-  
-*** tactical evaluation view
-"How beneficial would this task be if it were finished now?"
-- non-repeating tasks
-
-"How beneficial would this routine be if it were finished now?"
-- repeating tasks
-
-*** activity view
-"When are we doing these things?"
-- not dependent on anything
-- if item has deadline, must be due within 1 week
-- if no deadline, must be tactical value = more or effort = less
-
