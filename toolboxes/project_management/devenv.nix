@@ -26,9 +26,9 @@ in
           before = [ "devenv:enterShell" ];
           exec = let
             # annoying to produce a series of double-quoted strings
-            subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management.subproject_agenda_files;
+            subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management_toolbox.subproject_agenda_files;
           in ''
-            sed -e 's|@PROJECT_NAME@|${config.project_management.project_name}|g' \
+            sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
             -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
             -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
             ${dirLocalsTemplate} > .dir-locals.el
