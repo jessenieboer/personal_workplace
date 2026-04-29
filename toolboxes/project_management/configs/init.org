@@ -58,7 +58,7 @@
 
 * Search
 #+BEGIN_SRC scheme
-
+(set! filter-default-to-advanced #t)
 #+END_SRC
 
 * App badge
@@ -112,6 +112,9 @@
 #+END_SRC
 
 * Custom
+:PROPERTIES:
+:ID:       d16ed13e-a8ff-4e9d-ab57-018df26dbe4d
+:END:
 #+BEGIN_SRC scheme
   ;; (filter-add "Now" (lambda (item) (string=? (item-state item) "now")))
   ;; (filter-add "Now+Next" (lambda (item) (or (string=? (item-state item) "now") (string=? (item-state item) "next"))))

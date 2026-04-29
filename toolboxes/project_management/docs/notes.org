@@ -43,6 +43,9 @@ For any given project or group of projects:
 3. Tactical Evaluation: per project, for things we can actually work on now, determine what's more/average/less beneficial right now
 4. Relevant Dependencies: determine if there are things that need to be done before we can get to the most important stuff: the most valuable stuff, stuff due soon, or stuff we are already doing
 5. Effort Estimation: per project, of the important stuff, determine what will take more/average/less effort to finish
+6. Soft Scheduling: fill in other dates if desired
+7. Activity: set up what we to work on next/now
+  
 *** doing stuff views
 1. Focus: what are we focusing on right now?
 2. Calendar
@@ -120,6 +123,22 @@ What's included:
 - if an idependent item has a deadline, must be due within 1 month
 - if an independent item has no deadline, must be tactical value = more or average (so we can catch small easy things)
 
+*** Soft Scheduling (r)
+- Purpose :: Tentatively add stuff to the calendar without committing to those dates
+
+- Question :: "Do we want to tentatively schedule this?"
+
+What's included:
+- independent items with no hard dates that are of more value or less effort and avg value
+
+*** Relevant Delegation (SPC)
+- Purpose :: Assign items to workers
+
+- Question :: "Who is assigned to this?"
+
+What's included:
+- independent items with no hard dates that are of more value or less effort
+  
 *** Activity (t)
 - Purpose :: Set when we will work on items (now, next, or in the future?)
 
@@ -127,7 +146,7 @@ What's included:
 
 What's included:
 - if independent item has deadline, must be due within 1 week
-- if no deadline, must be tactical value = more or effort = less
+- if no deadline, must be tactical value = more or effort = less and avg value
 
 ** reporting views
 *** Focus (s)

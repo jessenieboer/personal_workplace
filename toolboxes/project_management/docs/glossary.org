@@ -1,5 +1,5 @@
 - benefit :: something good
-h - practice :: instructions that a worker performs habitually
+- practice :: instructions that a worker performs habitually
 - process :: well-ordered instructions about how to do something
 - project :: an arrangement of resources aimed at bringing about some definable benefit 
 - resource :: something that's either occupied or consumed for work (workers, time, money, materials, etc...)
