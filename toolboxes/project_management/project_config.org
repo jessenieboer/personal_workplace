@@ -30,40 +30,40 @@ must have this in emacs config for agenda to work, and adding it to this file re
       	 (org-agenda-files . ("@PROJECT_MANAGEMENT_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
       	 (org-archive-location . "%s_archive::")
       	 (org-archive-mark-done . t)
-      	 (org-capture-templates . (("e" "Task" entry
+      	 (org-capture-templates . (("s" "Task" entry
       				    (file+headline "@PROJECT_NAME@.org" "Tasks")
       				    <<task_capture_template>>)
-      				   ("n" "--Time-bound task" entry
-      				    (file+headline "@PROJECT_NAME@.org" "Tasks")
-      				    <<time_bound_task_capture_template>>)
-  				 ("s" "--Imminent task" entry
+  				 ("y" "--Imminent task" entry
       				    (file+headline "@PROJECT_NAME@.org" "Tasks")
       				    <<imminent_task_capture_template>>)
-      				   ("i" "Routine" entry
+      				   ("\t" "--Time-bound task" entry
+      				    (file+headline "@PROJECT_NAME@.org" "Tasks")
+      				    <<time_bound_task_capture_template>>)
+      				   ("e" "Routine" entry
       				    (file+headline "@PROJECT_NAME@.org" "Tasks")
       				    <<routine_capture_template>>)
-      				   ("p" "--Time-bound routine" entry
+      				   ("i" "--Time-bound routine" entry
       				    (file+headline "@PROJECT_NAME@.org" "Tasks")
       				    <<time_bound_routine_capture_template>>)
       				   ("z" "Practice" entry
         				    (file+headline "@PROJECT_NAME@.org" "Tasks")
         				    <<practice_capture_template>>)
-      				   ("o" "Occurrence" entry
+      				   ("n" "Occurrence" entry
       				    (file+headline "@PROJECT_NAME@.org" "Occurrences")
       				    <<occurrence_capture_template>>)
-      				   ("h" "Recurrence" entry
+      				   ("p" "Recurrence" entry
         				    (file+headline "@PROJECT_NAME@.org" "Occurrences")
         				    <<recurrence_capture_template>>)
-      				   ("y" "Reference" entry
+      				   ("c" "Reference" entry
       				    (file+headline "@PROJECT_NAME@.org" "References")
       				    <<reference_capture_template>>)
-      				   ("z" "Journal entry" plain
+      				   ("b" "Journal entry" plain
       				    (file+olp+datetree "journal.org")
       				    "%?")
-      				   ("u" "User story" entry
+      				   ("h" "User story" entry
       				    (file+headline "@PROJECT_NAME@.org" "User stories")
       				    <<task_capture_template>>)
-      				   ("s" "Idea" item
+      				   ("o" "Idea" item
       				    (file+headline "@PROJECT_NAME@.org" "Ideas")
       				    <<item_capture_template>> :immediate-finish t)))
     	 (org-directory . "@PROJECT_MANAGEMENT_DIRECTORY@/")
@@ -176,7 +176,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: activity_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("t" "Activity" ((tags "DEADLINE<=\"<+1w>\"|" ((org-agenda-overriding-header "When are these things happening?") (org-agenda-skip-function 'pmt-skip-non-occurrences) (org-agenda-sorting-strategy '((tags category-up deadline-up))))) (tags "FREQUENCY=\"once\"&DEADLINE<=\"<+1w>\"|FREQUENCY=\"once\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"once\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "When are we doing these tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up))))) (tags "FREQUENCY=\"repetitive\"&DEADLINE<=\"<+1w>\"|FREQUENCY=\"repetitive\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"repetitive\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "When are we doing these routines?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up))))) (tags "FREQUENCY=\"continuous\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"continuous\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "When are we doing these practices?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)")))
+  ("t" "Activity" ((tags "DEADLINE<=\"<+1w>\"|" ((org-agenda-overriding-header "When are these things happening?") (org-agenda-skip-function 'pmt-skip-non-occurrences) (org-agenda-sorting-strategy '((tags category-up deadline-up))))) (tags "FREQUENCY=\"once\"&DEADLINE<=\"<+1w>\"|FREQUENCY=\"once\"&TACTICAL_VALUE=\"more\"&DEADLINE<=\"\"|FREQUENCY=\"once\"&ESTIMATED_EFFORT=\"less\"&DEADLINE<=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "When are we doing these tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up))))) (tags "FREQUENCY=\"repetitive\"&DEADLINE<=\"<+1w>\"|FREQUENCY=\"repetitive\"&TACTICAL_VALUE=\"more\"&DEADLINE<=\"\"|FREQUENCY=\"repetitive\"&ESTIMATED_EFFORT=\"less\"&DEADLINE<=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "When are we doing these routines?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up))))) (tags "FREQUENCY=\"continuous\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"continuous\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "When are we doing these practices?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)")))
 #+END_SRC
 *** reporting views
 #+NAME: focus_view

@@ -35,7 +35,7 @@ tangle project_config.org, which will produce .dir-locals.el
   - keep moving things to more value and less effort, compared to other things
 *** daily curation (set up work for today or the next)
 - clear out inboxes
-- activity view: move desired items to "now"
+- activity view: move past items to past and desired items to "now"
 *** regular curation (go through a sequence or bounce around between views to determine what to do)
 For any given project or group of projects:
 1. Hard Dates Check: check to see if any captured items have hard date requirements; fill in date if known. ususally unnecessary as capture templates mark time-bound items as having hard dates
