@@ -1,27 +1,64 @@
 { pkgs, lib, config, inputs, ... }:
 let
   gh_devenv_script = ./programs/gh_devenv.sh;
+  pkgs-unstable = import inputs.nixpkgs-unstable { system = pkgs.stdenv.system; };
   secretspecTemplate = ./templates/secretspec.toml;
 in
 {
-  enterShell = ''
-    echo "jessenieboer's secrets toolbox available"
-  '';
+  config = {
+    enterShell = ''
+      # get bws token from pass
+      export BWS_ACCESS_TOKEN=$(pass show ${config.secrets_toolbox.mat_name_in_pass} 2>/dev/null | head -n1)
 
-  files."gh_devenv.sh".source = ./programs/gh_devenv.sh;
+      if [ -z "$BWS_ACCESS_TOKEN" ]; then
+      echo "  Failed to retrieve BWS access token from pass."
+      echo "  Make sure the token is stored at: $PASS_NAME"
+      echo "  Run: pass show $PASS_NAME"
+      exit 1
+      fi
 
-  packages = with pkgs; [
-    gnupg
-    pass
-    secretspec
-  ];
+      echo "Successfully loaded BWS machine access token from pass"
+      echo "jessenieboer's secrets toolbox available"
+    '';
 
-  tasks = {
+    files."gh_devenv.sh".source = ./programs/gh_devenv.sh;
+
+    packages = with pkgs; [
+      (pkgs.rustPlatform.buildRustPackage {
+        pname = "secretspec";
+        version = "v0.8.2";  # or pin to a specific commit/tag
+
+        src = pkgs.fetchFromGitHub {
+          owner = "cachix";
+          repo = "secretspec";
+          rev = "ccc50db26efc47f8eb3c4fe73c44bf0c66f890b9";
+          hash = "sha256-0aGv1ZUMEVAk3cNvwZHMNwgKoasVTffJ8xOMclNyAMw=";
+        };
+
+        cargoHash = "sha256-XqDWUQ9hzptNfGtTUftaokuuBsgMbE4HwiIZRQNp/C4=";
+        cargoBuildFlags = [ "--package" "secretspec" "--features" "bws" ];
+        #buildFeatures = [ "bws" ];
+
+        # Optional: native build inputs if needed
+        nativeBuildInputs = [ pkgs.pkg-config ];
+        buildInputs = [ pkgs.dbus pkgs.openssl ];  # often needed for Rust crates
+
+        meta = {
+          mainProgram = "secretspec";
+        };
+      })
+      gnupg
+      pass
+    ];
+
+    secrets_toolbox.mat_name_in_pass = "bws/nucbox_access_token";
+
+    tasks = {
       "secrets_toolbox:copy_secretspec_template" = {
         before = [ "devenv:enterShell" ];
         exec = ''
           if [ -f "${config.devenv.root}/secretspec.toml" ]; then
-          echo "docs readme.org already exists — skipping copy."
+          echo "secretspec.toml already exists — skipping copy."
           exit 0
           fi
           cp ${secretspecTemplate} ${config.devenv.root}/secretspec.toml
@@ -32,4 +69,15 @@ in
         showOutput = true;
       };
     };
+  };
+
+  options = {
+    secrets_toolbox = {
+      mat_name_in_pass = lib.mkOption {
+        description = "The name of the bws machine access token that lives in the local pass store";
+        example = "bws/my_token_name";
+        type = lib.types.str;
+      };
+    };
+  };
 }
