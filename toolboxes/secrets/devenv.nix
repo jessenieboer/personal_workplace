@@ -23,6 +23,14 @@ in
 
     files."gh_devenv.sh".source = ./programs/gh_devenv.sh;
 
+    languages.rust = {
+      enable = true;
+      channel = "stable";
+      version = "1.95.0";
+      components = [ "cargo" "rustc" "clippy" "rustfmt" "rust-src" "rust-analyzer" ];
+      #targets = [ "wasm32-unknown-unknown" ];  # if needed
+    };
+
     packages = with pkgs; [
       (pkgs.rustPlatform.buildRustPackage {
         pname = "secretspec";
@@ -40,8 +48,8 @@ in
         #buildFeatures = [ "bws" ];
 
         # Optional: native build inputs if needed
-        nativeBuildInputs = [ pkgs.pkg-config ];
-        buildInputs = [ pkgs.dbus pkgs.openssl ];  # often needed for Rust crates
+        nativeBuildInputs = [ pkg-config ];
+        buildInputs = [ dbus openssl ];  # often needed for Rust crates
 
         meta = {
           mainProgram = "secretspec";
