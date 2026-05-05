@@ -18,12 +18,17 @@ in
       fi
 
       echo "Successfully loaded BWS machine access token from pass"
+
+      export PERSONAL_WORKPLACE_TEST=$(secretspec get PERSONAL_WORKPLACE_TEST 2>/dev/null | head -n1)
+
+      if [ -z "PERSONAL_WORKPLACE_TEST" ]; then
+      echo "  Failed to retrive test secret from personal_workplace in BWS"
+      exit 1
+      fi
+
+      echo "Successfully loaded test secret from personal_workplace in BWS"
       echo "jessenieboer's secrets toolbox available"
     '';
-
-    env = {
-      PERSONAL_WORKPLACE_TEST = config.secretspec.secrets.PERSONAL_WORKPLACE_TEST or "secret not found";
-    };
 
     files = {
       "gh_devenv.sh".source = ./programs/gh_devenv.sh;
