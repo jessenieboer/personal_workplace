@@ -2,6 +2,11 @@ inputs:
   personal_workplace:
     flake: false
     url: github:jessenieboer/personal_workplace/jn
+  rust-overlay:
+    url: github:oxalica/rust-overlay
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
     
 imports:
   - personal_workplace/toolboxes/git
