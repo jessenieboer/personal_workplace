@@ -1,7 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
 let
+  envrc_config = ./configs/.envrc;
   gh_devenv_script = ./programs/gh_devenv.sh;
-  pkgs-unstable = import inputs.nixpkgs-unstable { system = pkgs.stdenv.system; };
   secretspecTemplate = ./templates/secretspec.toml;
 in
 {
@@ -21,7 +21,13 @@ in
       echo "jessenieboer's secrets toolbox available"
     '';
 
-    files."gh_devenv.sh".source = ./programs/gh_devenv.sh;
+    env = {
+      PERSONAL_WORKPLACE_TEST = config.secretspec.secrets.PERSONAL_WORKPLACE_TEST or "secret not found";
+    };
+
+    files = {
+      "gh_devenv.sh".source = ./programs/gh_devenv.sh;
+    };
 
     languages.rust = {
       enable = true;
@@ -61,7 +67,22 @@ in
 
     secrets_toolbox.mat_name_in_pass = "bws/nucbox_access_token";
 
+    # note that .envrc must be writable to work properly with the emacs envrc package
     tasks = {
+      "secrets_toolbox:copy_envrc" = {
+        before = [ "devenv:enterShell" ];
+        exec = ''
+          if [ -f "${config.devenv.root}/.envrc" ]; then
+          echo ".envrc already exists — skipping copy."
+          exit 0
+          fi
+          cp ${envrc_config} ${config.devenv.root}/.envrc
+          chmod u+w ${config.devenv.root}/.envrc
+
+          echo "copied envrc config to .envrc
+        '';
+        showOutput = true;
+      };
       "secrets_toolbox:copy_secretspec_template" = {
         before = [ "devenv:enterShell" ];
         exec = ''
