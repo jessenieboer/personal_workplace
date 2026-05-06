@@ -17,16 +17,7 @@ in
       exit 1
       fi
 
-      echo "Successfully loaded BWS machine access token from pass"
-
-      export PERSONAL_WORKPLACE_TEST=$(secretspec get PERSONAL_WORKPLACE_TEST 2>/dev/null | head -n1)
-
-      if [ -z "PERSONAL_WORKPLACE_TEST" ]; then
-      echo "  Failed to retrive test secret from personal_workplace in BWS"
-      exit 1
-      fi
-
-      echo "Successfully loaded test secret from personal_workplace in BWS"
+      echo "Successfully loaded BWS machine access token from pass"     
       echo "jessenieboer's secrets toolbox available"
     '';
 
