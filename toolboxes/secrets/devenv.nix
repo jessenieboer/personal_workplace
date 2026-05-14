@@ -75,7 +75,7 @@ in
           cp ${envrc_config} ${config.devenv.root}/.envrc
           chmod u+w ${config.devenv.root}/.envrc
 
-          echo "copied envrc config to .envrc
+          echo "copied envrc config to .envrc"
         '';
         showOutput = true;
       };

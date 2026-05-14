@@ -5,9 +5,6 @@ I tangle this file to generate templates/dir-locals.el.in rather than editing th
 must have this in emacs config for agenda to work, and adding it to this file requires eval,
 (add-hook 'org-agenda-mode-hook 'hack-dir-local-variables-non-file-buffer)
 ** dir-locals
-:PROPERTIES:
-:ID:       523928b1-e37d-47f3-9823-4d9cac257e6c
-:END:
 #+BEGIN_SRC emacs-lisp :tangle ./templates/dir-locals.el.in :noweb tangle 
   ((nil . ((org-agenda-custom-commands . (;; curation views
     					<<hard_dates_check_view>>
