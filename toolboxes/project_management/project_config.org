@@ -22,7 +22,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
     					<<focus_view>>
     					<<calendar_view>>
     					;;<<dependent_items_view>>
-    					;;<<done_items_view>>
+    					<<past_items_view>>
     					;;<<all_items_view>>
     					))
       	 (org-agenda-files . ("@PROJECT_MANAGEMENT_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
@@ -192,6 +192,11 @@ must have this in emacs config for agenda to work, and adding it to this file re
 #+NAME: calendar_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
   ("e" "Calendar" agenda "SCHEDULED<>\"\"|DEADLINE<>\"\"" ((org-agenda-include-deadlines t) (org-agenda-overriding-header "What's on the calendar?") (org-agenda-prefix-format '((agenda . "%?-t "))) (org-agenda-skip-function 'pmt-skip-top-level-headlines) (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled) (org-agenda-skip-scheduled-if-deadline-is-shown t) (org-agenda-sorting-strategy '((tags deadline-up))) (org-agenda-span 'week) (org-agenda-todo-keyword-format "%-7s") (org-agenda-use-time-grid nil) (org-deadline-warning-days 1)) ("@PROJECT_MANAGEMENT_DIRECTORY@/calendar.html" "@PROJECT_MANAGEMENT_DIRECTORY@/calendar.ps" "@PROJECT_MANAGEMENT_DIRECTORY@/calendar.ics"))
+#+END_SRC
+
+#+NAME: past_items_view
+#+BEGIN_SRC emacs-lisp :tangle no :noweb yes
+("c" "Past items" tags "TODO=\"past\"" ((org-agenda-overriding-header "What have we done?") (org-agenda-skip-function 'pmt-skip-top-level-headlines) (org-agenda-skip-function-global nil) (org-agenda-sorting-strategy '((tags category-up))) (org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %15CATEGORY(Project)")))
 #+END_SRC
 
 *** speculative_views
