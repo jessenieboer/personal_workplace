@@ -1,0 +1,22 @@
+(defun jnpw-get-xai-key () (let ((output (shell-command-to-string (format "secretspec get %s" (shell-quote-argument "XAI_API_KEY"))))) (if (string-empty-p (string-trim output)) nil (string-trim output))))
+
+(defun jnpw-setup-grok-backend ()
+  (let ((key (jnpw-get-xai-key)))
+    (when key
+      (setq jnpw-grok-backend
+            (gptel-make-xai "jnpw_grok_backend"
+              :key key
+              :models '(grok-4.3)
+              :request-params nil
+              :stream nil)))
+    (message "grok backend set up for gptel")))
+
+(defun jnpw-setup-grok ()
+  (interactive)
+  (inheritenv
+   (progn
+     (jnpw-setup-grok-backend)
+     (setq gptel-backend jnpw-grok-backend
+  	   gptel-default-mode 'org-mode
+  	   gptel-include-reasoning nil
+  	   gptel-model 'grok-4.3))))
