@@ -1,0 +1,21 @@
+kinds of tools:
+programs
+settings
+templates
+
+
+- <<benefit>> :: something good
+- <<configuration>> :: a [[unit]] of [[order]] that applies to some object
+- <<effort>> :: the application of energy, knowledge, and skill
+- <<order>> :: a neat, clean, logical, useful arrangement
+- <<practice>> :: a [[process]] that [[worker]]s execute repeatedly or continuously
+- <<process>> :: a [[configuration]] of instructions about how to do something
+- <<program>> :: a [[process]] that a computer can execute
+- <<settings>> :: a [[configuration]] of values for a [[tool]]'s options
+- <<template>> :: a useful pattern to copy and fill in
+- <<tool>> :: something that makes work easier and/or more productive
+- <<toolbox>> :: a collection of configurations?, practices, programs, settings, and templates for a specific software product, language, platform, or kind of [[work]]?
+- <<unit>> :: one cohesive thing
+- <<work>> :: the act of expending [[effort]] in order to bring about some [[benefit]]
+- <<worker>> :: a person or ai capable of doing [[work]]
+- <<workplace>> :: an organization in which [[work]] takes place

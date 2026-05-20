@@ -1,6 +1,6 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  gitIgnore = ./configs/.gitignore;
+  gitIgnore = ./settings/.gitignore;
 in
 {
   config = {

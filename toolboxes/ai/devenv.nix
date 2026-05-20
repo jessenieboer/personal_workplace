@@ -1,7 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  aiToolboxSetup = ./configs/ai_toolbox_setup.el;
-  dirLocals = ./configs/dir-locals.el;
+  aiToolboxSetup = ./settings/ai_toolbox_setup.el;
+  dirLocals = ./settings/dir-locals.el;
 in
 {
   config = {

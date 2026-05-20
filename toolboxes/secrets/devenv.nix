@@ -1,6 +1,6 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  envrc_config = ./configs/.envrc;
+  envrc_config = ./settings/.envrc;
   gh_devenv_script = ./programs/gh_devenv.sh;
   secretspecTemplate = ./templates/secretspec.toml;
 in
