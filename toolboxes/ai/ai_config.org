@@ -1,6 +1,6 @@
 # note: need to have (inheritenv-add-advice 'shell-command-to-string) in emacs init for the
 ** ai setup
-#+BEGIN_SRC emacs-lisp :tangle ./ai_toolbox_setup.el :noweb tangle
+#+BEGIN_SRC emacs-lisp :tangle ./programs/ai_toolbox_setup.el :noweb tangle
   <<jnpw_setup_grok_backend>>
 #+END_SRC
 ** backends

@@ -1,0 +1,66 @@
+* Tasks
+** future test
+SCHEDULED: <2026-05-15 Fri>
+:PROPERTIES:
+:ESTIMATED_EFFORT: less
+:END:
+** future be able to merge dir-locals from other toolboxes
+:PROPERTIES:
+:CATEGORY: project_management_toolbox
+:FREQUENCY: once
+:HAS_HARD_START_DATE: no
+:HAS_HARD_DUE_DATE: no
+:HARD_INTERNAL_DEPENDENCY: no 
+:SOFT_INTERNAL_DEPENDENCY: no 
+:HARD_EXTERNAL_DEPENDENCY: no 
+:SOFT_EXTERNAL_DEPENDENCY: no 
+:STRATEGIC_VALUE: average
+:TACTICAL_VALUE: average
+:ESTIMATED_EFFORT: average
+:ESTIMATED_$_COST: trivial
+:ACTUAL_EFFORT: 
+:ACTUAL_$_COST: 
+:END:
+create toolbox-specific dir-locals, merge them all at the end
+** past test
+:PROPERTIES:
+:CATEGORY: project_management_toolbox
+:FREQUENCY: once
+:HAS_HARD_START_DATE: no
+:HAS_HARD_DUE_DATE: no
+:HARD_INTERNAL_DEPENDENCY: no 
+:SOFT_INTERNAL_DEPENDENCY: no 
+:HARD_EXTERNAL_DEPENDENCY: no 
+:SOFT_EXTERNAL_DEPENDENCY: no 
+:STRATEGIC_VALUE: average
+:TACTICAL_VALUE: more
+:ESTIMATED_EFFORT: average
+:ESTIMATED_$_COST: trivial
+:ACTUAL_EFFORT: 
+:ACTUAL_$_COST: 
+:END:
+
+** future test
+:PROPERTIES:
+:CATEGORY: project_management_toolbox
+:FREQUENCY: once
+:HAS_HARD_START_DATE: no
+:HAS_HARD_DUE_DATE: no
+:HARD_INTERNAL_DEPENDENCY: no 
+:SOFT_INTERNAL_DEPENDENCY: no 
+:HARD_EXTERNAL_DEPENDENCY: no 
+:SOFT_EXTERNAL_DEPENDENCY: no 
+:STRATEGIC_VALUE: average
+:TACTICAL_VALUE: average
+:ESTIMATED_EFFORT: average
+:ESTIMATED_$_COST: trivial
+:ACTUAL_EFFORT: 
+:ACTUAL_$_COST: 
+:END:
+
+* Refs
+** level2 ref
+:PROPERTIES:
+:ESTIMATED_EFFORT: more
+:END:
+

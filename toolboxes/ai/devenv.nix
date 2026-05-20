@@ -1,7 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  aiToolboxSetup = ./settings/ai_toolbox_setup.el;
-  dirLocals = ./settings/dir-locals.el;
+  aiToolboxSetup = ./programs/ai_toolbox_setup.el;
+  dirLocals = ./programs/ai_toolbox_dir_locals.el;
 in
 {
   config = {
@@ -13,10 +13,11 @@ in
       "ai_toolbox:copy_setup_files" = {
         before = [ "devenv:enterShell" ];
         exec = ''
-          cat ${aiToolboxSetup} > ai_toolbox_setup.el
-          cat ${dirLocals} > .dir-locals.el
+          mkdir -p ${config.devenv.root}/toolboxes/ai_toolbox
+          cat ${aiToolboxSetup} > toolboxes/ai_toolbox/ai_toolbox_setup.el
+          cat ${dirLocals} > toolboxes/ai_toolbox/ai_toolbox_dir_locals.el
 
-          echo "ai setup files copied successfully"
+          echo "ai toolbox setup files copied successfully"
         '';
         # execIfModified = [
           #   "devenv.nix"
