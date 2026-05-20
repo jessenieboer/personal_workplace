@@ -1,0 +1,1 @@
+/nix/store/1vz6blbmwsqkgm2dd5qwv8kw61fh34jj-gh_devenv.sh
