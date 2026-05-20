@@ -84,7 +84,7 @@ in
           cp ${secretspecTemplate} ${config.devenv.root}/secretspec.toml
           chmod u+w ${config.devenv.root}/secretspec.toml
 
-          echo "copied secretspec template to secretspec.toml
+          echo "copied secretspec template to secretspec.toml"
         '';
         showOutput = true;
       };

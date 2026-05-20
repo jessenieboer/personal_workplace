@@ -8,14 +8,6 @@ in
       echo "jessenieboer's project management toolbox available"
     '';
 
-    files = {
-      ".envrc".text = ''
-        #!/usr/bin/env bash
-
-        eval "$(devenv direnvrc)"
-      '';
-    };
-
     # project_management_toolbox = {
     #   project_name = "project_management_toolbox";
     #   workers = [
@@ -37,12 +29,13 @@ in
           # annoying to produce a series of double-quoted strings
           subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management_toolbox.subproject_agenda_files;
         in ''
+          mkdir -p ${config.devenv.root}/toolboxes/project_management_toolbox
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
           -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
           -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
-          ${dirLocalsTemplate} > .dir-locals.el
+          ${dirLocalsTemplate} > ${config.devenv.root}/toolboxes/project_management_toolbox/project_management_toolbox_dir_locals.el
 
-          echo ".dir-locals.el generated successfully"
+          echo "project_management_toolbox_dir_locals.el generated successfully"
         '';
         # execIfModified = [
           #   "devenv.nix"
