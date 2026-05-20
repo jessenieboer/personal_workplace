@@ -9,7 +9,7 @@ in
     '';
 
     tasks = {
-      "secrets_toolbox:copy_envrc" = {
+      "emacs_toolbox:copy_envrc" = {
         before = [ "devenv:enterShell" ];
         exec = ''
           if [ -f "${config.devenv.root}/.envrc" ]; then

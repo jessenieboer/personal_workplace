@@ -1,7 +1,6 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  envrc_config = ./settings/.envrc;
-  gh_devenv_script = ./programs/gh_devenv.sh;
+  gh_devenv = ./programs/gh_devenv.sh;
   secretspecTemplate = ./templates/secretspec.toml;
 in
 {
@@ -17,13 +16,9 @@ in
       exit 1
       fi
 
-      echo "Successfully loaded BWS machine access token from pass"     
+      echo "Successfully loaded BWS machine access token from pass"
       echo "jessenieboer's secrets toolbox available"
     '';
-
-    files = {
-      "gh_devenv.sh".source = ./programs/gh_devenv.sh;
-    };
 
     languages.rust = {
       enable = true;
@@ -63,19 +58,19 @@ in
 
     secrets_toolbox.mat_name_in_pass = "bws/nucbox_access_token";
 
-    # note that .envrc must be writable to work properly with the emacs envrc package
     tasks = {
-      "secrets_toolbox:copy_envrc" = {
+      "secrets_toolbox:copy_github_devenv" = {
         before = [ "devenv:enterShell" ];
         exec = ''
-          if [ -f "${config.devenv.root}/.envrc" ]; then
-          echo ".envrc already exists — skipping copy."
+          if [ -f "${config.devenv.root}/toolboxes/secrets_toolbox/gh_devenv.sh" ]; then
+          echo "gh_devenv.sh already exists — skipping copy."
           exit 0
           fi
-          cp ${envrc_config} ${config.devenv.root}/.envrc
-          chmod u+w ${config.devenv.root}/.envrc
+          mkdir -p ${config.devenv.root}/toolboxes/secrets_toolbox
+          cp ${gh_devenv} ${config.devenv.root}/toolboxes/secrets_toolbox/gh_devenv.sh
+          chmod u+w ${config.devenv.root}/toolboxes/secrets_toolbox/gh_devenv.sh
 
-          echo "copied envrc config to .envrc"
+          echo "copied github devenv program to toolboxes/secrets_toolbox/gh_devenv.sh"
         '';
         showOutput = true;
       };
