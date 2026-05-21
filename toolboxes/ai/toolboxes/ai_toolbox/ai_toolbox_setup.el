@@ -4,7 +4,7 @@
   (let ((key (jnpw-get-xai-key)))
     (when key
       (setq jnpw-grok-backend
-            (gptel-make-xai "jnpw_grok_backend"
+            (gptel-make-xai "jnpw_grok"
               :key key
               :models '(grok-4.3)
               :request-params nil

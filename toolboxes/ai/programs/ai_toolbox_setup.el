@@ -3,12 +3,12 @@
 (defun jnpw-setup-grok-backend ()
   (let ((key (jnpw-get-xai-key)))
     (when key
-      (setq jnpw-grok-backend
-            (gptel-make-xai "jnpw_grok_backend"
-              :key key
-              :models '(grok-4.3)
-              :request-params nil
-              :stream nil)))
+      (setq gptel-model 'grok-4.3
+	    jnpw-grok-backend (gptel-make-xai "jnpw_grok"
+				:key key
+				:models '(grok-4.3)
+				:request-params nil
+				:stream nil)))
     (message "grok backend set up for gptel")))
 
 (defun jnpw-setup-grok ()

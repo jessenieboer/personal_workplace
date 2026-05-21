@@ -14,8 +14,8 @@ in
         before = [ "devenv:enterShell" ];
         exec = ''
           mkdir -p ${config.devenv.root}/toolboxes/ai_toolbox
-          cat ${aiToolboxSetup} > toolboxes/ai_toolbox/ai_toolbox_setup.el
-          cat ${dirLocals} > toolboxes/ai_toolbox/ai_toolbox_dir_locals.el
+          cat ${aiToolboxSetup} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_setup.el
+          cat ${dirLocals} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_dir_locals.el
 
           echo "ai toolbox setup files copied successfully"
         '';
