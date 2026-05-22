@@ -1,6 +1,11 @@
 # note: need to have (inheritenv-add-advice 'shell-command-to-string) in emacs init for the
-** ai setup
-#+BEGIN_SRC emacs-lisp :tangle ./programs/ai_toolbox_setup.el :noweb tangle
+** dir locals
+#+BEGIN_SRC emacs-lisp :tangle ./programs/dir_locals :noweb tangle
+  ((nil . ((eval . (load (expand-file-name "toolboxes/ai_toolbox/ai_toolbox_setup") nil t t))
+  	 (eval . (add-to-list 'gptel-agent-dirs (expand-file-name "toolboxes/ai_toolbox/"))))))
+#+END_SRC
+** toolbox setup
+#+BEGIN_SRC emacs-lisp :tangle ./programs/ai_toolbox_setup :noweb tangle
   <<jnpw_setup_grok_backend>>
 #+END_SRC
 ** backends

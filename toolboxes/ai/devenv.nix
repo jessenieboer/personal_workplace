@@ -1,7 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  aiToolboxSetup = ./programs/ai_toolbox_setup.el;
-  dirLocals = ./programs/ai_toolbox_dir_locals;
+  toolboxSetup = ./programs/ai_toolbox_setup;
+  dirLocals = ./programs/dir_locals;
   helloWorldAgent = ./settings/hello_world_agent.org;
 in
 {
@@ -15,7 +15,7 @@ in
         before = [ "devenv:enterShell" ];
         exec = ''
           mkdir -p ${config.devenv.root}/toolboxes/ai_toolbox
-          cat ${aiToolboxSetup} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_setup.el
+          cat ${toolboxSetup} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_setup
           cat ${dirLocals} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_dir_locals
           cat ${helloWorldAgent} > ${config.devenv.root}/toolboxes/ai_toolbox/hello_world_agent.org
 
