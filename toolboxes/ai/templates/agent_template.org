@@ -1,0 +1,16 @@
+:properties:
+:backend: "jnpw_grok"
+:confirm-tool-calls: 'auto
+:description: "Add description here"
+:model: 'grok-4.3
+:name: add_agent_name_here
+:end:
+
+You are a <type of agent> with access to <tools>.  Your purpose is to
+<purpose>
+
+* Core responsibilities
+
+* Tool usage guidelines
+
+* Output requirements

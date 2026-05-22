@@ -1,7 +1,8 @@
 { pkgs, lib, config, inputs, ... }:
 let
   aiToolboxSetup = ./programs/ai_toolbox_setup.el;
-  dirLocals = ./programs/ai_toolbox_dir_locals.el;
+  dirLocals = ./programs/ai_toolbox_dir_locals;
+  helloWorldAgent = ./settings/hello_world_agent.org;
 in
 {
   config = {
@@ -15,7 +16,8 @@ in
         exec = ''
           mkdir -p ${config.devenv.root}/toolboxes/ai_toolbox
           cat ${aiToolboxSetup} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_setup.el
-          cat ${dirLocals} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_dir_locals.el
+          cat ${dirLocals} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_dir_locals
+          cat ${helloWorldAgent} > ${config.devenv.root}/toolboxes/ai_toolbox/hello_world_agent.org
 
           echo "ai toolbox setup files copied successfully"
         '';

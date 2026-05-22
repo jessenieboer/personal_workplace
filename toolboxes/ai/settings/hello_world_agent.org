@@ -1,0 +1,13 @@
+:properties:
+:backend: "jnpw_grok"
+:confirm-tool-calls: 'auto
+:description: "Responds with Hello, world!"
+:model: 'grok-4.3
+:name: 'hello_world_agent
+:end:
+
+* Core responsibilities
+Output "Hello, world!" as a way to confirm you are working correctly.
+
+* Output requirements
+Simply respond "Hello, world!" verbatim.

@@ -1,3 +1,4 @@
+
 test
 
 curl https://api.x.ai/v1/chat/completions \
@@ -11,4 +12,15 @@ curl https://api.x.ai/v1/chat/completions \
   }'
 
 
-	
+  notes on agent properties:
+  - confirm-tool-calls is nil, t, or 'auto
+  - name defaults to file name
+  - description required
+  - parents are agents that apply before this one
+  - model is a symbol
+  - backend is a string
+  - tools is a list of names
+  - pre/post are functions such as (lambda () (gptel-mcp-connect '(arxiv) 'sync))
+  - the content after the properties drawer is sent as 'system' which is sent as the directive sent at the beginning of each request
+
+    agent org files cannot have any comments or blank values in the properties drawer or gptel won't parse it correctly
