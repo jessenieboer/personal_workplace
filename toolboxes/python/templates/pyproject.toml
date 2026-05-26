@@ -1,0 +1,42 @@
+[project]
+name = "my-python-project"
+version = "0.1.0"
+description = "my desc"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+  {name = "Jesse Nieboer", email = "jessenieboer@protonmail.com"}
+]
+
+dependencies = []
+
+# [dependency-groups]
+# dev = [
+#   "pytest>=8.0",
+#   "pytest-cov>=5.0",
+#   "ruff>=0.9",           
+#   "mypy>=1.10",
+#   "pre-commit>=4.0",
+# ]
+
+# # Tool configurations
+# [tool.ruff]
+# line-length = 100
+# target-version = "py311"
+
+# [tool.ruff.lint]
+# select = ["E", "F", "I", "B", "C4", "SIM", "UP"]
+# ignore = []
+
+# [tool.ruff.format]
+# quote-style = "double"
+
+# [tool.mypy]
+# python_version = "3.11"
+# strict = true
+# warn_unused_configs = true
+
+# [build-system]
+# requires = ["hatchling"]
+# build-backend = "hatchling.build"

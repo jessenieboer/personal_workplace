@@ -1,0 +1,51 @@
+{ config, pkgs, ... }:
+let
+  pyprojectTemplate = ./templates/pyproject.toml;
+in
+{
+  config = {
+    enterShell = ''
+      echo "jessenieboer's python toolbox available"
+      echo "Python version: $(python --version)"
+      echo "uv version: $(uv --version)"
+    '';
+
+    # env = {
+      #   PYTHONUTF8 = "1";
+      # };
+
+      languages.python = {
+        enable = true;
+        uv = {
+          enable = true;
+          sync.enable = true; 
+        };
+        venv.enable = true;
+        version = "3.12";
+      };
+      
+
+      tasks = {
+        "python_toolbox:copy_pyproject_template" = {
+          before = [ "devenv:enterShell" "devenv:python:uv" ];
+          exec = ''
+            if [ -f "${config.devenv.root}/pyproject.toml" ]; then
+            echo "pyproject.toml already exists — skipping copy."
+            exit 0
+            fi
+            cp ${pyprojectTemplate} ${config.devenv.root}/pyproject.toml
+            chmod u+w ${config.devenv.root}/pyproject.toml
+
+            echo "copied templates/pyproject.toml to pyproject.toml"
+          '';
+          showOutput = true;
+        };
+      };
+
+      # packages = with pkgs; [
+        #   git
+        #   ripgrep
+        #   fd
+        # ]
+  };
+}
