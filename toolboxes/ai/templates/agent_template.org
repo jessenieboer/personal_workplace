@@ -1,8 +1,8 @@
 :properties:
-:backend: "jnpw_grok"
-:confirm-tool-calls: 'auto
+:backend: jnpw_grok
+:confirm-tool-calls: auto
 :description: "Add description here"
-:model: 'grok-4.3
+:model: grok-4.3
 :name: add_agent_name_here
 :end:
 

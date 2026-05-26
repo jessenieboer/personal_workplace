@@ -1,8 +1,9 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  toolboxSetup = ./programs/ai_toolbox_setup;
   dirLocals = ./programs/dir_locals;
   helloWorldAgent = ./settings/hello_world_agent.org;
+  toolboxSetup = ./programs/ai_toolbox_setup;
+  vizier = ./settings/vizier.org;
 in
 {
   config = {
@@ -18,6 +19,7 @@ in
           cat ${toolboxSetup} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_setup
           cat ${dirLocals} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_dir_locals
           cat ${helloWorldAgent} > ${config.devenv.root}/toolboxes/ai_toolbox/hello_world_agent.org
+cat ${vizier} > ${config.devenv.root}/toolboxes/ai_toolbox/vizier.org
 
           echo "ai toolbox setup files copied successfully"
         '';

@@ -20,3 +20,9 @@
   	   gptel-default-mode 'org-mode
   	   gptel-include-reasoning nil
   	   gptel-model 'grok-4.3))))
+(progn
+  (add-to-list 'gptel-agent-dirs (expand-file-name "toolboxes/ai_toolbox/" (project-root (project-current))))
+  (gptel-agent-update)
+  ;; add the vizier agent as a preset so that gptel can use it as the default agent
+  (when-let* ((gptel-agent-plist (assoc-default "vizier" gptel-agent--agents nil nil)))
+  (apply #'gptel-make-preset 'vizier gptel-agent-plist)))
