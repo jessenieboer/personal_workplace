@@ -16,6 +16,8 @@ in
 
       languages.python = {
         enable = true;
+        lsp = true;
+        #requirements = 
         uv = {
           enable = true;
           sync.enable = true; 

@@ -20,7 +20,30 @@ dependencies = []
 #   "pre-commit>=4.0",
 # ]
 
-# # Tool configurations
+# Tool settings
+[tool.pyright]
+# pyright provides both type checking and import resolution:
+  # files/directories that should be analyzed for both type checking and import resolution go in "include"
+  # directories that should be on the path when resolving imports go in "extraPaths"; if nothing is here, pyright will assume all packages are at the root of the project
+  # files/directories that should not be analyzed at all go in "exclude"  
+exclude = [
+    "**/__pycache__",
+    "**/.devenv"
+    "**/.direnv",
+    "**/.pytest_cache"
+]
+#extraPaths = ["src"]
+followSymlinks = false # prevent recursion into the nix store?
+#include = ["bdd", "src", "tests"]
+reportMissingImports = "error"
+reportMissingTypeAnnotation = "error"
+typeCheckingMode = "strict" # change to "basic" if necessary
+verboseOutput = false
+
+# [build-system]
+# requires = ["hatchling"]
+# build-backend = "hatchling.build"
+
 # [tool.ruff]
 # line-length = 100
 # target-version = "py311"
