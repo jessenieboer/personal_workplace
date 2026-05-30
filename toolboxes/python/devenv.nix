@@ -16,7 +16,10 @@ in
 
       languages.python = {
         enable = true;
-        lsp = true;
+        lsp = {
+          enable = true;
+          package = pkgs.pyright;
+        };
         #requirements = 
         uv = {
           enable = true;

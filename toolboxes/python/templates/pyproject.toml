@@ -28,7 +28,7 @@ dependencies = []
   # files/directories that should not be analyzed at all go in "exclude"  
 exclude = [
     "**/__pycache__",
-    "**/.devenv"
+    "**/.devenv",
     "**/.direnv",
     "**/.pytest_cache"
 ]
