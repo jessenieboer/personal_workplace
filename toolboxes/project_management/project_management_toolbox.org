@@ -1,5 +1,5 @@
 * Tasks
-** future test
+** next test
 DEADLINE: <2026-06-17 Wed> SCHEDULED: <2026-05-15 Fri>
 :PROPERTIES:
 :ESTIMATED_EFFORT: less
@@ -24,6 +24,8 @@ DEADLINE: <2026-06-17 Wed> SCHEDULED: <2026-05-15 Fri>
 :ACTUAL_EFFORT: 
 :ACTUAL_$_COST: 
 :HAS_DATE: no
+:HARD_START: no
+:HARD_DUE: no
 :END:
 create toolbox-specific dir-locals, merge them all at the end
 ** past test
@@ -45,6 +47,7 @@ create toolbox-specific dir-locals, merge them all at the end
 :END:
 
 ** future test
+DEADLINE: <2026-06-25 Thu>
 :PROPERTIES:
 :CATEGORY: project_management_toolbox
 :FREQUENCY: once
@@ -60,9 +63,12 @@ create toolbox-specific dir-locals, merge them all at the end
 :ESTIMATED_$_COST: trivial
 :ACTUAL_EFFORT: 
 :ACTUAL_$_COST: 
+:HARD_START: no
+:HARD_DUE: yes
 :END:
 
 ** future for scheduled tasks, don't need to see them on evaluation view?
+DEADLINE: <2026-06-25 Thu>
 :PROPERTIES:
 :CATEGORY: project_management_toolbox
 :FREQUENCY: once
@@ -78,6 +84,8 @@ create toolbox-specific dir-locals, merge them all at the end
 :ESTIMATED_$_COST: trivial
 :ACTUAL_EFFORT: 
 :ACTUAL_$_COST: 
+:HARD_START: yes
+:HARD_DUE: no
 :END:
 
 ** future test  <2026-06-17 Wed>
@@ -86,7 +94,7 @@ create toolbox-specific dir-locals, merge them all at the end
 :FREQUENCY: once
 :HAS_DATE: 
 :HARD_START: no
-:HARD_DUE: yes
+:HARD_DUE: no
 :HARD_INTERNAL_DEPENDENCY: no 
 :SOFT_INTERNAL_DEPENDENCY: no 
 :HARD_EXTERNAL_DEPENDENCY: no 
@@ -107,13 +115,11 @@ create toolbox-specific dir-locals, merge them all at the end
 :END:
 
 * Occurrences
-** future testo
+** future testo <2026-06-18 Thu>
 :PROPERTIES:
 :CATEGORY: project_management_toolbox
 :FREQUENCY: once
-:HAS_DATE: no
-:HARD_START: no
-:HARD_DUE: no
+:HAS_DATE: yes
 :HARD_INTERNAL_DEPENDENCY: no 
 :SOFT_INTERNAL_DEPENDENCY: no 
 :HARD_EXTERNAL_DEPENDENCY: no 

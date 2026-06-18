@@ -78,86 +78,74 @@ Notes:
 
 *** Missing Occurrence Dates ([)
 - Purpose :: Capture the occurrence dates we still need so that we don't miss any
-- Question :: "What dates do we still need?"
+- Question :: What dates do we still need?
 
 What's included:
-- any occurrence that HAS_DATE
+- any occurrence that HAS_DATE but doesn't have a TIMESTAMP
 
 *** Occurrance Dates ({)
 - Purpose :: Edit occurrence dates
-- Question :: "Are theses dates correct?"
+- Question :: Are these dates correct?
 
 What's included:
-- anything occurrence that has a TIMESTAMP
-*** Task Date Check (q)
-- Purpose :: Make sure we know which occurrences will have a date attached so we don't miss any
-- Question :: Does this occurrence have any dates we need to be aware of?
+- any occurrence that has a TIMESTAMP
+  
+*** Hard Date Check (q)
+- Purpose :: Make sure we know which tasks have will have a hard date attached so we don't miss any
+- Question :: Does this task have any hard dates we need to be aware of?
 
 What's included:
-- any occurrence that doesn't have a yes/no value for HAS_DATE, 
+- any task that doesn't have a yes/no value for HARD_START or HARD_DUE 
   
 Notes:
 - this question is usually taken care of by using a capture template
   
-*** Missing Task Dates (g)
-- Purpose :: Make sure everything that should have a hard date has one
-- Question :: "What hard dates do we still need?"
+*** Missing Hard Dates (w)
+- Purpose :: Capture the hard dates we still need so that we don't miss any
+- Question :: What hard dates do we still need?
 
 What's included:
-- anything that has a HARD_START or HARD_DUE but doesn't have SCHEDULED
-
-*** Task Dates (r)
-- Purpose :: Edit occurrence dates
-- Question :: "Are theses dates correct?"
-
-What's included:
-- anything occurrence that has a TIMESTAMP
-
-
+- anything that has a HARD_START or HARD_DUE but doesn't have SCHEDULED/DEADLINE
   
-*** Hard Dates ([)
-- Purpose :: Capture the hard dates we already know about so that we don't miss any
-- Question :: "What hard dates do we know about?"
+*** Hard Dates (g)
+- Purpose :: Edit hard dates
+- Question :: Are these hard dates correct?
 
 What's included:
-- any task that has a yest for HARD_START or HARD_DUE
-
-
-
-Notes:
+- any task that has a SCHEDULED or DEADLINE
   
-*** Tactical Evaluation (l)
+*** Tactical Evaluation (r)
 - Purpose :: Figure out what's most beneficial to work on right now so we can focus our efforts on that 
 
-- Question :: "How beneficial would this be if it were finished now?"
+- Question :: How beneficial would this task be if it were finished now?
 
 What's included:
-- tasks that don't have a hard start date or that have a hard start date up to a week from now (stuff we can actually work on in the near future)
+- stuff we can actually work on in the near future (provided any dependencies are taken care of): tasks that don't have a HARD_START or that have a HARD_START within the next 7 days
   
-*** Relevant Dependencies (g)
+*** Relevant Dependencies (l)
 - Purpose :: Note anything that needs to be done before we get to the valuable stuff
 
-- Question :: "Are there any tasks that should or must be done prior to these?"
+- Question :: Are there any tasks that should or must be done prior to these?
 
 What's included:
 - anything that is "now" or "next", otherwise
-- if item has deadline, must be due within 1 month
+- if item has DEADLINE, must be due within 1 month
 - if no deadline, must be tactical value = more
 
 *** Effort Estimation (a)
 - Purpose :: Get a rough idea of how much effort relevant items take so we can take that into account when we decide what to work on
 
-- Question :: "How much of our effort would it take to finish this now?"
+- Question :: How much of our effort would it take to finish this now?
 
 What's included:
-- independent items that is "now" or "next", otherwise
+- independent items that are "now" or "next", otherwise
 - if an idependent item has a deadline, must be due within 1 month
 - if an independent item has no deadline, must be tactical value = more or average (so we can catch small easy things)
 
 *** Soft Scheduling (r)
-- Purpose :: Tentatively add stuff to the calendar without committing to those dates
+- Purpose :: Tentatively set start and finish dates for tasks
 
-- Question :: "Do we want to tentatively schedule this?"
+- Question :: Do we want to tentatively schedule this?
 
 What's included:
 - independent items with no hard dates that are of more value or less effort and avg value
@@ -165,7 +153,7 @@ What's included:
 *** Relevant Delegation (SPC)
 - Purpose :: Assign items to workers
 
-- Question :: "Who is assigned to this?"
+- Question :: Who is assigned to this?
 
 What's included:
 - independent items with no hard dates that are of more value or less effort
@@ -173,17 +161,17 @@ What's included:
 *** Activity (t)
 - Purpose :: Set when we will work on items (now, next, or in the future?)
 
-- Question :: "When are we doing this?"
+- Question :: What are we doing?
 
 What's included:
-- if independent item has deadline, must be due within 1 week
-- if no deadline, must be tactical value = more or effort = less and avg value
+- if independent task has deadline, must be due within 1 week
+- if task has no deadline, must be tactical value = more or effort = less and avg value
 
 ** reporting views
 *** Focus (s)
 - Purpose :: Show only what we are working on right now
 
-- Question :: "What are we focusing on right now?"
+- Question :: What are we focusing on?
 
 What's included:
 - anything "now"
