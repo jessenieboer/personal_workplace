@@ -6,10 +6,14 @@ must have this in emacs config for agenda to work, and adding it to this file re
 (add-hook 'org-agenda-mode-hook 'hack-dir-local-variables-non-file-buffer)
 ** dir-locals
 #+BEGIN_SRC emacs-lisp :tangle ./templates/dir-locals.el.in :noweb tangle 
-  ((nil . ((org-agenda-custom-commands . (;; curation views
-    					<<hard_dates_check_view>>
-    					<<hard_scheduling_view>>
-    					<<missing_hard_dates_view>>
+  ((nil . ((org-agenda-custom-commands . (
+  					  ;; curation views
+    					<<occurrence_date_check_view>>
+  					<<missing_occurrence_dates_view>>
+  					<<occurrence_dates_view>>
+  					<<task_date_check_view>>
+    					<<missing_task_dates_view>>
+    					<<task_dates_view>>
     					;;<<all_dependencies_view>>
     					<<relevant_dependencies_view>>
     					;;<<strategic_evaluation_view>>
@@ -68,13 +72,16 @@ must have this in emacs config for agenda to work, and adding it to this file re
       	 ;; (org-priority-highest . 2)
       	 ;; (org-priority-default . 2)
       	 ;; (org-priority-lowest . 2)
-      	 (org-global-properties . (("FREQUENCY_ALL" . "once repetitive continuous")
-      				   ("HAS_HARD_START_DATE_ALL" . "no yes")
-            			   ("HAS_HARD_DUE_DATE_ALL" . "no yes")
-      				   ("HAS_SOFT_START_DATE_ALL" . "no yes")
-            			   ("HAS_SOFT_DUE_DATE_ALL" . "no yes")
+      	 (org-global-properties . (("FREQUENCY_ALL" . "once repetitive continuous") ;; when does this happen?
+  				 ("HAS_DATE_ALL" . "no yes") ;; associated with a date
+      				   ("HARD_START_ALL" . "no yes") ;; must start on date
+            			   ("HARD_DUE_ALL" . "no yes") ;; must be done by
+      				   ;; ("SOFT_START_ALL" . "no yes") ;; should start on
+            			   ;; ("SOFT_DUE_ALL" . "no yes") ;; should be done by
       				   ;; SCHEDULED functions as start date
             			   ;; DEADLINE functions as due date
+  				 ;;("HARD_TEMPORAL_DEPENDENCY_ALL" . "no yes")
+      				   ;;("SOFT_TEMPORAL_DEPENDENCY_ALL" . "no yes")
       				   ("HARD_INTERNAL_DEPENDENCY_ALL" . "no yes")
       				   ("SOFT_INTERNAL_DEPENDENCY_ALL" . "no yes")
       				   ("HARD_EXTERNAL_DEPENDENCY_ALL" . "no yes")
@@ -93,42 +100,42 @@ must have this in emacs config for agenda to work, and adding it to this file re
 ** capture templates
 #+NAME: task_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_DATE: no\n:HARD_START: no\n:HARD_DUE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: imminent_task_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* now %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: more\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* now %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_DATE: no\n:HARD_START: no\n:HARD_DUE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: more\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: time_bound_task_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_DATE: yes\n:HARD_START: no\n:HARD_DUE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: routine_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_DATE: no\n:HARD_START: no\n:HARD_DUE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: time_bound_routine_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_DATE: yes\n:HARD_START: no\n:HARD_DUE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: occurrence_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HAS_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: recurrence_capture_template
 #+BEGIN_SRC text :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: repetitive\n:HAS_DATE: yes\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: practice_capture_template
 #+BEGIN_SRC :tangle no :noweb yes
-  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: continuous\n:HAS_HARD_START_DATE: no\n:HAS_HARD_DUE_DATE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
+  "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: continuous\n:HAS_DATE: no\n:HARD_START: no\n:HARD_DUE: no\n:HARD_INTERNAL_DEPENDENCY: no \n:SOFT_INTERNAL_DEPENDENCY: no \n:HARD_EXTERNAL_DEPENDENCY: no \n:SOFT_EXTERNAL_DEPENDENCY: no \n:STRATEGIC_VALUE: average\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:ESTIMATED_$_COST: trivial\n:ACTUAL_EFFORT: \n:ACTUAL_$_COST: \n:END:\n%?"
 #+END_SRC
 
 #+NAME: reference_capture_template
@@ -143,26 +150,45 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 ** agenda views
 *** curation views
-#+NAME: hard_dates_check_view
+#+NAME: occurrence_date_check_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("\\" "Hard Dates Check" ((tags "FREQUENCY=\"once\"&HAS_HARD_START_DATE=\"\"|FREQUENCY=\"once\"&HAS_HARD_DUE_DATE=\"\"" ((org-agenda-overriding-header "Does this task have any hard dates we need to be aware of?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HAS_HARD_START_DATE=\"\"|FREQUENCY=\"repetitive\"&HAS_HARD_DUE_DATE=\"\"" ((org-agenda-overriding-header "Does this routine have any hard dates we need to be aware of?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up)))))) ((org-overriding-columns-format "%20ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hstrt?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hdue?) %DEADLINE(Due date) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
+  ("`" "Occurrence Date Check" ((tags "FREQUENCY=\"once\"&HAS_DATE=\"\"" ((org-agenda-overriding-header "Does this occurrence have a date we need to be aware of?") (org-agenda-skip-function 'pmt-skip-non-occurrences) (org-agenda-sorting-strategy '((tags category-up))))) (tags "FREQUENCY=\"repetitive\"&HAS_DATE=\"\"" ((org-agenda-overriding-header "Does this recurrence have a date we need to be aware of?") (org-agenda-skip-function 'pmt-skip-non-occurrences) (org-agenda-sorting-strategy '((tags category-up)))))) ((org-overriding-columns-format "%40ITEM(Occurence/Recurrence) %HAS_DATE(Has date?) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
 #+END_SRC
 
-#+NAME: hard_scheduling_view
+#+NAME: missing_occurrence_dates_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("w" "Hard Scheduling" ((tags "FREQUENCY=\"once\"&HAS_HARD_START_DATE=\"yes\"|FREQUENCY=\"once\"&HAS_HARD_DUE_DATE=\"yes\"" ((org-agenda-overriding-header "What hard dates do we know about?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HAS_HARD_START_DATE=\"yes\"|FREQUENCY=\"repetitive\"&HAS_HARD_DUE_DATE=\"yes\"" ((org-agenda-overriding-header "What hard dates do we know about?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up)))))) ((org-overriding-columns-format "%20ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hstrt?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hdue?) %DEADLINE(Due date) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
+  ("[" "Missing Occurrence Dates" ((tags "FREQUENCY=\"once\"&HARD_START=\"yes\"&SCHEDULED=\"\"|FREQUENCY=\"once\"&HARD_DUE=\"yes\"&DEADLINE=\"\"" ((org-agenda-overriding-header "What hard dates are we missing?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HARD_START=\"yes\"&SCHEDULED=\"\"|FREQUENCY=\"repetitive\"&HARD_DUE=\"yes\"&DEADLINE=\"\"" ((org-agenda-overriding-header "What hard dates are we missing?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up)))))) ((org-overriding-columns-format "%20ITEM(Task/Occurance) %HARD_START(Hstrt?) %SCHEDULED(Start date) %HARD_DUE(Hdue?) %DEADLINE(Due date) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
+#+END_SRC
+
+#+NAME: occurrence_dates_view
+#+BEGIN_SRC emacs-lisp :tangle no :noweb yes
+  ("{" "Occurrence Dates" ((tags "FREQUENCY=\"once\"&HAS_DATE=\"yes\"" ((org-agenda-overriding-header "Are these occurrence dates correct?") (org-agenda-skip-function 'pmt-skip-non-occurrences) (org-agenda-sorting-strategy '((tags deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HAS_DATE=\"yes\"" ((org-agenda-overriding-header "Are these recurrence dates correct?") (org-agenda-skip-function 'pmt-skip-non-occurrences) (org-agenda-sorting-strategy '((tags deadline-up)))))) ((org-overriding-columns-format "%30ITEM(Task/Occurance) %TIMESTAMP(Date)  %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
+#+END_SRC
+
+\w
+occurance dates/missing
+
+
+#+NAME: task_date_check_view
+#+BEGIN_SRC emacs-lisp :tangle no :noweb yes
+  ("q" "Task Date Check" ((tags "FREQUENCY=\"once\"&HARD_START=\"\"|FREQUENCY=\"once\"&HARD_DUE=\"\"" ((org-agenda-overriding-header "Does this task have any dates we need to be aware of?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags category-up))))) (tags "FREQUENCY=\"repetitive\"&HARD_START=\"\"|FREQUENCY=\"repetitive\"&HARD_DUE=\"\"" ((org-agenda-overriding-header "Does this routine have any dates we need to be aware of?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags category-up)))))) ((org-overriding-columns-format "%40ITEM(Task/Routine) %HARD_START(Hard start?) %HARD_DUE(Hard due?) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
+#+END_SRC
+
+#+NAME: hard_dates_view
+#+BEGIN_SRC emacs-lisp :tangle no :noweb yes
+  ("w" "Hard Dates" ((tags "FREQUENCY=\"once\"&HARD_START=\"yes\"|FREQUENCY=\"once\"&HARD_DUE=\"yes\"" ((org-agenda-overriding-header "What hard dates do we know about?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HARD_START=\"yes\"|FREQUENCY=\"repetitive\"&HARD_DUE=\"yes\"" ((org-agenda-overriding-header "What hard dates do we know about?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up)))))) ((org-overriding-columns-format "%20ITEM(Task/Occurance) %HARD_START(Hstrt?) %SCHEDULED(Start date) %HARD_DUE(Hdue?) %DEADLINE(Due date) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: missing_hard_dates_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("[" "Missing Hard Dates" ((tags "FREQUENCY=\"once\"&HAS_HARD_START_DATE=\"yes\"&SCHEDULED=\"\"|FREQUENCY=\"once\"&HAS_HARD_DUE_DATE=\"yes\"&DEADLINE=\"\"" ((org-agenda-overriding-header "What hard dates are we missing?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HAS_HARD_START_DATE=\"yes\"&SCHEDULED=\"\"|FREQUENCY=\"repetitive\"&HAS_HARD_DUE_DATE=\"yes\"&DEADLINE=\"\"" ((org-agenda-overriding-header "What hard dates are we missing?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up)))))) ((org-overriding-columns-format "%20ITEM(Task/Occurance) %HAS_HARD_START_DATE(Hstrt?) %SCHEDULED(Start date) %HAS_HARD_DUE_DATE(Hdue?) %DEADLINE(Due date) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
+  ("[" "Missing Hard Dates" ((tags "FREQUENCY=\"once\"&HARD_START=\"yes\"&SCHEDULED=\"\"|FREQUENCY=\"once\"&HARD_DUE=\"yes\"&DEADLINE=\"\"" ((org-agenda-overriding-header "What hard dates are we missing?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HARD_START=\"yes\"&SCHEDULED=\"\"|FREQUENCY=\"repetitive\"&HARD_DUE=\"yes\"&DEADLINE=\"\"" ((org-agenda-overriding-header "What hard dates are we missing?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-sorting-strategy '((tags deadline-up)))))) ((org-overriding-columns-format "%20ITEM(Task/Occurance) %HARD_START(Hstrt?) %SCHEDULED(Start date) %HARD_DUE(Hdue?) %DEADLINE(Due date) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: tactical_evaluation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("l" "Tactical Evaluation" ((tags "HAS_HARD_START_DATE=\"no\"|HAS_HARD_START_DATE=\"yes\"&SCHEDULED<=\"<+1w>\"|HAS_HARD_START_DATE=\"yes\"&SCHEDULED<=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-down deadline-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%TACTICAL_VALUE(Tac Val) %30ITEM(Task)  %15CATEGORY(Project)")))
+  ("l" "Tactical Evaluation" ((tags "HARD_START=\"no\"|HARD_START=\"yes\"&SCHEDULED<=\"<+1w>\"|HARD_START=\"yes\"&SCHEDULED<=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-down deadline-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%TACTICAL_VALUE(Tac Val) %30ITEM(Task)  %15CATEGORY(Project)")))
 #+END_SRC
-# might put %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) in tac eval
+# might put %17DEADLINE(Due date) %5HARD_DUE(Hard?) in tac eval
 
 #+NAME: relevant_dependencies_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
@@ -176,12 +202,12 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: soft_scheduling_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("r" "Soft Scheduling" ((tags "FREQUENCY=\"once\"&HAS_HARD_START_DATE=\"no\"&HAS_HARD_DUE_DATE=\"no\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"once\"&HAS_HARD_START_DATE=\"no\"&HAS_HARD_DUE_DATE=\"no\"&ESTIMATED_EFFORT=\"less\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-overriding-header "Do we want to tentatively schedule any tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HAS_HARD_START_DATE=\"no\"&HAS_HARD_DUE_DATE=\"no\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"repetitive\"&HAS_HARD_START_DATE=\"no\"&HAS_HARD_DUE_DATE=\"no\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-overriding-header "Do we want to tentatively schedule any routines?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up deadline-up)))))) ((org-overriding-columns-format "%20ITEM(Task) %SCHEDULED(Start date) %DEADLINE(Due date) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
+("r" "Soft Scheduling" ((tags "FREQUENCY=\"once\"&HARD_START=\"no\"&HARD_DUE=\"no\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"once\"&HARD_START=\"no\"&HARD_DUE=\"no\"&ESTIMATED_EFFORT=\"less\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-overriding-header "Do we want to tentatively schedule any tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HARD_START=\"no\"&HARD_DUE=\"no\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"repetitive\"&HARD_START=\"no\"&HARD_DUE=\"no\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-overriding-header "Do we want to tentatively schedule any routines?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up deadline-up)))))) ((org-overriding-columns-format "%20ITEM(Task) %SCHEDULED(Start date) %DEADLINE(Due date) %10CATEGORY(Project)") (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: activity_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("t" "Activity" ((tags "DEADLINE<=\"<+1w>\"" ((org-agenda-overriding-header "When are these things happening?") (org-agenda-skip-function 'pmt-skip-non-occurrences) (org-agenda-sorting-strategy '((tags category-up deadline-up))))) (tags "FREQUENCY=\"once\"&DEADLINE<=\"<+1w>\"|FREQUENCY=\"once\"&TACTICAL_VALUE=\"more\"&DEADLINE=\"\"|FREQUENCY=\"once\"&ESTIMATED_EFFORT=\"less\"&TACTICAL_VALUE<>\"less\"&DEADLINE=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "When are we doing these tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up))))) (tags "FREQUENCY=\"repetitive\"&DEADLINE<=\"<+1w>\"|FREQUENCY=\"repetitive\"&TACTICAL_VALUE=\"more\"&DEADLINE=\"\"|FREQUENCY=\"repetitive\"&ESTIMATED_EFFORT=\"less\"&TACTICAL_VALUE<>\"less\"&DEADLINE=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "When are we doing these routines?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up))))) (tags "FREQUENCY=\"continuous\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"continuous\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "When are we doing these practices?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)")))
+  ("t" "Activity" ((tags "DEADLINE<=\"<+1w>\"" ((org-agenda-overriding-header "When are these things happening?") (org-agenda-skip-function 'pmt-skip-non-occurrences) (org-agenda-sorting-strategy '((tags category-up deadline-up))))) (tags "FREQUENCY=\"once\"&DEADLINE<=\"<+1w>\"|FREQUENCY=\"once\"&TACTICAL_VALUE=\"more\"&DEADLINE=\"\"|FREQUENCY=\"once\"&ESTIMATED_EFFORT=\"less\"&TACTICAL_VALUE<>\"less\"&DEADLINE=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "When are we doing these tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up))))) (tags "FREQUENCY=\"repetitive\"&DEADLINE<=\"<+1w>\"|FREQUENCY=\"repetitive\"&TACTICAL_VALUE=\"more\"&DEADLINE=\"\"|FREQUENCY=\"repetitive\"&ESTIMATED_EFFORT=\"less\"&TACTICAL_VALUE<>\"less\"&DEADLINE=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "When are we doing these routines?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up))))) (tags "FREQUENCY=\"continuous\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"continuous\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "When are we doing these practices?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(When) %30ITEM(Task) %TACTICAL_VALUE(Tac Val) %ESTIMATED_EFFORT(Effort) %17DEADLINE(Due date) %5HARD_DUE(Hard?) %15CATEGORY(Project)")))
 #+END_SRC
 *** reporting views
 #+NAME: focus_view
@@ -202,7 +228,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 *** speculative_views
 #+NAME: delegation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-("r" "Delegation" ((tags "FREQUENCY=\"once\"&HAS_HARD_START_DATE=\"no\"&HAS_HARD_DUE_DATE=\"no\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"once\"&HAS_HARD_START_DATE=\"no\"&HAS_HARD_DUE_DATE=\"no\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-overriding-header "Do we want to tentatively schedule any tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HAS_HARD_START_DATE=\"no\"&HAS_HARD_DUE_DATE=\"no\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"repetitive\"&HAS_HARD_START_DATE=\"no\"&HAS_HARD_DUE_DATE=\"no\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-overriding-header "Do we want to tentatively schedule any routines?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up deadline-up)))))) ((org-overriding-columns-format "%30ITEM(Task) %SCHEDULED(Start date) %DEADLINE(Due date) %15CATEGORY(Project)") (org-agenda-view-columns-initially t)))
+("r" "Delegation" ((tags "FREQUENCY=\"once\"&HARD_START=\"no\"&HARD_DUE=\"no\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"once\"&HARD_START=\"no\"&HARD_DUE=\"no\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-overriding-header "Do we want to tentatively schedule any tasks?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up deadline-up))))) (tags "FREQUENCY=\"repetitive\"&HARD_START=\"no\"&HARD_DUE=\"no\"&TACTICAL_VALUE=\"more\"|FREQUENCY=\"repetitive\"&HARD_START=\"no\"&HARD_DUE=\"no\"&ESTIMATED_EFFORT=\"less\"" ((org-agenda-overriding-header "Do we want to tentatively schedule any routines?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up deadline-up)))))) ((org-overriding-columns-format "%30ITEM(Task) %SCHEDULED(Start date) %DEADLINE(Due date) %15CATEGORY(Project)") (org-agenda-view-columns-initially t)))
 #+END_SRC
 #+NAME: all_dependencies_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
@@ -211,7 +237,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: strategic_evaluation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("l" "Strategic Evaluation" ((tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if all tasks were finished?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this routine be if all routines were finished?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"continuous\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this practice be if all were practiced?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%STRATEGIC_VALUE(Strat Val) %30ITEM(Task) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)")))
+  ("l" "Strategic Evaluation" ((tags "FREQUENCY=\"once\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if all tasks were finished?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this routine be if all routines were finished?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"continuous\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this practice be if all were practiced?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%STRATEGIC_VALUE(Strat Val) %30ITEM(Task) %17DEADLINE(Due date) %5HARD_DUE(Hard?) %15CATEGORY(Project)")))
 #+END_SRC
 
 #+NAME: cost_estimation_view
@@ -232,7 +258,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: basics_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("q" "Basics" tags "*" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %FREQUENCY(Freq) %HAS_HARD_START_DATE(Hard start?) %HAS_HARD_DUE_DATE(Hard due?) %15CATEGORY(Project)") (org-agenda-overriding-header "What are the basics?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-view-columns-initially t)))
+  ("q" "Basics" tags "*" ((org-overriding-columns-format "%7TODO(Status) %30ITEM(Task) %FREQUENCY(Freq) %HARD_START(Hard start?) %HARD_DUE(Hard due?) %15CATEGORY(Project)") (org-agenda-overriding-header "What are the basics?") (org-agenda-skip-function 'pmt-skip-references) (org-agenda-view-columns-initially t)))
 #+END_SRC
 
 #+NAME: dependent_items_view
@@ -252,7 +278,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: segmented_effort_estimation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("a" "Effort Estimation" ((tags "FREQUENCY=\"once\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to finish this task now?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to finish this routine now?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"continuous\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to practice this now?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "ESTIMATED_EFFORT(Effort) %30ITEM(Task) %17DEADLINE(Due date) %5HAS_HARD_DUE_DATE(Hard?) %15CATEGORY(Project)")))
+  ("a" "Effort Estimation" ((tags "FREQUENCY=\"once\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to finish this task now?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"repetitive\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to finish this routine now?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-down))))) (tags "FREQUENCY=\"continuous\"&TACTICAL_VALUE<>\"less\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to practice this now?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags user-defined-down)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "ESTIMATED_EFFORT(Effort) %30ITEM(Task) %17DEADLINE(Due date) %5HARD_DUE(Hard?) %15CATEGORY(Project)")))
 #+END_SRC
 
 # ) hard calendar only? or vice versa?

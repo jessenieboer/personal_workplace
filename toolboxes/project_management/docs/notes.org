@@ -39,7 +39,7 @@ tangle project_config.org, which will produce .dir-locals.el
 *** regular curation (go through a sequence or bounce around between views to determine what to do)
 For any given project or group of projects:
 1. Hard Dates Check: check to see if any captured items have hard date requirements; fill in date if known. ususally unnecessary as capture templates mark time-bound items as having hard dates
-2. Hard Scheduling: fill in dates for items with hard dates
+2. Hard Deadlines: fill in dates for items with hard deadlines
 3. Tactical Evaluation: per project, for things we can actually work on now, determine what's more/average/less beneficial right now
 4. Relevant Dependencies: determine if there are things that need to be done before we can get to the most important stuff: the most valuable stuff, stuff due soon, or stuff we are already doing
 5. Effort Estimation: per project, of the important stuff, determine what will take more/average/less effort to finish
@@ -55,43 +55,74 @@ For any given project or group of projects:
 
 * tools
 ** capture templates
-Task: work you do once
-Routine: work you do repeatedly
-Practice: work you do continuously
+Task: work you do 
+- Routine: work you do repeatedly
+- Practice: work you do continuously
 Occurrance: something that happens
-Recurrence: something that happens regularly
+- Recurrence: something that happens regularly
 Reference: information that needs to be saved for later
 Journal entry: freeform writing stored in a date tree
 
 All are "items"
 ** curation views
 
-*** Hard Dates Check (\)
-- Purpose :: Make sure we know which items will have a hard start or due date attached so we don't miss any
-
-- Question :: "Do these items have any hard dates we need to be aware of?"
+*** Occurrence Date Check (`)
+- Purpose :: Make sure we know which occurrences will have a date attached so we don't miss any
+- Question :: Does this occurrence have a date we need to be aware of?
 
 What's included:
-- anything that doesn't have a yes/no value for has_hard_start/due_date
+- any occurrence that doesn't have a yes/no value for HAS_DATE
+  
+Notes:
+- this question is usually taken care of by using a capture template
 
+*** Missing Occurrence Dates ([)
+- Purpose :: Capture the occurrence dates we still need so that we don't miss any
+- Question :: "What dates do we still need?"
+
+What's included:
+- any occurrence that HAS_DATE
+
+*** Occurrance Dates ({)
+- Purpose :: Edit occurrence dates
+- Question :: "Are theses dates correct?"
+
+What's included:
+- anything occurrence that has a TIMESTAMP
+*** Task Date Check (q)
+- Purpose :: Make sure we know which occurrences will have a date attached so we don't miss any
+- Question :: Does this occurrence have any dates we need to be aware of?
+
+What's included:
+- any occurrence that doesn't have a yes/no value for HAS_DATE, 
+  
 Notes:
 - this question is usually taken care of by using a capture template
   
-*** Hard Scheduling (w)
-- Purpose :: Capture the hard dates we already know about so that we don't miss any
+*** Missing Task Dates (g)
+- Purpose :: Make sure everything that should have a hard date has one
+- Question :: "What hard dates do we still need?"
 
+What's included:
+- anything that has a HARD_START or HARD_DUE but doesn't have SCHEDULED
+
+*** Task Dates (r)
+- Purpose :: Edit occurrence dates
+- Question :: "Are theses dates correct?"
+
+What's included:
+- anything occurrence that has a TIMESTAMP
+
+
+  
+*** Hard Dates ([)
+- Purpose :: Capture the hard dates we already know about so that we don't miss any
 - Question :: "What hard dates do we know about?"
 
 What's included:
-- anything that should have a hard start or due date
+- any task that has a yest for HARD_START or HARD_DUE
 
-*** Missing Hard Dates ([)
-- Purpose :: Make sure everything that should have a hard date has one
 
-- Question :: "What hard dates are we missing?"
-
-What's included:
-- anything that should have a hard start or due date but doesn't have one yet
 
 Notes:
   
@@ -165,6 +196,8 @@ What's included:
 What's included:
 - anything "now"
 
+
+
 * practices/disciplines:
 - capture everything
 - when something out-of current scope comes up, capture and continue
@@ -177,7 +210,6 @@ What's included:
 - process of working through the views
   
 * org repeating tasks:
-
 +1w - repeats on this day every week
 +1w -3d - repeats with warning period
 ++1w - marking as done makes sure the next date is in the future

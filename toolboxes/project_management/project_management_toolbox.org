@@ -1,8 +1,11 @@
 * Tasks
 ** future test
-SCHEDULED: <2026-05-15 Fri>
+DEADLINE: <2026-06-17 Wed> SCHEDULED: <2026-05-15 Fri>
 :PROPERTIES:
 :ESTIMATED_EFFORT: less
+:HAS_DATE: no
+:HARD_START: no
+:HARD_DUE: no
 :END:
 ** future be able to merge dir-locals from other toolboxes
 :PROPERTIES:
@@ -20,6 +23,7 @@ SCHEDULED: <2026-05-15 Fri>
 :ESTIMATED_$_COST: trivial
 :ACTUAL_EFFORT: 
 :ACTUAL_$_COST: 
+:HAS_DATE: no
 :END:
 create toolbox-specific dir-locals, merge them all at the end
 ** past test
@@ -58,9 +62,67 @@ create toolbox-specific dir-locals, merge them all at the end
 :ACTUAL_$_COST: 
 :END:
 
+** future for scheduled tasks, don't need to see them on evaluation view?
+:PROPERTIES:
+:CATEGORY: project_management_toolbox
+:FREQUENCY: once
+:HAS_HARD_START_DATE: no
+:HAS_HARD_DUE_DATE: no
+:HARD_INTERNAL_DEPENDENCY: no 
+:SOFT_INTERNAL_DEPENDENCY: no 
+:HARD_EXTERNAL_DEPENDENCY: no 
+:SOFT_EXTERNAL_DEPENDENCY: no 
+:STRATEGIC_VALUE: average
+:TACTICAL_VALUE: average
+:ESTIMATED_EFFORT: average
+:ESTIMATED_$_COST: trivial
+:ACTUAL_EFFORT: 
+:ACTUAL_$_COST: 
+:END:
+
+** future test  <2026-06-17 Wed>
+:PROPERTIES:
+:CATEGORY: project_management_toolbox
+:FREQUENCY: once
+:HAS_DATE: 
+:HARD_START: no
+:HARD_DUE: yes
+:HARD_INTERNAL_DEPENDENCY: no 
+:SOFT_INTERNAL_DEPENDENCY: no 
+:HARD_EXTERNAL_DEPENDENCY: no 
+:SOFT_EXTERNAL_DEPENDENCY: no 
+:STRATEGIC_VALUE: average
+:TACTICAL_VALUE: average
+:ESTIMATED_EFFORT: average
+:ESTIMATED_$_COST: trivial
+:ACTUAL_EFFORT: 
+:ACTUAL_$_COST: 
+:ID:       c7b11529-39a1-4e5c-8755-9c5d3c032bb1
+:END:
+
 * Refs
 ** level2 ref
 :PROPERTIES:
 :ESTIMATED_EFFORT: more
+:END:
+
+* Occurrences
+** future testo
+:PROPERTIES:
+:CATEGORY: project_management_toolbox
+:FREQUENCY: once
+:HAS_DATE: no
+:HARD_START: no
+:HARD_DUE: no
+:HARD_INTERNAL_DEPENDENCY: no 
+:SOFT_INTERNAL_DEPENDENCY: no 
+:HARD_EXTERNAL_DEPENDENCY: no 
+:SOFT_EXTERNAL_DEPENDENCY: no 
+:STRATEGIC_VALUE: average
+:TACTICAL_VALUE: average
+:ESTIMATED_EFFORT: average
+:ESTIMATED_$_COST: trivial
+:ACTUAL_EFFORT: 
+:ACTUAL_$_COST: 
 :END:
 

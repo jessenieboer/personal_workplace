@@ -1,4 +1,6 @@
 .devenv*
 devenv.local.nix
 devenv.local.yaml
-
+.direnv
+.pre-commit-config.yaml
+.pre-commit-config.yaml.devenv*
