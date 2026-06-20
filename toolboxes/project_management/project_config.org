@@ -182,7 +182,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: tactical_evaluation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("r" "Tactical Evaluation" ((tags "HARD_START=\"no\"|HARD_START=\"yes\"&SCHEDULED<=\"<+1w>\"|HARD_START=\"yes\"&SCHEDULED<=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-down deadline-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%TACTICAL_VALUE(Tac Val) %30ITEM(Task) %15CATEGORY(Project)")))
+  ("r" "Tactical Evaluation" ((tags "FREQUENCY<>\"continuous\"&HARD_START=\"no\"|FREQUENCY<>\"continuous\"&HARD_START=\"yes\"&SCHEDULED<=\"<+1w>\"|FREQUENCY<>\"continuous\"&HARD_START=\"yes\"&SCHEDULED<=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this task be if it were finished now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-down deadline-up))))) (tags "FREQUENCY=\"continuous\"&HARD_START=\"no\"|FREQUENCY=\"continuous\"&HARD_START=\"yes\"&SCHEDULED<=\"<+1w>\"|FREQUENCY=\"continuous\"&HARD_START=\"yes\"&SCHEDULED<=\"\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-tactical-value) (org-agenda-overriding-header "How beneficial would this practice be if we practiced it now?") (org-agenda-skip-function 'pmt-skip-non-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-down deadline-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%TACTICAL_VALUE(Tac Val) %ITEM(Task) %15CATEGORY(Project)")))
 #+END_SRC
 # might put %17DEADLINE(Due date) %5HARD_DUE(Hard?) in tac eval
 
@@ -193,7 +193,7 @@ must have this in emacs config for agenda to work, and adding it to this file re
 
 #+NAME: effort_estimation_view
 #+BEGIN_SRC emacs-lisp :tangle no :noweb yes
-  ("a" "Effort Estimation" ((tags "DEADLINE<=\"<+1m>\"|TACTICAL_VALUE<>\"less\"&DEADLINE=\"\"|TODO=\"next\"|TODO=\"now\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to finish this task now?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%ESTIMATED_EFFORT(Effort) %30ITEM(Task) %15CATEGORY(Project)")))
+  ("a" "Effort Estimation" ((tags "DEADLINE<=\"<+1m>\"|TACTICAL_VALUE<>\"less\"&DEADLINE=\"\"|TODO=\"next\"|TODO=\"now\"" ((org-agenda-cmp-user-defined 'pmt-org-cmp-estimated-effort) (org-agenda-overriding-header "How much of our effort would it take to finish this task now?") (org-agenda-skip-function 'pmt-skip-all-dependent-tasks) (org-agenda-sorting-strategy '((tags category-up user-defined-up)))))) ((org-agenda-view-columns-initially t) (org-overriding-columns-format "%ESTIMATED_EFFORT(Effort) %ITEM(Task) %15CATEGORY(Project)")))
 #+END_SRC
 
 #+NAME: soft_scheduling_view
