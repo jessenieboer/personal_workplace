@@ -47,7 +47,7 @@ create toolbox-specific dir-locals, merge them all at the end
 :END:
 
 ** future test
-DEADLINE: <2026-06-25 Thu>
+SCHEDULED: <2026-07-22 Wed>
 :PROPERTIES:
 :CATEGORY: project_management_toolbox
 :FREQUENCY: once

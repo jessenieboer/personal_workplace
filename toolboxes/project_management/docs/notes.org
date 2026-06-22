@@ -65,7 +65,6 @@ Journal entry: freeform writing stored in a date tree
 
 All are "items"
 ** curation views
-
 *** Occurrence Date Check (`)
 - Purpose :: Make sure we know which occurrences will have a date attached so we don't miss any
 - Question :: Does this occurrence have a date we need to be aware of?
@@ -142,7 +141,7 @@ What's included:
 - if an idependent item has a deadline, must be due within 1 month
 - if an independent item has no deadline, must be tactical value = more or average (so we can catch small easy things)
 
-*** Soft Scheduling (r)
+*** Soft Scheduling (SPC)
 - Purpose :: Tentatively set start and finish dates for tasks
 
 - Question :: Do we want to tentatively schedule this?
@@ -164,8 +163,8 @@ What's included:
 - Question :: What are we doing?
 
 What's included:
-- if independent task has deadline, must be due within 1 week
-- if task has no deadline, must be tactical value = more or effort = less and avg value
+- if independent task has deadline or scheduled, must be due within 1 week
+- if task has no deadline or schedule, must be tactical value = more or effort = less and avg value
 
 ** reporting views
 *** Focus (s)
