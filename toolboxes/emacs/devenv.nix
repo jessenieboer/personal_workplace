@@ -26,7 +26,7 @@ in
       "emacs_toolbox:generate_dir_locals" = {
         before = [ "devenv:enterShell" ];
         exec = ''
-          echo "Generating .dir-locals.el from toolboxes/*dir_locals.el..."
+          echo "Generating .dir-locals.el from toolboxes/*dir_locals..."
 
           if [ ! -d "${config.devenv.root}/toolboxes" ]; then
           echo "No toolboxes/ directory found — skipping."
@@ -42,7 +42,7 @@ in
           | sort -z \
           | xargs -0 cat >> ${config.devenv.root}/.dir-locals.el
 
-          echo "✓ Generated .dir-locals.el from $(find toolboxes -name '*dir_locals.el' | wc -l) files"
+          echo "✓ Generated .dir-locals.el from $(find toolboxes -name '*dir_locals' | wc -l) files"
         '';
         showOutput = true;
       };

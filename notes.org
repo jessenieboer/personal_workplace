@@ -1,6 +1,6 @@
 
 
-What kinds? of tools:
+What kinds of tools:
 programs
 settings
 templates
