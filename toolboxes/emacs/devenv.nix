@@ -46,7 +46,7 @@ in
         '';
         showOutput = true;
       };
-      "devenv:enterShell".after = [ "emacs_toolbox:generate_dir_locals" ];
+      "devenv:enterShell".after = [ "emacs_toolbox:generate_dir_locals_el" ];
     };
   };
 }
