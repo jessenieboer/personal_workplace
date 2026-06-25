@@ -116,8 +116,8 @@
 :ID:       d16ed13e-a8ff-4e9d-ab57-018df26dbe4d
 :END:
 #+BEGIN_SRC scheme
-  ;; (filter-add "Now" (lambda (item) (string=? (item-state item) "now")))
-  ;; (filter-add "Now+Next" (lambda (item) (or (string=? (item-state item) "now") (string=? (item-state item) "next"))))
+  (filter-add "Focus" (lambda (item) (string=? (item-state item) "now")))
+  (filter-add "Now+Next" (lambda (item) (or (string=? (item-state item) "now") (string=? (item-state item) "next"))))
   ;;(filter-add "Top Priority" (lambda (item) (string=? (item-priority item) "A")))
   (set! editor-toolbar-items '())
   (set! filter-include-default #f)

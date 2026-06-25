@@ -33,9 +33,9 @@ in
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
           -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
           -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
-          ${dirLocalsTemplate} > ${config.devenv.root}/toolboxes/project_management_toolbox/project_management_toolbox_dir_locals.el
+          ${dirLocalsTemplate} > ${config.devenv.root}/toolboxes/project_management_toolbox/project_management_toolbox_dir_locals
 
-          echo "project_management_toolbox_dir_locals.el generated successfully"
+          echo "project_management_toolbox_dir_locals generated successfully"
         '';
         # execIfModified = [
           #   "devenv.nix"
