@@ -48,9 +48,9 @@ in
       };
 
       # packages = with pkgs; [
-        #   git
+      #     pytest
         #   ripgrep
         #   fd
-        # ]
+        #]
   };
 }
