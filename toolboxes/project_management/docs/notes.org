@@ -65,30 +65,6 @@ Journal entry: freeform writing stored in a date tree
 
 All are "items"
 ** curation views
-*** Occurrence Date Check (`)
-- Purpose :: Make sure we know which occurrences will have a date attached so we don't miss any
-- Question :: Does this occurrence have a date we need to be aware of?
-
-What's included:
-- any occurrence that doesn't have a yes/no value for HAS_DATE
-  
-Notes:
-- this question is usually taken care of by using a capture template
-
-*** Missing Occurrence Dates ([)
-- Purpose :: Capture the occurrence dates we still need so that we don't miss any
-- Question :: What dates do we still need?
-
-What's included:
-- any occurrence that HAS_DATE but doesn't have a TIMESTAMP
-
-*** Occurrance Dates ({)
-- Purpose :: Edit occurrence dates
-- Question :: Are these dates correct?
-
-What's included:
-- any occurrence that has a TIMESTAMP
-  
 *** Hard Date Check (q)
 - Purpose :: Make sure we know which tasks have will have a hard date attached so we don't miss any
 - Question :: Does this task have any hard dates we need to be aware of?
@@ -99,6 +75,16 @@ What's included:
 Notes:
 - this question is usually taken care of by using a capture template
   
+*** Occurrence Date Check (`)
+- Purpose :: Make sure we know which occurrences will have a date attached so we don't miss any
+- Question :: Does this occurrence have a date we need to be aware of?
+
+What's included:
+- any occurrence that doesn't have a yes/no value for HAS_DATE
+  
+Notes:
+- this question is usually taken care of by using a capture template
+
 *** Missing Hard Dates (w)
 - Purpose :: Capture the hard dates we still need so that we don't miss any
 - Question :: What hard dates do we still need?
@@ -106,12 +92,26 @@ Notes:
 What's included:
 - anything that has a HARD_START or HARD_DUE but doesn't have SCHEDULED/DEADLINE
   
+*** Missing Occurrence Dates ([)
+- Purpose :: Capture the occurrence dates we still need so that we don't miss any
+- Question :: What dates do we still need?
+
+What's included:
+- any occurrence that HAS_DATE but doesn't have a TIMESTAMP
+
 *** Hard Dates (g)
 - Purpose :: Edit hard dates
 - Question :: Are these hard dates correct?
 
 What's included:
 - any task that has a SCHEDULED or DEADLINE
+  
+*** Occurrance Dates ({)
+- Purpose :: Edit occurrence dates
+- Question :: Are these dates correct?
+
+What's included:
+- any occurrence that has a TIMESTAMP
   
 *** Tactical Evaluation (r)
 - Purpose :: Figure out what's most beneficial to work on right now so we can focus our efforts on that 
@@ -140,6 +140,8 @@ What's included:
 - independent items that are "now" or "next", otherwise
 - if an idependent item has a deadline, must be due within 1 month
 - if an independent item has no deadline, must be tactical value = more or average (so we can catch small easy things)
+
+- Notes: consider value being relative within a project, but effort being universal across all projects? 
 
 *** Soft Scheduling (SPC)
 - Purpose :: Tentatively set start and finish dates for tasks
