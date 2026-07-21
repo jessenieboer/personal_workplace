@@ -1,0 +1,28 @@
+nix file doesn't work right now
+
+1. get hash for latest release: nix store prefetch-file --json \
+  "https://github.com/bschelst/boosteroid-steamos/releases/download/v1.1.34/org.schelstraete.boosteroid.flatpak" \
+| jq -r '.hash'
+
+2. build:  nix-store --realise $(nix-instantiate -E '
+  with import <nixpkgs> {};
+  fetchurl {
+    url = "https://github.com/bschelst/boosteroid-steamos/releases/download/v1.1.34/org.schelstraete.boosteroid.flatpak";
+    sha256 = <copied hash>
+  }
+    ')
+  
+3.  install: flatpak install --user --bundle /nix/store/<store hash>-org.schelstraete.boosteroid.flatpak
+
+how to update:
+
+- plug lib.fakeHash into to the sha256 field for the boosteroid package
+- home-manager switch to get the updated sha256
+- copy the new sha256 into aforementioned field
+- flatpak uninstall --user org.schelstraete.boosteroid
+- comment out the ./software/boosteroid/boosteroid.nix in flake.nix
+- run home manager switch
+- nix collect garbage (both user and root just to be safe)
+- put the ./software/boosteroid/boosteroid.nix back in flake.nix
+- home manager switch again
+

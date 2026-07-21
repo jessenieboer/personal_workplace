@@ -1,0 +1,30 @@
+bootstrap private home-manager repo:
+
+cd to ~/.ssh
+sshkeygen -K (get a stub file for the private key stored on my yubikey)
+rename the key to id_ed_25519_sk
+delete the .pub file (assuming it's already uploaded to github)
+
+mkdir ~/.config
+cd ~/.config
+git clone git@github.com:jessenieboer/home-manager.git
+home-manager switch --flake .#jessenieboer@machine
+
+
+
+pass, bws, and devenv:
+- for a physical machine, create a machine access token in the bws web interface
+- on that machine, pass insert -e bws/<token name> and then paste the value
+- use the gh_devenv.sh script to run devenv commands (i.e. ". gh_devenv.sh update")
+
+
+boosteroid:
+curl -L -O https://github.com/bschelst/boosteroid-steamos/releases/latest/download/org.schelstraete.boosteroid.flatpak && \
+flatpak install --user ./org.schelstraete.boosteroid.flatpak
+
+then flatpak run org.schelstraete.boosteroid
+
+
+update:
+cp -rf ~/kingdoms/Household/Jesse/personal_workplace/toolboxes/home-manager/ ~/.config/
+home-manager switch --flake ~/.config/home-manager/.#jessenieboer@nucbox

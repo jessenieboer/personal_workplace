@@ -1,0 +1,5694 @@
+# -*- lexical-binding: t; -*-
+:PROPERTIES:
+:ID:       c561baee-bf85-46d4-a105-fa4e977d6588
+:END:
+* configuration overview :essential:
+:PROPERTIES:
+:ID:       89995582-78b2-41e7-bdd7-f5807e576e45
+:END:
+** personal info
+:PROPERTIES:
+:NAME:     personal-info
+:END:
+#+begin_src emacs-lisp
+(setq user-full-name "Jesse Nieboer"
+      user-mail-address "jessenieboer@protonmail.com")
+#+end_src
+* preliminary emacs settings :essential:
+:PROPERTIES:
+:NAME:     preliminary-settings
+:END:
+#+begin_src emacs-lisp
+(set-default-coding-systems 'utf-8-unix)
+(set-keyboard-coding-system 'utf-8-unix)
+(set-language-environment "UTF-8")
+(set-terminal-coding-system 'utf-8-unix)
+(setq compilation-always-kill t
+      confirm-kill-processes nil
+      debug-on-error t
+      debug-on-signal nil
+      delete-by-moving-to-trash t ;; for safety
+      ;; jit-lock-defer-time 0.05
+      large-file-warning-threshold (* 100 1000 1000)
+      lexical-binding t
+      package-archives nil ;; don't use elpa/melpa, use nix
+      use-dialog-box nil
+      use-package-always-ensure nil ;; not necessary with nix providing everything
+      warning-suppress-types '((files))) ;; latest version of emacs generates some annoying lexical binding warnings for temp buffers
+
+(use-package async
+  :config
+  (async-bytecomp-package-mode 1)
+  (dired-async-mode 1))
+
+(use-package esup
+  :commands (esup))
+#+end_src
+* host environment :essential:
+:PROPERTIES:
+:NAME:     environment
+:END:
+Where to save things
+where to start
+where to find and load non-package-managed packages
+#+begin_src emacs-lisp
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name "backups/" user-emacs-directory)))
+      user-emacs-directory (file-name-as-directory "~/kingdom/software/emacs/"))  
+#+end_src
+** load packages not taken care of by nix
+:PROPERTIES:
+:NAME:     environment-non-nix-packages
+:DEPENDS:  environment
+:END:
+#+begin_src emacs-lisp
+(let ((default-directory  (expand-file-name "load/" user-emacs-directory)))
+  (normal-top-level-add-subdirs-to-load-path))
+#+end_src
+* essential emacs                                                 :essential:
+:PROPERTIES:
+:NAME:     essential-emacs
+:END:
+emacs without other packages except for:
+- org-dotemacs to make this config work
+- use-package for getting other packages to work
+- the major-mode-hydra package for keyboard control
+- maybe themes to make it nicer to work with
+** controlling emacs by keyboard
+:PROPERTIES:
+:NAME:     keyboard-controls
+:DEPENDS:  environment-non-nix-packages
+:ID:       605f98ee-769b-4678-995b-66234bd364c7
+:END:
+F1 for control mode, F7 for literal mode. Controls will change based on buffer's major mode.
+
+Keep mode lists separate rather than put them directly in the my-hydra-define call to keep that call cleaner and so that I can fold away these big lists of modes.
+
+4 general kinds of controls:
+- connection: controlling what files and processes (buffers) *emacs* is connected to, and which ones are currently in front of you to work with (the ones *you* are currently "connected to")
+- navigation: controlling where your cursor is on the screen
+- display: controlling where things are on screen and how they look
+- interaction: controlling what you are doing with the buffer you're currently working with
+
+when figuring out what you want keys to be, consider
+- mnemonic
+- physical (what I use)
+
+the control key is for enabling an extra layer on top of modes that need normal text editing capabilities like org and shell
+#+begin_src emacs-lisp
+(use-package major-mode-hydra
+  :config
+  (setq hydra-is-helpful nil))
+
+;; make it cleaner to define hydras by being able to separate the list of modes from the definition of the keys rather than having them all in the same call
+(defmacro my-make-hydra (modes keys)
+  `(major-mode-hydra-define ,(eval modes) (:color amaranth :quit-key ("<f7>") :title "Controls") ,keys))
+
+(defmacro my-add-to-hydra (modes keys)
+  `(major-mode-hydra-define+ ,(eval modes) (:color amaranth :quit-key ("<f7>") :title "Controls") ,keys))
+(setq my-recorded-major-mode nil)
+
+(defun my-record-major-mode ()
+  (setq my-recorded-major-mode major-mode))
+
+(defun my-autohydra ()
+  "Switches to the appropriate hydra for the buffer when focus changes"
+  (if (not (or (eq major-mode 'minibuffer-mode)
+  	       (eq major-mode 'minibuffer-inactive-mode)
+	       (eq major-mode 'fundamental-mode) ;; for org capture templates
+	       (eq my-recorded-major-mode 'fundamental-mode) ;; for org capture templates
+  	       (eq my-recorded-major-mode 'minibuffer-mode)
+  	       (eq my-recorded-major-mode 'minibuffer-inactive-mode)))
+      (setq unread-command-events '(f7 f1))))
+
+(defun my-show-major-mode ()
+  "Displays the name of the major mode at the bottom of the screen. Makes it easier to see what modes I need to add to various hydras."
+  (interactive)
+  (message "major-mode: %s" major-mode))
+
+(use-package buffer-focus-hook
+  :init
+  (add-hook 'buffer-focus-hook--out 'my-record-major-mode)
+  (add-hook 'buffer-focus-hook--in 'my-autohydra))
+#+end_src
+*** <name> controls :template:
+:PROPERTIES:
+:NAME:     controls-<name>
+:DEPENDS:  keyboard-controls
+:END:
+note: remove :template: tag before using
+**** modes
+:PROPERTIES:
+:NAME:     controls-<name>-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-<name>-controls
+      '(
+  	mode-1
+  	mode-2))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-<name>-keys
+:DEPENDS:  controls-<name>-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-<name>-controls
+  		 ("Connection"
+  		  (("key" function "short desc"))
+  		  "Navigation"
+  		  (("key" function "short desc"))
+  		  "Display"
+  		  (("key" function "short desc"))
+  		  "Interaction"
+  		  (("key" function "short desc"))))
+#+end_src
+**** completion
+:PROPERTIES:
+:NAME:     controls-<name>-completion
+:END:
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook #'(add-hook '<some mode hook>
+  				       (lambda ()
+  					 (setq-local completion-at-point-functions
+  						     (list
+  						      #'<cape>
+  						      #'<cape>)))))
+#+end_src
+*** meta controls
+:PROPERTIES:
+:NAME:     controls-meta
+:DEPENDS:  keyboard-controls
+:END:
+keyboard controls about the keyboard controls
+all modes including minibuffer modes use these and build on top of them
+todo: get list of all used modes from emacs so i don't have to do this manually
+**** modes
+:PROPERTIES:
+:NAME:     controls-meta-modes
+:ID:       5f9f9a9b-1721-4a29-a273-eb8aafe9c7cf
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-meta-controls
+      '(
+  	apropos-mode
+  	backtrace-mode
+	bitwarden-list-dialog-mode
+  	calendar-mode
+	c-mode
+  	comint-mode
+  	compilation-mode
+  	conf-toml-mode
+  	conf-unix-mode
+  	completion-list-mode
+  	copilot-chat-list-mode
+  	copilot-chat-org-prompt-mode
+  	copilot-chat-prompt-mode
+  	custom-mode
+  	css-mode
+  	csv-mode
+  	debugger-mode
+  	dired-mode
+  	emacs-lisp-mode
+	eww-mode
+  	ess-r-mode
+  	feature-mode
+  	fundamental-mode
+	gptel-context-buffer-mode
+  	help-mode
+  	imenu-list-major-mode
+  	inferior-python-mode
+  	Info-mode
+  	js-json-mode
+  	js-mode
+  	lisp-data-mode
+  	lisp-interaction-mode
+  	lisp-mode
+  	lsp-ui-imenu-mode
+  	magit-cherry-mode
+  	magit-diff-mode
+  	magit-log-mode
+  	magit-log-select-mode
+  	magit-merge-preview-mode
+  	magit-process-mode
+  	magit-reflog-mode
+  	magit-refs-mode
+  	magit-repolist-mode
+  	magit-revision-mode
+  	magit-section-mode
+  	magit-stash-mode
+  	magit-stashes-mode
+  	magit-status-mode
+  	magit-submodule-list-mode
+  	markdown-mode
+  	messages-buffer-mode
+  	minibuffer-inactive-mode ;; comment out if using control key for minibuffer
+  	minibuffer-mode ;; comment out if using control key for minibuffer
+  	nix-mode
+  	org-agenda-mode
+  	org-mode
+  	pdf-view-mode
+  	pgmacs-mode
+  	process-menu-mode
+	prolog-inferior-mode
+  	prolog-mode
+	ps-mode
+  	python-mode
+  	sclang-mode
+  	sh-mode
+  	shell-mode
+  	shell-command-mode
+  	special-mode
+  	sql-mode
+  	sweeprolog-mode
+  	sweeprolog-top-level-mode
+  	text-mode
+  	treemacs-mode
+  	web-mode
+  	xref--xref-buffer-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-meta-keys
+:DEPENDS:  controls-meta-modes
+:ID:       96524f17-cb8b-4fd6-b376-0ee40eb42803
+:END:
+#+begin_src emacs-lisp
+;; these keys need to operate if no hydra is active; i.e. in "literal mode"
+(global-set-key (kbd "<f1>") #'major-mode-hydra)
+(global-set-key (kbd "<f12> v") #'my-show-major-mode)
+(global-set-key (kbd "<f12> <f1>") #'describe-key)
+;; (global-set-key (kbd "M-<f1>" '#start-kbd-macro))
+;; (global-set-key (kbd "M-<f7>" '#end-kbd-macro))
+
+;; need tab to not be prefix key for other keybindings to work
+;;  (global-set-key (kbd "<tab>") nil)
+;;  (global-set-key (kbd "C-i") nil)
+
+(my-make-hydra modes-that-use-meta-controls
+  	       ("Connection"
+  		()
+  		"Navigation"
+  		()
+  		"Display"
+  		(("<f11>" (setq hydra-is-helpful t) "show controls")
+  		 ("<f5>" (setq hydra-is-helpful nil) "hide controls")
+  		 ("<f12> v" my-show-major-mode "show mm")
+  		 ("<f12> <f1>" describe-key "desc key" :exit t))
+  		"Interaction"
+  		()))
+#+end_src
+** working with emacs in general
+:PROPERTIES:
+:NAME:     emacs-general
+:END:
+commands and settings that affect the program as a whole
+#+begin_src emacs-lisp  
+(defalias 'yes-or-no-p 'y-or-n-p)
+(setq read-extended-command-predicate #'command-completion-default-include-p)
+(setq completion-ignore-case t)
+
+;;todo: put in a browser section
+;; (setq browse-url-browser-function 'browse-url-generic
+;;     browse-url-generic-program "qutebrowser"
+;;     browse-url-generic-args '("--target" "window"))
+#+end_src
+*** minibuffer controls
+:PROPERTIES:
+:NAME:     controls-minibuffer
+:DEPENDS:  controls-meta-keys
+:END:
+Controlling the minibuffer
+**** modes
+:PROPERTIES:
+:NAME:     controls-minibuffer-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-minibuffer-controls
+      '(minibuffer-inactive-mode
+  	minibuffer-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-minibuffer-keys
+:DEPENDS:  controls-minibuffer-modes
+:END:
+#+begin_src emacs-lisp
+;; minibuffer controls using the control key so i can match qutebrowser
+;; Connection
+;; (global-set-key (kbd "C-f") #'abort-recursive-edit)
+;; Navigation
+;; (global-set-key (kbd "C-m") #'other-window)
+;; (global-set-key (kbd "C-y") #'other-window)
+;; (global-set-key (kbd "C-SPC") #'previous-line)
+;; (global-set-key (kbd "C-e") #'next-line)
+;; (global-set-key (kbd "C-t") #'backward-char)
+;; (global-set-key (kbd "C-s") #'forward-char)
+;; (global-set-key (kbd "C-a") #'backward-word)
+;; (global-set-key (kbd "C-c") #'forward-word)
+;; (global-set-key (kbd "C-n") #'forward-word)
+;; (global-set-key (kbd "C-l") #'move-end-of-line)
+
+;; Interaction
+;;  (global-set-key (kbd "C-o") #'set-mark-command)
+;;  (global-set-key (kbd "C-<f9>") #'exchange-point-and-mark)
+;; (global-set-key (kbd "C-<backspace>") #'delete-backward-char)
+;;  (global-set-key (kbd "C-<delete>") #'delete-forward-char)
+;;  (global-set-key (kbd "C-i C-<backspace>") #'delete-minibuffer-contents)
+;;  (global-set-key (kbd "C-i C-a") #'yank)
+;;  (global-set-key (kbd "C-i <return>") #'exit-minibuffer)
+
+(my-add-to-hydra modes-that-use-minibuffer-controls
+  		 ("Connection"
+  		  (("f" abort-recursive-edit "mini quit"))
+  		  "Navigation"
+  		  (("SPC" previous-line "pree line")
+  		   ("e" next-line "nex line")
+  		   ("t" backward-char "pree char")
+  		   ("s" forward-char  "nex char")
+  		   ("a" backward-word "pree word")
+  		   ("n" forward-word "nex word"))
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("o" set-mark-command "mark")
+  		   ("<f9>" exchange-point-and-mark "mark switch")
+  		   ("DEL" delete-backward-char "pre del")
+  		   ("<deletechar>" delete-forward-char "nex del")
+  		   ("i DEL" delete-minibuffer-contents "mini del")
+  		   ("ia" yank "paste")
+  		   ("RET" exit-minibuffer "mini sel"))))
+#+end_src
+*** side controls
+:PROPERTIES:
+:NAME:     controls-side
+:DEPENDS:  controls-meta-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-side-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-side-controls
+      '(imenu-list-major-mode
+  	lsp-ui-imenu-mode
+  	treemacs-mode
+  	xref--xref-buffer-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-side-keys
+:DEPENDS:  controls-side-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-side-controls
+  		 ("Connection"
+  		  (("ha" execute-extended-command "command" :exit t)
+  		   ("h=" eval-expression "eval exp" :exit t))
+  		  "Navigation"
+  		  (("r" consult-line "search" :exit t))
+  		  "Display"
+  		  (("fa" popper-toggle-type "popper toggle")
+		   ("fl" popper-kill-latest-popup "close popup"))
+  		  "Interaction"
+  		  ()))
+#+end_src
+*** main controls
+:PROPERTIES:
+:NAME:     controls-main
+:DEPENDS:  controls-meta-keys controls-side-keys
+:END:
+Controlling everything that's not the minibuffer or a "side" buffer
+**** modes
+:PROPERTIES:
+:NAME:     controls-main-modes
+:DEPENDS:  controls-minibuffer-modes controls-side-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-main-controls
+      (seq-remove (lambda (m) (or
+  			       (member m modes-that-use-minibuffer-controls)
+  			       (member m modes-that-use-side-controls))) modes-that-use-meta-controls))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-main-keys
+:DEPENDS:  controls-main-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-main-controls
+  		 ("Connection"
+  		  (("ha" execute-extended-command "command" :exit t)
+  		   ("h=" eval-expression "eval exp" :exit t)
+		   ("hp" list-processes "list processes")
+  		   ("h:" save-buffers-kill-emacs "close emacs")
+  		   ("h\\" restart-emacs "restart emacs")
+  		   ("<f12> <f12>" info "info")
+  		   ("<f12> t" describe-variable "desc var")
+  		   ("<f12> a" describe-function "desc fun")
+  		   ("<f12> <f1>" describe-key "desc key" :exit t))
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+#+end_src
+** working with buffers
+:PROPERTIES:
+:NAME:     buffers
+:ID:       ec66de65-3faf-4842-b2be-473acb3d4cae
+:END:
+#+begin_src emacs-lisp
+(setq
+ clean-buffer-list-delay-general 1
+ clean-buffer-list-kill-buffer-names '("*Apropos*" "*Backtrace*" "*Buffer List*" "*Compile-Log*" "*diff*" "\\*envrc\\*" "*Help*" "*info*" "*lsp-log*" "*nixfmt*" "*Warnings*" "*vc*" "*vc-diff*")
+ clean-buffer-list-kill-regexps '("^\\*Async.*" "^\\*Ilist\\*" "^\\*Help\\*")
+ global-auto-revert-mode t)
+
+
+
+;; note: wish i could get this to work
+;; (add-to-list 'display-buffer-alist
+;; 	     '("^\\*Metahelp\\*$" . (display-buffer-no-window)))
+#+end_src
+*** buffer controls
+:PROPERTIES:
+:NAME:     controls-buffer
+:DEPENDS:  controls-main-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-buffer-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-buffer-controls modes-that-use-main-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-buffer-keys
+:DEPENDS:  controls-buffer-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-buffer-controls
+  		 ("Connection"
+  		  (("h(" switch-to-buffer "go any buff" :exit t)
+  		   ;; ("v" previous-buffer "pre buff")
+  		   ;; ("x" next-buffer "next buff")
+  		   ("hf" (kill-buffer nil) "close this buffer")
+  		   ("hm" clone-indirect-buffer-other-window "clone buffer"))
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("hd" save-buffer "write buffer")
+  		   ("h<" (save-some-buffers t nil) "write all buffers")
+  		   ("hw" revert-buffer "revert buffer"))))
+
+(my-add-to-hydra 'process-menu-mode
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("RET" command-push-button "visit process buffer")
+  		   ("DEL" process-menu-delete-process "kill process"))))
+#+end_src
+** working with windows
+:PROPERTIES:
+:NAME:     windows
+:END:
+#+begin_src emacs-lisp
+(setq ignore-window-parameters t
+      split-height-threshold nil)
+#+end_src
+*** window controls
+:PROPERTIES:
+:NAME:     controls-window
+:DEPENDS:  controls-main-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-window-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-window-controls modes-that-use-main-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-window-keys
+:DEPENDS:  controls-window-modes
+:ID:       7e7ff90c-1988-40bc-a592-d33d0ea532af
+:END:
+#+begin_src emacs-lisp
+;; any mode can switch out of a window
+(my-add-to-hydra modes-that-use-meta-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  (("m" (other-window -1) "pree win")
+  		   ("y" other-window "nex win")
+  		   ("&" (other-frame -1) "pree frame")
+  		   ("|" (other-frame 1) "nex frame"))
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+
+(my-add-to-hydra modes-that-use-window-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  (("fn" split-window-right "make win right")
+  		   ("fh" split-window-below "make win down")
+  		   ("ff" delete-window "close win")
+  		   ("fd" delete-other-windows "close other win")
+  		   ("f <tab>" minimize-window "min win")
+  		   ("fb" maximize-window "max win")
+  		   ("fp" fit-window-to-buffer "fit win")
+  		   ("fx" balance-windows "balance win")
+  		   ("<home>" shrink-window-horizontally "shrink horz")
+  		   ("<end>" enlarge-window-horizontally "grow horz")
+  		   ("<prior>" shrink-window "shrink vert")
+  		   ("<next>" enlarge-window "grow vert")
+  		   ("fe" (recenter nil) "recenter")
+  		   ("fi" (recenter 0) "recenter top")
+  		   ("fo" (recenter -1) "recenter bot"))
+  		  "Interaction"
+  		  ()))
+#+end_src
+** working with projects
+:PROPERTIES:
+:NAME:     projects
+:ID:       ffbb4918-7bba-4880-8a05-56947fb7acd8
+:END:
+
+note that a project is in the form of (symbol . "path") i.e. (transient . "~/kingdom/projects/solo-projects/professional-projects/workshop/")
+
+the project name is the name of the directory that contains the marker file
+
+.project.el marks a project, contains properties and values
+- project-tags :: a list of tags that can be used to categorize the project
+
+#+begin_src emacs-lisp
+  (setq my-project-cache (make-hash-table :test 'equal :weakness 'key)
+        my-project-ignored-regexes '()
+        my-project-ignored-modes '()
+        my-project-marker-file-name "project_marker"
+        my-projects-directory (file-name-as-directory "~/Dropbox/")
+        project--list nil ;;this is unset at startup which causes an error in my-get-project-roots
+        ;;project-find-functions '(my-cached-project-current)
+        project-find-functions '(my-find-project-containing-dir)
+        ;;project-list-file nil ;; prevent saving projects across sessions
+        project-switch-commands 'project-find-file)
+
+  (defvar project-name nil)
+  (put 'project-name 'safe-local-variable #'stringp)
+
+  (defvar project-tags nil)
+  (put 'project-tags 'safe-local-variable (lambda (x) (and (listp x) (cl-every #'stringp x))))
+
+  ;;todo: move to enhanced
+  ;; (require 'ffap)
+  ;; (dolist (l (ffap-all-subdirs my-projects-directory 3))
+  ;;   (add-to-list 'safe-local-variable-directories (file-name-as-directory l)))
+
+  (defun my-get-project-root (proj)
+    (cdr proj))
+
+  (defun my-get-project-type (proj)
+    (car proj))
+
+  (defun my-get-project-name (proj)
+    (when (my-project-p proj)
+      (project-name proj)))
+
+  (defun my-get-project-roots ()
+    (flatten-list project--list))
+
+  (defun my-nil-or-empty-string-p (x)
+    (or (not x) (equal x "")))
+
+  ;; (defun my-dir-within-p (dir parent)
+  ;;   "Return t if DIR is within PARENT, nil otherwise."
+  ;;   (let ((dir (file-name-as-directory (expand-file-name dir)))
+  ;;         (parent (file-name-as-directory (expand-file-name parent))))
+  ;;     (string-prefix-p parent dir)))
+
+  (defun my-dir-within-p (dir parent)
+    "Return t if DIR is within PARENT, nil otherwise."
+    (let ((dir (expand-file-name dir))
+          (parent (expand-file-name parent)))
+      (string-prefix-p (file-name-as-directory parent)
+                       (file-name-as-directory dir))))
+
+  (defvar my-locate-dominating-file-cache (make-hash-table :test 'equal))
+
+  (defun my-locate-dominating-file (dir marker)
+    "Optimized version of locate-dominating-file with caching."
+    (or (gethash dir my-locate-dominating-file-cache)
+        (let ((result (locate-dominating-file dir marker)))
+          (puthash dir result my-locate-dominating-file-cache)
+          result)))
+
+  (defun my-find-project-containing-dir (dir)
+    "Find the nearest ancestor directory containing a project marker file.
+        Return the (transient . \"directory path\"), or nil if nothing is found.
+        Used in `project-find-functions`. Ignores directories not under
+        `my-projects-directory` and any path containing `/.direnv/`.
+        Accepts both file and directory paths as input."
+    (when (and dir
+               (not (string-search "/.direnv/" dir))
+               (my-dir-within-p dir my-projects-directory))
+      (when-let* ((proj-root (my-locate-dominating-file dir my-project-marker-file-name)))
+        (cons 'transient proj-root))))
+
+  (defun my-get-projects ()
+    (mapcar 'my-find-project-containing-dir (my-get-project-roots)))
+
+  (defun my-project-p (proj)
+    (let ((proj-root (cdr proj)))
+      (not (null (my-find-project-containing-dir proj-root)))))
+
+  (defun my-get-project-with-name (project-name)
+    (car (seq-filter (lambda (p)
+            	     (string= project-name (my-get-project-name p))) (my-get-projects))))
+
+  (defun my-find-project-containing-buffer (buff) 
+    "Get the project this buffer is associated with; nil if not in a project. Not fully implemented; just get the current project."
+    (project-current))
+
+  (defun my-get-project-name-for-buffer (buffer)
+    "Return the project name for BUFFER, or nil if none."
+    (with-current-buffer (get-buffer buffer) ;; fails if invalid buffer name
+      (when-let* ((project (project-current nil (buffer-file-name (current-buffer)))))
+        (project-name project))))
+
+  (defun my-get-project-marker-file (proj)
+    "Get this project's marker file."
+    (when (my-project-p proj)
+      (let ((f (expand-file-name my-project-marker-file-name (my-get-project-root proj))))
+        (when (file-exists-p f) f))))
+
+  ;;https://stackoverflow.com/questions/30568113/result-value-of-elisp-code-stored-in-a-file
+  (defun my-eval-file (file)
+    "Execute FILE and return the result of the last expression."
+    (eval
+     (ignore-errors
+       (read-from-whole-string
+        (with-temp-buffer
+          (insert-file-contents file)
+          (buffer-string))))))
+
+  ;; (defun my-get-project-property (proj property-key)
+  ;;   (when (my-project-p proj)
+  ;;     (plist-get (symbol-value proj) property-key)))
+
+  (defun my-get-project-property (proj property-key)
+    "Get the specified property value from the specified project's marker file."
+    (when (my-project-p proj)
+      (plist-get (my-eval-file (my-get-project-marker-file proj)) property-key)))
+
+  ;; (defun my-get-project-property (proj property-key)
+  ;;   "Get a property from the project's marker file."
+  ;;   (when (my-project-p proj)
+  ;;     (let* ((proj-root (my-get-project-root proj))
+  ;;            (project-file (my-get-project-marker-file proj)))
+  ;;       (when (file-exists-p project-file)
+  ;; 	(load-file project-file))
+  ;;       (plist-get project-config property-key))))
+
+  (defun my-get-project-tags (proj)
+    "Get the tags in this project's marker file as a list of strings."
+    (when (my-project-p proj)
+      (my-get-project-property proj :project-tags)))
+
+  (defun my-get-all-project-tags ()
+    "Get all tags in all project marker files as a list of single-string lists. Used to set org-tag-persistent-alist."
+    (mapcar (lambda (p)
+              (my-get-project-tags p))
+            (my-get-projects)))
+
+  ;; (defun my-cached-project-current (&optional maybe-prompt dir)
+  ;;   "Cached version of project-current."
+  ;;   (let* ((key (or dir default-directory))
+  ;;          (cached (gethash key my-project-cache)))
+  ;;     (or cached
+  ;;         (let ((proj (my-find-project-containing-dir key)))
+  ;;           (when proj
+  ;;             (puthash key (cons 'transient (cdr proj)) my-project-cache))
+  ;;           proj))))
+
+  (setq org-tag-persistent-alist (my-get-all-project-tags))
+
+
+  ;; new stuff:
+  (defvar project-name nil)
+  (defvar my-project-cache (make-hash-table :test 'equal :weakness 'key))
+  (defvar my-project-marker-file-name "project-marker")
+  (defvar my-projects-directory (file-name-as-directory "~/kingdom/projects/"))
+  (defvar my-project-cache (make-hash-table :test 'equal :weakness 'key))
+  (defvar my-locate-dominating-file-cache (make-hash-table :test 'equal))
+
+  (setq project--list nil ;;this is unset at startup which causes an error in my-get-project-roots
+        ;;project-find-functions '(my-cached-project-current)
+        project-find-functions '(my-find-project-containing-dir)
+        ;;project-list-file nil ;; prevent saving projects across sessions
+        project-switch-commands 'project-find-file)
+
+  (defun my-locate-dominating-file (dir marker)
+    "Optimized version of locate-dominating-file with caching."
+    (or (gethash dir my-locate-dominating-file-cache)
+        (let ((result (locate-dominating-file dir marker)))
+          (puthash dir result my-locate-dominating-file-cache)
+          result)))
+
+  (defun my-find-project-containing-dir (dir)
+    "Find the nearest ancestor directory containing a project marker file.
+        Return the (transient . \"directory path\"), or nil if nothing is found.
+        Used in `project-find-functions`. Ignores directories not under
+        `my-projects-directory` and any path containing `/.direnv/`.
+        Accepts both file and directory paths as input."
+    (when (and dir
+               (not (string-search "/.direnv/" dir))
+               (my-dir-within-p dir my-projects-directory))
+      (when-let* ((proj-root (my-locate-dominating-file dir my-project-marker-file-name)))
+        (cons 'transient proj-root))))
+
+  (defun my-project-p (proj)
+    (let ((proj-root (cdr proj)))
+      (not (null (my-find-project-containing-dir proj-root)))))
+
+  (defun my-get-project-name (proj)
+    (when (my-project-p proj)
+      (project-name proj)))
+
+  (or (project-name (or (project-current) "No project")
+
+  (defun my-get-project-root (proj)
+    (cdr proj))
+
+  (defun my-get-project-config (proj)
+    (expand-file-name ".dir-locals.el" (my-get-project-root proj)))
+
+  (defun my-currently-in-project-p ()
+    (if (project-current) t))
+
+  (put 'project-name 'safe-local-variable #'stringp)
+
+  (setq tab-bar-tab-name-function (lambda () (or (my-get-project-name (project-current)) "No project")))
+#+end_src
+*** project controls
+:PROPERTIES:
+:NAME:     controls-project
+:DEPENDS:  controls-buffer-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-project-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-project-controls modes-that-use-main-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-project-keys
+:DEPENDS:  controls-project-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-project-controls
+  		 ("Connection"
+  		  (("h SPC" project-switch-to-buffer "go proj buff" :exit t)
+  		   ("h DEL" project-switch-project "go proj" :exit t)
+  		   ("h RET" project-find-file "find proj file" :exit t))
+  		  "Navigation"
+  		  ();; ("hr" project-find-regexp "project find regex")
+  					;("h{" project-search "project search loop")
+  					;("h DEL" fileloop-continue "continue loop")
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+#+end_src
+** organizing workbenches
+:PROPERTIES:
+:NAME:     workbench
+:DEPENDS:  buffers windows projects
+:ID:       ad5f2be7-471a-4413-8edc-74d975cfd264
+:END:
+
+- repository :: a collection of materials that share an overarching categorization that is mutually exclusive with other overarching categorizations, and thus are stored under one top-level container and can have a heirarchy structure. implemented as a directory.
+- project :: an ordering of resources (labor, money, materials, etc...) aiming at some defined or definable benefit. project materials are contained in repositories.
+- project type :: some higher-level categorization of projects.
+- workplace :: any organization, like a company or my household. contains workshops. implemented as a github repo with a nix flake that defines each workshop as a nixos configuration
+- workshop :: the entire computer environment including hardware, os, software, and generic configurations. described with nix. one active workshop per physical machine, but machines can switch between workshops. contains worksbenches. implemented in the workplace repo as a single nixos config
+- toolbox :: a set of tools and configurations aimed at a specific kind of work. one wb for general development, one for python development, etc... implemented as a template repo with a nix flake containing  dev shell(s)? workplaces, workshops, and/or projects may provide toolboxes.
+- toolbelt :: someone's personal set of tools and configurations. implemented with a flake and home manager. might have a separate repo for nix-independent emacs?  
+- workspace :: personal "area" within the workshop, basically your account on the desktop?
+- workbench :: a personally-constructed tool-specific arrangement of tools and materials, where work is ready to go. shorter-term focus; may flit around between workbenches. os workbenches are probably "desktops". emacs workbenches are flexible and involve
+  - emacs frame arrangements
+  - emacs window arrangements
+  - the buffer groups available to windows
+    - use tab-bar, tab-line, and emacs purpose?
+      https://github.com/bmag/emacs-purpose
+      perhaps activities is in there too https://github.com/alphapapa/activities.el
+- screen :: a physical display
+  
+emacs terms:
+- frame :: container for windows. 
+- tab bar :: used to contain workbenches
+- buffer :: connection to a computer file or process
+- buffer group :: an collection of buffers organized by name, mode, project, etc...
+- minibuffer :: buffer that connects to emacs itself?
+- tab :: convnient way of displaying and selecting buffers in a window
+- mode :: rules for how a buffer behaves
+- window :: displays a buffer and can be limited to show only a specific group of buffers
+- side window ::
+- workspace/zone/station, project zone :: a conceptual area within a workshop arranged to facilitate some scope of work within or among projects. workspaces are flexible and defined on the fly, but saveable. they include screen setup; perhaps managed at the os level?
+
+3 frame:
+- middle frame "main": primary interaction
+- left frame "references" (info useful for main frame) and "input" (command line): 
+- right frame "results" or "output": output of main
+
+
+tab grouping:
+- if a buffer is in a project, that's its tab group, "No project" otherwise
+- some tabs are hidden from tab line altogether
+
+#+begin_src emacs-lisp
+(setq desktop-path (list (expand-file-name "desktops/" user-emacs-directory))
+      desktop-restore-eager t
+      desktop-restore-reuses-frames nil
+      my-hidden-buffer-patterns nil
+      my-main-frame-name "jn_main"
+      my-reference-frame-name "jn_reference"
+      my-results-frame-name "jn_results"
+      my-reference-buffer-patterns nil
+      my-results-buffer-patterns nil
+      my-tab-line-hidden-buffer-patterns nil
+      tab-line-close-button-show nil
+      tab-line-new-button-show nil
+      tab-line-tab-name-function 'tab-line-tab-name-truncated-buffer
+      tab-line-tabs-buffer-group-function 'my-tab-line-tabs-buffer-group-function
+      tab-line-tabs-function 'tab-line-tabs-buffer-groups)
+
+;; (defvar my-hidden-buffer-regexp nil "Combined regexp for all hidden patterns.")
+
+(defun my-add-hidden-buffer-patterns (regex-list)
+  "Add patterns to my list of buffers that won't show up on the tab line."
+  (setq my-hidden-buffer-patterns (append my-hidden-buffer-patterns regex-list)))
+
+(defun my-add-reference-buffer-patterns (regex-list)
+  "Add patterns to my list of buffers that display in my reference frame."
+  (setq my-reference-buffer-patterns (append my-reference-buffer-patterns regex-list)))
+
+(defun my-add-results-buffer-patterns (regex-list)
+  "Add patterns to my list of buffers that display in my results frame."
+  (setq my-results-buffer-patterns (append my-results-buffer-patterns regex-list)))
+
+(defvar my-tab-display-cache (make-hash-table :test 'equal :weakness 'key)
+  "Cache for hidden buffer checks.")
+
+(defun my-cache-for-tab-display (buffer)
+  "Cache given buffer according to visibility."
+  (let ((bname (buffer-name buffer)))
+    (if (my-string-matches-any-regex-p bname my-hidden-buffer-patterns)
+  	(puthash bname "Hidden" my-tab-display-cache)
+      (puthash bname (my-get-project-name-for-buffer buffer) my-tab-display-cache))))
+
+(defun my-update-tab-display-cache ()
+  (clrhash my-tab-display-cache)
+  (mapc 'my-cache-for-tab-display (buffer-list)))
+
+(defun my-tab-line-tabs-buffer-group-function (buffer)
+  (gethash (buffer-name buffer) my-tab-display-cache "No tab group"))
+
+
+;;( defun  my-tab-line-advice (orig-fun &optional buffer)
+;;  "Alter tab-line grouping to hide buffers matching my-hidden-buffer-regexp."
+;;  (let ((buffer-name (buffer-name buffer)))
+;;    (and my-hidden-buffer-patterns
+;; 	 (if (gethash buffer-name my-buffer-hidden-cache)
+;; 	     "Hidden"
+;; 	   (let (
+
+;; 		 (gethash buffer-name my-visible-buffer-cache)
+;; 		 (my-cache-buffer buffer-name)
+;;                 (let ((hidden (string-match-p my-hidden-buffer-regexp buffer-name)))
+;; 		   (message "adding to cache: %s" buffer-name)
+;;                   (puthash buffer-name hidden my-buffer-hidden-cache)
+;;                   hidden)))
+;;           "Hidden"
+;; 	   (funcall orig-fun buffer)))))
+
+;; Clear cache on buffer changes
+
+
+
+
+;; (defun my-combine-regexes (regex-list)
+;;   "Compile a single regexp by alternating the individual patterns in the list."
+;;   (when regex-list
+;;     (let ((combined (concat "\\(?:"
+;; 			    (mapconcat 'identity regex-list "\\|")
+;; 			    "\\)")))
+;;       combined)))
+
+;; (defun my-add-hidden-buffer-patterns (regex-list)
+;;   "Add patterns to my list of buffers that won't show up on the tab line."
+;;   (setq my-tab-line-hidden-buffer-patterns (append my-tab-line-hidden-buffer-patterns regex-list))
+;;   (setq my-hidden-buffer-regexp
+;;         (when my-tab-line-hidden-buffer-patterns
+;;           (my-combine-regexes my-tab-line-hidden-buffer-patterns))))
+
+
+;; (defun  my-tab-line-advice (orig-fun &optional buffer)
+;;   "Alter tab-line grouping to hide buffers matching my-hidden-buffer-regexp."
+;;   (let ((buffer-name (buffer-name buffer)))
+;;     (if (and my-hidden-buffer-regexp
+;; 	     (or (gethash buffer-name my-buffer-hidden-cache)
+;;                  (let ((hidden (string-match-p my-hidden-buffer-regexp buffer-name)))
+;; 		   (message "adding to cache: %s" buffer-name)
+;;                    (puthash buffer-name hidden my-buffer-hidden-cache)
+;;                    hidden)))
+;;         "Hidden"
+;;       (funcall orig-fun buffer))))
+
+;; ;; Clear cache on buffer changes
+;; (add-hook 'kill-buffer-hook (lambda () (clrhash my-buffer-hidden-cache)))
+;; (add-hook 'after-change-major-mode-hook (lambda () (clrhash my-buffer-hidden-cache)))
+
+;; (advice-add 'tab-line-tabs-buffer-group-by-project :around #'my-tab-line-advice)
+
+;; result and reference buffer stuff
+
+
+(defun my-reference-buffer-p (buffer-or-name &rest ARGS)
+  "Test whether buffer should be displayed in my reference frame."
+  (let ((buffer (get-buffer buffer-or-name)))
+    (when (and buffer (buffer-live-p buffer))
+      (my-string-matches-any-regex-p (buffer-name buffer) my-reference-buffer-patterns))))
+
+(defun my-results-buffer-p (buffer-or-name &rest ARGS)
+  "Test whether buffer should be displayed in my results frame."
+  (let ((buffer (get-buffer buffer-or-name)))
+    (when (and buffer (buffer-live-p buffer))
+      (my-string-matches-any-regex-p (buffer-name buffer) my-results-buffer-patterns))))
+
+;; save frame names
+(push '(name . nil) frameset-filter-alist)
+
+(desktop-save-mode -1) ; i'd rather save manually in case something gets screwed up
+(global-tab-line-mode 1)
+(tab-bar-mode 1)
+
+(require 'cl-lib)
+
+;; (defun my-string-matches-any-regex-p (string regex-list)
+;;   "Optimized: match against a single combined regexp."
+;;   (and my-hidden-buffer-regexp
+;;        (string-match-p my-hidden-buffer-regexp string)))
+
+;;(defun my-string-matches-any-regex-p (string regex-list)
+;; "Return non-nil if string matches any regex in REGEX-LIST."
+;; (cl-find-if (lambda (regex) (string-match-p regex string)) regex-list))
+
+;; (defvar my-compiled-hidden-regexps (mapcar #'regexp-quote my-tab-line-hidden-buffer-patterns)
+;;   "Pre-compiled regexps for hidden buffers.")
+
+;; (defun my-string-matches-any-regex-p (string regex-list)
+;;   "Return non-nil if string matches any regex in REGEX-LIST."
+;;   (cl-loop for re in my-compiled-hidden-regexps
+;;            thereis (string-match-p re string)))
+
+;; (defun my-tab-line-advice (orig-fun &optional buffer)
+;;   "Alter the tab line grouping function to exclude a buffer from the tab line if its name matches one of the patterns in my-tab-line-hidden-buffer-patterns."
+;;   (if (my-string-matches-any-regex-p (buffer-name buffer) my-tab-line-hidden-buffer-patterns)
+;;       "Hidden"
+;;     (funcall orig-fun buffer)))
+
+;; (defun my-tab-line-advice (orig-fun &optional buffer)
+;;   "Alter the tab line grouping function to exclude a buffer from the tab line if its name matches one of the patterns in my-tab-line-hidden-buffer-patterns."
+;;   (let ((buff-name (buffer-name buffer)))
+;;     (if (my-string-matches-any-regex-p buff-name my-tab-line-hidden-buffer-patterns)
+;;         "Hidden"
+;;       (funcall orig-fun buffer))))
+
+(defun my-ensure-frame-exists (name)
+  "Ensure a frame with NAME exists, creating it if necessary."
+  (unless (seq-find (lambda (frame) (equal (frame-parameter frame 'name) name))
+              	    (frame-list))
+    (make-frame `((name . ,name)))))
+
+;; (defun my-display-in-frame (frame-name action)
+;;   "Temporarily modify display-buffer-alist to show buffers in named frame."
+;;   (let ((display-buffer-overriding-action
+;; 	   '(display-buffer-use-some-frame
+;; 	     (frame-predicate . (lambda (frame)
+;; 				  (equal (frame-parameter frame 'name) frame-name)))
+;; 	     (inhibit-switch-frame . t))))
+;;     (funcall action)))
+
+;; (my-display-in-frame my-reference-frame-name (lambda () (pop-to-buffer "*scratch*")))
+
+;; display preferencnes
+(my-add-hidden-buffer-patterns '("^\\*Async-.*" "^\\*Backtrace\\*$" "^\\*Ilist\\*$" "^\\*Metahelp\\*$" "^\\*Messages\\*$" ".*Old buffer.*" "^\\*Process List\\*$" "^\\*Shell Command Output\\*$" "^\\*Warnings\\*$"))
+(my-add-reference-buffer-patterns '("^\\*Backtrace\\*$" "^\\*Metahelp\\*$" "^\\*Process List\\*$" ".*shell\\*" "^\\*Warnings\\*$"))
+(my-add-results-buffer-patterns '("^\\*Async-.*"  "^\\*Messages\\*$" "^\\*Shell Command Output\\*$"))
+;; (my-add-hidden-buffer-patterns (append '("^\\*Ilist\\*$") my-reference-buffer-patterns my-results-buffer-patterns))
+
+(defun my-desktop-save ()
+  (interactive)
+  (when (fboundp 'treemacs-quit)
+    (treemacs-select-window)
+    (treemacs-quit))
+  (desktop-save (car desktop-path) nil t))
+#+end_src
+*** workbench controls
+:PROPERTIES:
+:NAME:     controls-workbench
+:DEPENDS:  controls-main-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-workbench-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-workbench-controls modes-that-use-main-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-workbench-keys
+:DEPENDS:  controls-workbench-modes
+:ID:       3e6ea340-7501-46da-8d4c-bc4d5eac4fb5
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-workbench-controls
+  		 (
+  		  "Connection"
+  		  (("v" tab-line-switch-to-prev-tab  "prev buff")
+  		   ("x" tab-line-switch-to-next-tab "next buff")
+  		   ("u RET" tab-new "make workbench")
+  		   ("uf" tab-close "close workbench")
+  		   ("q" tab-previous "prev workbench")
+  		   ("z" tab-next "next workbench")
+  		   ("u SPC" tab-switch "switch workbench")
+  		   ("ub" tab-rename "rename workbench"))
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  (("!" tab-line-move-tab-backward "move tab left")
+  		   ("?" tab-line-move-tab-forward "move tab right")
+  		   ("f`" tab-bar-mode "toggle workbench display")
+		   ("f~" tab-line-mode "toggle tab display")
+  		   ("`" (tab-move -1) "move ws tab left")
+  		   ("~" tab-move "move ws tab right"))
+  		  "Interaction"
+  		  (("ud" my-desktop-save))))
+
+(my-add-to-hydra modes-that-use-side-controls
+  		 ("Connection"
+  		  (("q" tab-previous "prev workbench")
+  		   ("z" tab-next "next workbench")
+  		   ("u SPC" tab-switch "switch workbench"))
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+#+end_src
+*** general emacs workbench
+:PROPERTIES:
+:NAME:     workbench-emacs-general
+:END:
+#+begin_src emacs-lisp
+;; buffers that are not part of any buffer group to be displayed
+;; (setq my-ungrouped-buffer-regexes '("^\\*Async.*" "^\\*Backtrace\\*" "^\\*Ilist\\*" "^\\*Help\\*" "^\\*Messages\\*" "^\\*Mini.*" "^\\*Old.*" "^\\*Warnings\\*"))
+
+;; reference frame
+;; (add-to-list 'display-buffer-alist
+;;       	     '("\\*Help\\*" . (display-buffer-use-some-frame
+;;       			       ;;implicitly buffer argument is here
+;;       			       (dedicated . t)
+;;       		 	       (frame-predicate . (lambda (frame) (equal (frame-parameter frame 'name) my-reference-frame-name)))
+;;       			       (inhibit-switch-frame . t))))
+#+end_src
+** reading text
+:PROPERTIES:
+:NAME:     reading-text
+:END:
+#+begin_src emacs-lisp
+#+end_src
+*** text reading controls
+:PROPERTIES:
+:NAME:     controls-text-reading
+:DEPENDS:  controls-main-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-text-reading-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-text-reading-controls
+      '(
+  	backtrace-mode
+	bitwarden-list-dialog-mode
+	c-mode
+  	css-mode
+  	compilation-mode
+  	conf-toml-mode
+  	conf-unix-mode
+  	copilot-chat-list-mode
+  	copilot-chat-prompt-mode
+  	copilot-chat-org-prompt-mode
+  	csv-mode
+  	debugger-mode
+  	emacs-lisp-mode
+  	ess-r-mode
+	eww-mode
+  	feature-mode
+  	fundamental-mode
+  	help-mode
+  	Info-mode
+  	js-json-mode
+  	js-mode
+  	lisp-data-mode
+  	lisp-interaction-mode
+  	lisp-mode
+  	markdown-mode
+  	messages-buffer-mode
+  	nix-mode
+  	org-mode
+  	pgmacs-mode
+  	process-menu-mode
+  	prolog-mode
+	ps-mode
+  	python-mode
+  	sclang-mode
+  	sh-mode
+  	special-mode
+  	sql-mode
+  	sweeprolog-mode
+  	text-mode
+	web-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-text-reading-keys
+:DEPENDS:  controls-text-reading-modes
+:END:
+scroll other win
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-text-reading-controls
+  		 ("Connection"  
+  		  ()
+  		  "Navigation"
+  		  (("SPC" previous-line "pree line")
+  		   ("e" next-line "nex line")
+  		   ("(" backward-paragraph "pree chunk")
+  		   (")" forward-paragraph "nex chunk")
+  		   ("t" backward-char "pree char")
+  		   ("s" forward-char  "nex char")
+  		   ("a" backward-word "pree word")
+  		   ("n" forward-word "nex word")
+  		   ("w" backward-sexp "pre bal")
+  		   ("=" (scroll-down 10) "scroll up")
+  		   (";" (scroll-up 10) "scroll up")
+  		   ("b" forward-sexp "nex-bal")
+  		   ("l" move-beginning-of-line "line first")
+  		   ("c" move-end-of-line "line last")		     
+  		   ("/" beginning-of-buffer "buff first")
+  		   ("," end-of-buffer "buff last")
+  		   ("r" isearch-forward "search"))
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("o" set-mark-command "mark")
+  		   ("<f9>" exchange-point-and-mark "mark switch")
+  		   ("i SPC" kill-ring-save "copy"))))
+
+(my-add-to-hydra modes-that-use-side-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  (("r" isearch-forward "search"))
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+#+end_src
+*** linked text controls
+:PROPERTIES:
+:NAME:     controls-linked-text-reading
+:DEPENDS:  controls-text-reading-keys workbench
+:ID:       90a28315-63c9-45df-a426-89975a2b5940
+:END:
+#+BEGIN_SRC emacs-lisp
+(my-add-hidden-buffer-patterns '("^\\*Help\\*$" "^\\*Info\\*$"))
+(my-add-reference-buffer-patterns '("^\\*Help\\*$" "^\\*Info\\*$"))
+#+END_SRC
+**** modes
+:PROPERTIES:
+:NAME:     controls-linked-text-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-linked-text-controls
+      '(help-mode
+  	Info-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-linked-text-keys
+:DEPENDS:  controls-linked-text-modes
+:ID:       9e0ee4f3-429a-4bf7-874d-836d9b0b5031
+:END:
+
+#+begin_src emacs-lisp
+;; (my-add-to-hydra modes-that-use-linked-text-controls
+;; 		 ("Connection"
+;; 		  ()
+;; 		  "Navigation"
+;; 		  (("C-SPC" previous-line "pree line")
+;; 		   ("C-e" next-line "nex line")
+;; 		   ("C-n" (scroll-up 10) "scroll up")
+;; 		   ("C-a" (scroll-down 10) "scroll down")
+;; 		   ("C-y" other-window "nex win")
+;; 		   ("C-m" (other-window -1) "pree win"))
+;; 		  "Display"		     
+;; 		  ()
+;; 		  "Interaction"
+;; 		  ()))
+
+(my-add-to-hydra 'help-mode
+  		 ("Connection"
+  		  (("w" help-go-back "back")
+  		   ("b" help-go-forward "fwd")
+  		   ("RET" push-button "follow"))
+  		  "Navigation"
+  		  (("g" backward-button "pre link")
+  		   ("p" forward-button "nex link"))
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+
+(my-add-to-hydra 'Info-mode
+  		 ("Connection"
+  		  (("RET" Info-follow-nearest-node "follow")
+  		   ("d" (Info-follow-nearest-node t) "follow other")
+  		   ("w" Info-history-back "back")
+  		   ("b" Info-history-forward "fwd")
+  		   ("iw" Info-prev "prev")
+  		   ("ib" Info-next "next")
+  		   ;;("C-<tab>" Info-directory "directory")
+  		   ;; ("r" Info-search "directory")
+  		   )
+  		  "Navigation"
+  		  (("g" Info-prev-reference "pre link")
+  		   ("p" Info-next-reference "nex link"))
+  		  "Display"		     
+  		  ()
+  		  "Interaction"
+  		  ()))
+#+end_src
+** working with the filesystem
+:PROPERTIES:
+:NAME:     file-system
+:END:
+#+begin_src emacs-lisp
+(use-package dired
+  :config 
+  (setq dired-copy-preserve-time t
+  	dired-dwim-target t
+  	dired-recursive-deletes 'top)
+  (add-hook 'dired-mode-hook(lambda ()(dired-hide-details-mode t))))
+#+end_src
+*** file system controls
+:PROPERTIES:
+:NAME:     controls-file-system
+:DEPENDS:  controls-main-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-file-system-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-file-system-controls modes-that-use-main-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-file-system-keys
+:DEPENDS:  controls-file-system-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-file-system-controls
+  		 ("Connection"
+  		  (("h*" find-file "find any file")
+  		   ("h/" dired "dired"))
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+
+(my-add-to-hydra 'dired-mode
+  		 ("Connection"
+  		  (("RET" dired-find-file "dir sel")
+  		   ("d" dired-find-file-other-window "dir sel other"))
+  		  "Navigation"
+  		  (
+  		   ("SPC" dired-previous-line "dir pre line")
+  		   ("e" dired-next-line "dir nex line")
+  		   ("(" dired-previous-dirline "dir pre dir")
+  		   (")" dired-next-dirline "dir nex dir")
+  		   ("DEL" dired-up-directory "dir up"))
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("o" dired-mark "dir mark")
+  		   ("<f9>" dired-unmark "dir unmark")
+  		   ("i SPC" dired-do-copy "dir copy")
+  		   ("i DEL" dired-do-delete "dir del")
+  		   ("ib" dired-do-rename "dir rename")
+  		   ("i RET" make-directory "make dir")
+  		   ("ig" dired-undo "undo"))))
+#+end_src
+** editing text
+:PROPERTIES:
+:NAME:     editing-text
+:END:
+*** text-editing controls
+:PROPERTIES:
+:NAME:     controls-text-editing
+:DEPENDS:  controls-linked-text-keys
+:END:
+#+begin_src emacs-lisp
+(indent-tabs-mode -1)
+#+end_src
+**** modes
+:PROPERTIES:
+:NAME:     controls-text-editing-modes
+:DEPENDS:  ai
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-text-editing-controls
+      '(c-mode
+	conf-toml-mode
+  	conf-unix-mode
+  	copilot-chat-prompt-mode
+  	copilot-chat-org-prompt-mode
+        ;;csv-mode
+  	css-mode
+  	emacs-lisp-mode
+  	ess-r-mode
+  	feature-mode
+	fundamental-mode
+  	inferior-python-mode
+  	js-json-mode
+  	js-mode
+  	lisp-data-mode
+  	lisp-interaction-mode
+  	lisp-mode
+  	markdown-mode
+  	nix-mode
+  	org-mode
+  	prolog-mode
+	ps-mode
+  	python-mode
+  	sclang-mode
+  	sh-mode
+  	sql-mode
+  	sweeprolog-mode
+  	text-mode
+	web-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-text-editing-keys
+:DEPENDS:  controls-text-editing-modes
+:ID:       8a909a3c-6fa6-46f3-9434-6cc6470acfea
+:END:
+p and g are available navigation by bookmarks?
+cannot use TAB in control mode because it's the same as ctrl-i, which is used as a leader key for org stuff
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-text-editing-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (
+  		   ("RET" newline "newline")
+  		   ;;("*" split-line "split line")
+  		   ("DEL" delete-backward-char "pre del")
+  		   ("i DEL" kill-whole-line "kill whole line")
+  		   ("<deletechar>" delete-forward-char "nex del")
+  		   ("i <deletechar>" kill-line "kill to end") 
+  		   ("it" kill-region "snip")
+  		   ("ia" yank "paste")
+  		   ("ir" yank-from-kill-ring "paste from ring")
+  		   ("il" join-line "join prev line")
+  		   ("ic" (join-line t) "join next line")
+  		   ;; ("i TAB" indent-relative "indent")
+  		   ("ig" undo "undo")
+  		   ("id" with-editor-finish "editor finish")
+  		   ;;("if" with-editor-cancel "editor cancel") ;; this seems to delete files for some reason
+  		   )))
+
+(my-add-to-hydra 'fundamental-mode
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  (
+  		   ("g" widget-backward "backward widget")
+  		   ("p" widget-forward "forward widget"))
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("RET" widget-button-press "press button"))))
+#+end_src
+** customizing emacs's appearance
+:PROPERTIES:
+:NAME:     appearance
+:ID:       4745446c-c58c-410c-aa7c-79bed507a901
+:END:
+Having to do with emacs visuals; make it look ok before we start on other stuff
+#+begin_src emacs-lisp
+(global-visual-line-mode t)
+(menu-bar-mode -1)
+(toggle-frame-fullscreen)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(setq inhibit-splash-screen t
+      inhibit-startup-screen t
+      x-underline-at-descent-line nil)
+(setq-default fit-window-to-buffer-horizontally t)
+#+end_src
+**** appearance controls
+:PROPERTIES:
+:NAME:     controls-appearance
+:DEPENDS:  controls-main-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-appearance-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-appearance-controls modes-that-use-main-controls)
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-appearance-keys
+:DEPENDS:  controls-appearance-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-appearance-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  (("f SPC" text-scale-decrease "zoom out")
+  		   ("f RET" text-scale-increase "zoom in"))
+  		  "Interaction"
+  		  ()))
+#+end_src
+**** themes
+:PROPERTIES:
+:NAME:     themes
+:END:
+#+begin_src emacs-lisp
+(use-package solarized-theme
+  :config
+  (setq solarized-use-variable-pitch nil
+  	solarized-scale-org-headlines t)
+  (load-theme 'solarized-light t t)
+  (load-theme 'solarized-dark t t))
+
+;; (defun enable-time-appropriate-theme ()
+;;   "Load `solarized-dark` after 5pm and `solarized-light` before 5pm."
+;;   (let ((hour (string-to-number (format-time-string "%H"))))
+;;     (if (>= hour 19)
+;; 	(enable-theme 'solarized-dark)
+;;       (enable-theme 'solarized-light))))
+
+#+end_src
+* enhanced emacs :enhanced:
+:PROPERTIES:
+:NAME:     enhanced-emacs
+:END:
+emacs with additional functionality and customization
+** customizing emacs's appearance
+:PROPERTIES:
+:NAME:     enhanced-appearance
+:ID:       2b606e81-f73f-4a39-87dc-122656c7da42
+:END:
+Having to do with emacs visuals; make it look ok before we start on other stuff
+#+begin_src emacs-lisp
+;; must have this font installed
+(add-to-list 'default-frame-alist '(font . "Source Code Pro"))
+(setq-default fit-window-to-buffer-horizontally t)
+(setq golden-ratio-auto-scale nil)
+
+(use-package all-the-icons
+  :config
+  (setq all-the-icons-scale-factor 1.0)
+  ;; Explicitly set Font Awesome version if needed
+  (setq all-the-icons-font-families
+        '((faicon . "FontAwesome")))
+  ;; Enable for Dired
+  ;; (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  :if (display-graphic-p))
+#+end_src
+*** mode line
+:PROPERTIES:
+:NAME:     mode-line
+:DEPENDS:  projects
+:END:
+#+begin_src emacs-lisp
+(setq solarized-high-contrast-mode-line t)
+
+(setq-default mode-line-format
+  	      (list 
+  	       mode-line-modified
+  	       " "
+  	       mode-line-buffer-identification
+  	       "  "
+  	       "%l"
+  	       ":"
+  	       "%c"
+  	       "  "
+  	       "%p"
+  	       "   "
+  	       '(:eval (my-get-project-name (project-current)))
+  	       "   "
+  	       '(:eval mode-name)
+  	       "   "
+  	       '(vc-mode vc-mode)
+  	       ))
+#+end_src
+*** enhanced appearance controls
+:PROPERTIES:
+:NAME:     controls-enhanced-appearance
+:DEPENDS:  controls-appearance-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-enhanced-appearance-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-enhanced-appearance-controls modes-that-use-main-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-enhanced-appearance-keys
+:DEPENDS:  controls-enhanced-appearance-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-enhanced-appearance-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  (("f r" (default-text-scale-reset) "global zoom reset")
+  		   ("f SPC" (default-text-scale-decrease) "global zoom out")
+  		   ("f (" text-scale-decrease "zoom out")
+  		   ("f RET" (default-text-scale-increase) "global zoom in")
+  		   ("f *" text-scale-increase "global zoom in"))
+  		  "Interaction"
+  		  ()))
+#+end_src
+** working with emacs in general
+:PROPERTIES:
+:NAME:     enhanced-emacs-general
+:END:
+https://github.com/minad/vertico#complementary-packages
+#+begin_src emacs-lisp
+(use-package vertico
+  :init
+  (vertico-mode)
+  (vertico-multiform-mode))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  (orderless-matching-styles '(orderless-prefixes orderless-literal)))
+(setq completion-styles '(basic))
+
+(use-package marginalia
+  :init
+  (marginalia-mode))
+
+;; marginalia annotation functions
+;;(defun my-marginalia-annotate-capitol-node (cand)
+;;())
+#+end_src
+*** enhanced minibuffer controls
+:PROPERTIES:
+:NAME:     controls-enhanced-minibuffer
+:DEPENDS:  controls-minibuffer-keys
+:END:
+**** keys
+:PROPERTIES:
+:NAME:     controls-enhanced-minibuffer-keys
+:DEPENDS:  controls-enhanced-minibuffer-modes
+:ID:       843ed509-80b1-4ff2-a6b7-2825004c95ea
+:END:
+#+begin_src emacs-lisp
+;; Connection
+;;  (global-set-key (kbd "C-f") #'abort-recursive-edit)
+;; Navigation
+;;  (global-set-key (kbd "C-SPC") #'vertico-previous)
+;;  (global-set-key (kbd "C-e") #'vertico-next)
+;; Display
+;;  (global-set-key (kbd "C-b") #'marginalia-cycle)
+;; Interaction
+;;  (global-set-key (kbd "C-<return>" #'my-empty-vertico-exit)
+;;  (global-set-key (kbd "C-d") #'vertico-exit-input)
+;;  (global-set-key (kbd "C-o") #'embark-select)
+
+;;  (global-set-key (kbd "C-p") #'embark-export)
+;;  (global-set-key (kbd "C-h") #'embark-act)
+;;  (global-set-key (kbd "C->") #'embark-act-all)
+;;  (global-set-key (kbd "C-u") #'embark-become)
+;;(global-set-key (kbd "C-<tab>") #'vertico-insert)
+;;  (global-set-key (kbd "C-i C-SPC") #'vertico-save)
+
+(my-add-to-hydra modes-that-use-enhanced-minibuffer-controls
+  		 ("Connection"
+  		  (("f" abort-recursive-edit "mini quit"))
+  		  "Navigation"
+  		  (("SPC" vertico-previous "pree line")
+  		   ("e" vertico-next "nex line")
+  		   ("(" vertico-previous-group "pree group")
+  		   (")" vertico-next-group "nex group"))
+  		  "Display"
+  		  (("b" marginalia-cycle "marge cycle"))
+  		  "Interaction"
+  		  (
+  		   ;; ("g" embark-select "mark")
+  		   ;; ("p" embark-export "export")
+  		   ("RET" (vertico-exit nil) "select")
+  		   ("*" vertico-exit-input "select input")
+  		   ;; ("h" embark-act "embark act")
+  		   ;; (">" embark-act-all "embark act all")
+  		   ;; ("u" embark-become "embark become")
+  		   ("<tab> RET" vertico-insert "insert")
+  		   ("i SPC" vertico-save "copy" :exit t))))
+#+end_src
+**** modes
+:PROPERTIES:
+:NAME:     controls-enhanced-minibuffer-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-enhanced-minibuffer-controls
+      '(minibuffer-inactive-mode
+  	minibuffer-mode))
+#+end_src
+*** enhanced main controls
+:PROPERTIES:
+:NAME:     controls-enhanced-main
+:DEPENDS:  controls-main-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-enhanced-main-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-enhanced-main-controls modes-that-use-main-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-enhanced-main-keys
+:DEPENDS:  controls-enhanced-main-modes
+:END:
+#+begin_src emacs-lisp
+;; (my-add-to-hydra modes-that-use-enhanced-main-controls
+;; 		 ("Connection"
+;; 		  (("key" function "short desc"))
+;; 		  "Navigation"
+;; 		  (("key" function "short desc"))
+;; 		  "Display"
+;; 		  (("key" function "short desc"))
+;; 		  "Interaction"
+;; 		  (("key" function "short desc"))))
+#+end_src
+** working with buffers
+:PROPERTIES:
+:NAME:     enhanced-buffers
+:DEPENDS:  buffers workbench projects
+:ID:       96fd7d65-fd07-40da-97be-8669c2078038
+:END:
+#+begin_src emacs-lisp
+(defun my-get-major-mode (buffer)
+  "Return the major mode of the given buffer."
+  (with-current-buffer buffer
+    major-mode))
+
+(defun my-string-matches-any-regex-p (str regex-list)
+  "Return t if STR matches any regex in REGEX-LIST."
+  (cl-loop for regex in regex-list
+  	   thereis (string-match-p regex str)))
+
+;; (defun my-group-by-project (buffer)
+;;   "Returns buffer's project name, or 'ungrouped', according to buffer name and mode."
+;;   (let ((b-name (buffer-name buffer))
+;; 	(m-mode (my-get-major-mode buffer))
+;; 	(p-name (my-get-project-name (my-get-project-containing-buffer buffer))))
+;;     (if (or (my-string-matches-any-regex-p b-name my-ungrouped-buffers)
+;; 	    (memq m-mode my-ungrouped-modes)
+;; 	    (not p-name))
+;; 	nil
+;;       p-name)))
+
+;; (defun my-group-by-project-and-mode (buffer)
+;;   "Returns a concatenation of project name + major mode or 'ungrouped', according to buffer name and mode."
+;;   (let ((b-name (buffer-name buffer))
+;; 	(m-mode (my-get-major-mode buffer))
+;; 	(p-name (my-get-project-name (my-get-project-containing-buffer buffer))))
+;;     (if (or (my-string-matches-any-regex-p b-name my-ungrouped-buffers)
+;; 	    (memq m-mode my-ungrouped-modes))
+;; 	nil
+;;       (concat p-name "--" (symbol-name m-mode)))))
+
+;; (use-package centaur-tabs
+;;   :config
+;;   (setq centaur-tabs-cycle-scope 'tabs
+;; 	centaur-tabs-enable-ido-completion nil
+;; 	centaur-tabs-height 32
+;; 	centaur-tabs-set-close-button nil
+;; 	centaur-tabs-set-icons nil
+;; 	centaur-tabs-set-modified-marker t
+;; 	centaur-tabs-show-new-tab-button nil
+;; 	centaur-tabs-style "rounded"
+;; 	centaur-tabs-set-bar 'left))
+
+(setq consult-line-start-from-top t
+      consult-preview-key nil ;; if this is set to 'any, it screws up autohydra
+      my-ungrouped-buffers '()
+      my-ungrouped-modes '())
+
+(setq my-debug-template-prefix "My Debug")
+;;todo: add to hidden buffers in other s;; ections rather than here 
+;; my-hidden-buffers `("\\*Async.*" "\\*Backtrace\\*" "\\*dap.*" "\\*Flycheck.*" "\\*Ilist\\*" "\\*LSP.*" "\\*lsp-log.*" "\\*Messages\\*" "\\*Mini.*" "\\*Old.*" "\\*pyright.*" "\\*pytest.*" "\\*Python.*" "\\*ruff.*" "\\*scratch\\*" "\\*Warnings\\*" "\\*xref\\*" ,(concat "\\" my-debug-template-prefix ".*")))
+
+#+end_src
+*** enhanced buffer controls
+:PROPERTIES:
+:NAME:     controls-enhanced-buffer
+:DEPENDS:  controls-buffer-keys controls-project-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-enhanced-buffer-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-enhanced-buffer-controls modes-that-use-main-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-enhanced-buffer-keys
+:DEPENDS:  controls-enhanced-buffer-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-enhanced-buffer-controls
+  		 ("Connection"
+  		  (("ht" consult-buffer "go buff" :exit t)
+  		   ("h SPC" consult-project-buffer "go proj buff" :exit t))
+  		  "Navigation"
+  		  (
+  		   ;;("v" centaur-tabs-backwa;; rd "prev proj tab")
+  		   ;; ("x" centaur-tabs-forward "next proj tab")
+  		   )
+  		  "Display"
+  		  (
+  		   ;;("fz" centaur-tabs-mode "toggle buffer tabs")
+  		   ;;("!" centaur-tabs-move-current-tab-to-left "move tab left")
+  		   ;;("?" centaur-tabs-move-current-tab-to-right "move tab right")
+  		   )
+  		  "Interaction"
+  		  ()))
+#+end_src
+** working with windows
+:PROPERTIES:
+:NAME:     enhanced-windows
+:ID:       0300505b-4768-4c4e-a8f5-b3e2f7b8911a
+:END:
+#+begin_src emacs-lisp
+(use-package popper
+  :config
+  ;; (setq popper-reference-buffers ;; attempt to fix crashes mentioned below
+  ;; 	'(("^\\*Metahelp\\*$" . hide)))
+  (setq popper-reference-buffers
+  	'("^CAPTURE-.*$"  ;; org captures
+  	  "^COMMIT_EDITMSG$"
+  	  ;;"^.*\.org\:\:.*$" ;; agenda indirect follow mode buffers; does not give any benefit compared to default behavior
+  	  ;;".*\\*shell\\*"
+  	  ;;shell-mode
+  	  ;;"^\\*Help\\*$"   help-mode
+  	  ;;"^\\*Messages\\*$"  messages-buffer-mode
+  	  ))
+  popper-window-height 20)
+
+#+end_src
+
+*** enhanced window controls
+:PROPERTIES:
+:NAME:     controls-enhanced-window
+:DEPENDS:  controls-window-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-enhanced-window-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-enhanced-window-controls modes-that-use-window-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-enhanced-window-keys
+:DEPENDS:  controls-enhanced-window-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-enhanced-window-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  (("C-<left>" windswap-left "left win swap")
+  		   ("C-<right>" windswap-right "right win swap")
+  		   ("C-<up>" windswap-up "up win swap")
+  		   ("C-<down>" windswap-down "down win swap")
+  		   ("fl" popper-kill-latest-popup "close popup")
+  		   ("fa" popper-toggle-type "popper toggle type")
+  		   ("f <f7>" golden-ratio "gold")
+  		   ("f S-<f7>" golden-ratio-mode "gold mode"))
+  		  "Interaction"
+  		  ()))
+
+(my-add-to-hydra modes-that-use-side-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  (("fl" popper-kill-latest-popup "close popup"))
+  		  "Interaction"
+  		  ()))
+#+end_src
+** reading text
+:PROPERTIES:
+:NAME:     enhanced-reading-text
+:END:
+#+BEGIN_SRC emacs-lisp
+(use-package hide-lines
+  :ensure nil  ;; Provided by Nix
+  :commands (hide-lines hide-lines-show-all))
+#+END_SRC
+*** enhanced text reading controls
+:PROPERTIES:
+:NAME:     controls-enhanced-text-reading
+:DEPENDS:  controls-text-reading-keys
+:END:
+#+begin_src emacs-lisp
+
+
+;; todo: fix. right if right buffer, left if left buffer
+(defun my-get-sidebar-position ()
+  'left)
+;; (if (= 0 (nth 0 (window-edges (selected-window) nil t)))
+;; 	  'left
+;; 	'right))
+
+;; (defun my-launch-imenu ()
+;;   (interactive)
+;;   (let ((imenu-list-position (my-get-sidebar-position)))
+;;     (imenu-list-smart-toggle)))
+
+;; (defun my-imenu-goto-and-close ()
+;;   (interactive)
+;;   (imenu-list-goto-entry)
+;;   (imenu-list-quit-window))
+
+(use-package imenu-list
+  :config
+  (setq imenu-list-auto-resize t
+  	imenu-list-focus-after-activation t
+  	imenu-list-position 'left
+  	org-imenu-depth 7)
+  (remove-hook 'imenu-list-after-jump-hook 'recenter)
+  (add-hook 'imenu-list-after-jump-hook (lambda () (recenter 0))))
+#+end_src 
+**** modes
+:PROPERTIES:
+:NAME:     controls-enhanced-text-reading-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-enhanced-text-reading-controls modes-that-use-text-reading-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-enhanced-text-reading-keys
+:DEPENDS:  controls-enhanced-text-reading-modes
+:ID:       68f74fc3-0b0e-4fba-896c-c24d69f5bdea
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-enhanced-text-reading-controls
+  		 ("Connection"
+  		  (("hg" imenu-list-smart-toggle "imenu toggle")
+  		   ("hr" consult-imenu "consult imenu")
+  		   ("h{" consult-imenu-multi "consult imenu multi"))
+  		  "Navigation"
+  		  (("r" consult-line "search" :exit t)
+  		   ("{" consult-line-multi "search multi" :exit t))
+  		  "Display"
+  		  (("fw" hide-lines-show-all "show hidden lines"))
+  		  "Interaction"
+  		  ()))
+
+(my-add-to-hydra modes-that-use-side-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  (("r" consult-line "search" :exit t))
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+
+(my-add-to-hydra 'imenu-list-major-mode
+  		 ("Connection"
+  		  (("hg" imenu-list-smart-toggle "imenu toggle")
+  		   ("hf" imenu-list-quit-window "quit"))
+  		  "Navigation"
+  		  (("SPC" previous-line "pree line")
+  		   ("e" next-line "nex line")
+  		   ("(" backward-paragraph "pree chunk")
+  		   (")" forward-paragraph "nex chunk"))
+  		  "Display"
+  		  (("t" hs-hide-block "hide block")
+  		   ("s" hs-show-block "show block")
+  		   ("c" imenu-list-display-entry "show entry")
+  		   )
+  		  "Interaction"
+  		  (("RET" imenu-list-goto-entry "go entry")
+  		   ;; ("f" my-imenu-goto-and-close "go entry and close")
+  		   )))
+#+end_src
+** working with the filesystem
+:PROPERTIES:
+:NAME:     enhanced-file-system
+:END:
+#+begin_src emacs-lisp
+(use-package treemacs
+  :config
+  (setq treemacs-persist-file (expand-file-name "treemacs/treemacs-persist" user-emacs-directory)))
+
+(defun my-treemacs-org-capture ()
+    "Project capture for the project containing the treemacs point."
+    (interactive)
+    (let* ((filepath-at-point (treemacs--prop-at-point :path))
+	  (project-at-point (my-find-project-containing-dir filepath-at-point))
+	  (project-dir (my-get-project-root project-at-point)))
+      (message "filepath: %s" project-dir)
+      ;; load dir locals as buffer, capture from there?
+      ;; (other-window 1)
+      ;; (setq unread-command-events '())
+      ;; (org-capture (my-find-project-containing-dir filepath-at-point))
+      ))
+
+(defun my-treemacs-get-path-at-point ()
+  (treemacs--prop-at-point :path))
+
+(defun my-treemacs-get-project-at-point ()
+  (my-find-project-containing-dir (my-treemacs-get-path-at-point)))
+
+(defun my-treemacs-show-project-at-point ()
+  (interactive)
+  (message "%s" (my-get-project-name (my-treemacs-get-project-at-point))))
+
+(setq aw-keys '(?s ?e ?n ?c ?i ?p ?o ?h ?b ?u))
+;; (defun my-launch-treemacs ()
+;;   (interactive)
+;;   (let ((treemacs-position (my-get-sidebar-position)))
+;;     (treemacs)))
+#+end_src 
+*** enhanced file-system controls
+:PROPERTIES:
+:NAME:     controls-enhanced-file-system
+:DEPENDS:  controls-file-system-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-enhanced-file-system-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-enhanced-file-system-controls modes-that-use-file-system-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-enhanced-file-system-keys
+:DEPENDS:  controls-enhanced-file-system-modes
+:ID:       4c5ae289-255a-4afa-9888-2f2df8582b38
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra 'dired-mode
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  (("t" dired-subtree-remove "deer hide sub")
+  		   ("s" dired-subtree-insert "deer show sub"))
+  		  "Interaction"
+  		  (("it" dired-ranger-move "deer move")
+  		   ("i SPC" dired-ranger-copy "deer copy")
+  		   ("ia" dired-ranger-paste "deer paste"))))
+
+(my-add-to-hydra modes-that-use-file-system-controls
+  		 ("Connection"
+  		  (("hl" treemacs "treemacs"))))
+
+(my-add-to-hydra 'treemacs-mode
+  		 ("Connection"
+  		  (("u SPC" treemacs-switch-workspace "go workspace")
+  		   ("<return>" (treemacs-visit-node-in-most-recently-used-window)  "visit")
+  		   ("d" treemacs-visit-node-ace  "other visit")
+  		   ("fn" treemacs-visit-node-horizontal-split  "visit hsplit")
+  		   ("fh" treemacs-visit-node-vertical-split  "visit vsplit")
+  		   ("x" treemacs-next-workspace "tree nex work")
+  		   ("v" (treemacs-next-workspace -1) "tree pree work")
+  		   ("hl" treemacs "treemacs")
+  		   ("hf" treemacs-quit "treemacs"))
+  		  "Navigation"
+  		  (("SPC" treemacs-previous-line "tree pree line")
+  		   ("e" treemacs-next-line "tree nex line")
+  		   )
+  		  "Display"
+  		  (("t" treemacs-COLLAPSE-action "tree hide")
+  		   ("a" treemacs-collapse-all-projects "tree hide proj")
+  		   ("s" treemacs-RET-action "tree show")
+  		   ("c" (treemacs-visit-node-in-most-recently-used-window '(4))  "tree peek")
+  		   ("," treemacs-peek-mode "tree peek mode")
+  		   ("fp" treemacs-fit-window-width "tree fit win")
+  		   ("ff" delete-window "delete win")
+  		   ("<home>" treemacs-decrease-width "tree shrink horz")
+  		   ("<end>" treemacs-increase-width "tree grow horz"))
+  		  "Interaction"
+  		  (("o" treemacs-mark-or-unmark-path-at-point "tree mark")
+  		   ("it" treemacs-move-file "deer move")
+		   ("j" my-treemacs-org-capture "org capture" :exit t)
+  		   ("i SPC" treemacs-copy-file "tree copy")
+  		   ("i (" treemacs-copy-absolute-path-at-point "tree copy path")
+  		   ("ia" treemacs-create-file "tree create")
+  		   ("i RET" treemacs-create-dir "tree create dir")
+  		   ("i DEL" treemacs-delete-file "tree dell")
+  		   ("ib" treemacs-rename-file "tree rename")
+  		   ("ie" treemacs-edit-workspaces "tree edit work")
+  		   ("iw" treemacs-refresh "tree refresh"))))
+
+#+end_src
+** editing text
+:PROPERTIES:
+:NAME:     enhanced-editing-text
+:ID:       45ca9f80-f658-4d37-9597-7e9ea7d20fc7
+:END:
+completions:
+- tab initiates completion everywhere in both literal and control modes
+- each major mode has a default completion configuration, a set of capfs it uses, configured like this:
+(add-hook 'org-mode-hook
+(lambda ()
+(setq-local completion-at-point-functions
+(list
+#'cape-elisp-block
+#'cape-dabbrev))))
+
+| tab + key | completion                                           |
+|-----------+------------------------------------------------------|
+| spc       | mode-specific default                                |
+| i         | abbrev                                               |
+| e         | word from (project-specific) dict                    |
+| t         | word from this buffer (dabbrev)                      |
+| f1        | line from this buffer                                |
+| s         | word from open (project?) buffers in this major mode |
+| f7        | line from open (project?) buffers in this major mode |
+| r         | language keyword                                     |
+| d         | file name                                            |
+| n         | comint/shell/minibuffer history                      |
+| p         | add mode abbrev                                      |
+| ]         | remove mode abbrev                                   |
+| b         | add global abbrev                                    |
+| +         | remove global abbrev                                 |
+| tab       | ai complete? show completion generally?              |
+| ret       | ai accept whole completion                           |
+| a         | ai accept by word                                    |
+| l         | ai accept by line                                    |
+| g         | ai next completion                                   |
+| del       | ai prev completion                                   |
+| f         | ai clear overlay                                     |
+| w         | ai mode                                              |
+|           |                                                      |
+
+#+begin_src emacs-lisp
+(defhydra my-corfu-hydra (:hint nil)
+  "Corfu"
+  ("<return>" corfu-insert "insert")
+  ("SPC" corfu-previous "prev")
+  ("e" corfu-next "next")
+  ("a" corfu-scroll-up "scroll up")
+  ("n" corfu-scroll-down "scroll down")
+  ("l" corfu-prompt-beginning "beg")
+  ("c" corfu-prompt-end "end")
+  ("/" corfu-first "first")
+  ("," corfu-last "last")
+  ("b" corfu-info-location "info loc")
+  ("w" corfu-info-documentation "docs")
+  ("f" corfu-quit "quit" :exit t))
+
+(use-package corfu
+  :bind (:map corfu-map
+  	      ("<f1>" . 'my-corfu-hydra/body))
+  :custom (completion-styles '(orderless basic))
+  (corfu-cycle nil)
+  (corfu-quit-at-boundary nil)
+  (corfu-quit-no-match nil)
+  :init
+  (global-corfu-mode))
+
+(setq dabbrev-ignored-buffer-modes
+      '(archive-mode image-mode pdf-view-mode special-mode))
+
+(use-package cape
+  :init
+  (setq cape-dabbrev-min-length 4
+  	cape-dabbrev-check-other-buffers 'nil
+  	cape-line-buffer-function #'current-buffer))
+;;   (cape-dict-file nil)
+;; ;; :init
+;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
+;; (add-hook 'completion-at-point-functions #'cape-file)
+;; (add-hook 'completion-at-point-functions #'cape-history)
+;; (add-hook 'completion-at-point-functions #'cape-line)
+;; ;;(add-hook 'completion-at-point-functions #'my-cape-dabbrev-open-buffers)
+
+(global-origami-mode)
+
+(add-hook 'text-mode-hook
+  	  (lambda ()
+  	    (setq-local completion-at-point-functions
+  			(list
+  			 #'cape-dabbrev))))
+#+end_src
+*** enhanced editing text controls
+:PROPERTIES:
+:NAME:     controls-enhanced-text-editing
+:DEPENDS:  controls-text-editing-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-enhanced-text-editing-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-enhanced-text-editing-controls modes-that-use-text-editing-controls)
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-enhanced-text-editing-keys
+:DEPENDS:  controls-enhanced-text-editing-modes
+:ID:       7f850373-1dd5-4256-b2d8-094c83c66e36
+:END:
+#+begin_src emacs-lisp
+(global-set-key (kbd "<tab>") nil)
+(global-set-key (kbd "<tab> m") 'indent-relative)
+;;(global-set-key (kbd "<tab> <tab>") 'indent-relative)
+
+(global-set-key (kbd "<tab> SPC") 'completion-at-point)
+(global-set-key (kbd "<tab> i") 'cape-abbrev)
+(global-set-key (kbd "<tab> e") 'cape-dict)
+(global-set-key (kbd "<tab> t") 'cape-dabbrev) ;;current buffer
+;;(global-set-key (kbd "<tab> s") 'cape-dabbrev) ;;project buffers
+(global-set-key (kbd "<tab> <f1>") 'cape-line)
+(global-set-key (kbd "<tab> r") 'cape-keyword)
+(global-set-key (kbd "<tab> d") 'cape-file)
+(global-set-key (kbd "<tab> n") 'cape-history)
+
+(global-set-key (kbd "<tab> p") 'add-mode-abbrev)
+(global-set-key (kbd "<tab> ]") 'inverse-add-mode-abbrev)
+(global-set-key (kbd "<tab> b") 'add-global-abbrev)
+(global-set-key (kbd "<tab> +") 'inverse-add-mode-abbrev)
+
+;;(global-set-key (kbd "<tab> {") 'my-cape-dabbrev-open-buffers)
+;; (global-set-key (kbd "<tab> w") 'cape-line)
+;; (global-set-key (kbd "<tab> d") 'cape-file)
+
+(my-add-to-hydra modes-that-use-enhanced-text-editing-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (
+  		   ("ir" consult-yank-from-kill-ring "paste from ring")
+  		   ("ig" undo-fu-only-undo "undo")
+  		   ("iw" undo-fu-only-redo "redo"))
+  		  "Completion"
+  		  (("<tab> SPC" completion-at-point "comp default" :exit t)
+  		   ("<tab> i" cape-abbrev "comp abbr" :exit t)
+  		   ("<tab> e" cape-dict "comp dict" :exit t)
+  		   ("<tab> t" cape-dabbrev "comp word" :exit t)
+  		   ("<tab> <f1>" cape-line "comp line" :exit t)
+  		   ("<tab> r" cape-keyword "comp key" :exit t)
+  		   ("<tab> d" cape-file "comp file" :exit t)
+  		   ("<tab> n" cape-history "comp hist" :exit t)
+  		   ("<tab> p" add-mode-abbrev "add mode abbr" :exit t)
+  		   ("<tab> ]" inverse-add-mode-abbrev "rem mode abbr file" :exit t)
+  		   ("<tab> b" add-global-abbrev "add glob abbr" :exit t)
+  		   ("<tab> +" inverse-add-mode-abbrev "rem glob abbr" :exit t))))
+#+end_src
+** managing passwords
+:PROPERTIES:
+:NAME:     password-management
+:DEPENDS:  environment emacs-general
+:END:
+#+BEGIN_SRC emacs-lisp
+(use-package bitwarden
+  :config
+  (bitwarden-auth-source-enable)
+  (setq bitwarden-user "jessenieboer@protonmail.com"))
+
+(use-package auth-source
+  :config
+  ;; Prioritize Bitwarden backend, fallback to ~/.authinfo.gpg
+  (setq auth-sources '(bitwarden (:source "~/.authinfo.gpg"))))
+;; Optional: Debug auth-source issues
+;; (setq auth-source-debug t))
+#+end_src
+*** password-management controls
+:PROPERTIES:
+:NAME:     controls-password-management
+:DEPENDS:  controls-main-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-password-management-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-password-management-controls
+      '())
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-password-management-keys
+:DEPENDS:  controls-password-management-modes
+:END:
+#+begin_src emacs-lisp
+
+(my-add-to-hydra 'bitwarden-list-dialog-mode
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("ia" bitwarden-list-all-kill-ring-save "copy pw"))))
+#+end_src
+* specified emacs :specified:
+:PROPERTIES:
+:NAME:     specified-emacs
+:ID:       d6bcd942-f1ed-4f1c-82d4-b6280acaf875
+:END:
+emacs setup for specific kinds of work
+#+begin_src emacs-lisp
+
+#+end_src
+** using ai
+:PROPERTIES:
+:NAME:     ai
+:DEPENDS:  workbench
+:END:
+
+#+begin_src emacs-lisp
+(require 'gptel)
+(require 'gptel-anthropic)
+(require 'gptel-bedrock)
+(require 'gptel-context)
+(require 'gptel-gemini)
+(require 'gptel-gh)
+(require 'gptel-integrations)
+(require 'gptel-kagi)
+(require 'gptel-ollama)
+(require 'gptel-openai)
+(require 'gptel-openai-extras)
+(require 'gptel-org)
+(require 'gptel-request)
+(require 'gptel-rewrite)
+(require 'gptel-transient)
+
+(use-package gptel-agent
+  :config (gptel-agent-update))
+;; (require 'gptel-agent)
+;; (require 'gptel-agent-tools)
+;; (require 'gptel-agent-tools-introspection)
+
+;; (setq gptel-backend (gptel-make-gh-copilot "Copilot")
+;;       gptel-default-mode 'org-mode
+;;       gptel-model "gpt-5")
+
+(defun my-xAI-login ()
+  (if (not (bitwarden-unlocked-p))
+      (bitwarden-unlock))
+  (setq gptel-backend (gptel-make-xai "xAI"
+			:key (bitwarden-getpass "grok-api-key")
+			:models '(grok-4-1-fast-reasoning
+				  grok-code-fast)
+			:stream t)
+	gptel-default-mode 'org-mode
+	gptel-include-reasoning t
+	gptel-model 'grok-4-1-fast-reasoning))
+
+;; (setq gptel-include-reasoning t)
+
+(advice-add 'gptel-agent-update :around
+            (lambda (orig-fun &rest args)
+              (hack-dir-local-variables-non-file-buffer)
+              (apply orig-fun args)))
+
+(my-add-reference-buffer-patterns '(".*\\*Copilot.*" "^\\*gptel-agent.*" "^\\*xAI.*"))
+
+(defun my-add-project-context (project-name)
+  (let ((proj-root (my-get-project-root (my-get-project-with-name project-name))))
+    (gptel-context-add-file (expand-file-name "bdd/features/" proj-root))
+    (gptel-context-add-file (expand-file-name "bdd/steps/" proj-root))
+    (gptel-context-add-file (expand-file-name "docs/" proj-root))
+    (gptel-context-add-file (expand-file-name "project/" proj-root))
+    ))
+
+(my-add-project-context "bdd_test")
+
+(defun my-treemacs-add-project-context-at-point ()
+  (interactive)
+  (let ((proj (my-treemacs-get-project-at-point)))
+    (if (not proj)
+	(message "no project at point")
+      (message "adding %s project root to ai context" (my-get-project-name proj))
+      (gptel-context-add-file (my-get-project-root proj)))))
+
+(put 'gptel-agent-dirs 'safe-local-variable #'listp)
+(put 'gptel-confirm-tool-calls 'safe-local-variable #'listp)
+(put 'gptel-include-tool-results 'safe-local-variable #'listp)
+
+;; (use-package mcp
+;;   :custom
+;;   (mcp-hub-servers
+;;    '(("filesystem" . (:command "npx"
+;;                                :args ("-y" "@modelcontextprotocol/server-filesystem")
+;;                                :roots ("/home/jessenieboer/Dropbox/household/"))))))
+
+
+
+
+
+
+;; (use-package copilot-chat
+;;     :config
+;;     (setq
+;;      copilot-chat-backend 'request
+;;      copilot-chat-frontend 'org))
+
+;;   (my-add-hidden-buffer-patterns '(".*\\*copilot.*"))
+;;   (my-add-hidden-buffer-patterns '(".*\\*Copilot.*"))
+;;   (my-add-reference-buffer-patterns '(".*\\*copilot.*"))
+;;   (my-add-reference-buffer-patterns '(".*\\*Copilot.*"))
+
+;;(add-to-list 'display-buffer-alist
+;; '("\\*Copilot-chat-list-.*"
+;;   (display-buffer-in-side-window)
+;;   (side . left)
+;;   (slot . 0)))
+
+
+;; (add-to-list 'display-buffer-alist
+;; 	     '("\\*Copilot-chat-prompt\\*"
+;; 	       (display-buffer-use-some-frame display-buffer-pop-up-frame)
+;; 	       (frame-predicate . (lambda (frame) (equal (frame-parameter frame 'name) my-input-frame-name)))
+;; 	       (pop-up-frame-parameters . ((name . my-input-frame-name)))
+;; 	       (inhibit-switch-frame . t)))
+#+end_src
+*** ai controls
+:PROPERTIES:
+:NAME:     controls-ai
+:DEPENDS:  controls-main-keys controls-text-editing-keys
+:ID:       97e7d4be-4960-428a-816b-a6f93a815fb4
+:GPTEL_MODEL: gpt-5
+:GPTEL_BACKEND: Copilot
+:GPTEL_SYSTEM: You are a large language model living in Emacs and a helpful assistant. Respond concisely.
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-ai-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-ai-controls
+      '(org-mode
+  	python-mode
+	sh-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-ai-keys
+:DEPENDS:  controls-ai-modes
+:ID:       507ca4e7-64f4-45ed-83b1-ab0c938f74fc
+:END:
+#+begin_src emacs-lisp
+;; (my-add-to-hydra modes-that-use-main-controls
+;;   		 ("Connection"
+;;   		  (("di <f6>" gptel "open ai chat"))))
+
+(my-add-to-hydra modes-that-use-ai-controls
+  		 ("Connection"
+  		  (("dix" gptel-agent "open ai agent")
+		   ("di <f7>" gptel "open ai chat")
+		   ("diw" gptel-mode "ai mode")
+  		   ("di\\" (my-xAI-login) "ai login" :exit t)
+  		   ("dih" (gptel-context--buffer-setup nil nil gptel-context) "show ai context"))
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("di?" (gptel-agent-update))
+		   ("di RET" gptel-send "ai send")
+		   ("dio" gptel-add "add ai context")
+		   ("diu" gptel-context-confirm "confirm context ops")
+		   ("di:" gptel-context-remove-all "remove ai context"))))
+
+  (my-add-to-hydra 'gptel-context-buffer-mode
+		 ("Connection"
+		  ()
+		  "Navigation"
+		  (("SPC" previous-line "pree line")
+  		   ("e" next-line "nex line")
+		   ("a" gptel-context-previous "visit")
+		   ("n" gptel-context-next "visit"))
+		  "Display"
+		  ()
+		  "Interaction"
+		  (("d" gptel-context-visit "visit")
+		   ("o" gptel-context-flag-deletion "visit")
+		   ("f" gptel-context-quit "visit"))))
+
+(my-add-to-hydra 'treemacs-mode
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+		  (("io" my-treemacs-add-project-context-at-point "add ai context"))))
+
+  ;; (my-add-to-hydra 'copilot-chat-prompt-mode
+  ;; 		 ("Connection"
+  ;; 		  (("dii" copilot-chat-list "ai context list"))
+  ;; 		  "Navigation"
+  ;; 		  ()
+  ;; 		  "Display"
+  ;; 		  ()
+  ;; 		  "Interaction"
+  ;; 		  (("i RET" copilot-chat-prompt-send "ai chat send"))))
+
+  ;; (my-add-to-hydra 'copilot-chat-org-prompt-mode
+  ;; 		 ("Connection"
+  ;; 		  (("dii" copilot-chat-list "ai context list"))
+  ;; 		  "Navigation"
+  ;; 		  ()
+  ;; 		  "Display"
+  ;; 		  ()
+  ;; 		  "Interaction"
+  ;; 		  (("i RET" copilot-chat-prompt-send "ai chat send"))))
+
+  ;; (my-add-to-hydra modes-that-use-ai-controls
+  ;; 		 ("Connection"
+  ;; 		  (("diw" copilot-mode "ai mode")
+  ;; 		   ("di\ +" copilot-login "ai login")
+  ;; 		   ("di <f6>" copilot-chat "ai chat")
+  ;; 		   ("dii" copilot-chat-list "ai context list"))
+  ;; 		  "Navigation"
+  ;; 		  ()
+  ;; 		  "Display"
+  ;; 		  ()
+  ;; 		  "Interaction"
+  ;; 		  (("di SPC" copilot-chat-yank "ai yank")
+  ;; 		   ("dir" copilot-chat-yank-pop "ai yank pop"))))
+
+  ;; (my-add-to-hydra 'copilot-chat-list-mode
+  ;; 		 ("Connection"
+  ;; 		  (("hw" copilot-chat-list-refresh "refresh list"))
+  ;; 		  "Navigation"
+  ;; 		  ()
+  ;; 		  "Display"
+  ;; 		  ()
+  ;; 		  "Interaction"
+  ;; 		  (("DEL" copilot-chat-list-clear-buffers "clear all buffers")
+  ;; 		   ("RET" copilot-chat-list-add-or-remove-buffer "add/remove buffer"))))
+
+  ;; (my-add-to-hydra 'copilot-chat-prompt-mode
+  ;; 		 ("Connection"
+  ;; 		  (("dii" copilot-chat-list "ai context list"))
+  ;; 		  "Navigation"
+  ;; 		  ()
+  ;; 		  "Display"
+  ;; 		  ()
+  ;; 		  "Interaction"
+  ;; 		  (("i RET" copilot-chat-prompt-send "ai chat send"))))
+
+  ;; (my-add-to-hydra 'copilot-chat-org-prompt-mode
+  ;; 		 ("Connection"
+  ;; 		  (("dii" copilot-chat-list "ai context list"))
+  ;; 		  "Navigation"
+  ;; 		  ()
+  ;; 		  "Display"
+  ;; 		  ()
+  ;; 		  "Interaction"
+  ;; 		  (("i RET" copilot-chat-prompt-send "ai chat send"))))
+
+  ;; (my-add-to-hydra modes-that-use-ai-controls
+  ;; 		 ("Connection"
+  ;; 		  ()
+  ;; 		  "Navigation"
+  ;; 		  ()
+  ;; 		  "Display"
+  ;; 		  ()
+  ;; 		  "Interaction"
+  ;; 		  ()))
+#+end_src
+** using a command line
+:PROPERTIES:
+:NAME:     command-line
+:ID:       bdc217fc-f4d7-44e3-967d-d6b2008e6e42
+:END:
+#+BEGIN_SRC emacs-lisp
+(add-hook 'comint-mode-hook
+          (lambda ()
+            (setq-local comint-scroll-to-bottom-on-input t)
+            (setq-local comint-scroll-to-bottom-on-output t)
+            (setq-local comint-move-point-for-output t)
+            (setq-local comint-scroll-show-maximum-output t)))
+#+END_SRC
+*** command-line controls 
+:PROPERTIES:
+:NAME:     controls-command-line
+:DEPENDS:  controls-meta-keys
+:END:
+**** modes
+:PROPERTIES:
+:NAME:     controls-command-line-modes
+:END:
+#+begin_src emacs-lisp
+  (setq modes-that-use-command-line-controls
+        '(comint-mode
+  	inferior-python-mode
+	prolog-inferior-mode
+  	shell-mode
+  	sweeprolog-top-level-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-command-line-keys
+:DEPENDS:  controls-command-line-modes controls-main-keys
+:ID:       507ca4e7-64f4-45ed-83b1-ab0c938f74fc
+:END:
+#+begin_src emacs-lisp
+  ;; adjust some keys that will still be active in literal mode
+  ;; (define-key comint-mode-map (kbd "<return>") 'comint-send-input)
+  ;;  (define-key comint-mode-map (kbd "<return>") 'newline)
+
+  (my-add-to-hydra modes-that-use-main-controls
+    		 ("Connection"
+    		  (("hn" project-shell "shell" :exit t))
+    		  "Navigation"
+    		  ()
+    		  "Display"
+    		  ()
+    		  "Interaction"
+    		  ()))
+
+  ;; prevent accidental commands
+  ;; 
+  ;; 
+
+  ;; override some text-editing stuff
+  (my-add-to-hydra modes-that-use-command-line-controls
+    		 ("Connection"
+    		  ()
+    		  "Navigation"
+    		  (
+    		   ("C-SPC" comint-previous-prompt "pree prompt")
+    		   ("C-e" comint-next-prompt "nex prompt")
+  		   ("SPC" previous-line "pree line")
+  		   ("e" next-line "nex line")
+  		   ("t" backward-char  "nex char")
+    		   ("s" forward-char  "nex char")
+    		   ("a" backward-word "pree word")
+    		   ("n" forward-word "nex word")
+    		   ("w" backward-sexp "pre bal")
+    		   ("b" forward-sexp "nex-bal")
+    		   ("l" move-beginning-of-line "line first")
+    		   ("c" move-end-of-line "line last")
+    		   ("r" comint-history-isearch-backward "history search" :exit t)
+    		   )
+    		  "Display"
+    		  ()
+    		  "Interaction"
+    		  (("o" set-mark-command "mark")
+  		   ("<f9>" exchange-point-and-mark "mark switch")
+  		   ("DEL" delete-backward-char "pre del")
+  		   ("i DEL" kill-whole-line "kill whole line")
+  		   ("<deletechar>" delete-forward-char "nex del")
+  		   ("i <deletechar>" kill-line "kill to end") 
+  		   ("it" kill-region "snip")
+  		   ("i SPC" kill-ring-save "copy")
+  		   ("ia" yank "paste")
+  		   ("ir" yank-from-kill-ring "paste from ring")
+  		   ("ig" undo "undo")
+  		   ("C-w" comint-previous-input "pree in")
+    		   ("C-b" comint-next-input "nex in")
+    		   ("RET" comint-send-input "send in")
+    		   ("if" comint-quit-subjob "quit")
+    		   ("i$" comint-kill-subjob "kill"))))
+#+end_src
+** using jira
+:PROPERTIES:
+:NAME:     jira
+:END:
+#+BEGIN_SRC emacs-lisp
+;;(defun my-load-jira-config ()
+;;  "Load .jira.el from the current project's root, if it exists."
+;;  (interactive)
+;;  (when-let* ((proj (project-current))
+;;              (jira-config-file (my-get-project-marker-file proj)))
+;;    (when (file-exists-p jira-config-file)			  
+;;      (load-file jira-config-file))))
+
+;;(add-hook 'buffer-focus-hook--in
+;;         (lambda ()
+;;            (when (and (buffer-file-name)
+;;                       (my-find-project-containing-dir (buffer-file-name)))
+;;              (my-load-jira-config))))
+
+;; (defvar jiralib-login-bitwarden-id nil)
+;; (defvar jiralib-token-bitwarden-id nil)
+;; (use-package org-jira
+;;   :after org
+;;   :config
+;;   (setq jiralib-use-rest-api t
+;; 	org-jira-working-dir (expand-file-name "org-jira/" user-emacs-directory))
+;;   (put 'jiralib-login-bitwarden-id 'safe-local-variable #'stringp)
+;;   (put 'jiralib-token-bitwarden-id 'safe-local-variable #'stringp)
+;;   (put 'jiralib-url 'safe-local-variable #'stringp)
+;;   (put 'jiralib-user 'safe-local-variable #'stringp)
+;;   (put 'jiralib-token 'safe-local-variable #'stringp))
+
+;; (defun my-setup-jira-token ()
+;;   (interactive)
+;;   (if jiralib-token-bitwarden-id
+;;       (progn
+;; 	(setq jiralib-token (cons
+;; 			     "Authorization"
+;; 			     (concat "Basic " (base64-encode-string (concat (bitwarden-runcmd "get" "username" jiralib-token-bitwarden-id) ":" (bitwarden-runcmd "get" "password" jiralib-token-bitwarden-id)) 'no-line-break))))
+;; 	(message "jira token set"))
+;;     (message "no jira token found for this project")))
+
+;;does not work for jira cloud
+;; (defun my-jira-login ()
+;;   (interactive)
+;;   (if jiralib-login-bitwarden-id
+;;       (progn
+;; 	(jiralib-login (bitwarden-runcmd "get" "username" jiralib-login-bitwarden-id) (bitwarden-runcmd "get" "password" jiralib-login-bitwarden-id))
+;; 	(message "logged in to jira"))
+;;     (message "no jira login info found")))
+
+;; (defun my-load-jira-config ()
+;;   "Load Jira configuration from .project.el in the current project's root."
+;;   (interactive)
+;;   (message "Starting my-load-jira-config...")
+;;   (when-let* ((proj (project-current))
+;;               (proj-root (my-get-project-root proj))
+;;               (jira-config (my-get-project-property proj :jira-config)))
+;;     (message "Project detected: %s" proj)
+;;     (message "Project root: %s" proj-root)
+;;     (message "Jira config loaded: %s" jira-config)
+;;     (let ((url (plist-get jira-config :jira-url))
+;;           (jql (plist-get jira-config :jira-default-jql))
+;;           (done-states (plist-get jira-config :jira-done-states))
+;;           (custom-jqls (plist-get jira-config :jira-custom-jqls))
+;;           (login (plist-get jira-config :jira-login))
+;;           (token (plist-get jira-config :jira-token)))
+;;       (message "Jira URL: %s" url)
+;;       (message "Jira default JQL: %s" jql)
+;;       (message "Jira done states: %s" done-states)
+;;       (message "Jira custom JQLs: %s" custom-jqls)
+;;       (message "Jira login: %s" login)
+;;       (message "Jira token function: %s" token)
+;;       ;; Evaluate token if it's a function (from auth-source-search)
+;;       (when (functionp token)
+;;         (let ((token-value (funcall token)))
+;;           (message "Jira token value: %s" (if token-value
+;;                                               "[redacted for security]"
+;;                                             "nil (token evaluation failed)"))))
+;;       (setq jiralib-url url
+;;             org-jira-default-jql jql
+;;             org-jira-done-states done-states
+;;             org-jira-custom-jqls custom-jqls
+;;             jiralib-login login
+;;             jiralib-token token))
+;;     (message "Jira configuration set successfully"))
+;;   (message "Finished my-load-jira-config"))
+#+end_src
+** using the org system
+:PROPERTIES:
+:NAME:     org-system
+:ID:       c94a66e8-784b-40e8-8c49-c6b95c840959
+:END:
+edit org mark ring or use bookmarks
+toggle link display
+capturing:
+- set org capture template to a project's capture template if available, otherwise global capture 
+*** org-custom
+:PROPERTIES:
+:NAME:     org-custom
+:DEPENDS:  projects
+:END:
+my custom supporting functions for how i use org stuff
+**** set up org roam captures
+:PROPERTIES:
+:NAME:     org-custom-3
+:DEPENDS:  enhanced-file-system
+:ID:       efb62131-b4c1-440c-87d7-7fb608d52d11
+:END:
+note that for capture stuff to work correctly for a project, you have to create a symlink in ~/kingdom/software/emacs/org-roam/ to the project: in dired, put the cursor on the project's directory, dired-do-symlink, and enter ~/kingdom/software/emacs/org-roam/ when prompted for where to symlink from. this solves issues where you can capture correctly but the nodes don't seem to get indexed and nothing shows up for org-roam-node-find
+
+note that if captures fail because of an invalid bookmark file, check if the bookmark file is blank and if so, delete it. emacs will create another one.
+#+begin_src emacs-lisp
+  ;; (defun my-capitol-capture-filter (node project-tags)
+  ;;   "Return t if the given node has a tag in the given list of project tags, it's in the capitol org file, and it's a headline node. Return nil if project-tags is nil or contains \"capitol\"."
+  ;;   (and (> (org-roam-node-level node) 0)
+  ;; 	 (member (org-roam-node-file node) (my-get-project-property (my-get-project "capitol") :roam-files))
+  ;; 	 (or (not project-tags)
+  ;; 	     (member "capitol"  project-tags)
+  ;; 	     (> (length (cl-intersection project-tags (org-roam-node-tags node))) 0))))
+
+  (defun my-capitol-capture-filter (node project-tags)
+    "Return t if NODE is a headline in capitol.org and matches PROJECT-TAGS criteria.
+  Return nil if PROJECT-TAGS is nil or contains \"capitol\"."
+    (and (> (org-roam-node-level node) 0) ; Headline node
+         (string= (org-roam-node-file node) "~/kingdom/projects/capitol/capitol.org")) ; Exact file match
+    (not (or (null project-tags) ; nil check
+  	   (member "capitol" project-tags))) ; "capitol" in tags
+    (or (null project-tags) ; If tags are nil, allow all (redundant due to above, kept for clarity)
+        (> (length (cl-intersection project-tags (org-roam-node-tags node))) 0)))
+
+  (defun my-capitol-capture (proj)
+    "Capture from the current project to the capitol to-do system."
+    (org-roam-capture nil nil
+  		    :filter-fn `(lambda (n) (my-capitol-capture-filter n (my-get-project-tags proj)))
+  		    :info (list :project-tags (my-get-project-tag-string proj))
+  		    :templates (my-get-project-property (my-get-project-with-name "capitol") :roam-templates))
+    (org-tidy-mode 1))
+
+  (defun my-capitol-node-find (proj)
+    "Find capitol nodes tagged with tags from the current project."
+    (org-roam-node-find nil nil `(lambda (n) (my-capitol-capture-filter n (my-get-project-tags proj))) nil))
+
+  (defun my-capitol-insert (proj)
+    "Insert to/from the capitol to-do system."
+    (org-roam-node-insert `(lambda (n) (my-capitol-capture-filter n (my-get-project-tags proj)))
+  			:templates (my-get-project-property (my-get-project-with-name "capitol") :roam-templates)
+  			:info (list :project-tags (my-get-project-tag-string proj))))
+
+  (defun my-project-files-filter (node project-files)
+    "Return t if given node's file is in the given list of project files, and it's a headline node."
+    (and (> (org-roam-node-level node) 0)
+         (member (org-roam-node-file node) project-files)))
+
+  (defun my-project-capture (proj)
+    "Capture to the current project according to the files and templates in that project's marker file."
+    (org-roam-capture nil nil
+  		    :filter-fn `(lambda (n) (my-project-files-filter n (my-get-project-property proj :roam-files)))
+  		    :templates (my-get-project-property proj :roam-templates))
+    (org-tidy-mode 1))
+
+  (defun my-project-node-find (proj)
+    "Find nodes in the files specified by current project's marker file."
+    (org-roam-node-find nil nil `(lambda (n) (my-project-files-filter n (my-get-project-property proj :roam-files))) nil))
+
+  (defun my-project-insert (proj)
+    "Insert to/from the current project according to the files and templates in that project's marker file."
+    (org-roam-node-insert `(lambda (n) (my-project-files-filter n (my-get-project-property proj :roam-files)))
+  			:templates (my-get-project-property project :roam-templates)
+  			:info (list :project-tags (my-get-project-tag-string proj))))
+
+  (defun my-get-project-tag-string (proj)
+    "Get the tags in this project's marker file as a colon-separated-string. Used to insert tags on org capture."
+    (when (my-project-p proj)
+      (concat ":" (mapconcat 'identity (my-get-project-tags proj) ":") ":")))
+
+  ;; (defun my-treemacs-capitol-capture ()
+  ;;   "Capture to my top-level task management project from treemacs."
+  ;;   (interactive)
+  ;;   (let ((filepath-at-point (treemacs--prop-at-point :path)))
+  ;;     (other-window 1) ;; if i don't jump to the other window the template tries to make treemacs the only window
+  ;;     (setq unread-command-events '()) ;; need this or the combo of other win and autohydra leaves the minibuffer in control mode
+  ;;     (my-capitol-capture (my-find-project-containing-dir filepath-at-point))))
+
+  ;; (defun my-treemacs-capitol-node-find ()
+  ;;   "Find capitol nodes tagged with tags from the project containing the treemacs point."
+  ;;   (interactive)
+  ;;   (let ((filepath-at-point (treemacs--prop-at-point :path)))
+  ;;     (other-window 1)
+  ;;     (setq unread-command-events '())
+  ;;     (my-capitol-node-find (my-find-project-containing-dir filepath-at-point))))
+
+  ;; (my-projectile-project-for-file (treemacs--prop-at-point :path))
+
+  ;; (defun my-treemacs-project-capture ()
+  ;;   "Project capture for the project containing the treemacs point."
+  ;;   (interactive)
+  ;;   (let ((filepath-at-point (treemacs--prop-at-point :path)))
+  ;;     (message "filepath: %s")
+  ;;     ;; (other-window 1)
+  ;;     ;; (setq unread-command-events '())
+  ;;     ;; (org-capture (my-find-project-containing-dir filepath-at-point))
+  ;;     ))
+
+  ;; (defun my-treemacs-project-node-find ()
+  ;;   "Find project nodes tagged with tags from the project containing the treemacs point."
+  ;;   (interactive)
+  ;;   (let ((filepath-at-point (treemacs--prop-at-point :path)))
+  ;;     (other-window 1)
+  ;;     (setq unread-command-events '())
+  ;;     (my-project-node-find (my-find-project-containing-dir filepath-at-point))))
+
+
+  ;; special function to make the capitol project templates easier to specify
+  (defun my-get-capitol-properties-string (;; id = generated id
+  					 ;; capture type = category
+  					 ;; Basics
+  					 effort-type
+  					 frequency
+  					 has-due-date
+  					 ;; (due-date = deadline)
+  					 ;; Prioritization
+  					 ;; (value = priority)
+  					 effort-amount
+  					 budget-impact
+  					 commitment
+  					 ;; Dependencies
+  					 hard-date-dependency
+  					 soft-date-dependency
+  					 hard-internal-dependency
+  					 soft-internal-dependency
+  					 hard-external-dependency
+  					 soft-external-dependency
+  					 ;; Resource Assignment
+  					 effort ;; (estimated effort)
+  					 estimated-cost
+  					 ;; Doing things
+  					 ;; (timing = todo)
+  					 ;; Reporting
+  					 actual-effort
+  					 actual-cost)
+    (format (concat ":PROPERTIES:"
+  		  (my-get-string-for-capitol-property 'id)
+  		  (my-get-string-for-capitol-property 'category)
+  		  (my-get-string-for-capitol-property 'effort-type)
+  		  (my-get-string-for-capitol-property 'frequency)
+  		  (my-get-string-for-capitol-property 'has-due-date)
+  		  (my-get-string-for-capitol-property 'effort-amount)
+  		  (my-get-string-for-capitol-property 'budget-impact)
+  		  (my-get-string-for-capitol-property 'commitment)
+  		  (my-get-string-for-capitol-property 'hard-date-dependency)
+  		  (my-get-string-for-capitol-property 'soft-date-dependency)
+  		  (my-get-string-for-capitol-property 'hard-internal-dependency)
+  		  (my-get-string-for-capitol-property 'soft-internal-dependency)
+  		  (my-get-string-for-capitol-property 'hard-external-dependency)
+  		  (my-get-string-for-capitol-property 'soft-external-dependency)
+  		  (my-get-string-for-capitol-property 'effort)
+  		  (my-get-string-for-capitol-property 'estimated-cost)
+  		  (my-get-string-for-capitol-property 'actual-effort)
+  		  (my-get-string-for-capitol-property 'actual-cost)
+  		  "\n:END:\n\n")
+  	  (org-id-new)
+  	  nil
+  	  effort-type
+  	  frequency
+  	  has-due-date
+  	  effort-amount
+  	  budget-impact
+  	  commitment
+  	  hard-date-dependency
+  	  soft-date-dependency
+  	  hard-internal-dependency
+  	  soft-internal-dependency
+  	  hard-external-dependency
+  	  soft-external-dependency
+  	  effort 
+  	  estimated-cost
+  	  actual-effort
+  	  actual-cost))
+
+  (defun my-get-string-for-capitol-property (property-symbol)
+    (format  "\n:%s: %cs" (upcase (string-replace "-" "_" (symbol-name property-symbol))) 37))
+#+end_src
+**** auto-set an entry's category for global todo
+:PROPERTIES:
+:NAME:     org-custom-1
+:ID:       0c4068ce-26e8-4010-821e-87ff1ce54198
+:END:
+#+begin_src emacs-lisp
+  (defun my-get-org-entry-property (pom property-name)
+    (car (cdr (flatten-list (org-entry-properties pom property-name)))))
+
+  (defun my-determine-category (effort-type frequency)
+    (cond ((and (string= effort-type "work")
+  	      (string= frequency "once")) "task")
+  	((and (string= effort-type "work")
+  	      (string= frequency "repetitive")) "routine")
+  	((and (string= effort-type "work")
+  	      (string= frequency "continuous")) "practice")
+  	((and (string= effort-type "none")
+  	      (string= frequency "once")) "occurance")
+  	((and (string= effort-type "none")
+  	      (string= frequency "repetitive")) "recurrence")
+  	((and (string= effort-type "organization")
+  	      (string= frequency "once")) "reference")))
+
+  (defun my-set-category ()
+    (let ((effort-type (car(cdr (flatten-list (org-entry-properties nil "EFFORT_TYPE")))))
+  	(frequency (car(cdr (flatten-list (org-entry-properties nil "FREQUENCY"))))))
+      (if (and effort-type frequency)
+  	(org-entry-put nil "CATEGORY" (my-determine-category effort-type frequency)))))
+
+  (defun my-set-category-on-property-change (property newvalue)
+    (when (or (string= property "EFFORT_TYPE")
+  	    (string= property "FREQUENCY"))
+      (my-set-category)))
+#+end_src
+**** set up project tags
+:PROPERTIES:
+:NAME:     org-custom-2
+:ID:       83149176-02e5-4d1c-8dba-0431e0146195
+:END:
+#+begin_src emacs-lisp
+  ;; (my-get-project-marker-file (cdr (project-current)))
+
+  ;; (defun my-get-project-tags (project)
+  ;;   "Get the tags in this project's marker file as a list of strings."
+  ;;   (if (not project)
+  ;;       '("no_project")
+  ;;     (let ((tags (my-get-project-property project :project-tags)))
+  ;;       (if (or (string= (car tags) "")
+  ;; 	      (not tags))
+  ;; 	  '("no_project")
+  ;; 	tags))))
+
+  ;; (defun my-get-project-tag-alist ()
+  ;;   "Get all tags in all project marker files as a list of single-string lists. Used to set org-tag-persistent-alist."
+  ;;   (let ((htags (get-tags-hierarchical))
+  ;; 	(nonhtags (get-tags-non-hierarchical)))
+  ;;     (dolist (e nonhtags htags) (if (and e (not (member e htags)))
+  ;; 				   (push e htags)))))
+
+  ;; ;; (defun get-tags-hierarchical ()
+  ;;   (mapcar (lambda (p)
+  ;; 	    (my-get-project-property p :project-tags))
+  ;; 	  (my-get-projects)))
+
+  ;; ;; need to exclude capitol project from the loop to avoid nesting error
+  ;; ;;  (org-super-agenda-groups '((:tag ,(flatten-list (get-tags-non-hierarchical)))))
+  ;; (defun get-tags-non-hierarchical ()
+  ;;   (append '(("capitol"))
+  ;; 	  (remove nil (mapcan (lambda (p)
+  ;; 				(mapcar 'list (my-get-project-property p :project-tags)))
+  ;; 			      (seq-filter (lambda (p) (not (string= (project-name (project-current nil p)) "capitol"))) (my-get-projects))))))
+
+
+  ;; (defun my-project-tag-p (item)
+  ;; 	(message "%s" (get-text-property 1 'tags item)))
+
+#+end_src
+**** get dates out of calendar mode
+:PROPERTIES:
+:NAME:     org-custom-4
+:ID:       9dac835d-56e3-4c79-b523-d5c60a7b7275
+:END:
+#+begin_src emacs-lisp
+  (defun my-select-schedule-from-calendar ()
+    (interactive)
+    (if (eq major-mode 'calendar-mode)
+        (progn
+  	(org-calendar-select)
+  	(calendar-exit t)
+  	(org-agenda-schedule nil (org-read-date nil nil org-ans1))
+  	(org-agenda-redo))))
+
+  (defun my-select-deadline-from-calendar ()
+    (interactive)
+    (if (eq major-mode 'calendar-mode)
+        (progn
+  	(org-calendar-select)
+  	(calendar-exit t)
+  	(org-agenda-deadline nil (org-read-date nil nil org-ans1))
+  	(org-agenda-redo))))
+#+end_src
+**** org agenda views
+:PROPERTIES:
+:NAME:     org-custom-5
+:DEPENDS:  org-custom-1 org-custom-3
+:ID:       a612a81e-b059-4bc1-b0d9-694d2cafead8
+:END:
+#+begin_src emacs-lisp
+  ;; (use-package org-super-agenda
+  ;;   :config
+  ;;   (setq org-super-agenda-keep-order nil)
+  ;;   (org-super-agenda-mode))
+
+  ;; (defun my-project-agenda (project)
+  ;;   ;; this must be set globally or agenda commands won't know what files to use
+  ;;   (setq  org-agenda-files (my-get-project-property project :roam-files))
+  ;;   (let ((org-agenda-custom-commands (my-get-project-property project :agenda-commands)))
+  ;;     (org-agenda)))
+
+  ;; (defun my-agenda-indirect-switch ()
+  ;;   (let ((i org-agenda-follow-indirect))
+  ;;     (if org-agenda-follow-indirect
+  ;; 	(setq org-agenda-follow-indirect nil)
+  ;;       (setq org-agenda-follow-indirect t))))
+
+  (defun my-get-agenda-entry-property (entry property-name)
+    (let* ((em (or (get-text-property 1 'org-marker entry)
+		 (get-text-property 1 'org-hd-marker entry)))
+	 (eb (marker-buffer em)))
+      (with-current-buffer eb (my-get-org-entry-property em property-name))))
+
+  ;; (defun my-org-cmp-effort-amount-2 (a b)
+  ;;   "Compare agenda entries based on the effort_amount property"
+  ;;   (if (and a b)
+  ;;       (let ((ia (my-get-agenda-entry-property a "ID"))
+  ;; 	    (ib (my-get-agenda-entry-property b "ID"))
+  ;; 	    (ea (my-get-agenda-entry-property a "EFFORT_AMOUNT"))
+  ;; 	    (eb (my-get-agenda-entry-property b "EFFORT_AMOUNT")))
+  ;; 	(cond
+  ;; 	 ((string> ea eb) (message "%s %s %s %s" ia ea ib eb) +1)
+  ;; 	 ((string< ea eb) (message "%s %s %s %s" ia ea ib eb) -1)
+  ;; 	 (t nil)))
+  ;;     nil))
+
+(defun my-org-cmp-relative-value (a b property)
+  "Compare agenda entries by less/average/more. 
+Returns +1 if A > B, -1 if A < B, nil if equal or missing."
+  (if (and a b)
+      (let* ((ea (my-get-agenda-entry-property a property))
+             (eb (my-get-agenda-entry-property b property))
+             (sea (or ea "less"))
+             (seb (or eb "less"))
+             (order '("less" "average" "more"))
+             (ia (cl-position sea order :test #'string=))
+             (ib (cl-position seb order :test #'string=)))
+        (cond ((= ia ib) nil)
+              ((< ia ib) -1)
+              ((> ia ib) +1)))
+    nil))
+
+(defun my-org-cmp-strategic-value (a b)
+  (my-org-cmp-relative-value a b "STRATEGIC_VALUE"))
+
+(defun my-org-cmp-tactical-value (a b)
+  (my-org-cmp-relative-value a b "TACTICAL_VALUE"))
+
+(defun my-org-cmp-estimated-effort (a b)
+  (my-org-cmp-relative-value a b "ESTIMATED_EFFORT"))
+
+  ;; (defun my-org-cmp-budget-impact (a b)
+  ;;   "Compare agenda entries based on the budget_impact property"
+  ;;   (if (and a b)
+  ;;       (let* ((ea (my-get-agenda-entry-property a "BUDGET_IMPACT"))
+  ;; 	     (eb (my-get-agenda-entry-property b "BUDGET_IMPACT"))
+  ;; 	     (sea (if ea ea "trivial"))
+  ;; 	     (seb (if eb eb "trivial")))
+  ;; 	(cond ((and (string= sea seb) nil))
+  ;; 	      ((and (string= "trivial" sea) (string= "small" seb)) -1)
+  ;; 	      ((and (string= "trivial" sea) (string= "medium" seb)) -1)
+  ;; 	      ((and (string= "trivial" sea) (string= "large" seb)) -1)
+  ;; 	      ((and (string= "small" sea) (string= "trivial" seb)) +1)
+  ;; 	      ((and (string= "small" sea) (string= "medium" seb)) -1)
+  ;; 	      ((and (string= "small" sea) (string= "large" seb)) -1)
+  ;; 	      ((and (string= "medium" sea) (string= "trivial" seb)) +1)
+  ;; 	      ((and (string= "medium" sea) (string= "small" seb)) +1)
+  ;; 	      ((and (string= "medium" sea) (string= "large" seb)) -1)
+  ;; 	      ((and (string= "large" sea) (string= "trivial" seb)) +1)
+  ;; 	      ((and (string= "large" sea) (string= "small" seb)) +1)
+  ;; 	      ((and (string= "large" sea) (string= "medium" seb)) +1))) nil))
+
+  ;; (defun my-org-cmp-commitment (a b)
+  ;;   "Compare agenda entries based on the commitment property"
+  ;;   (if (and a b)
+  ;;       (let* ((ea (my-get-agenda-entry-property a "COMMITMENT"))
+  ;; 	     (eb (my-get-agenda-entry-property b "COMMITMENT"))
+  ;; 	     (sea (if ea ea "yes"))
+  ;; 	     (seb (if eb eb "yes")))
+  ;; 	(cond ((and (string= sea seb) nil))
+  ;; 	      ((and (string= "yes" sea) (string= "probably" seb)) -1)
+  ;; 	      ((and (string= "yes" sea) (string= "maybe" seb)) -1)
+  ;; 	      ((and (string= "yes" sea) (string= "no" seb)) -1)
+  ;; 	      ((and (string= "probably" sea) (string= "yes" seb)) +1)
+  ;; 	      ((and (string= "probably" sea) (string= "maybe" seb)) -1)
+  ;; 	      ((and (string= "probably" sea) (string= "no" seb)) -1)
+  ;; 	      ((and (string= "maybe" sea) (string= "yes" seb)) +1)
+  ;; 	      ((and (string= "maybe" sea) (string= "probably" seb)) +1)
+  ;; 	      ((and (string= "maybe" sea) (string= "no" seb)) -1)
+  ;; 	      ((and (string= "no" sea) (string= "yes" seb)) +1)
+  ;; 	      ((and (string= "no" sea) (string= "probably" seb)) +1)
+  ;; 	      ((and (string= "no" sea) (string= "maybe" seb)) +1))) nil))
+
+#+end_src	   
+**** org-edna dependencies
+:PROPERTIES:
+:NAME:     org-custom-6
+:END:
+note: can't fully implement what i want for dependencies in edna (can't prevent starting a task, only finishing one)
+can use org roam backlinks to see all tasks a given task is blocking
+#+begin_src emacs-lisp
+
+  ;; (defun my-roam-link-to-id (link)
+  ;;   (substring (replace-regexp-in-string "^\\[\\[id:" "" (format "%s" link)) 0 36))
+
+  ;; (defun my-roam-link-to-ids (&rest links)
+  ;;   (mapcar (lambda (link) (my-roam-link-to-id link)) links))
+
+  ;; (use-package org-edna)
+
+  ;; (eval-after-load "org-edna"
+  ;;   '(defun org-edna-finder/ids (&rest ids)
+  ;;      (mapcar
+  ;;       (lambda (id)
+  ;; 	(org-id-find (my-roam-link-to-id id) 'marker))
+  ;;       ids)))
+
+  ;; (org-edna-mode)
+
+  ;; (defun my-get-current-dependencies ()
+  ;;   (if (org-entry-properties nil "BLOCKER")
+  ;;       (split-string (substring (replace-regexp-in-string "ids(" "" (car (cdr (flatten-list (org-entry-properties nil "BLOCKER"))))) 0 -1))))
+
+  ;; (defun my-find-dependency-link ()
+  ;;   (let* ((node (org-roam-node-read))
+  ;; 	 (description (org-roam-node-formatted node)))
+  ;;     (org-link-make-string
+  ;;      (concat "id:" (org-roam-node-id node)) description)))
+
+  ;; (defun my-add-dependency ()
+  ;;   "Add a dependency from the capitol to the current org heading."
+  ;;   (interactive)
+  ;;   (org-entry-put nil "BLOCKER" (format "ids%s" (append (my-get-current-dependencies) (list (my-find-dependency-link))))))
+
+
+#+end_src	  
+*** org-mode
+:PROPERTIES:
+:NAME:     org-mode
+:DEPENDS:  org-custom-1 org-custom-2
+:ID:       22ea4687-1617-4793-965d-cbf8a1b2c511
+:END:
+#+begin_src emacs-lisp  
+;; capture properties from ordered kingdom. using some org features as properties so i can use org-agenda-sorting-strategy
+(put 'org-capture-templates 'safe-local-variable #'listp)
+(put 'org-directory 'safe-local-variable #'stringp)
+(put 'org-deadline-warning-days 'safe-local-variable #'integerp)
+(put 'org-global-properties 'safe-local-variable #'listp)
+(put 'org-agenda-files 'safe-local-variable #'listp)
+(put 'org-agenda-custom-commands 'safe-local-variable #'listp)
+(put 'org-todo-keywords 'safe-local-variable #'listp)
+(put 'org-todo-keyword-faces 'safe-local-variable #'listp)
+;; (setq org-global-properties '(;; capture type = category
+;;       			      ;; Basics
+;;       			      ;; project = tags
+;;       			      ("EFFORT_TYPE_ALL" . "work organization none")
+;;       			      ("FREQUENCY_ALL" . "once repetitive continuous")
+;;       			      ("HAS_DUE_DATE_ALL" . "no yes")
+;;       			      ;; due date = deadline
+;;       			      ;; Prioritization
+;;       			      ;; value = priority
+;;       			      ("EFFORT_AMOUNT_ALL" . "less average more")
+;;       			      ("BUDGET_IMPACT_ALL" . "trivial small medium large")
+;;       			      ("COMMITMENT_ALL" . "yes probably maybe no")
+;;       			      ;; Dependencies
+;;       			      ("HARD_DATE_DEPENDENCY_ALL" . "no yes")
+;;       			      ("SOFT_DATE_DEPENDENCY_ALL" . "no yes")
+;;       			      ("HARD_INTERNAL_DEPENDENCY_ALL" . "no yes")
+;;       			      ("SOFT_INTERNAL_DEPENDENCY_ALL" . "no yes")
+;;       			      ("HARD_EXTERNAL_DEPENDENCY_ALL" . "no yes")
+;;       			      ("SOFT_EXTERNAL_DEPENDENCY_ALL" . "no yes")
+;;       			      ;; Resource Assignment
+;;       			      ("EFFORT_ALL" . "0d 1d 2d 3d 5d 8d 13d 21d 34d 55d 89d 144d 233d")
+;;       			      ("ESTIMATED_COST")
+;;       			      ;; individuals = tags
+;;       			      ;; teams = tags
+;;       			      ;; resources = tags
+;;       			      ;; Doing things
+;;       			      ;; timing = todo
+;;       			      ;; Reporting
+;;       			      ("ACTUAL_EFFORT")
+;;       			      ("ACTUAL_COST")))
+
+(defun my-org-src-setup-for-lsp (modes)
+  "Set up temporary file for org-src buffers in MODES with LSP support.
+  MODES is a list of major modes (e.g., '(prolog-mode sweeprolog-mode))."
+  (when (apply #'derived-mode-p modes)
+    ;; make a temp file in same dir
+    (let ((org-file (buffer-file-name (org-src-source-buffer))))
+      (when org-file
+        (let ((temp-file (expand-file-name
+                          (concat (file-name-base org-file)
+                                  "-derived-"
+                                  (format "%06x" (random (expt 16 6)))
+                                  ".pl")
+                          (file-name-directory org-file))))
+          (setq-local buffer-file-name temp-file)
+          (write-region (point-min) (point-max) temp-file nil 'silent))))
+    ;; Mark buffer as unmodified to keep org-src-exit ability
+    ;;(set-buffer-modified-p nil)
+    ;; start lsp
+    (lsp)))
+
+(defun my-org-edit-src-exit-advice (orig-fun &rest args)
+  "Clean up temporary file before exiting org-edit-src buffer."
+  (let ((temp-file buffer-file-name))
+    (unwind-protect
+        (apply orig-fun args)
+      (when (and temp-file (file-exists-p temp-file))
+        (delete-file temp-file)))))
+
+(advice-add 'org-edit-src-exit :around #'my-org-edit-src-exit-advice)
+
+(defun my-org-show-definition-in-echo ()
+  "Show definition after :: in echo area when cursor on [[term]] link."
+  (when-let* ((elem (org-element-context))
+              ((eq (org-element-type elem) 'link))
+              (path (org-element-property :path elem)))
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward (format "^- <<%s>> ::\\s-*\\(.*\\)" (regexp-quote path)) nil t)
+        (message "%s" (string-trim (match-string 1)))))))
+
+(defun my-org-add-targets-to-definitions ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((inhibit-point-motion-hooks t))
+      (while (re-search-forward "^-\s*\\(.*\\)\s*::" nil t)
+        (let ((term (string-trim (match-string 1))))
+          (unless (string-match-p "<<" term)
+            (replace-match (format "- <<%s>> ::" term))))))))
+
+(defun my-org-linkify-word-at-point ()
+  "Surround word at point with [[ ]]."
+  (interactive)
+  (let ((bounds (bounds-of-thing-at-point 'word)))
+    (when bounds
+      (save-excursion
+        (goto-char (car bounds))
+        (insert "[[")
+        (goto-char (+ (cdr bounds) 2))
+        (insert "]]")))))
+
+(defun my-org-targetify-word-at-point ()
+  "Surround word at point with << >>."
+  (interactive)
+  (let ((bounds (bounds-of-thing-at-point 'word)))
+    (when bounds
+      (save-excursion
+        (goto-char (car bounds))
+        (insert "<<")
+        (goto-char (+ (cdr bounds) 2))
+        (insert ">>")))))
+
+(use-package org
+  :config
+  ;; (add-hook 'org-src-mode-hook
+  ;;       (lambda ()
+  ;;           ;; Remove the header comment
+  ;;           (save-excursion
+  ;;             (goto-char (point-min))
+  ;;             (when (looking-at-p "^#\\+ Edit, then exit with.*$")
+  ;;               (delete-region (point-min) (progn (forward-line 1) (point)))))))
+  (setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil))
+    	org-edit-src-content-indentation 0
+      	org-id-link-to-org-use-id t
+      	org-priority-default ?B
+      	org-priority-highest ?A
+      	org-priority-lowest ?C
+      	org-priority-start-cycle-with-default nil
+      	org-property-changed-functions 'my-set-category-on-property-change
+	org-highlight-sparse-tree-matches nil
+	org-startup-folded 'nofold
+    	org-src-fontify-natively t
+        org-src-preserve-indentation t
+      	org-tags-column 0
+      	org-todo-keywords '((sequence "future" "next" "now" "|" "past"))
+	org-todo-keyword-faces '(("future" . (:foreground "blue" :weight bold))
+      				 ("next" . (:foreground "deep sky blue" :weight bold))
+      				 ("now" . (:foreground "lawn green" :weight bold))
+      				 ("past" . (:foreground "dark olive green" :weight bold)))
+      	org-use-tag-inheritance nil)) ;; does not work with roam i don't think
+
+
+;; (use-package polymode);
+;; (use-package poly-org);
+
+(defun my-org-src-or-kill-buffer ()
+  "Call org-edit-src-abort in org-src-mode, kill-buffer otherwise."
+  (interactive)
+  (if (and org-src-mode)
+      (org-edit-src-abort)
+    (kill-buffer nil)))
+
+(defun my-org-src-or-save-buffer ()
+  "Call org-edit-src-abort in org-src-mode, kill-buffer otherwise."
+  (interactive)
+  (if (and org-src-mode)
+      (org-edit-src-save)
+    (save-buffer)))
+
+;; https://emacs.stackexchange.com/questions/73907/org-insert-todo-subheading-respect-content
+(defun my-insert-todo-subheading-respect-content ()
+  (interactive)
+  (let ((org-insert-heading-respect-content t))
+    (org-insert-todo-subheading t)))
+
+(defun my-insert-subheading-respect-content ()
+  (interactive)
+  (let ((org-insert-heading-respect-content t))
+    (org-insert-subheading t)))
+
+(use-package org-tidy
+  :config (setq org-tidy-general-drawer-flag t 
+		org-tidy-properties-backspace-map nil
+      		org-tidy-properties-delete-map nil
+		org-tidy-properties-style 'fringe
+		org-tidy-top-property-style 'fringe)
+  :hook
+  (org-mode . org-tidy-mode))
+
+(defun my-org-wrap-region-in-src-block (lang)
+  "Wrap the selected region in an org-mode buffer with #+BEGIN_SRC and #+END_SRC.
+      LANG specifies the language for the src block."
+  (interactive "sEnter the language for the src block: ")
+  (let ((begin "#+BEGIN_SRC ")
+      	(end "#+END_SRC"))
+    (save-excursion
+      (goto-char (region-end))
+      (insert (concat "\n" end))
+      (goto-char (region-beginning))
+      (insert (concat begin lang "\n")))))
+
+;;theoretically we should be able to use replace-match and have a simpler function, but i found that modifying the buffer from within a loop makes replace-match give you "Args out of range" errors
+(defun my-replace-ids-with-uuids ()
+  "Replace each instance of '>id<' with a unique new Org ID in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward ">id<" nil t)
+      (let* ((match-end (point))
+             (match-start (- match-end 4)))  ; '>id<' is 4 characters
+        (delete-region match-start match-end)
+        (goto-char match-start)
+        (insert (org-id-new))))))
+
+(defun my-org-toggle-noexport-tag ()
+  "Toggle :noexport: tag on the current headline."
+  (interactive)
+  (org-toggle-tag "noexport"))
+
+(define-abbrev org-mode-abbrev-table "pp" ":PROPERTIES:\n\n:END:")
+
+;; (defun my-ensure-tangle-directories ()
+;; "Ensure that directories for all tangle targets exist."
+;; (save-excursion
+;;   (goto-char (point-min))
+;;   (let ((blocks (org-babel-tangle-collect-blocks)))
+;;     (dolist (block blocks)
+;;       (dolist (spec (cdr block))
+;; 	(let ((file (cdr (assq :tangle spec))))
+;; 	  (when (and file (not (string= file "no")))
+;; 	    (let ((dir (file-name-directory file)))
+;; 	      (when (and dir (not (file-exists-p dir)))
+;; 		(make-directory dir t))))))))))
+
+;; (add-hook 'org-babel-pre-tangle-hook 'my-ensure-tangle-directories)
+
+;;  (use-package org-fancy-priorities	
+;;   :hook
+;;   (org-mode . org-fancy-priorities-mode)
+;;   :config
+;;   (setq org-fancy-priorities-list '("H" "A" "L")))
+
+;; (defun my-launch-org-sidebar ()
+;;   (interactive)
+;;   (let ((org-sidebar-tree-side (my-get-sidebar-position)))
+;;     (org-sidebar-tree)))
+
+
+
+
+#+end_src
+**** org-mode controls
+:PROPERTIES:
+:NAME:     controls-org-mode
+:DEPENDS:  controls-text-editing-keys controls-buffer-keys
+:ID:       f4c197bd-f0d2-42d5-8422-99c12d856fb7
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-org-mode-modes
+:ID:       855ff133-d106-44a4-8d6d-f6751ea839f3
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-org-mode-controls
+      '(org-mode))
+
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-org-mode-keys
+:DEPENDS:  controls-org-mode-modes
+:ID:       fcdaf948-172e-4c3b-895b-860f8be94778
+:END:
+
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-main-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("j" (progn (org-capture) (org-tidy-buffer)) "org capture" :exit t))))
+		   ;; ("k" (progn (org-capture) (org-tidy-buffer)) "capture local" :exit t))))
+
+(my-add-to-hydra modes-that-use-org-mode-controls
+    		 (
+    		  "Connection"
+    		  (("TAB RET" org-edit-special "edit"))
+    		  "Navigation"
+    		  (("C-SPC" previous-line "or pree line")
+    		   ("C-e" next-line "or nex line")
+    		   ("C-<f1>" org-previous-visible-heading "or pree head")
+    		   ("C-<f7>" org-next-visible-heading "or nex head"))
+    		  "Display"
+    		  (("C-s" (org-fold-show-entry nil) "or show ent")
+    		   ("C-n" org-fold-show-children "or show child")
+    		   ("C-h" org-fold-show-branches "or show branch")
+		   ("C-c" org-cycle "org cycle")
+    		   ("C-u" org-fold-show-all "or show sub")
+		   ("C-g" org-fold-hide-drawer-toggle "org drawer toggle")
+		   ("C-w" org-tidy-mode "org tidy toggle")
+		   ("C-a" org-fold-hide-sublevels "or hide @lvl")
+    		   ("C-l" org-fold-hide-block-all "or hide all blocks")
+    		   ;; ("C-g" (org-fold-hide-sublevels 1) "or hide @lvl")
+    		   ("C-t" org-fold-hide-subtree "or hide sub"))
+    		  "Interaction (org)"
+    		  (("ip" org-comment-dwim "org comment")
+  		   ("im" indent-region "indent")
+  		   ("i]" my-org-toggle-noexport-tag "toggle noexport")  
+    		   ("C-<backspace>" org-move-subtree-up "sub up")
+    		   ("C-<tab>" org-move-subtree-down "sub down")
+    		   ("C-q" org-promote-subtree "pro sub")
+    		   ("C-z" org-demote-subtree "dee sub")
+    		   ("TAB C-SPC" org-insert-heading "insert head here")
+    		   ("TAB C-<return>" org-insert-subheading "insert sub here")
+    		   ("TAB C-t" org-insert-heading-respect-content "insert head")
+    		   ("TAB C-<f1>" my-insert-subheading-respect-content "insert sub")
+    		   ;; ("C-o" org-mark-subtree "or mark sub") 
+    		   ("TAB TAB" org-todo "cycle todo")
+    		   ("TAB C-<tab>" org-priority-down "priority down")
+    		   ("TAB C-p" org-priority-up "priority up")
+    		   ("TAB C-w" org-property-previous-allowed-value "prev prop val")
+    		   ("TAB C-b" org-property-next-allowed-value "next prop val")
+    		   ("TAB C-e" org-deadline "deadline")
+    		   ("TAB C-n" org-schedule "schedule")
+    		   ("TAB C-s" org-set-tags-command "org set tags")
+  		   ("d <f12>" org-gfm-export-to-markdown "tangle to md")
+		   ("+" my-org-targetify-word-at-point "mobile push")
+		   ("\\" my-org-linkify-word-at-point "mobile pull")
+		   ("C-d C-b" org-org-export-to-org "export to org"))
+  		  
+  		  "Interaction (org table)"
+  		  (("M-r" org-table-toggle-column-width "or col width")
+  		   ("M-j" org-table-shrink "or shrink")
+  		   ("M-k" org-table-expand "or expand")
+  		   ("M-q" org-table-move-row-up "or row up")
+  		   ("M-z" org-table-move-row-down "or row down")
+  		   ("M-f" org-table-move-column-left "or col left")
+  		   ("M-u" org-table-move-column-right "or col right")
+  		   ("M-i M-m" org-table-align "or align") ;; alt tab
+  		   ("M-<return>" org-table-edit-field "or edit field")
+  		   ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
+  		   ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
+  		   ("M-i M-l" org-table-create "or make table")
+  		   ("M-i M-SPC" (org-table-insert-row '(4)) "or in row")
+  		   ("M-i M-a" org-table-insert-hline "or in line")
+  		   ("M-i M-t" org-table-insert-column "or in col")
+  		   ;; ("M-i M-DEL" org-table-kill-row "or delete row")
+  		   ;; ("M-i M-q" org-table-delete-column "or delete col")
+  		   ;; ("M-i M-r" org-table-sort-lines "or sort")
+  		   ;; ("M-i M-p" org-table-follow-field-mode "or follow mode")
+  		   ;; ("M-i M-n" org-table-header-line-mode "or head mode")
+  		   ("M-t" org-table-previous-field "or pree field")
+  		   ("M-s" org-table-next-field "or nex field")   
+  		   ("M-SPC" previous-line "pree line")
+  		   ("M-e" org-table-next-row "next row")
+  		   ("M-a" org-table-beginning-of-field "or field first")
+  		   ("M-n" org-table-end-of-field "or field last")
+  		   ("M-l" move-beginning-of-line "line first")
+  		   ("M-c" move-end-of-line "line last"))))
+;; ("M-y" other-window "nex win")
+;; ("M-m" (other-window -1) "pree win")
+;; ("M-i M-g" undo-fu-only-undo "undo")
+;; ("M-i ;; M-w" undo-fu-only-redu "redo"))
+
+;; (my-add-to-hydra 'org-src-mode
+;; 		 ("Connection"
+;;   		  ()
+;;   		  "Navigation"
+;;   		  ()
+;;   		  "Display"
+;;   		  ()
+;;   		  "Interaction"
+;;   		  (("hd" org-edit-src-exit "org src exit")
+;;   		   ("hf" org-edit-src-abort "org src abort"))))
+
+
+;; replace save and kill functions to account for possibility of org edit src stuff
+(my-add-to-hydra modes-that-use-buffer-controls
+  		 ("Connection"
+  		  (("hf" my-org-src-or-kill-buffer "close this buffer"))
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("hd" my-org-src-or-save-buffer "org src save buffer"))))
+
+;; org table stuff - use the otherwise unused Alt key so I can shift between 'literal' and 'command' and still use all the existing org mode keys
+(global-set-key (kbd "M-i") nil)
+(global-set-key (kbd "M-r") #'org-table-toggle-column-width)
+(global-set-key (kbd "M-j") #'org-table-shrink)
+(global-set-key (kbd "M-k") #'org-table-expand)
+(global-set-key (kbd "M-q") #'org-table-move-row-up)
+(global-set-key (kbd "M-z") #'org-table-move-row-down)
+(global-set-key (kbd "M-f") #'org-table-move-column-left)
+(global-set-key (kbd "M-u") #'org-table-move-column-right)
+(global-set-key (kbd "M-i M-m") #'org-table-align)
+;; (global-set-key (kbd "M-<return>") #'org-table-edit-field)
+;; ("TAB C-d" (org-table-finish-edit-field) "or confirm edit")
+;; (global-set-key (kbd "M-i M-d" (org-table-finish-edit-field)))
+(global-set-key (kbd "M-i M-l") #'org-table-create)
+(global-set-key (kbd "M-i M-SPC") '(org-table-insert-row '(4)))
+(global-set-key (kbd "M-i M-a") #'org-table-insert-hline)
+(global-set-key (kbd "M-i M-t") #'org-table-insert-column)
+;; (global-set-key (kbd "M-i M-DEL") #'org-table-kill-row)
+;; (global-set-key (kbd "M-i M-q") #'org-table-delete-column)
+;; (global-set-key (kbd "M-i M-r") #'org-table-sort-lines)
+;; (global-set-key (kbd "M-i M-p") #'org-table-follow-field-mode)
+;; (global-set-key (kbd "M-i M-n") #'org-table-header-line-mode)
+(global-set-key (kbd "M-t") #'org-table-previous-field)
+(global-set-key (kbd "M-s") #'org-table-next-field)
+(global-set-key (kbd "M-SPC") #'previous-line)
+(global-set-key (kbd "M-e") #'next-line)
+(global-set-key (kbd "M-a") #'org-table-beginning-of-field)
+(global-set-key (kbd "M-n") #'org-table-end-of-field)
+(global-set-key (kbd "M-l") #'move-beginning-of-line)
+(global-set-key (kbd "M-c") #'move-end-of-line)
+;; (global-set-key (kbd "M-y") #'other-window)
+;; (global-set-key (kbd "M-m") (other-window -1))
+;; (global-set-key (kbd "M-i M-g") #'undo-fu-only-undo)
+;; (global-set-key (kbd "M-i M-w") #'undo-fu-only-redu )
+
+
+#+end_src
+****** completion
+:PROPERTIES:
+:NAME:     controls-org-completion
+:DEPENDS:  enhanced-editing-text
+:END:
+#+begin_src emacs-lisp
+;; not sure why putting the add hook in here doesn't work - call this function in startup function
+(defun my-org-mode-completion ()
+  (add-hook 'org-mode-hook
+  	    (lambda ()
+  	      (setq-local completion-at-point-functions
+  			  (list
+  			   #'cape-elisp-block)))))
+
+(define-abbrev-table 'org-mode-abbrev-table
+  '(("s" "#+BEGIN_SRC\n\n#+END_SRC")
+    ("se" "#+BEGIN_SRC emacs-lisp\n\n#+END_SRC")))
+#+end_src
+*** org-roam
+:PROPERTIES:
+:NAME:     org-roam
+:DEPENDS:  org-mode org-custom-3 projects
+:ID:       9f6217dc-9503-4905-b9db-9e4029603eff
+:END:
+#+begin_src emacs-lisp
+(use-package emacsql)
+;; (use-package org-roam
+;;   :config
+;;   ;; (add-hook 'org-capture-before-finalize-hook #'my-set-category)
+;;   (setq find-file-visit-truename nil
+;;   	org-roam-completion-everywhere nil
+;;   	org-roam-database-connector 'sqlite-builtin
+;;   	org-roam-db-location (expand-file-name "org-roam/org-roam.db" user-emacs-directory)
+;;   	org-roam-directory (expand-file-name "org-roam/" user-emacs-directory)
+;;   	org-roam-node-display-template (concat "${title:50} "
+;;   					       (propertize "${category:12} ${todo:12} ${tags}"))))
+
+
+;;  (defun my-get-project-org-roam-db-location (project-name)
+;;   (my-get-project-filepath project-name ".org-roam/org-roam.db"))
+
+;; (defun my-get-project-org-roam-directory (project-name)
+;;   (let ((dir (my-get-project-root project-name)))
+;; 	(if (not dir)
+;; 	    nil
+;; 	  (file-name-as-directory (my-get-project-filepath project-name ".org-roam/")))))
+
+#+end_src
+**** org-roam controls
+:PROPERTIES:
+:NAME:     controls-org-roam
+:DEPENDS:  controls-org-mode-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-org-roam-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-org-roam-controls
+      '(
+  	org-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-org-roam-keys
+:DEPENDS:  controls-org-roam-modes
+:ID:       75895cc3-5cf8-4aa9-be7d-2dfe8d873bf8
+:END:
+#+begin_src emacs-lisp
+;; (my-add-to-hydra modes-that-use-main-controls
+;;   		 ("Connection"
+;;   		  ()
+;;   		  "Navigation"
+;;   		  ()
+;;   		  "Display"
+;;   		  ()
+;;   		  "Interaction"
+;;   		  (("j" (my-capitol-capture (my-find-project-containing-buffer (current-buffer))) "capitol capture" :exit t)
+;;   		   ("#" (my-capitol-node-find nil) "capitol find" :exit t)
+;;   		   ("C-j" (my-capitol-insert (my-find-project-containing-buffer (current-buffer))) "capitol insert" :exit t)
+;;   		   ("k" (my-project-capture (my-find-project-containing-buffer (current-buffer))) "project capture" :exit t)
+;;   		   ("@" (my-project-node-find (my-find-project-containing-buffer (current-buffer))) "project find" :exit t)
+;;   		   ("C-k" (my-project-insert (my-find-project-containing-buffer (current-buffer))) "project insert" :exit t)
+;;   		   ("hk" org-roam-db-sync "roam db sync")
+;;   		   ("h@" org-roam-db-clear-all "roam db clear"))))
+
+(my-add-to-hydra modes-that-use-org-roam-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("id" org-capture-finalize "org save")
+  		   ("i<" org-capture-refile "org refile")
+  		   ("if" org-capture-kill "org abort" :exit t))))
+
+;; (my-add-to-hydra 'treemacs-mode
+;;   		 ("Connection"
+;;   		  ()
+;;   		  "Navigation"
+;;   		  ()
+;;   		  "Display"
+;;   		  ()
+;;   		  "Interaction"
+;;   		  (;; ("j" my-treemacs-capitol-capture "capitol capture" :exit t)
+;;   		   ;; ("#" my-treemacs-capitol-node-find "capitol find" :exit t)
+;;   		   )))
+  		   ;; ("@" my-treemacs-project-node-find "project find" :exit t))
+#+end_src
+*** org-babel
+:PROPERTIES:
+:NAME:     org-babel
+:DEPENDS:  org-mode org-custom-3 projects workbench
+:ID:       9f6217dc-9503-4905-b9db-9e4029603eff
+:END:
+#+begin_src emacs-lisp
+(my-add-hidden-buffer-patterns '("^\\*Org Babel.*" "^\\*Org-Babel.*"))
+(my-add-reference-buffer-patterns '("^\\*Org-Babel Error"))
+
+;; couldn't get org-tidy to remove org babel results easily
+;; (defun my-org-babel-execute-block-and-tidy-results ()
+;;   (interactive)
+;;   (with-timeout (5 (message "Execution timed out"))
+;;     (org-babel-execute-src-block)
+;;     (org-tidy-mode 1)))
+
+;; (defun my-org-babel-execute-buffer-and-tidy-results ()
+;;   (interactive)
+;;   (with-timeout (5 (message "Execution timed out"))
+;;     (org-babel-execute-src-buffer)
+;;     (org-tidy-mode 1)))
+
+(defun my-tangle-and-revert ()
+  "Tangle the current Org file and revert affected buffers."
+  (interactive)
+  (let ((tangled-files (org-babel-tangle)))
+    (dolist (file tangled-files)
+      (let ((buf (get-file-buffer file)))
+        (when buf
+          (with-current-buffer buf
+            (revert-buffer t t)))))))
+
+(defun my-tangle-block-and-revert ()
+  "Tangle the current Org file and revert affected buffers."
+  (interactive)
+  (let ((tangled-files (org-babel-tangle '(4))))
+    (dolist (file tangled-files)
+      (let ((buf (get-file-buffer file)))
+        (when buf
+          (with-current-buffer buf
+            (revert-buffer t t)))))))
+
+(defun my-org-babel-safe-execute-block ()
+  (interactive)
+  (with-timeout (5 (message "Execution timed out"))
+    (org-babel-execute-src-block)))
+
+(defun my-org-babel-safe-execute-buffer ()
+  (interactive)
+  (with-timeout (5 (message "Execution timed out"))
+    (org-babel-execute-src-buffer)))
+
+(defun my-org-babel-execute-block-and-open-results ()
+  "Execute and open results in org buffer."
+  (interactive)
+  (with-timeout (5 (message "Execution timed out"))
+    (org-babel-execute-src-block))
+  (org-babel-open-src-block-result)
+  (save-excursion
+    (goto-char (point-min)) ;; not sure why but this makes result hiding consistent
+    (org-babel-result-hide-all)))
+
+(defun my-org-babel-execute-buffer-and-open-results ()
+  "Execute and open results in org buffer."
+  (interactive)
+  (with-timeout (5 (message "Execution timed out"))
+    (org-babel-execute-buffer))
+  (save-excursion
+    (goto-char (point-min)) ;; not sure why but this makes result hiding consistent
+    (org-babel-result-hide-all)))
+
+(defun my-format-results-buffer ()
+  (let ((buffer-name (buffer-name (current-buffer))))
+    (when (string-match-p "^\\*Org Babel Results\\*" buffer-name)
+      (visual-line-mode -1)
+      (toggle-truncate-lines 1))))
+
+(defun my-org-babel-detangle-silent ()
+  "Detangle without switching to the Org buffer."
+  (interactive)
+  (save-window-excursion
+    (org-babel-detangle)))
+
+(add-hook 'buffer-list-update-hook #'my-format-results-buffer)
+(put 'org-confirm-babel-evaluate 'safe-local-variable #'booleanp)
+
+
+#+end_src
+
+**** org-babel controls
+:PROPERTIES:
+:NAME:     controls-org-babel
+:DEPENDS:  controls-org-mode-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-org-babel-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-org-babel-controls
+      '(org-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-org-babel-keys
+:DEPENDS:  controls-org-babel-modes code-general
+:ID:       75895cc3-5cf8-4aa9-be7d-2dfe8d873bf8
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-org-babel-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  (("C-v" org-babel-previous-src-block "prev block")
+  		   ("C-x" org-babel-next-src-block "next block"))
+  		  "Display"
+  		  (("C-f" org-babel-result-hide-all "hide results"))
+  		  "Interaction"
+  		  (("db" my-tangle-and-revert "org tangle all")
+    		   ("d+" my-tangle-block-and-revert "org tangle block")
+		   ("C-d C-o" my-org-babel-safe-execute-block "exec block")
+		   ("C-d C-h" my-org-babel-safe-execute-block "exec buffer"))))
+
+(my-add-to-hydra modes-that-use-general-code-controls
+		 ("Interaction"
+		  (("dq" my-org-babel-detangle-silent "detangle to org"))))
+#+end_src
+**** org-agenda
+:PROPERTIES:
+:NAME:     org-agenda
+:DEPENDS:  org-roam org-custom-4 org-custom-5 enhanced-appearance workbench
+:ID:       ab7f3c01-6225-4954-be45-fe28d8a386b8
+:END:
+#+begin_src emacs-lisp
+(setq org-deadline-warning-days 0 ;; this is what controls whether or not future items show up on today's agenda
+      org-agenda-confirm-kill t
+      org-agenda-follow-indirect nil
+      org-agenda-menu-show-matcher nil
+      org-agenda-prefix-format '((agenda . " %-12:c%?-12t% s")
+    				 (search . "  %-12:c")
+    				 (tags . "  %-12:c")
+    				 (todo . " "))
+      org-agenda-show-inherited-tags nil
+      org-agenda-skip-function-global '(org-agenda-skip-entry-if 'todo 'done)
+      org-agenda-start-with-follow-mode nil
+      org-agenda-use-tag-inheritance nil
+      org-agenda-window-setup 'current-window
+      org-read-date-popup-calendar nil)
+
+(my-add-reference-buffer-patterns '("\\*Agenda Commands\\*" "\\*Org Agenda\\*"))
+;; (add-to-list 'display-buffer-alist
+;; 	     '("\\*Org Agenda\\*"
+;; 	       (display-buffer-use-some-frame display-buffer-pop-up-frame)
+;; 	       (frame-predicate . (lambda (frame) (equal (frame-parameter frame 'name) my-input-frame-name)))
+;; 	       (pop-up-frame-parameters . ((name . my-input-frame-name)))
+;; 	       (inhibit-switch-frame . t)))
+
+;; (add-to-list 'display-buffer-alist
+;; 	     '("\\*Agenda Commands\\*"
+;; 	       (display-buffer-use-some-frame display-buffer-pop-up-frame)
+;; 	       (frame-predicate . (lambda (frame) (equal (frame-parameter frame 'name) my-input-frame-name)))
+;; 	       (pop-up-frame-parameters . ((name . my-input-frame-name)))
+;; (inhibit-switch-frame . t)))
+
+;; new stuff
+(setq org-todo-keywords '((sequence "future" "next" "now" "|" "past"))
+      org-todo-keyword-faces '(("future" . (:foreground "blue" :weight bold))
+      			       ("next" . (:foreground "deep sky blue" :weight bold))
+      			       ("now" . (:foreground "lawn green" :weight bold))
+      			       ("past" . (:foreground "dark olive green" :weight bold))))
+
+;; (defun my-local-agenda ()
+;;   "Call org-agenda, setting org-agenda-files to the project's agenda files listed in it's .dir-locals (agenda can't seem to find them otherwise)"
+;;   (interactive)
+;;   (if (my-currently-in-project-p)
+;;       (let* ((src-buf (find-file-noselect (my-get-project-config (project-current))))
+;; 	     (files (buffer-local-value 'org-agenda-files src-buf)))
+;; 	(setq-default org-agenda-files files)
+;; 	(org-agenda))
+;;     (message "not currently in a project")))
+
+(add-hook 'org-agenda-mode-hook 'hack-dir-local-variables-non-file-buffer)
+
+(defun my-skip-top-level-headlines ()
+  (if (= (org-outline-level) 1) 1 nil))
+
+(defun my-skip-non-tasks ()
+  (or (my-skip-top-level-headlines)
+      (if (member (car (org-get-outline-path)) '("Occurances" "References")) 1 nil)))
+
+(defun my-skip-references ()
+  (or (my-skip-top-level-headlines)
+      (if (member (car (org-get-outline-path)) '("References")) 1 nil)))
+
+(defun my-skip-hard-dependent-tasks ()
+  (or (my-skip-non-tasks)
+      (cond ((string= (org-entry-get nil "HARD_INTERNAL_DEPENDENCY") "yes") 1)
+            ((string= (org-entry-get nil "HARD_EXTERNAL_DEPENDENCY") "yes") 1))))
+
+(defun my-skip-all-dependent-tasks ()
+  (or (my-skip-hard-dependent-tasks)
+      (cond ((string= (org-entry-get nil "SOFT_INTERNAL_DEPENDENCY") "yes") 1)
+            ((string= (org-entry-get nil "SOFT_EXTERNAL_DEPENDENCY") "yes") 1))))
+
+(defun my-org-agenda-cycle-span (direction)
+  "Cycle agenda time span forward or backward.
+DIRECTION: +1 for forward (day → week → month → year), -1 for backward.
+Stops at ends, no wraparound."
+  (interactive "p")
+  (unless (derived-mode-p 'org-agenda-mode)
+    (user-error "Not in an org-agenda buffer"))
+  (let* ((current org-agenda-current-span)
+         (spans '(day week month year))
+         (pos (cl-position current spans))
+         (new-pos (max 0 (min (+ pos direction) (1- (length spans)))))
+         (new-span (nth new-pos spans)))
+    (if (= pos new-pos)
+        (message "Already at %s span: %s" (if (> direction 0) "maximum" "minimum") current)
+      (org-agenda-change-time-span new-span)
+      (message "Span: %s → %s" current new-span))))
+
+(defun my-treemacs-org-capture ()
+    "Project capture for the project containing the treemacs point."
+    (interactive)
+    (let* ((filepath-at-point (treemacs--prop-at-point :path))
+	  (project-at-point (my-find-project-containing-dir filepath-at-point))
+	  (project-dir (my-get-project-root project-at-point))
+	  )
+      (message "filepath: %s" project-dir)
+      ;; load dir locals as buffer, capture from there?
+      ;; (other-window 1)
+      ;; (setq unread-command-events '())
+      ;; (org-capture (my-find-project-containing-dir filepath-at-point))
+      ))
+
+(put 'org-agenda-custom-commands 'safe-local-variable #'listp)
+(put 'org-agenda-files 'safe-local-variable #'listp)
+;; (put 'org-agenda-skip-function-global 'safe-local-variable #'listp)
+(put 'org-archive-location 'safe-local-variable #'stringp)
+(put 'org-archive-mark-done 'safe-local-variable #'booleanp)
+(put 'org-capture-templates 'safe-local-variable #'listp)
+(put 'org-directory 'safe-local-variable #'stringp)
+(put 'org-deadline-warning-days 'safe-local-variable #'integerp)
+(put 'org-global-properties 'safe-local-variable #'listp)
+(put 'org-mobile-capture-file 'safe-local-variable #'stringp)
+(put 'org-mobile-directory 'safe-local-variable #'stringp)
+(put 'org-mobile-inbox-for-pull 'safe-local-variable #'stringp)
+#+end_src
+***** org-agenda controls
+:PROPERTIES:
+:NAME:     controls-org-agenda
+:DEPENDS:  controls-enhanced-buffer-keys controls-org-mode-keys
+:END:
+****** modes
+:PROPERTIES:
+:NAME:     controls-org-agenda-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-org-agenda-controls
+      '(org-agenda-mode))
+#+end_src
+****** keys
+:PROPERTIES:
+:NAME:     controls-org-agenda-keys
+:DEPENDS:  controls-org-agenda-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-main-controls
+  		 ("Connection"
+  		  (("ho" org-agenda "local agenda")
+		   ;; ("h*" my-global-agenda "global agenda")
+		   )
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+
+(my-add-to-hydra modes-that-use-org-agenda-controls
+  		 ("Connection"
+  		  (("RET" org-agenda-goto "goto")
+  		   ("hf" org-agenda-exit "close agenda"))
+  		  "Navigation"
+  		  (("SPC" org-agenda-previous-line "pree line")
+  		   ("e" org-agenda-next-line "next line")
+  		   ("C-SPC" org-agenda-backward-block "prev block")
+  		   ("C-e" org-agenda-forward-block "next block")
+  		   ("C-<f1>" origami-backward-fold-same-level "prev header")
+  		   ("C-<f7>" origami-forward-fold "next header")
+  		   ("t" backward-char "prev column")
+  		   ("s" forward-char "next column")
+  		   ("r" consult-line "search" :exit t)
+  		   ("{" consult-line-multi "search multi" :exit t))
+  		  "Agenda Display"
+  		  (("d" org-agenda-show "show")
+  		   ("l" org-agenda-earlier "earlier")
+  		   ("c" org-agenda-later "later")
+		   ("/" (my-org-agenda-cycle-span -1) "decrease time spac")
+  		   ("," (my-org-agenda-cycle-span 1) "increase time span")
+  		   ;; ("/" org-agenda-day-view "day view")
+  		   ;; ("," org-agenda-week-view "week view")
+  		   ;; ("\\" org-agenda-month-view "month view")
+  		   ;; ("+" org-agenda-year-view "year view")
+  		   ("i TAB" org-agenda-follow-mode "follow mode")
+  		   ("iz" (my-agenda-indirect-switch) "follow indirect")
+  		   ("ip" org-agenda-filter-by-category "show single cat")
+  		   ("i]" (org-agenda-filter-by-category t) "remove cat")
+  		   ("ib" (org-agenda-filter-remove-all) "remove all filters")
+  		   ("ie" (org-agenda-filter-by-tag nil ?\t nil) "show single tag")
+  		   ("ic" (org-agenda-filter-by-tag '(64) ?\t nil) "show tag no subs")
+  		   ("in" (org-agenda-filter-by-tag '(16) ?\t nil)  "add tag")
+  		   ("i;" (org-agenda-filter-by-tag '(4) ?\t nil) "remove tag")
+  		   ("i)" (org-agenda-remove-filter 'tag) "remove tag filter")
+  		   ("io" org-agenda-columns "columns view")
+  		   ("ih" org-columns "default view")
+  		   ("is" org-agenda-show-tags "show tags")
+  		   ("iy" org-agenda-entry-text-show "show entry text")
+  		   ("i|" (org-agenda-entry-text-hide) "hide entry text")
+  		   ("iu" org-agenda-toggle-time-grid "togg time grid")
+  		   ("C-t" origami-close-node "fold")
+  		   ("C-s" origami-open-node "unfold")
+  		   ("hw" org-agenda-redo-all "refresh")
+  		   ("iw" org-agenda-redo-all "refresh"))
+  		  "Interaction"
+  		  (
+  		   ("a" org-columns-previous-allowed-value "prev val")
+  		   ("n" org-columns-next-allowed-value "next val")
+  		   ("<backspace>" org-agenda-date-earlier "date earlier")
+  		   ("<tab>" org-agenda-date-later "date later")
+  		   ("ii" org-agenda-bulk-action "bulk action" :exit t)
+  		   ("it" org-agenda-set-tags "set tag" :exit t)
+  		   ;;("ir" (progn (org-agenda-todo nil) (org-agenda-redo-all)) "cycle todo")
+  		   ("ir" org-goto-calendar "goto calendar")
+  		   ("i SPC" (progn (org-agenda-deadline nil)) "set deadline" :exit t)
+  		   ("i(" (progn (org-agenda-deadline '(4)) (org-agenda-redo-all)) "remove deadline" :exit t)
+  		   ("ia" (progn (org-agenda-schedule nil) ) "set schedule" :exit t)
+  		   ("i=" (progn (org-agenda-schedule '(4)) (org-agenda-redo-all)) "remove schedule" :exit t)
+  		   ("w" (progn (org-agenda-priority-up) (org-agenda-redo-all)) "priority up")
+  		   ("b" (progn (org-agenda-priority-down) (org-agenda-redo-all)) "priority down")
+  		   ("o" org-agenda-bulk-mark "mark")
+  		   ("-" org-agenda-bulk-unmark "unmark")
+  		   ("<f9>" org-agenda-bulk-mark-all "mark all")
+  		   ("<f10>" org-agenda-bulk-unmark-all "unmark all")
+  		   ("hd" (org-save-all-org-buffers) "save and refresh")
+  		   ("i DEL" org-agenda-archive "archive node")
+  		   ("i '" org-agenda-kill :exit t "delete node")
+  		   ("ig" org-agenda-undo "undo"))))
+
+(my-add-to-hydra 'calendar-mode
+  		 ("Connection"
+  		  (("hf" calendar-exit "exit"))
+  		  "Navigation"
+  		  (("SPC" calendar-backward-week "prev day week")
+  		   ("e" calendar-forward-week "next week")
+  		   ("t" calendar-backward-day "prev day")
+  		   ("s" calendar-forward-day  "next day")
+  		   ("a" calendar-backward-month "prev month")	
+  		   ("n" calendar-forward-month "next month")
+  		   ("=" calendar-backward-year "prev year")	
+  		   (";" calendar-forward-year "next year"))
+  		  "Display"
+  		  (("hw" calendar-redraw "refresh"))
+  		  "Interaction"
+  		  (("RET" my-select-deadline-from-calendar "select deadline")
+  		   ("d" my-select-schedule-from-calendar "select scheduled")
+  		   ;; ("o" calendar-set-mark "mark")
+  		   ;; ("<f9>" calendar-unmark "unmark")
+		   )))
+
+#+end_src
+
+** using source control
+:PROPERTIES:
+:NAME:     source-control
+:DEPENDS:  workbench
+:ID:       55fd3262-ca50-4182-b447-f9adb88cf01a
+:END:
+#+begin_src emacs-lisp
+(add-hook 'find-file-hook 'smerge-mode)
+#+end_src
+*** magit
+:PROPERTIES:
+:NAME:     magit
+:END:
+#+begin_src emacs-lisp
+;; add magit stuff to results buffer?
+(my-add-hidden-buffer-patterns '(".*magit.*"))
+(my-add-results-buffer-patterns '(".*magit.*"))
+
+#+end_src
+**** magit controls                                        
+:PROPERTIES:
+:NAME:     controls-magit
+:DEPENDS:  controls-main-keys controls-enhanced-text-editing-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-magit-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-magit-controls
+      '(
+  	;;magit-cherry-mode
+  	magit-diff-mode
+  	magit-log-mode
+  	;;magit-log-select-mode
+  	;;magit-merge-preview-mode
+  	;;magit-process-mode
+  	;;magit-reflog-mode
+  	magit-refs-mode
+  	;;magit-repolist-mode
+  	magit-revision-mode
+  	;;magit-section-mode
+  	;;magit-stash-mode
+  	;;magit-stashes-mode
+  	magit-status-mode
+  	;;magit-submodule-list-mode
+  	))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-magit-keys
+:DEPENDS:  controls-magit-modes
+:ID:       068f7618-ba68-4573-bfc5-bdd7a3c8ce03
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-main-controls
+  		 ("Connection"
+  		  (("hh" magit "magit" :exit t)
+  		   ("h>" magit-clone "magit clone" :exit t)
+  		   ("i)" smerge-mode "smerge" :exit t))))
+
+(my-add-to-hydra modes-that-use-magit-controls
+  		 ("Connection"
+  		  (("ia" magit-git-command "git command"))
+  		  "Navigation"
+  		  (("SPC" magit-previous-line "pree line")
+  		   ("e" magit-next-line "nex line")
+  		   ("a" magit-section-backward "prev sect")
+  		   ("n" magit-section-forward "next sect")
+  		   ("l" magit-section-backward-sibling "prev sib")
+  		   ("c" magit-section-forward-sibling "next sib"))
+  		  "Display"
+  		  (("t" magit-section-hide "hide sect")
+  		   ("s" magit-section-show "show sect")
+  		   ("iw" magit-refresh "git refresh"))
+  		  "Interaction"
+  		  ()))
+
+(my-add-to-hydra 'magit-status-mode
+  		 ("Connection"
+  		  ;; r/d for magit-diff-visit-file
+  		  ()
+  		  "Navigation"
+  		  (
+  		   ;;("i RET" magit-diff-visit-file "diff")
+  		   ("id" magit-diff-visit-file-other-window "diff other"))
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (
+  		   ;; setting up for work
+  		   ("w" magit-fetch "git fetch" :exit t)
+  		   ("\\" magit-remote "git remote" :exit t)
+  		   ("g" magit-checkout "git checkout")
+  		   ("[" magit-branch "git branch" :exit t)
+
+  		   ;; preserving work
+  		   ("RET" magit-stage "git stage")
+  		   ("DEL" magit-unstage "git unstage")
+  		   ("'" magit-reset "git reset" :exit t)
+  		   ("d" magit-stash "git stash" :exit t)
+  		   ("<tab>" magit-commit "git commit" :exit t)
+  		   ("b" magit-push "git push" :exit t)
+
+  		   ;; integrating work
+  		   ("p" magit-merge "git merge" :exit t)
+  		   ("]" magit-rebase "git rebase" :exit t)
+  		   ;; ("i SPC" magit-diff-dwim "diff" :exit t)
+  		   ("ie" magit-discard "choose side to keep")
+  		   ;; ("io" magit-smerge-keep-upper "keep mine")
+  		   ;; ("ih" magit-smerge-keep-lower "keep other")
+  		   ;; ("iu" magit-smerge-keep-all "keep all")
+
+  		   ;; other
+  		   ("iq" magit-log "git log" :exit t)
+  		   ("o" set-mark-command "mark")
+  		   ("-" exchange-point-and-mark "mark switch"))))
+
+(my-add-to-hydra 'magit-diff-mode
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("RET" diff-apply-hunk "apply hunk")
+  		   ("*" diff-test-hunk "test hunk")
+  		   ("i RET" diff-goto-source "goto src")
+  		   ("ig" diff-reverse-hunk "undo apply"))))
+
+;; add smerge commands
+(my-add-to-hydra modes-that-use-enhanced-text-editing-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  (
+  		   ;; ("i TAB" smerge-prev "prev conf")
+  		   ;; ("dp" smerge-next "next conf")
+  		   )
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("ie" smerge-keep-current "keep current")
+  		   ("io" smerge-keep-mine "keep mine")
+  		   ("ih" smerge-keep-other "keep other")
+  		   ("iu" smerge-keep-all "keep all"))))
+#+end_src
+** using pdfs
+:PROPERTIES:
+:NAME:     pdf
+:END:
+*** pdf controls 
+:PROPERTIES:
+:NAME:     controls-pdf
+:DEPENDS:  controls-main-keys controls-enhanced-appearance-keys
+:END:
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-page)
+  ;; turn off cua so copy works
+  (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
+  :mode ("\\.pdf\\'" . pdf-view-mode))
+#+end_src
+**** modes
+:PROPERTIES:
+:NAME:     controls-pdf-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-pdf-controls '(pdf-view-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-pdf-keys
+:DEPENDS:  controls-pdf-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-pdf-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  (("e" pdf-view-next-line-or-next-page "pree line")
+  		   ("SPC" pdf-view-previous-line-or-previous-page "nex line")
+  		   ("a" pdf-view-scroll-down-or-previous-page "scroll up")
+  		   ("n" pdf-view-scroll-up-or-next-page "scroll up")
+  		   ("/" pdf-view-first-page "first page")
+  		   ("," pdf-view-last-page "last page")
+  		   ("hg" pdf-outline "outline")
+  		   )
+  		  "Display"
+  		  (("fr" pdf-view-fit-page-to-window "zoom reset")
+  		   ("f SPC" pdf-view-shrink "zoom out")
+  		   ("f RET" pdf-view-enlarge "zoom in")
+  		   ("f t" pdf-view-themed-minor-mode "pdf color filter"))
+  		  "Interaction"
+  		  ()))
+#+end_src
+** using csv files
+:PROPERTIES:
+:NAME:     csv
+:END:
+#+begin_src emacs-lisp
+(use-package csv-mode
+  :mode ("\\.csv\\'" . csv-mode)
+  :hook (csv-mode . (lambda ()
+                      (csv-align-mode 1)
+  		      (visual-line-mode -1)
+  		      (toggle-truncate-lines 1))))
+
+#+end_src
+*** csv controls 
+:PROPERTIES:
+:NAME:     controls-csv
+:DEPENDS:  controls-main-keys
+:END:
+#+begin_src emacs-lisp
+
+#+end_src
+**** modes
+:PROPERTIES:
+:NAME:     controls-csv-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-csv-controls '(csv-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-csv-keys
+:DEPENDS:  controls-csv-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-csv-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+#+end_src
+** using postgres
+:PROPERTIES:
+:NAME:     postgres
+:DEPENDS:  environment-non-nix-packages code-sql
+:ID:       744e8bf4-444f-48d5-9317-ba612da9474a
+:END:
+#+begin_src emacs-lisp
+;; (use-package pg
+;;   :config
+;;   (setq pg-default-user "jessenieboer"
+;;         pg-default-database "jn_test"
+;;         pg-default-host nil  ;; Local socket
+;;         pg-default-port 5432))
+
+(use-package pgmacs
+  :after sql
+  :commands (pgmacs-open pgmacs-browse-table)
+  :config
+  (setq pgmacs-data-directory "/var/lib/postgres_drive/postgresql/16")
+  (setq pgmacs-show-row-numbers t
+  	pgmacs-show-system-tables nil)
+  :ensure nil)
+
+;; (defun my-pgmacs-connect ()
+;;   "Connect to PostgreSQL using predefined defaults, bypassing the widget."
+;;   (interactive)
+;;   (pgmacs-open-string "dbname=jn_test user=jessenieboer port=5432"))
+
+;; (defvar *pg* (pg-connect "pgeltestdb" "pgeltestuser" "pgeltest" "localhost" 5432))
+#+end_src
+*** postgres controls 
+:PROPERTIES:
+:NAME:     controls-postgres
+:DEPENDS:  controls-main-keys
+:END:
+#+begin_src emacs-lisp
+
+#+end_src
+**** modes
+:PROPERTIES:
+:NAME:     controls-postgres-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-postgres-controls '(pgmacs-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-postgres-keys
+:DEPENDS:  controls-postgres-modes
+:ID:       e8bba344-01f9-42e4-9668-45e213030a47
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-postgres-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+#+end_src
+** using eww
+:PROPERTIES:
+:NAME:     eww
+:END:
+*** eww controls 
+:PROPERTIES:
+:NAME:     controls-eww
+:DEPENDS:  controls-main-keys
+:END:
+#+begin_src emacs-lisp
+(setq eww-auto-rename-buffer nil
+      shr-table-corner ?+
+      shr-table-horizontal-line ?-
+      shr-table-vertical-line ?|)
+#+end_src
+
+**** modes
+:PROPERTIES:
+:NAME:     controls-eww-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-eww-controls '(eww-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-eww-keys
+:DEPENDS:  controls-eww-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-eww-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+#+end_src
+** writing code
+:PROPERTIES:
+:NAME:     code
+:DEPENDS:  enhanced-editing-text environment-non-nix-packages
+:END:
+*** bdd
+:PROPERTIES:
+:NAME:     bdd
+:DEPENDS:  enhanced-emacs-general
+:END:
+#+begin_src emacs-lisp
+(use-package feature-mode
+  :config (add-to-list 'auto-mode-alist '("\\.feature\\'" . feature-mode)))
+
+(add-hook 'feature-mode-hook (lambda () (orgtbl-mode -1)))
+
+(defun my-run-cucumber-reports ()
+  (interactive)
+  (let ((default-directory (my-get-project-root (project-current))))
+    (shell-command "node bdd/docs/generate-report.js")))
+
+(defun my-generate-feature2-html ()
+  (interactive)
+  (let* ((proj (project-current))
+	 (proj-root (my-get-project-root proj))
+	 (proj-name (my-get-project-name proj)))
+    (shell-command (format "nix develop -c features2 create -i \"bdd/features\" -t \"bdd/tools/features2\" -o \"bdd/docs\" -p \"%s\" -d \"Features for %s\"" proj-name proj-name))
+    (browse-url-of-buffer (find-file-noselect (file-name-concat proj-root "bdd/docs/Features.html") t))))
+
+(define-abbrev org-mode-abbrev-table "sf" "#+BEGIN_SRC feature\n\n#+END_SRC")
+#+end_src
+**** bdd controls
+***** modes
+:PROPERTIES:
+:NAME:     controls-bdd-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-bdd-controls
+      '(bdd-mode
+  	feature-mode
+	js-mode
+	nix-mode
+  	org-mode
+  	python-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-bdd-keys
+:DEPENDS:  controls-bdd-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-bdd-controls
+		   ("Connection"
+		    ()
+		    "Navigation"
+		    ()
+		    "Display"
+		    ()
+		    "Interaction (code)"
+		    (("dm" my-run-cucumber-reports "run cuc reports"))
+		    "Completion"
+		    ()))
+#+end_src
+***** completion
+:PROPERTIES:
+:NAME:     controls-bdd-completion
+:DEPENDS:  enhanced-editing-text
+:END:
+#+begin_src emacs-lisp
+;; not sure why putting the add hook in here doesn't work - call this function in startup function
+;; (defun my-feature-mode-completion ()
+;;   (add-hook 'python-mode-hook
+;; 	    (lambda ()
+;; 	      (setq-local completion-at-point-functions
+;; 			  (list
+;; 			   #'cape-dabbrev
+;; 			   #'cape-keyword)))))
+;; (define-abbrev feature-mode-abbrev-table "f" "Feature: ")
+;; (define-abbrev feature-mode-abbrev-table "s" "Scenario: ")
+;; (define-abbrev feature-mode-abbrev-table "g" "Given: ")
+;; (define-abbrev feature-mode-abbrev-table "w" "When: ")
+;; (define-abbrev feature-mode-abbrev-table "t" "Then: ")
+
+#+end_src
+*** elisp
+:PROPERTIES:
+:NAME:     code-elisp
+:END:
+todo: split lisp and elisp
+#+begin_src emacs-lisp
+
+#+end_src
+**** elisp controls
+:PROPERTIES:
+:NAME:     controls-elisp
+:DEPENDS:  controls-general-code-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-elisp-modes
+:ID:       b0b3c978-5861-43a0-9cae-a86a2983f9d6
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-elisp-controls
+      '(
+  	emacs-lisp-mode
+  	lisp-data-mode
+  	lisp-interaction-mode
+  	lisp-mode
+  	org-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-elisp-keys
+:DEPENDS:  controls-elisp-modes
+:ID:       3a1feee8-cb74-43d0-80ea-d0f784fa6769
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-elisp-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("do" eval-last-sexp "eval last")
+  		   ("d-" eval-region "eval region")
+  		   ("dh" eval-buffer "eval all"))))
+#+end_src
+*** code in general
+:PROPERTIES:
+:NAME:     code-general
+:DEPENDS:  environment-non-nix-packages enhanced-emacs-general workbench enhanced-appearance enhanced-buffers
+:ID:       4ed380e3-2c64-42cc-bfb2-445fcf322d6b
+:END:
+
+tool explanations and implementations
+
+*completions* :: display and select relevant text to insert
+Corfu frontend
+Various cape functions
+Copilot 
+
+*debugger* :: steps through code execution and shows values
+dap-mode
+
+*diagnostics* :: live feedback on code
+- syntax errors
+- type checking
+- style issues
+- potential bugs
+- code quality suggestions
+
+We use lsp-mode + lsp-ui + flycheck combined with language-specific tools like pyright and ruff
+
+*formatting* :: makes code conform to correct format
+
+*import resolution*: :: make sure other code being used is located correctly
+- errors show up in lsp headerline breadcrumbs
+
+*navigation* :: move around in code
+- show/goto definition
+- show/goto references
+
+  
+code ui features:
+- don't use sideline, it moves the code around if the window is too narrow
+- lsp-ui doc stuff goes to the bottom of the frame so it stays out of the way of the code and potentially minibuffer (can't figure out how to get it to show up in the reference frame)
+- code navigation:
+  - definition: use xref-find-definitions (in this or other window), no good way to display in reference frame without switching focus
+  - show references:
+  - goto references:
+#+begin_src emacs-lisp
+(setq indent-tabs-mode -1
+      xref-prompt-for-identifier nil)
+(global-eldoc-mode -1) ; not necessary with lsp-ui
+(show-paren-mode t)
+
+(use-package copilot
+  :config
+  (add-to-list 'copilot-indentation-alist '(org-mode 2)))
+
+;; for each mode that uses tdd, you have to setq-local compile-command to the test command for that mode
+;; commented out because it still doesn't work right, mode line icon isn't consistently accurate
+;; (use-package tdd
+;;   :config
+;;   (tdd-mode -1) ;; only activate manually
+;;   (set-face-attribute 'compilation-mode-line-exit nil
+;; 		      :foreground "green"
+;; 		      :inherit nil)
+;;   (set-face-attribute 'compilation-mode-line-fail nil
+;; 		      :foreground "red"
+;; 		      :inherit nil))
+
+
+;; (defun my-org-mode-tdd-hook ()
+;;   (tdd-mode -1))
+;; (add-hook 'org-mode-hook 'my-org-mode-tdd-hook)
+
+;; buffer local direnv stuff; necssary for python at least?
+(use-package envrc 
+  :config
+  (add-hook 'change-major-mode-after-body-hook 'envrc-mode)
+  :hook (after-init . envrc-global-mode))
+
+(use-package dap-mode
+  :ensure t
+  :config
+  (dap-auto-configure-mode -1)
+  (dap-mode 1)
+  (dap-tooltip-mode 1)
+  ;;(dap-ui-controls-mode 1)
+  ;;(dap-ui-mode 1)
+  (require 'dap-python)
+  (setq dap-ui-use-treemacs nil)
+  (tooltip-mode 1))
+
+(my-add-results-buffer-patterns '("^\\*dap-.*"))
+(my-add-hidden-buffer-patterns '("^\\*dap-.*"))
+(my-add-hidden-buffer-patterns '("^\\*Debug.*"))
+
+(use-package flycheck
+  :config
+  (set-face-attribute 'flycheck-error nil :underline '(:color "red" :style wave))
+  (set-face-attribute 'flycheck-warning nil :underline '(:color "orange" :style wave))
+  (set-face-attribute 'flycheck-info nil :underline '(:color "blue" :style wave))
+  (setq flycheck-display-errors-delay 0.5))
+
+(use-package flycheck-posframe
+  :ensure t
+  :after flycheck
+  :config (setq flycheck-posframe-border-width 3 ;; doesn't seem to have any effect
+        	flycheck-posframe-position 'frame-bottom-left-corner)
+  (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
+
+(use-package lsp-mode
+  :commands lsp lsp-deferred
+  :config (setq lsp-completion-provider :none
+        	lsp-diagnostics-provider :flycheck
+        	lsp-eldoc-enable-hover nil
+        	lsp-enable-snippet nil
+        	lsp-file-watch-ignored-directories (append lsp-file-watch-ignored-directories '("/nix/store") '("**/bot-assist-mps"))
+        	lsp-idle-delay 0.5
+        	lsp-log-io nil
+    		lsp-restart 'interactive))
+;;:custom	  lsp-use-plists nil ;; t is causing errors at the moment)
+
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :config (setq lsp-ui-doc-alignment 'frame ;; only relevant if lsp-ui-doc-position is not 'at-point
+        	lsp-ui-doc-delay 0.5
+        	lsp-ui-doc-enable t
+        	lsp-ui-doc-header nil
+        	lsp-ui-doc-include-signature nil
+        	lsp-ui-doc-max-height 80
+        	lsp-ui-doc-position 'bottom
+        	lsp-ui-doc-show-with-cursor t
+        	lsp-ui-doc-show-with-mouse nil
+        	lsp-ui-doc-use-childframe t
+        	lsp-ui-imenu-mode-map (make-sparse-keymap)
+        	lsp-ui-imenu-auto-refresh t
+        	lsp-ui-imenu-buffer-position 'left
+        	lsp-ui-peek-always-show t
+        	lsp-ui-peek-enable t
+        	lsp-ui-sideline-enable -1))
+
+(defun my-lsp-ui-imenu-smart-toggle ()
+  "Toggle the visibility of the lsp-ui-imenu buffer.
+        		    If the buffer is visible in any frame, hide it by quitting its window.
+        		    If it is not visible, display it by calling `lsp-ui-imenu`."
+  (interactive)
+  (let ((imenu-buffer (get-buffer "*lsp-ui-imenu*")))
+    (if (and imenu-buffer (get-buffer-window imenu-buffer 'visible))
+        (quit-window nil (get-buffer-window imenu-buffer 'visible))
+      (lsp-ui-imenu))))
+
+(my-add-hidden-buffer-patterns '("^\\*flycheck-.*"))
+;; leave alone for now because i can't just "display" the buffer, the buffer gets focus because xref uses pop-to-buffer
+;; (defun my-xref-find-definitions ()
+;;   (interactive)
+;;   (let ((identifier (or (xref-backend-identifier-at-point (xref-find-backend)) (user-error "No xref identifier at point"))))
+;;     (my-display-in-frame my-reference-frame-name
+;;      (lambda ()
+;;        (xref-find-definitions identifier)))))
+
+(add-hook 'prog-mode-hook (lambda () (eldoc-mode -1)
+        		    (flymake-mode -1)))
+
+#+end_src
+**** general code controls
+:PROPERTIES:
+:NAME:     controls-general-code
+:DEPENDS:  controls-enhanced-text-editing-keys controls-magit-keys
+:ID:       4cf9d37e-0046-47ab-94ce-97c5d839298e
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-general-code-modes
+:ID:       17fcd381-7ab1-4a38-9137-d30025082c71
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-general-code-controls
+      '(
+  	bdd-mode
+	c-mode
+  	emacs-lisp-mode
+  	ess-r-mode
+  	feature-mode
+  	js-json-mode
+	js-mode
+	lisp-data-mode
+  	lisp-interaction-mode
+  	markdown-mode
+  	nix-mode
+  	org-mode
+  	prolog-mode
+  	python-mode
+	sh-mode
+  	sweeprolog-mode
+	web-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-general-code-keys
+:DEPENDS:  controls-general-code-modes
+:ID:       3a7fe526-c6a3-4e32-a219-96b9f8526711
+:END:
+
+
+g = lsp prev ref
+[ = flycheck prev error
+p = lsp next ref
+] = flycheck next error
+
+ip = comment
+ib = rename
+in = run command line
+i\ = restart session
+im = format buffer
+iq = load buffer?
+
+d = leader key for code stuff
+
+dx = debug step in
+d f7 = debug next 
+do = eval last
+d- = eval region
+dh = eval buffer
+du = debug step out
+d <f12> = debug tooltip
+
+dy = peek def
+ds = 
+de = test file
+dn = simple test project
+d; = verbose test project
+dc = peek ref
+dk = preview
+
+dz = find def other win
+d~ = find def this win
+di = ai leader (see below)
+d TAB = xref back
+dp = xref forward
+db = go xref
+
+dq = detangle to org
+
+dd = breakpoint toggle
+d RET continue
+dg = debug session
+d[ = sessions
+da = run last debug
+df = quit session
+dw = restart debug session
+d\ = lsp restart
+dm = run reports
+
+di = ai help leader key
+
+diw = ai mode
+di\ = ai login
+dig = ai review region
+di[ = ai review buffer
+dir = ai yank pop
+di DEL = ai fix
+diq = 
+
+dij
+dil 
+dia 
+di SPC = ai yank 
+dit = ai optimize
+dim
+
+di <f6> = open ai chat
+dif = 
+did
+di ret = ai send
+di <f1>
+div 
+
+di TAB
+dii = open ai chat
+dip
+dib
+
+dis = explain symbol 
+die = 
+din = explain function  
+dic = explain region
+
+dix = open ai agent
+di? = update agents
+di <f7> = open ai chat
+dio = add ai context
+dih = show ai context
+diu = clear context
+di <f12> =
+
+#+begin_src emacs-lisp
+;;(global-set-key (kbd "<tab> w") 'copilot-mode)
+;;(global-set-key (kbd "<tab> \\") 'copilot-login)
+(global-set-key (kbd "<tab> TAB") 'copilot-complete)
+(global-set-key (kbd "<tab> RET") 'copilot-accept-completion)
+(global-set-key (kbd "<tab> a") 'copilot-accept-completion-by-word)
+(global-set-key (kbd "<tab> l") 'copilot-accept-completion-by-line)
+(global-set-key (kbd "<tab> g") 'copilot-previous-completion)
+(global-set-key (kbd "<tab> DEL") 'copilot-next-completion)
+(global-set-key (kbd "<tab> f") 'copilot-clear-overlay)
+
+(my-add-to-hydra modes-that-use-general-code-controls
+  		 ("Connection"
+  		  (("dz" xref-find-definitions-other-window "find def other")
+  		   ("d~" xref-find-definitions "find def")
+  		   ("d TAB" xref-go-back "xref back")
+  		   ("dp" xref-go-forward "xref fwd")
+  		   ("db" xref-find-references "find refs")
+  		   ("dg" dap-debug "debug session")
+  		   ("df" dap-disconnect "debug quit")
+  		   ("dw" dap-debug-restart "debug restart")
+  		   ("df" dap-disconnect "debug quit")
+  		   ("d\\" lsp-restart-workspace "debug quit"))
+  		  "Navigation"
+  		  (("g" (lsp-ui-find-prev-reference nil) "prev ref")
+  		   ("p" (lsp-ui-find-next-reference nil) "next ref")
+  		   ("[" flycheck-previous-error "prev err")
+  		   ("]" flycheck-next-error "next err")
+  		   ;; ("iy" lsp-ui-doc-focus-frame "focus doc")
+  		   ;;("i|" lsp-ui-doc-unfocus-frame "unfocus doc")
+  		   )
+  		  "Display"
+  		  (("dy" lsp-ui-peek-find-definitions "peek def" :exit t)
+  		   ("dc" (lsp-ui-peek-find-references nil) "peek ref" :exit t)
+  		   ("hg" lsp-ui-imenu "lsp nav")
+  		   ("d <f12>" dap-tooltip-at-point "debug tooltip")
+  		   ("d[" dap-ui-sessions "debug sessions"))
+  		  "Interaction (code)"
+  		  (("ip" comment-dwim "comment") 
+  		   ("im" lsp-format-buffer "format buffer")
+  		   ("ib" lsp-rename "rename")
+  		   ("dd" dap-breakpoint-toggle "breakpoint")
+  		   ("d RET" dap-continue "continue")
+  		   ("dx" dap-step-in "step in")
+  		   ("d <f7>" dap-next "next")
+  		   ("du" dap-step-out "step out")
+  		   ("da" dap-debug-last "debug last")
+  		   ("TAB C-d" org-edit-src-exit "org src exit")
+  		   ("TAB C-f" org-edit-src-abort "org src abort")
+  		   ("dig" copilot-chat-review "ai review")
+  		   ("di[" copilot-chat-review-whole-buffer "ai review buffer")
+  		   ("di DEL" copilot-chat-fix "ai fix")
+  		   ("dit" copilot-chat-optimize "ai optimize")
+  		   ("di <f12>" copilot-chat-doc "ai document")
+  		   ("dis" copilot-chat-explain-symbol-at-line "ai explain symbol")
+  		   ("din" copilot-chat-explain-defun "ai explain function")
+  		   ("dic" copilot-chat-explain "ai explain region"))
+  		  "Completion"
+  		  (;; ("dy" tdd-mode "tdd mode")
+  		   ("<tab> w" copilot-mode "ai mode")
+  		   ("<tab> \\" copilot-login "ai login")
+  		   ("<tab> TAB" copilot-complete "ai complete")
+  		   ("<tab> RET" copilot-accept-completion "ai accept all")
+  		   ("<tab> a" copilot-accept-completion-by-word "ai accept word")
+  		   ("<tab> l" copilot-accept-completion-by-line "ai accept line")
+  		   ("<tab> g" copilot-previous-completion "prev ai comp")
+  		   ("<tab> DEL" copilot-next-completion "next ai comp")
+  		   ("<tab> f" copilot-clear-overlay "clear ai"))))
+
+(with-eval-after-load 'lsp-ui    
+  ;;Custom keybindings for lsp-ui-peek
+  ;; Connection
+  (define-key lsp-ui-peek-mode-map (kbd "RET") 'lsp-ui-peek--goto-xref)
+  (define-key lsp-ui-peek-mode-map (kbd "d") 'lsp-ui-peek--goto-xref-other-window)
+  (define-key lsp-ui-peek-mode-map (kbd "f") 'lsp-ui-peek--abort) 
+
+  ;; Navigation
+  (define-key lsp-ui-peek-mode-map (kbd "SPC") 'lsp-ui-peek--select-prev)
+  (define-key lsp-ui-peek-mode-map (kbd "e") 'lsp-ui-peek--select-next)
+  (define-key lsp-ui-peek-mode-map (kbd "v") 'lsp-ui-peek--select-prev-file)
+  (define-key lsp-ui-peek-mode-map (kbd "x") 'lsp-ui-peek--select-next-file))
+
+(my-add-to-hydra 'xref--xref-buffer-mode
+  		 ("Connection"
+  		  (("RET" xref-quit-and-goto-xref "go xref quit")
+  		   ("d" xref-goto-xref "go xref")
+  		   ("hf" quit-window "exit"))
+  		  "Navigation"
+  		  (("SPC" xref-prev-line "xref prev")
+  		   ("e" xref-next-line "xref next")
+  		   ("a" xref-prev-group "xref prev group")
+  		   ("n" xref-next-group "xref next group"))
+  		  "Display"
+  		  ()
+  		  "Interaction (code)"
+  		  ()))
+
+(my-add-to-hydra 'lsp-ui-imenu-mode
+  		 ("Connection"
+  		  (("hg" my-lsp-ui-imenu-smart-toggle "toggle")
+  		   ("hw" lsp-ui-imenu--refresh "refresh")
+  		   ("hf" lsp-ui-imenu--kill "exit"))
+  		  "Navigation"
+  		  (("SPC" previous-line "pree line")
+  		   ("e" next-line "nex line")
+  		   ("a" lsp-ui-imenu--prev-kind "prev kind")
+  		   ("n" lsp-ui-imenu--next-kind "next kind"))
+  		  "Display"
+  		  (("c" lsp-ui-imenu--view "peek"))
+  		  "Interaction"
+  		  (("RET" lsp-ui-imenu--visit "visit"))))
+
+#+end_src
+
+***** completion
+:PROPERTIES:
+:NAME:     controls-code-completion
+:DEPENDS:  enhanced-editing-text
+:END:
+#+begin_src emacs-lisp
+;; not sure why putting the add hook in here doesn't work - call this function in startup function
+;; (defun my-general-code-completion ()
+;;   (add-hook 'python-mode-hook
+;; 	    (lambda ()
+;; 	      (setq-local completion-at-point-functions
+;; 			  (list
+;; 			   #'cape-dabbrev)))))
+#+end_src
+**** general code workbench
+:PROPERTIES:
+:NAME:     workbench-general-code
+:END:
+#+BEGIN_SRC emacs-lisp
+  ;;; side window in main
+(add-to-list 'display-buffer-alist
+    	     '("^\\*xref\\*"
+    	       (display-buffer-in-side-window)
+    	       (side . left)
+    	       (slot . 0)))
+
+    ;;; results frame
+(add-to-list 'display-buffer-alist
+    	     `(,(concat "^\\*" my-debug-template-prefix ".*::.*")
+    	       (display-buffer-use-some-frame)
+    	       (frame-predicate . (lambda (frame) (equal (frame-parameter frame 'name) my-results-frame-name)))
+    	       (inhibit-switch-frame . t)))
+
+#+END_SRC
+*** html
+:PROPERTIES:
+:NAME:     code-html
+:END:
+#+begin_src emacs-lisp
+(use-package web-mode
+  :mode
+  (("\\.html\\'" . web-mode)))
+#+end_src
+**** html controls
+:PROPERTIES:
+:NAME:     controls-html
+:DEPENDS:  controls-general-code-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-html-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-html-controls
+      '(web-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-html-keys
+:DEPENDS:  controls-html-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-html-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("do" browse-url-of-buffer "browse"))))
+
+#+end_src
+*** json
+:PROPERTIES:
+:NAME:     code-json
+:END:
+**** json controls
+:PROPERTIES:
+:NAME:     controls-json
+:DEPENDS:  controls-general-code-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-json-modes
+:ID:       b0b3c978-5861-43a0-9cae-a86a2983f9d6
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-json-controls
+      '(js-json-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-json-keys
+:DEPENDS:  controls-json-modes
+:ID:       3a1feee8-cb74-43d0-80ea-d0f784fa6769
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-json-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("im" json-pretty-print-buffer "format buffer")
+  		   ;;("i DEL" comment-dwim "comment")
+  		   )))
+#+end_src
+*** markdown
+:PROPERTIES:
+:NAME:     code-markdown
+:DEPENDS:  emacs-general org-mode
+:ID:       04f67d1b-6a9e-4404-89c5-574e27989289
+:END:
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "org"
+  '(require 'ox-gfm nil t))
+
+(defun my-org-gfm-checkbox-lowercase (text backend info)
+  "Convert uppercase [X] to lowercase [x] in ox-gfm export."
+  (when (eq backend 'gfm)
+    (replace-regexp-in-string "\\[X\\]" "[x]" text)))
+
+(defun my-org-gfm-export-and-preview ()
+  "Export the current Org buffer to GitHub Flavored Markdown using #+EXPORT_FILE_NAME and preview with grip."
+  (interactive)
+  (when (eq major-mode 'org-mode)
+    (let* ((org-file (buffer-file-name))
+           (md-file
+            (or
+             ;; Check for #+EXPORT_FILE_NAME:
+             (org-entry-get nil "EXPORT_FILE_NAME" t)
+             ;; Fallback to default (org-file.md)
+             (concat (file-name-sans-extension org-file) ".md")))
+           (md-file-full (expand-file-name md-file)))
+      ;; Export to Markdown
+      (org-gfm-export-to-markdown nil nil t)
+      ;; Start grip preview if file exists
+      (if (file-exists-p md-file-full)
+          (grip-start-preview md-file-full)
+        (error "Markdown file %s not found" md-file-full)))))
+
+(add-to-list 'org-export-filter-item-functions 'my-org-gfm-checkbox-lowercase)
+
+(use-package grip-mode
+  :config (setq grip-command 'grip
+        	grip-preview-use-webkit nil
+        	grip-url-browser "brave"))
+#+END_SRC
+**** markdown controls
+:PROPERTIES:
+:NAME:     controls-markdown
+:DEPENDS:  controls-general-code-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-markdown-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-markdown-controls
+      '(markdown-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-markdown-keys
+:DEPENDS:  controls-markdown-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-markdown-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("do" grip-start-preview "start preview")
+  		   ("d-" grip-stop-preview "stop preview"))))
+
+#+end_src
+
+*** nix
+:PROPERTIES:
+:NAME:     code-nix
+:DEPENDS:  workbench
+:END:
+#+begin_src emacs-lisp
+(my-add-hidden-buffer-patterns '("^\\*nixfmt\\*"))
+#+end_src
+**** nix controls
+:PROPERTIES:
+:NAME:     controls-nix
+:DEPENDS:  controls-general-code-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-nix-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-nix-controls
+      '(nix-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-nix-keys
+:DEPENDS:  controls-nix-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-nix-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  (("im" nix-format-buffer "format buffer"))))
+#+end_src
+*** prolog
+:PROPERTIES:
+:NAME:     code-prolog
+:DEPENDS:  code-general workbench enhanced-windows org-babel org-mode
+:ID:       9758a4c9-87b2-45d0-8216-2c5e7c84f288
+:END:
+#+begin_src emacs-lisp
+(use-package ob-prolog
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((prolog . t))))
+
+(use-package sweeprolog
+  :config
+  (add-hook 'org-src-mode-hook
+	    (lambda ()
+	      (my-org-src-setup-for-lsp '(prolog-mode sweeprolog-mode))))
+  (add-to-list 'auto-mode-alist '("\\.pl\\'" . sweeprolog-mode))
+  (add-to-list 'lsp-language-id-configuration '(sweeprolog-mode . "prolog"))
+  (add-to-list 'org-src-lang-modes '("prolog" . sweeprolog))
+  (define-abbrev sweeprolog-mode-abbrev-table "q" "?- ")
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection
+    (lsp-stdio-connection '("swipl"
+  			    "-g" "use_module(library(lsp_server))."
+  			    "-g" "lsp_server:main"
+  			    "-t" "halt"
+  			    "--" "stdio"))
+    :major-modes '(prolog-mode sweeprolog-mode)
+    :priority 1
+    :multi-root t
+    :server-id 'prolog-ls))
+  :ensure nil
+  :mode ("\\.pl\\'" . sweeprolog-mode))
+
+(defun my-sweeprolog-send-goal (start end)
+  "Send highlighted region or goal at point to sweeprolog top-level."
+  (interactive "r")
+  (let* ((goal (if (use-region-p)
+                   (buffer-substring-no-properties start end)
+                 (or (car (sweeprolog-goals-at-point))
+                     (error "No goal at point"))))
+         (goal (cond
+                ((string-match (rx "." (or white "\n") eos) goal) goal)
+                ((string-match (rx "." eos) goal) (concat goal "\n"))
+                (t (concat goal ".\n"))))
+         (buffer (sweeprolog-top-level-buffer)))
+    (sweeprolog-top-level-send-string goal buffer)
+    (display-buffer buffer sweeprolog-top-level-display-action)))
+
+(require 'dap-swi-prolog)
+
+(add-hook 'sweeprolog-mode-hook 
+  	  (lambda ()
+  	    ;; (dap-register-debug-template `,(concat my-debug-template-prefix " :: Prolog file")
+  	    ;; 				 (list
+  	    ;; 				  :args [""]
+  	    ;; 				  :console "integratedTerminal"
+  	    ;; 				  ;;:cwd nil
+  	    ;; 				  ;;:module nil
+  	    ;; 				  :program "${file}"
+  	    ;; 				  :request "launch"
+  	    ;; 				  :type "swipl"))
+  	    ;; completion
+  	    (setq-local completion-at-point-functions
+    			(list #'sweeprolog-completion-at-point))
+  	    (lsp-deferred)
+	    (hide-lines-show-all) ;; experimenting to see if this works better
+	    (my-prolog-hide-org-tangle-comments)))
+
+(add-hook 'sweeprolog-top-level-mode-hook
+          (lambda ()
+            (setq-local completion-at-point-functions
+                        (list #'sweeprolog-completion-at-point))
+            (lsp-deferred)))
+
+(setq org-babel-prolog-command "swipl")
+
+(define-abbrev org-mode-abbrev-table "sl" "#+BEGIN_SRC prolog \n\n#+END_SRC")
+(define-abbrev org-mode-abbrev-table "q" "?- ")
+
+(defun my-prolog-hide-org-tangle-comments ()
+  "Hide Org tangle comments in Prolog buffers."
+  (interactive)
+  (hide-lines-matching "\\(^%.*\\[\\[file:.*\\]\\]$\\|^%.*ends here\\)$"))
+
+
+(my-add-results-buffer-patterns '("^pl-.*" "^\\*sweeprolog-top-.*"))
+(my-add-hidden-buffer-patterns '("^\\*Sweep Messages\\*" "^pl-.*" "^\\*prolog-ls.*" "^\\*sweeprolog-top-.*"))
+(my-add-reference-buffer-patterns '("^\\*Sweep Messages\\*" "^*\\prolog-ls.*"))
+;;(setq popper-reference-buffers (append popper-reference-buffers '(sweeprolog-top-level-mode))) ;; for some reason prolog-inferior-mode doesn't work 
+
+(defun my-sweep-top-level-and-load ()
+  (interactive)
+  (let ((b (current-buffer)))
+	(sweeprolog-top-level)
+	(sweeprolog-load-buffer b)))
+
+#+end_src
+**** prolog controls
+:PROPERTIES:
+:NAME:     controls-prolog
+:DEPENDS:  controls-general-code-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-prolog-modes
+:END:
+#+begin_src emacs-lisp
+(setq modes-that-use-prolog-controls
+      '(prolog-mode sweeprolog-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-prolog-keys
+:DEPENDS:  controls-prolog-modes
+:END:
+#+begin_src emacs-lisp
+(my-add-to-hydra modes-that-use-prolog-controls
+    		 ("Connection"
+    		  (("in" my-sweep-top-level-and-load "top level")
+		   ("i;" sweeprolog-top-level "top level")
+		   ("iq" sweeprolog-load-buffer "load buffer"))
+    		  "Navigation"
+    		  ()
+    		  "Display"
+    		  ()
+    		  "Interaction"
+    		  (("do" my-sweeprolog-send-goal "send goal")
+		   ("i\\" sweeprolog-restart "restart session"))))
+;;use i commands for interaction/continuation stuff?
+
+(my-add-to-hydra 'sweeprolog-top-level-mode
+    		 ("Connection"
+    		  (("iq" sweeprolog-load-buffer "load buffer"))
+    		  "Navigation"
+    		  ()
+    		  "Display"
+    		  ()
+    		  "Interaction"
+    		  (("i\\" sweeprolog-restart "restart session"))))
+#+end_src
+*** python
+:PROPERTIES:
+:NAME:     code-python
+:ID:       c6cb3d72-b96f-45ad-bfb7-73951e02790a
+:DEPENDS:  code-general workbench enhanced-buffers
+:END:
+
+seems that i don't need to use or mess with python environment stuff in emacs if i use flakes in the python projects. in fact, it seems i don't even need to register lsp clients if my project flake is set up correctly (see python-project-template)
+#+begin_src emacs-lisp
+  (setq dap-python-debugger 'debugpy
+        dap-print-io nil
+        python-indent-guess-indent-offset nil
+        python-indent-offset 4)
+  (define-abbrev org-mode-abbrev-table "sp" "#+BEGIN_SRC python\n\n#+END_SRC")
+  ;; (define-abbrev python-mode-abbrev-table "t" "# TODO: ")
+
+  ;; (use-package lsp-pyright
+  ;;   :config (setq lsp-pyright-diagnostic-mode "openFilesOnly"
+  ;; 		  lsp-pyright-multi-root nil)
+  ;;   :custom (lsp-pyright-langserver-command "pyright"))
+
+  (use-package python-pytest
+    :custom python-pytest-unsaved-buffers-behavior 'save-all)
+
+  (add-hook 'python-mode-hook 
+  	  (lambda ()
+  	    ;; set pyright stuff
+  	    ;; (setq lsp-pyright-diagnostic-mode "openFilesOnly"
+  	    ;; 	  lsp-pyright-extra-paths ["src"]
+  	    ;; 	  lsp-pyright-multi-root nil)
+
+  	    ;; completion
+  	    (setq-local completion-at-point-functions
+    			(list
+    			 #'cape-keyword))
+
+  	    ;; set debug configs
+  	    ;; (setq dap-debug-template-configurations nil)
+  	    (dap-register-debug-template `,(concat my-debug-template-prefix " :: Python file")
+  					 (list
+  					  :args [""]
+  					  :console "integratedTerminal"
+  					  ;;:cwd nil
+  					  ;;:module nil
+  					  ;;:program nil ;;"${file}"
+  					  :request "launch"
+  					  :type "python"))
+  	    (dap-register-debug-template `,(concat my-debug-template-prefix " :: Python test file")
+  					 (list
+  					  :args ["--ff"]
+  					  :console "integratedTerminal"
+  					  :cwd "${workspaceFolder}"
+  					  :module "pytest"
+  					  ;;:program "${file}"
+  					  :request "launch"
+  					  :type "python"))
+
+  	    ;; start lsp
+  	    (lsp-deferred)))
+
+  ;; display preferences
+  (my-add-hidden-buffer-patterns '("\\*envrc\\*" "^\\*lsp-.*" "^\\*pyright.*" "^\\*pytest.*" "^\\*ruff.*"))
+  (my-add-results-buffer-patterns '("^\\*pytest.*"))
+#+end_src
+**** python controls
+:PROPERTIES:
+:NAME:     controls-python
+:DEPENDS:  controls-general-code-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-python-modes
+:ID:       4d4b7ac8-c24c-4afa-a9d0-fa1b3ad25e6a
+:END:
+#+begin_src emacs-lisp
+  (setq modes-that-use-python-controls
+        '(python-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-python-keys
+:DEPENDS:  controls-python-modes
+:END:
+#+begin_src emacs-lisp
+  (my-add-to-hydra modes-that-use-python-controls
+  		 ("Connection"
+  		  (("in" run-python "python command line"))
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction (code)"
+  		  (("dn" python-pytest "test project")
+		   ;;("dn" (python-pytest '("--cucumberjson=bdd/docs/html/features.json")) "test project")
+  		   ("d;" (python-pytest '("--tb=short")) "test project verbose")
+  		   ("ds" python-pytest-last-failed "test last failed")
+  		   ;; ("de" python-pytest-file "test file")
+  		   ("do" python-shell-send-statement "eval last")
+  		   ("d-" python-shell-send-statement "eval region")
+  		   ("dh" python-shell-send-buffer "eval all"))))
+#+end_src
+*** r
+:PROPERTIES:
+:NAME:     code-r
+:END:
+#+begin_src emacs-lisp
+  ;; (use-package ess
+  ;;   :init
+  ;;   (require 'ess-site))              
+#+end_src
+*** sql
+:PROPERTIES:
+:NAME:     code-sql
+:ID:       12989bd0-dd81-44e2-b29d-551268230efd
+:END:
+#+begin_src emacs-lisp
+    (use-package sql
+      :config
+      ;; (sql-set-product 'postgres)
+      ;; (setq sql-connection-alist
+      ;;       '((mydb
+      ;;          (sql-product 'postgres)
+      ;;          (sql-database "jessenieboer_db")
+      ;;          (sql-server "localhost")
+      ;;          (sql-user "jessenieboer")
+      ;;          (sql-port 5432))
+      ;;         (admin
+      ;;          (sql-product 'postgres)
+      ;;          (sql-database "postgres")
+      ;;          (sql-server "localhost")
+      ;;          (sql-user "postgres")
+      ;;          (sql-port 5432))))
+      :hook
+      (sql-mode . (lambda ()
+                    ;;(sql-set-sqli-buffer)  ; Auto-connect to SQLi buffer
+                    (sql-highlight-postgres-keywords)))  ; Syntax highlighting for PostgreSQL
+      :mode ("\\.sql\\'" . sql-mode))
+
+    (use-package ob-sql
+      :config
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((sql . t))))
+
+  (define-abbrev org-mode-abbrev-table "ss" "#+BEGIN_SRC sql \n\n#+END_SRC")
+#+end_src
+*** sql controls 
+:PROPERTIES:
+:NAME:     controls-sql
+:DEPENDS:  controls-main-keys
+:END:
+#+begin_src emacs-lisp
+
+#+end_src
+**** modes
+:PROPERTIES:
+:NAME:     controls-sql-modes
+:END:
+#+begin_src emacs-lisp
+  (setq modes-that-use-sql-controls '(sql-mode))
+#+end_src
+**** keys
+:PROPERTIES:
+:NAME:     controls-sql-keys
+:DEPENDS:  controls-sql-modes
+:ID:       e8bba344-01f9-42e4-9668-45e213030a47
+:END:
+#+begin_src emacs-lisp
+  (my-add-to-hydra modes-that-use-sql-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction"
+  		  ()))
+#+end_src
+*** supercollider
+:PROPERTIES:
+:NAME:     code-supercollider
+:DEPENDS:  code-general workbench enhanced-buffers org-mode
+:END:
+
+#+begin_src emacs-lisp
+  (use-package sclang
+    :config
+    (setq  sclang-auto-scroll-post-buffer t
+           sclang-library-startup t
+           sclang-post-buffer-size 1000)
+    ;; (add-hook 'sclang-mode-hook (lambda ()
+    ;;                           (sclang-eval-string "s.boot;")))
+    :ensure nil  ;; Provided by Nix
+    :mode (("\\.sc\\'" . sclang-mode)
+           ("\\.scd\\'" . sclang-mode)))
+
+
+  (my-add-hidden-buffer-patterns '("^\\*SCLang:PostBuffer\\*"))
+  (my-add-results-buffer-patterns '("^\\*SCLang:PostBuffer\\*"))
+
+  ;; (use-package ob-sclang
+  ;;   :config
+  ;;   (org-babel-do-load-languages
+  ;;    'org-babel-load-languages
+  ;;    '((sclang . t))))
+
+#+end_src
+**** supercollider controls
+:PROPERTIES:
+:NAME:     controls-supercollider
+:DEPENDS:  controls-general-code-keys
+:END:
+***** modes
+:PROPERTIES:
+:NAME:     controls-supercollider-modes
+:END:
+#+begin_src emacs-lisp
+  (setq modes-that-use-supercollider-controls
+        '(sclang-mode))
+#+end_src
+***** keys
+:PROPERTIES:
+:NAME:     controls-supercollider-keys
+:DEPENDS:  controls-supercollider-modes
+:END:
+#+begin_src emacs-lisp
+  (my-add-to-hydra modes-that-use-supercollider-controls
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  ()
+  		  "Display"
+  		  ()
+  		  "Interaction (code)"
+  		  (("do" sclang-eval-region-or-line "eval last")
+  		   ("dh" sclang-eval-document "eval doc")
+  		   ("df" sclang-stop "stop"))))
+
+#+end_src
+* startup :essential:
+:PROPERTIES:
+:NAME:     emacs-startup
+:DEPENDS:  emacs-general org-roam projects code-prolog
+:ID:       4d519929-74c8-45c3-a66f-5636cdafdb39
+:END:
+#+begin_src emacs-lisp
+  ;; (setq desktop-globals-to-save (remove 'custom-enabled-themes desktop-globals-to-save)) 
+  					; don't seem to have this in globals to save anyway
+
+  ;; tie all reference/results buffers to the reference/results frame
+  (add-to-list 'display-buffer-alist
+  	     '(my-reference-buffer-p
+  	       (display-buffer-reuse-window
+  		display-buffer-use-some-frame)
+  	       (reusable-frames . t)
+  	       (frame-predicate . (lambda (frame) (equal (frame-parameter frame 'name) my-reference-frame-name)))
+  	       (inhibit-switch-frame . t)))
+
+  (add-to-list 'display-buffer-alist
+  	     '(my-results-buffer-p
+  	       (display-buffer-reuse-window
+  		display-buffer-use-some-frame)
+  	       (reusable-frames . t)
+  	       (frame-predicate . (lambda (frame) (equal (frame-parameter frame 'name) my-results-frame-name)))
+  	       (inhibit-switch-frame . t)))
+
+
+  (defun my-startup ()
+    ;;(enable-time-appropriate-theme)
+
+    (project-forget-projects-under my-projects-directory t)
+    (project-remember-projects-under my-projects-directory t)
+
+    (dolist (proj project--list)
+    (add-to-list 'safe-local-variable-directories (car proj)))
+
+    (popper-mode) ;; do this at the end so popper-reference-buffers has been populated as necessary
+    
+    ;; (org-roam-db-clear-all)
+    ;; (org-roam-db-sync)
+    ;; (org-roam-db-autosync-mode)
+
+    (my-ensure-frame-exists "jn_reference")
+    (my-ensure-frame-exists "main")
+    (my-ensure-frame-exists "jn_results")
+    (desktop-read)
+
+    (lsp-workspace-remove-all-folders)
+
+    (my-update-tab-display-cache)
+    (add-hook 'buffer-list-update-hook #'my-update-tab-display-cache)
+    ;; (add-hook 'org-mode-hook
+    ;;           (lambda ()
+    ;;             (let ((filename (or (buffer-file-name) "")))
+    ;; 		(when (and filename
+    ;; 			   (string-match-p "\\.org\\'" filename)
+    ;; 			   (not (string-match-p "^CAPTURE-.*$" (file-name-nondirectory filename))))
+    ;; 		  (poly-org-mode)))))
+    (setq warning-suppress-types (append warning-suppress-types '((polymode))))
+    (enable-theme 'solarized-dark)
+      (add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'post-command-hook #'my-org-show-definition-in-echo nil t)))
+
+    ;; load stuff that doesn't load correctly with :init in use-package
+    (require 'pgmacs))
+
+  (add-hook 'after-init-hook #'my-startup)
+  ;; (add-hook 'emacs-startup-hook #'my-fix-auto-mode-alist-for-prolog 100)
+
+#+end_src

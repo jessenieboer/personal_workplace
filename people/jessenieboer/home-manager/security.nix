@@ -1,0 +1,111 @@
+{ config, inputs, lib, pkgs, ... }:
+{
+  home = {
+    # initialize the password store if it's not already initialized
+    activation.passInit = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      if [ ! -f "${config.xdg.dataHome}/password-store/.gpg-id" ]; then
+      echo "Initializing pass password store..."
+      ${pkgs.pass}/bin/pass init "$(pass show .gpg-id 2>/dev/null || echo '${config.programs.password-store.settings.PASSWORD_STORE_KEY}')"
+      else
+      echo "Pass store already initialized."
+      fi
+    '';
+
+    file = {
+      ".config/secretspec/config.toml".text = ''
+        [defaults]
+        profile = "dev"
+        provider = "bws://b4d03fd4-666f-4e15-bc31-b43d00e5f451"
+
+        [defaults.providers]
+        personal_workplace = "bws://b4d03fd4-666f-4e15-bc31-b43d00e5f451"
+      '';
+    };
+
+    packages = with pkgs; [
+      bitwarden-cli
+      bitwarden-desktop
+      bws #bitwarden secrets manager
+      jq # for parsing json from bws
+      #pass-git-helper
+      yubikey-manager
+    ];
+  };
+
+  programs = {
+    gpg = {
+      enable = true;
+      publicKeys = [
+        {
+          text = ''
+            -----BEGIN PGP PUBLIC KEY BLOCK-----
+            Comment: 2BC2 1C27 9427 FEE6 2E20  1117 F29D E2CB E4F3 FCE5
+            Comment: Jesse Nieboer <jessenieboer@protonmail.com>
+
+            xjMEaaHi1hYJKwYBBAHaRw8BAQdAgxFrMdnwBjzIUzwpkwMy7D49i44K3O8jqA6c
+            y7/sdhzNK0plc3NlIE5pZWJvZXIgPGplc3NlbmllYm9lckBwcm90b25tYWlsLmNv
+            bT7CrwQTFgoAVxsUgAAAAAAEAA5tYW51MiwyLjUrMS4xMSwyLDECGwMFCwkIBwIC
+            IgIGFQoJCAsCBBYCAwECHgcCF4AWIQQrwhwnlCf+5i4gERfyneLL5PP85QUCaaHm
+            bwAKCRDyneLL5PP85b7IAQCxMryEBKkSUvXlHc8o7pO4EKsHS1Lwht/OnPOD4rtE
+            UwEA51iT2CXnYBcPANeLgJcvZZRL0l8fCDtmtfRdc7EwjwHCtQQTFgoAXRYhBCvC
+            HCeUJ/7mLiARF/Kd4svk8/zlBQJpoeLWGxSAAAAAAAQADm1hbnUyLDIuNSsxLjEx
+            LDIsMQIbAwUJBaTkygULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRDyneLL
+            5PP85WWyAQCBmEklgDBEBJC6BrJrcwaKgjSPCl+ltl1pCWWu2+1qgwEA/ZMw2nv+
+            sweky2rbMfSfFSbxxVJbIGKHnhzBRvIRwwPOOARpoeLWEgorBgEEAZdVAQUBAQdA
+            JXh2B+hepgGzyPMD1g8RA4lJmSgFBopIb7qonDnWnBQDAQgHwpQEGBYKADwbFIAA
+            AAAABAAObWFudTIsMi41KzEuMTEsMiwxAhsMFiEEK8IcJ5Qn/uYuIBEX8p3iy+Tz
+            /OUFAmmh5oMACgkQ8p3iy+Tz/OUZdgD7BJgWBAIh4N9NDQmpPNj2Qta5ajJmqRV3
+            mH3IGYlDp6MBALQac8v9g6XZQ2EY3uKOdpb150yFx/ubu6YSjcPCFUMI
+            =yw5/
+            -----END PGP PUBLIC KEY BLOCK-----
+          '';
+          trust = "ultimate";
+        }
+      ];
+
+      # YubiKey best practice on NixOS
+      scdaemonSettings = {
+        disable-ccid = true;
+      };
+
+      settings = {
+        no-comments = true;
+        no-emit-version = true;
+        keyserver = "hkps://keys.openpgp.org";
+      };
+    };
+    password-store = {
+      enable = true;
+      package = pkgs.pass;
+      settings = {
+        PASSWORD_STORE_KEY = "2BC21C279427FEE62E201117F29DE2CBE4F3FCE5"; # my gpg key id
+      };
+    };
+
+
+    ssh = {
+      enable = true;
+      enableDefaultConfig = false;
+
+      matchBlocks = {
+        "github.com" = {
+          addKeysToAgent = "yes";
+          hostname = "github.com";
+          identitiesOnly = true;
+          # stub files that point to private key on a Yubikey
+          identityFile = [
+            "/home/jessenieboer/.ssh/id_ed25519_sk"           # main YubiKey
+            "/home/jessenieboer/.ssh/id_ed25519_sk_spare"     # spare YubiKey
+          ];
+          user = "git";
+        };
+      };
+    };
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    enableSshSupport = true;
+    pinentry.package = pkgs.pinentry-qt;
+  };
+}
