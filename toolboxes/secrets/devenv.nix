@@ -20,40 +20,41 @@ in
       echo "jessenieboer's secrets toolbox available"
     '';
 
-    languages.rust = {
-      enable = true;
-      channel = "stable";
-      version = "1.95.0";
-      components = [ "cargo" "rustc" "clippy" "rustfmt" "rust-src" "rust-analyzer" ];
-      #targets = [ "wasm32-unknown-unknown" ];  # if needed
-    };
+    # languages.rust = {
+    #   enable = true;
+    #   channel = "stable";
+    #   version = "1.95.0";
+    #   components = [ "cargo" "rustc" "clippy" "rustfmt" "rust-src" "rust-analyzer" ];
+    #   #targets = [ "wasm32-unknown-unknown" ];  # if needed
+    # };
 
     packages = with pkgs; [
-      (pkgs.rustPlatform.buildRustPackage {
-        pname = "secretspec";
-        version = "v0.8.2";  # or pin to a specific commit/tag
+      # (pkgs.rustPlatform.buildRustPackage {
+      #   pname = "secretspec";
+      #   version = "v0.8.2";  # or pin to a specific commit/tag
 
-        src = pkgs.fetchFromGitHub {
-          owner = "cachix";
-          repo = "secretspec";
-          rev = "ccc50db26efc47f8eb3c4fe73c44bf0c66f890b9";
-          hash = "sha256-0aGv1ZUMEVAk3cNvwZHMNwgKoasVTffJ8xOMclNyAMw=";
-        };
+      #   src = pkgs.fetchFromGitHub {
+      #     owner = "cachix";
+      #     repo = "secretspec";
+      #     rev = "ccc50db26efc47f8eb3c4fe73c44bf0c66f890b9";
+      #     hash = "sha256-0aGv1ZUMEVAk3cNvwZHMNwgKoasVTffJ8xOMclNyAMw=";
+      #   };
 
-        cargoHash = "sha256-XqDWUQ9hzptNfGtTUftaokuuBsgMbE4HwiIZRQNp/C4=";
-        cargoBuildFlags = [ "--package" "secretspec" "--features" "bws" ];
-        #buildFeatures = [ "bws" ];
+      #   cargoHash = "sha256-XqDWUQ9hzptNfGtTUftaokuuBsgMbE4HwiIZRQNp/C4=";
+      #   cargoBuildFlags = [ "--package" "secretspec" "--features" "bws" ];
+      #   #buildFeatures = [ "bws" ];
 
-        # Optional: native build inputs if needed
-        nativeBuildInputs = [ pkg-config ];
-        buildInputs = [ dbus openssl ];  # often needed for Rust crates
+      #   # Optional: native build inputs if needed
+      #   nativeBuildInputs = [ pkg-config ];
+      #   buildInputs = [ dbus openssl ];  # often needed for Rust crates
 
-        meta = {
-          mainProgram = "secretspec";
-        };
-      })
+      #   meta = {
+      #     mainProgram = "secretspec";
+      #   };
+      # })
       gnupg
       pass
+      secretspec
     ];
 
     secrets_toolbox.mat_name_in_pass = "bws/nucbox_access_token";
