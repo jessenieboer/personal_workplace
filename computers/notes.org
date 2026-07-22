@@ -1,0 +1,28 @@
+Nixos configs for my personal workplace
+
+to start (on a brand new nixos system):
+
+bootstrapping from a new nixos install:
+as root user, type the following into /etc/nixos/configuration.nix; then cd into .ssh,  ssh-keygen -K to get the stub file, rename the stub file to id_ed25519_sk, delete the .pub file (assuming this is in github already)
+
+nixos rebuild switch
+
+git clone git@github.com:jessenieboer/personal_workplace
+
+cd personal_workplace/computers
+
+nixos-generate-config --show-hardware-config >> hardware/hardware-configuration.nix
+
+combine hardware/hardware-configuration.nix with the appropriate machine nix file in hardware/ (if putting this on hardware you haven't before)
+
+mkpasswd -m sha-512 > /root/secrets/root.hash
+mkpasswd -m sha-512 > /root/secrets/username.hash
+
+nixos-rebuild switch --flake .#configname
+
+todo: nextcloud server
+
+updating (as root in ~/)
+cp -r /home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/ .
+cp /secrets/wifi-passwords.nix /personal_workplace/computers/wifi.nix
+nixos-rebuild switch --flake /personal_workplace/computers/.#configname

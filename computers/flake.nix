@@ -1,0 +1,39 @@
+{
+  description = "NixOS configs for my personal workplace";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  };
+
+  outputs = { self, nixpkgs, ... }@inputs: {
+    nixosConfigurations."laptop" = nixpkgs.lib.nixosSystem {
+      modules = [
+        ./hardware/uiu57o6a.nix
+        ./household-users.nix
+        ./networking.nix
+        ./os/linux.nix
+        ./os/nixos.nix
+        ./os/ui.nix
+        ./security.nix
+        ./wifi.nix
+      ];
+      specialArgs = { inherit inputs; };
+      system = "x86_64-linux";
+    };
+    nixosConfigurations."nucbox" = nixpkgs.lib.nixosSystem {
+      modules = [
+        ./hardware/nucbox.nix
+        ./hardware/wd-5T.nix
+        ./household-users.nix
+        ./networking.nix
+        ./os/linux.nix
+        ./os/nixos.nix
+        ./os/ui.nix
+        ./security.nix
+        ./wifi.nix
+      ];
+      specialArgs = { inherit inputs; };
+      system = "x86_64-linux";
+    };
+  };
+}
