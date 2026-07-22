@@ -608,7 +608,7 @@
       my-projects-directory (file-name-as-directory "~/kingdoms")
       project-mode-line nil ;; causes some slowdown if not nil
       project-switch-commands 'project-find-file
-      project-vc-extra-root-markers '(".project" "devenv.nix")
+      project-vc-extra-root-markers '(".project" "devenv.nix" "flake.nix")
       project-vc-ignores '(".devenv/")
       project-vc-use-cache t
       tab-bar-tab-name-function (lambda () (let ((proj (project-current)))
@@ -807,8 +807,10 @@ Returns the value as string or nil if not found / error."
 (require 'gptel)
 (require 'gptel-agent)
 (require 'gptel-context)
+(require 'gptel-integrations)
 (require 'gptel-openai-extras)
 (require 'gptel-transient)
+(require 'mcp)
 
 (setq my-default-ai-chat-name "*ai chat*")
 
@@ -816,28 +818,12 @@ Returns the value as string or nil if not found / error."
   (interactive)
     (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
 
-;; (setq my-grok-backend (gptel-make-xai "grok_backend"
-;;   		      :key (my-secretspec-get "XAI_API_KEY")
-;; 		      :models '(grok-4.3)
-;; 		      :request-params nil
-;;   		      :stream nil))
-
-;; (setq gptel-backend my-grok-backend
-;;       gptel-default-mode 'org-mode
-;;       ;; gptel-display-buffer-action
-;;       ;; '((display-buffer-reuse-window
-;;       ;;    display-buffer-same-window)
-;;       ;;   (reusable-frames . t))
-;;       gptel-include-reasoning nil
-;;       gptel-model 'grok-4.3)
-
-(my-add-right-buffer-patterns '("^\\*ai chat\\*$" "^\\*gptel-agent.*$"  "^\\*gptel-context\\*$"))
+(my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-agent.*"  "^\\*gptel-context\\*"))
 
 (my-add-to-hydra main-edit-modes
   		 ("Connection"
-		  (("dix" (progn (jnpw-setup-grok)
-				 (gptel-agent default-directory 'vizier)) "open ai agent")
-		   ("di <f7>" (progn (jnpw-setup-grok) (gptel my-default-ai-chat-name)) "open ai chat")
+		  (("dix" (progn (jnpw-setup-ai) (gptel-agent (project-root (project-current)) 'vizier)) "open ai agent") ;; each project with the ai toolbox defines this function
+		   ("di <f7>" (progn (jnpw-setup-ai) (gptel my-default-ai-chat-name)) "open ai chat")
 		   ;; ("diw" gptel-mode "ai mode")
 		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
 		   ;; ("di\\" gptel-menu "ai login" :exit t)
@@ -856,9 +842,8 @@ Returns the value as string or nil if not found / error."
 
 (my-add-to-hydra 'dired-mode
 		 ("Connection"
-		  (("ix" (progn (jnpw-setup-grok)
-				 (gptel-agent default-directory 'vizier)) "open ai agent")
-		   ("i <f7>" (progn (jnpw-setup-grok) (gptel my-default-ai-chat-name)) "open ai chat")
+		  (("ix" (progn (jnpw-setup-ai) (gptel-agent (project-root (project-current)))) "open ai agent")
+		   ("i <f7>" (progn (jnpw-setup-ai) (gptel my-default-ai-chat-name)) "open ai chat")
 		   ;; ("diw" gptel-mode "ai mode")
 		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
 		   ;; ("di\\" gptel-menu "ai login" :exit t)
