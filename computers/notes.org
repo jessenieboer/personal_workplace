@@ -24,5 +24,5 @@ todo: nextcloud server
 
 updating (as root in ~/)
 cp -r /home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/ .
-cp /secrets/wifi-passwords.nix /personal_workplace/computers/wifi.nix
-nixos-rebuild switch --flake /personal_workplace/computers/.#configname
+cp /root/secrets/wifi-passwords.nix /root/personal_workplace/computers/wifi.nix
+nixos-rebuild switch --flake /root/personal_workplace/computers/.#configname

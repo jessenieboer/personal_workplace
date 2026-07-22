@@ -9,12 +9,12 @@
     nixosConfigurations."laptop" = nixpkgs.lib.nixosSystem {
       modules = [
         ./hardware/uiu57o6a.nix
-        ./household-users.nix
         ./networking.nix
         ./os/linux.nix
         ./os/nixos.nix
         ./os/ui.nix
         ./security.nix
+        ./users.nix
         ./wifi.nix
       ];
       specialArgs = { inherit inputs; };
@@ -24,12 +24,12 @@
       modules = [
         ./hardware/nucbox.nix
         ./hardware/wd-5T.nix
-        ./household-users.nix
         ./networking.nix
         ./os/linux.nix
         ./os/nixos.nix
         ./os/ui.nix
         ./security.nix
+        ./users.nix
         ./wifi.nix
       ];
       specialArgs = { inherit inputs; };
