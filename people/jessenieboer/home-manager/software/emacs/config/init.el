@@ -797,9 +797,9 @@
 (defun my-secretspec-get (name)
   "Retrieve a secret using SecretSpec CLI.
 Returns the value as string or nil if not found / error."
-  (let ((output (inheritenv (shell-command-to-string
-			     (format "secretspec get %s"
-				     (shell-quote-argument name))))))
+  (let ((output (shell-command-to-string
+			     (format "secretspec get -f ~/.config/secretspec/secretspec.toml %s"
+				     (shell-quote-argument name)))))
     (if (string-empty-p (string-trim output))
         nil
       (string-trim output))))
@@ -812,18 +812,29 @@ Returns the value as string or nil if not found / error."
 (require 'gptel-transient)
 (require 'mcp)
 
-(setq my-default-ai-chat-name "*ai chat*")
-
 (defun my-gptel-add-project-context ()
   (interactive)
-    (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
+  (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
+
+(setq gptel-default-mode 'org-mode
+      gptel-include-reasoning nil
+      ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
+      jn-grok-backend (gptel-make-xai "jn_grok"
+			:key (my-secretspec-get "XAI_API_KEY")
+   			  :models '(grok-4.5)
+  			  :request-params nil
+  			  :stream nil)
+      my-default-ai-chat-name "*ai chat*")
+
+(setq gptel-backend jn-grok-backend
+      gptel-model 'grok-4.5)
 
 (my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-agent.*"  "^\\*gptel-context\\*"))
 
 (my-add-to-hydra main-edit-modes
   		 ("Connection"
-		  (("dix" (progn (jnpw-setup-ai) (gptel-agent (project-root (project-current)) 'vizier)) "open ai agent") ;; each project with the ai toolbox defines this function
-		   ("di <f7>" (progn (jnpw-setup-ai) (gptel my-default-ai-chat-name)) "open ai chat")
+		  (("dix" (gptel-agent (project-root (project-current)) 'vizier) "open ai agent") ;; each project with the ai toolbox defines this function
+		   ("di <f7>" (gptel my-default-ai-chat-name) "open ai chat")
 		   ;; ("diw" gptel-mode "ai mode")
 		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
 		   ;; ("di\\" gptel-menu "ai login" :exit t)
@@ -842,8 +853,8 @@ Returns the value as string or nil if not found / error."
 
 (my-add-to-hydra 'dired-mode
 		 ("Connection"
-		  (("ix" (progn (jnpw-setup-ai) (gptel-agent (project-root (project-current)))) "open ai agent")
-		   ("i <f7>" (progn (jnpw-setup-ai) (gptel my-default-ai-chat-name)) "open ai chat")
+		  (("ix" (gptel-agent (project-root (project-current)) 'vizier) "open ai agent")
+		   ("i <f7>" (gptel my-default-ai-chat-name) "open ai chat")
 		   ;; ("diw" gptel-mode "ai mode")
 		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
 		   ;; ("di\\" gptel-menu "ai login" :exit t)

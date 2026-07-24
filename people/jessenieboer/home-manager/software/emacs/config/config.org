@@ -6,6 +6,7 @@
 * Early Init
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle early-init.el
+:ID:       5baedd22-8ef9-41fe-ba1b-ee4cbaa6c06f
 :END:
 
 #+begin_src emacs-lisp
@@ -64,6 +65,9 @@
 :END:
 
 ** Set up general emacs environment
+:PROPERTIES:
+:ID:       99fa21f5-6773-4e4a-b43d-462aaa99cb4e
+:END:
 #+begin_src emacs-lisp
   (require 'info) ;; need this early to avoid envrc errors
   (defalias 'yes-or-no-p 'y-or-n-p)
@@ -81,6 +85,9 @@ interaction: what can i do?
 - text: editing text
 - completion: 
 *** hydra config and convenience
+:PROPERTIES:
+:ID:       80b73d1c-d01f-4895-9046-dcee20f763d3
+:END:
 #+begin_src emacs-lisp
   (require 'buffer-focus-hook)
   (require 'major-mode-hydra)
@@ -125,6 +132,9 @@ interaction: what can i do?
   (add-hook 'buffer-focus-hook--in 'my-autohydra)
 #+end_src
 *** mode categorization
+:PROPERTIES:
+:ID:       6cae2d6b-3e72-4468-9e8e-a6661b473c04
+:END:
 Modes fall into a few high-level categories based on how we generally want to interact with them
 #+begin_src emacs-lisp
   (setq all-modes '(backtrace-mode
@@ -201,6 +211,9 @@ Modes fall into a few high-level categories based on how we generally want to in
 
 #+end_src
 *** general emacs controls
+:PROPERTIES:
+:ID:       b2eeffce-db88-467f-a40d-e5359de23021
+:END:
 #+begin_src emacs-lisp
   (global-set-key (kbd "<f12> v") #'my-show-major-mode)
 
@@ -226,6 +239,9 @@ Modes fall into a few high-level categories based on how we generally want to in
       		  (("f" abort-recursive-edit "quit"))))
 #+end_src
 ** Use completion
+:PROPERTIES:
+:ID:       6a346fbd-33de-439c-8f44-f9ec01511dc6
+:END:
 https://github.com/minad/vertico#complementary-packages
 #+begin_src emacs-lisp
   (require 'marginalia)
@@ -244,6 +260,9 @@ https://github.com/minad/vertico#complementary-packages
   (vertico-mode)
 #+end_src
 *** completion controls
+:PROPERTIES:
+:ID:       98659969-515f-429e-ba92-45e2062a67a5
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra minibuffer-modes
     		 ("Connection"
@@ -261,11 +280,17 @@ https://github.com/minad/vertico#complementary-packages
   		   ("<tab> RET" vertico-insert "insert"))))
 #+end_src
 ** Navigate text
+:PROPERTIES:
+:ID:       799cd5f0-7648-448f-9e97-ccd019390e7d
+:END:
 #+begin_src emacs-lisp
   (require 'consult)
   (global-visual-line-mode t)
 #+end_src
 *** navigate text controls
+:PROPERTIES:
+:ID:       8dbdb77d-f55d-443c-8581-c92d0c87badd
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra main-modes
     		 ("Connection"
@@ -322,6 +347,9 @@ https://github.com/minad/vertico#complementary-packages
   ;;   		  (("o" set-mark-command "mark"))))
 #+end_src		   
 ** Edit text
+:PROPERTIES:
+:ID:       2a408892-9e24-4c54-8cda-88714578098a
+:END:
 #+begin_src emacs-lisp
   (require 'undo-fu)
 
@@ -330,6 +358,9 @@ https://github.com/minad/vertico#complementary-packages
                           (or (getenv "XDG_STATE_HOME") "~/.local/state")))
 #+end_src
 *** edit text controls
+:PROPERTIES:
+:ID:       1f2c9de6-4ddd-49b5-820c-fc0ca1e59ad5
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra main-edit-modes
     		 ("Connection"
@@ -372,6 +403,9 @@ https://github.com/minad/vertico#complementary-packages
   		   ("<tab> RET" vertico-insert "insert"))))
 #+end_src
 ** Manage buffers
+:PROPERTIES:
+:ID:       cefa9d6b-3c17-4f20-8879-cecd182722bd
+:END:
 Contains some caching stuff to speed up buffer grouping for tab line, which is a point of slowdown according to the profiler
 #+begin_src emacs-lisp
   (require 'easysession)
@@ -436,6 +470,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 
 #+end_src
 *** buffer controls
+:PROPERTIES:
+:ID:       c2a10dd9-e59d-43db-879d-506e1d1be736
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra main-modes
     		 ("Connection"
@@ -493,6 +530,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 
 #+end_src
 ** Arrange windows and frames
+:PROPERTIES:
+:ID:       a01bc524-fce2-43a3-9ae6-d0095c177645
+:END:
 #+begin_src emacs-lisp
   (require 'golden-ratio)
   (require 'popper)
@@ -569,6 +609,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     					;(winner-mode)
 #+end_src
 *** window and frame controls
+:PROPERTIES:
+:ID:       4085f53f-f157-46a7-80cf-1a6030ba7ab6
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra all-modes
     		 ("Connection"
@@ -635,6 +678,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   		   ("C-<down>" windswap-down "down win swap"))))
 #+end_src
 ** Interact with the file system
+:PROPERTIES:
+:ID:       6467d879-8d04-495b-9ea1-ac8a7ff81d8e
+:END:
 #+begin_src emacs-lisp
   (require 'dirvish)
   (require 'dirvish-side)
@@ -673,6 +719,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   ;; todo: dirvish close if open, open in ace window, open on either side?
 #+end_src
 *** filesystem controls
+:PROPERTIES:
+:ID:       761470a0-eabc-4b6c-9741-fb345742d702
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra main-modes
     		 ("Connection"
@@ -716,6 +765,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     		   ("ig" dired-undo "undo"))))
 #+end_src
 ** Work with projects
+:PROPERTIES:
+:ID:       df2c1df4-74ae-4c5f-ad0d-54423465c003
+:END:
 #+begin_src emacs-lisp
   (require 'project)
   (setq my-project-management-directory (file-name-as-directory "~/Dropbox/_project_management")
@@ -759,6 +811,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
         nil)))
 #+end_src
 *** project controls
+:PROPERTIES:
+:ID:       65ae458a-3b57-4eba-a9cd-e49f9eeb0483
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra (append main-modes alt-nav-modes)
     		 ("Connection"
@@ -767,6 +822,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     		   ("h RET" project-find-file "find proj file" :exit t))))
 #+end_src
 ** Manage tabs
+:PROPERTIES:
+:ID:       c404e710-f233-4c8c-b836-4b0497217122
+:END:
 Contains some caching stuff to speed up buffer grouping for tab line, which is a point of slowdown according to the profiler
 #+begin_src emacs-lisp
   (require 'cl-lib)
@@ -828,6 +886,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 
 #+end_src
 *** buffer controls
+:PROPERTIES:
+:ID:       f97490e8-7c5e-4c38-b0ae-f6d152f38d19
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra main-modes
     		 ("Connection"
@@ -885,6 +946,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 
 #+end_src
 ** Customize appearance
+:PROPERTIES:
+:ID:       b2bd666d-882f-44a2-ae94-750d90bc7dc5
+:END:
 #+begin_src emacs-lisp
   (require 'default-text-scale)
   (require 'solarized)
@@ -911,6 +975,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   (toggle-frame-fullscreen)
 #+end_src
 *** appearance controls
+:PROPERTIES:
+:ID:       7c10cccc-8da1-4dc3-86f5-59ab73076729
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra (append main-modes alt-nav-modes)
     		 ("Connection"
@@ -923,20 +990,24 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     		   ("f *" text-scale-increase "buffer zoom in"))))
 #+end_src
 ** Get secrets
+:PROPERTIES:
+:ID:       00198fb8-33a3-46e1-b55d-c88d32e8f40e
+:END:
 #+begin_src emacs-lisp
   (defun my-secretspec-get (name)
-    "Retrieve a secret using SecretSpec CLI.
+    "Retrieve a secret using SecretSpec CLI, given there is a ~/.config/secretspec/secretspec.toml.
   Returns the value as string or nil if not found / error."
     (let ((output (shell-command-to-string
-  			     (format "secretspec get %s"
+  			     (format "secretspec get -f ~/.config/secretspec/secretspec.toml %s"
   				     (shell-quote-argument name)))))
       (if (string-empty-p (string-trim output))
           nil
         (string-trim output))))
-
-  (my-secretspec-get "XAI_API_KEY")
 #+end_src
 ** Interact with AI
+:PROPERTIES:
+:ID:       212e84d3-68d3-4e5c-ad6e-fa6aebf67eb6
+:END:
 #+begin_src emacs-lisp
   (require 'gptel)
   (require 'gptel-agent)
@@ -946,20 +1017,34 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   (require 'gptel-transient)
   (require 'mcp)
 
-  (setq my-default-ai-chat-name "*ai chat*")
-
   (defun my-gptel-add-project-context ()
     (interactive)
-      (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
+    (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
+
+  (setq gptel-default-mode 'org-mode
+        gptel-include-reasoning nil
+        ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
+        jn-grok-backend (gptel-make-xai "jn_grok"
+  			:key (my-secretspec-get "XAI_API_KEY")
+     			  :models '(grok-4.5)
+    			  :request-params nil
+    			  :stream nil)
+        my-default-ai-chat-name "*ai chat*")
+
+  (setq gptel-backend jn-grok-backend
+        gptel-model 'grok-4.5)
 
   (my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-agent.*"  "^\\*gptel-context\\*"))
 #+end_src
 *** ai controls
+:PROPERTIES:
+:ID:       99e0abc8-a434-4874-bf70-784dfbfa5ef3
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra main-edit-modes
     		 ("Connection"
-  		  (("dix" (progn (jnpw-setup-ai) (gptel-agent (project-root (project-current)) 'vizier)) "open ai agent") ;; each project with the ai toolbox defines this function
-  		   ("di <f7>" (progn (jnpw-setup-ai) (gptel my-default-ai-chat-name)) "open ai chat")
+  		  (("dix" (gptel-agent (project-root (project-current)) 'vizier) "open ai agent") ;; each project with the ai toolbox defines this function
+  		   ("di <f7>" (gptel my-default-ai-chat-name) "open ai chat")
   		   ;; ("diw" gptel-mode "ai mode")
   		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
   		   ;; ("di\\" gptel-menu "ai login" :exit t)
@@ -978,8 +1063,8 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 
   (my-add-to-hydra 'dired-mode
   		 ("Connection"
-  		  (("ix" (progn (jnpw-setup-ai) (gptel-agent (project-root (project-current)))) "open ai agent")
-  		   ("i <f7>" (progn (jnpw-setup-ai) (gptel my-default-ai-chat-name)) "open ai chat")
+  		  (("ix" (gptel-agent (project-root (project-current)) 'vizier) "open ai agent")
+  		   ("i <f7>" (gptel my-default-ai-chat-name) "open ai chat")
   		   ;; ("diw" gptel-mode "ai mode")
   		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
   		   ;; ("di\\" gptel-menu "ai login" :exit t)
@@ -1012,6 +1097,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 		   #+end_src
 
 ** Work with code
+:PROPERTIES:
+:ID:       3b1db598-058b-4de6-aa73-ceae6df1feda
+:END:
 #+begin_src emacs-lisp
     (require 'flycheck)
     (set-face-attribute 'flycheck-error nil :underline '(:color "red" :style wave))
@@ -1068,6 +1156,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     
 #+end_src
 *** code controls
+:PROPERTIES:
+:ID:       bd830b00-47a3-4424-9808-d6b109570d09
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra main-edit-modes
   		 ("Connection"
@@ -1095,6 +1186,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+end_src
 ** Specialize
 *** eat
+:PROPERTIES:
+:ID:       866f74c4-d394-460b-a315-086ed447cfeb
+:END:
 #+begin_src emacs-lisp
   (require 'eat)
   (setq eat-enable-auto-line-mode t
@@ -1115,6 +1209,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   					;(add-hook 'eat-mode-hook #'my-eat-direnv-hook)
 #+end_src
 **** eat controls
+:PROPERTIES:
+:ID:       7d70b8f9-8567-433b-866f-734c7c7e2020
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra (append main-modes alt-nav-modes)
   		 ("Connection"
@@ -1165,6 +1262,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+end_src
 *** elisp
 **** elisp controls
+:PROPERTIES:
+:ID:       90e21eca-afb1-4971-a8c9-b4e8c6a1a929
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra '(emacs-lisp-mode
     		   lisp-data-mode
@@ -1177,6 +1277,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     		   ("dh" eval-buffer "eval all"))))
 #+end_src
 *** magit
+:PROPERTIES:
+:ID:       71ccafb2-4e4c-4316-b15c-1cff633b8f44
+:END:
 #+begin_src emacs-lisp
   (require 'magit)
   (setq magit-clone-set-remote.pushDefault t
@@ -1186,6 +1289,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   (my-add-right-buffer-patterns '(".*magit.*"))
 #+end_src
 **** magit controls
+:PROPERTIES:
+:ID:       110674af-0ecc-40ca-9230-3d0b1541615c
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra (append '(dired-mode) main-modes)
     		 ("Connection"
@@ -1233,10 +1339,16 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+end_src
 
 *** markdown
+:PROPERTIES:
+:ID:       ad97a506-1347-4d45-9e69-186642a71b4b
+:END:
 #+begin_src emacs-lisp
   (require 'markdown-mode)
 #+end_src
 **** markdown controls
+:PROPERTIES:
+:ID:       37ba5c9c-b108-41bb-9c94-35bf0d635fc1
+:END:
 #+begin_src emacs-lisp
   ;; (my-add-to-hydra main-modes
   ;;   		 ("Connection"
@@ -1250,10 +1362,16 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+end_src
 
 *** nix
+:PROPERTIES:
+:ID:       b78dd949-d9a5-496e-92a4-76192b5328bb
+:END:
 #+begin_src emacs-lisp
   (require 'nix-mode)
 #+end_src
 **** nix controls
+:PROPERTIES:
+:ID:       9e25d15a-1f53-4a1c-b9ce-424451b9093a
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra 'nix-mode
     		 ("Code"
@@ -1261,6 +1379,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+end_src
 
 *** org-mode
+:PROPERTIES:
+:ID:       827f8c59-2e3f-40bd-b6a6-e05695ce8112
+:END:
 #+begin_src emacs-lisp
   (require 'htmlize)
   (require 'org)
@@ -1484,6 +1605,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 
 #+end_src
 **** org-mode controls
+:PROPERTIES:
+:ID:       0db0dc5f-8599-4fc4-a1d6-0f381b7e2eca
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra main-modes
     		 ("Connection"
@@ -1683,6 +1807,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   		   ("d" my-select-schedule-from-calendar "select scheduled"))))
 #+end_src
 *** python
+:PROPERTIES:
+:ID:       7b4260ce-a85b-42f6-b37e-d4f11dde2ed3
+:END:
 #+begin_src emacs-lisp
   (setq python-indent-offset 4)
 
@@ -1701,6 +1828,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
       (my-add-right-buffer-patterns '("^\\*pytest.*"))
 #+end_src
 **** python controls
+:PROPERTIES:
+:ID:       cf193d51-fbae-4735-bf01-7e3697187daf
+:END:
 #+begin_src emacs-lisp
   (my-add-to-hydra 'python-mode
     		 ("Connection"
@@ -1721,9 +1851,15 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+end_src
 
 *** category
+:PROPERTIES:
+:ID:       489ab1a8-85dc-4302-a32e-9e65f4cada74
+:END:
 #+begin_src emacs-lisp
 #+end_src
 **** category controls
+:PROPERTIES:
+:ID:       17f0d023-330f-4b68-a5b8-c9846aa5a8a7
+:END:
 #+begin_src emacs-lisp
   ;; (my-add-to-hydra main-modes
   ;;   		 ("Connection"
@@ -1737,6 +1873,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+end_src
 
 ** Startup
+:PROPERTIES:
+:ID:       7c18e45c-9c8f-44df-89a8-e911fabc30f4
+:END:
 #+begin_src emacs-lisp
     (defun my-startup ()
       (popper-mode)

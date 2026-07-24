@@ -21,6 +21,8 @@
       jessenieboer_home_manager = { uri = "bws://ff39ba56-1bfb-46cf-af64-b42601032d0f", credentials = { access_token = "jessenieboer_access_token" } }
       jessenieboer_access_token = "pass://jessenieboer_secretspec_bws_access_token"
       '';
+
+      ".config/secretspec/secretspec.toml".source = ./secretspec.toml;
     };
 
     packages = with pkgs; [
