@@ -16,6 +16,10 @@
       [defaults]
       provider = "bws"
       profile = "default"
+
+      [defaults.providers]
+      jessenieboer_home_manager = { uri = "bws://ff39ba56-1bfb-46cf-af64-b42601032d0f", credentials = { access_token = "jessenieboer_access_token" } }
+      jessenieboer_access_token = "pass://jessenieboer_secretspec_bws_access_token"
       '';
     };
 
@@ -115,7 +119,7 @@
       enableDefaultConfig = false;
       settings = {
         "github.com" = {
-          ddKeysToAgent = "yes";
+          AddKeysToAgent = "yes";
           HostName = "github.com";
           IdentitiesOnly = true;
           # stub files that point to private key on a Yubikey

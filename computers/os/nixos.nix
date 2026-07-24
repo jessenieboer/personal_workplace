@@ -6,13 +6,13 @@
     ];
   };
 
-  languages.rust = {
-      enable = true;
-      channel = "stable";
-      version = "1.95.0";
-      components = [ "cargo" "rustc" "clippy" "rustfmt" "rust-src" "rust-analyzer" ];
-      #targets = [ "wasm32-unknown-unknown" ];  # if needed
-  };
+  # languages.rust = {
+  #     enable = true;
+  #     channel = "stable";
+  #     version = "1.95.0";
+  #     components = [ "cargo" "rustc" "clippy" "rustfmt" "rust-src" "rust-analyzer" ];
+  #     #targets = [ "wasm32-unknown-unknown" ];  # if needed
+  # };
 
   nix = {
     gc = {
