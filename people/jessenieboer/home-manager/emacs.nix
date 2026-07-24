@@ -95,23 +95,23 @@ let
     '';
   };
 
-  bitwarden = pkgs.emacsPackages.trivialBuild {
-    pname = "bitwarden";
-    version = "0.1";
-    src = fetchFromGitHub {
-      owner = "seanfarley";
-      repo = "emacs-bitwarden";
-      rev = "50c0078d356e0ac0bcaf26b40113700ba4123ec3";
-      sha256 = "111z6k29wrry1gvm1qkwclh3hl7p5lp3nwdv6kn8w3214yh28c77";
-    };
-    # buildInputs = [ pkgs.emacs ];
-    nativeBuildInputs = [ pkgs.bitwarden-cli ];
-    buildPhase = "true"; # No compilation needed
-    installPhase = ''
-      mkdir -p $out/share/emacs/site-lisp/bitwarden
-      cp -r $src/* $out/share/emacs/site-lisp/bitwarden/
-    '';
-  };
+  # bitwarden = pkgs.emacsPackages.trivialBuild {
+  #   pname = "bitwarden";
+  #   version = "0.1";
+  #   src = fetchFromGitHub {
+  #     owner = "seanfarley";
+  #     repo = "emacs-bitwarden";
+  #     rev = "50c0078d356e0ac0bcaf26b40113700ba4123ec3";
+  #     sha256 = "111z6k29wrry1gvm1qkwclh3hl7p5lp3nwdv6kn8w3214yh28c77";
+  #   };
+  #   # buildInputs = [ pkgs.emacs ];
+  #   nativeBuildInputs = [ pkgs.bitwarden-cli ];
+  #   buildPhase = "true"; # No compilation needed
+  #   installPhase = ''
+  #     mkdir -p $out/share/emacs/site-lisp/bitwarden
+  #     cp -r $src/* $out/share/emacs/site-lisp/bitwarden/
+  #   '';
+  # };
 
   # org-jira = pkgs.emacsPackages.trivialBuild {
     #   pname = "org-jira";
@@ -270,7 +270,7 @@ in
       source-code-pro
     ];
 
-    stateVersion = "25.11";
+    stateVersion = "26.05";
   };
 
   programs = {

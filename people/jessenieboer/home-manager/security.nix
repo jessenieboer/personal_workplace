@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, unstable, ... }:
 {
   home = {
     # initialize the password store if it's not already initialized
@@ -13,22 +13,49 @@
 
     file = {
       ".config/secretspec/config.toml".text = ''
-        [defaults]
-        profile = "dev"
-        provider = "bws://b4d03fd4-666f-4e15-bc31-b43d00e5f451"
-
-        [defaults.providers]
-        personal_workplace = "bws://b4d03fd4-666f-4e15-bc31-b43d00e5f451"
+      [defaults]
+      provider = "bws"
+      profile = "default"
       '';
     };
 
     packages = with pkgs; [
+      (pkgs.rustPlatform.buildRustPackage {
+        pname = "secretspec";
+        version = "0.16.0";
+
+        # to update: nix-prefetch-github cachix secretspec --rev v0.16.0
+        src = pkgs.fetchFromGitHub {
+          owner = "cachix";
+          repo = "secretspec";
+          rev = "454546d7cca26f604eea8e8bf85673d7d01d400d";
+          hash = "sha256-TL9S/NFwL9q7h6ImGosGpB7T08HhDFy1v04YLLvVsto=";
+        };
+
+        buildAndTestSubdir = "secretspec";
+        cargoHash = "sha256-+8FGPk/84gW0+LeCufr+uEpWdy35QI2tlgkFRnv6Ycg=";
+        
+        #cargoBuildFlags = [ "--package" "secretspec" "--features" "bws" ];
+        #buildFeatures = [ "bws" ];
+
+        # Optional: native build inputs if needed
+        nativeBuildInputs = [ pkg-config ];
+        buildInputs = [ dbus openssl ];  # often needed for Rust crates
+
+        meta = {
+          mainProgram = "secretspec";
+        };
+      })
       bitwarden-cli
-      bitwarden-desktop
+      #bitwarden-desktop
       bws #bitwarden secrets manager
-      jq # for parsing json from bws
-      #pass-git-helper
+      jq # for parsing json from bws      
       yubikey-manager
+      rustc
+      cargo
+      clippy
+      rustfmt
+      rust-analyzer
     ];
   };
 
@@ -86,18 +113,17 @@
     ssh = {
       enable = true;
       enableDefaultConfig = false;
-
-      matchBlocks = {
+      settings = {
         "github.com" = {
-          addKeysToAgent = "yes";
-          hostname = "github.com";
-          identitiesOnly = true;
+          ddKeysToAgent = "yes";
+          HostName = "github.com";
+          IdentitiesOnly = true;
           # stub files that point to private key on a Yubikey
-          identityFile = [
+          IdentityFile = [
             "/home/jessenieboer/.ssh/id_ed25519_sk"           # main YubiKey
             "/home/jessenieboer/.ssh/id_ed25519_sk_spare"     # spare YubiKey
           ];
-          user = "git";
+          User = "git";
         };
       };
     };

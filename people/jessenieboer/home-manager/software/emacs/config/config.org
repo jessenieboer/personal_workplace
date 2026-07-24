@@ -927,12 +927,14 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   (defun my-secretspec-get (name)
     "Retrieve a secret using SecretSpec CLI.
   Returns the value as string or nil if not found / error."
-    (let ((output (inheritenv (shell-command-to-string
+    (let ((output (shell-command-to-string
   			     (format "secretspec get %s"
-  				     (shell-quote-argument name))))))
+  				     (shell-quote-argument name)))))
       (if (string-empty-p (string-trim output))
           nil
         (string-trim output))))
+
+  (my-secretspec-get "XAI_API_KEY")
 #+end_src
 ** Interact with AI
 #+begin_src emacs-lisp

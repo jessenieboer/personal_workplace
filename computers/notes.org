@@ -26,3 +26,15 @@ updating (as root in ~/)
 cp -r /home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/ .
 cp /root/secrets/wifi-passwords.nix /root/personal_workplace/computers/wifi.nix
 nixos-rebuild switch --flake /root/personal_workplace/computers/.#configname
+
+might need to do a sudo nixos-rebuild boot --flake /root/personal_workplace/computers/.#configname
+
+* common tech
+stuff that is used all throughout my personal workplace
+
+- nix
+- git
+- home-manager
+- yubikey-manager service stuff so users can use yubikeys in homes
+- docker virtualization enabled
+- plasma and wayland

@@ -2,7 +2,7 @@
 
   environment.systemPackages = with pkgs;
   [
-    gnupg
+    #gnupg
     yubikey-manager
   ];
 

@@ -7,6 +7,7 @@
 
       profiles = {
         "jessenieboer" = {
+          font.name = "Hack";
           name = "jessenieboer";
           extraConfig = {
             "Mouse.Misc" = {
@@ -18,4 +19,3 @@
     };
   };  
 }
-

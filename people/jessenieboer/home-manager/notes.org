@@ -1,4 +1,4 @@
-bootstrap private home-manager repo:
+* bootstrap private home-manager repo:
 
 cd to ~/.ssh
 sshkeygen -K (get a stub file for the private key stored on my yubikey)
@@ -10,21 +10,25 @@ cd ~/.config
 git clone git@github.com:jessenieboer/home-manager.git
 home-manager switch --flake .#jessenieboer@machine
 
+* update:
+cp -rf ~/kingdoms/Household/Jesse/personal_workplace/toolboxes/home-manager/ ~/.config/
+home-manager switch --flake ~/.config/home-manager/.#jessenieboer@nucbox
+
+* security stuff
+- bws is where secrets are stored for my workspace (home manager)
+- secretspec gets the secrets out of bws for use on the local machine
+- i created a machine accout token (jessenieboer_secretspec) for secretspec to use, then i stored it in pass as pass://jessenieboer_secretspec_bws_access_token
+- pass is set up with my personal gpg key
 
 
 pass, bws, and devenv:
 - for a physical machine, create a machine access token in the bws web interface
-- on that machine, pass insert -e bws/<token name> and then paste the value
+- logged in as a user on that machine, pass insert -e bws/<token name> and then paste the value
 - use the gh_devenv.sh script to run devenv commands (i.e. ". gh_devenv.sh update")
 
 
-boosteroid:
+* boosteroid:
 curl -L -O https://github.com/bschelst/boosteroid-steamos/releases/latest/download/org.schelstraete.boosteroid.flatpak && \
 flatpak install --user ./org.schelstraete.boosteroid.flatpak
 
 then flatpak run org.schelstraete.boosteroid
-
-
-update:
-cp -rf ~/kingdoms/Household/Jesse/personal_workplace/toolboxes/home-manager/ ~/.config/
-home-manager switch --flake ~/.config/home-manager/.#jessenieboer@nucbox
