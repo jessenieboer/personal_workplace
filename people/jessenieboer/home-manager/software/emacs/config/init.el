@@ -795,7 +795,7 @@
   		   ("f *" text-scale-increase "buffer zoom in"))))
 
 (defun my-secretspec-get (name)
-  "Retrieve a secret using SecretSpec CLI.
+  "Retrieve a secret using SecretSpec CLI, given there is a ~/.config/secretspec/secretspec.toml.
 Returns the value as string or nil if not found / error."
   (let ((output (shell-command-to-string
 			     (format "secretspec get -f ~/.config/secretspec/secretspec.toml %s"
@@ -811,6 +811,7 @@ Returns the value as string or nil if not found / error."
 (require 'gptel-openai-extras)
 (require 'gptel-transient)
 (require 'mcp)
+(require 'mcp-hub)
 
 (defun my-gptel-add-project-context ()
   (interactive)
@@ -821,9 +822,10 @@ Returns the value as string or nil if not found / error."
       ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
       jn-grok-backend (gptel-make-xai "jn_grok"
 			:key (my-secretspec-get "XAI_API_KEY")
-   			  :models '(grok-4.5)
-  			  :request-params nil
-  			  :stream nil)
+   			:models '(grok-4.5)
+  			:request-params nil
+  			:stream nil)
+      mcp-hub-servers '(("filesystem" :command "mcp-filesystem" :args nil))
       my-default-ai-chat-name "*ai chat*")
 
 (setq gptel-backend jn-grok-backend

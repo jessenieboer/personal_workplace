@@ -1,5 +1,5 @@
-:properties:
-:backend: jnpw_grok
+g:properties:
+:backend: jn_grok
 :confirm-tool-calls: 'auto
 :description: "Responds with Hello, world!"
 :model: grok-4.5

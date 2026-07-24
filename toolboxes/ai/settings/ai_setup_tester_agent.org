@@ -1,5 +1,5 @@
 :properties:
-:backend: jnpw_grok
+:backend: jn_grok
 :confirm-tool-calls: 'auto
 :description: "Helps test ai setup stuff"
 :model: grok-4.5

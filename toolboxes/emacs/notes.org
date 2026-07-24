@@ -1,0 +1,1 @@
+provides tools for using emacs to work on this project

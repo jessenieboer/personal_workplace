@@ -1,41 +1,16 @@
-(defun jnpw-get-xai-key () (let ((output (shell-command-to-string (format "secretspec get %s" (shell-quote-argument "XAI_API_KEY"))))) (if (string-empty-p (string-trim output)) nil (string-trim output))))
+;; (defun ai-setup-mcp-servers ()
+;;   (setq mcp-hub-servers
+;;            '(("filesystem" :command "mcp-filesystem" :args nil)))
+;;   (mcp-hub-start-all-server))
 
-(defun jnpw-setup-mcp-servers ()
-  (require 'gptel-integrations)
-  (require 'mcp)
-  (require 'mcp-hub)
-  (setq mcp-hub-servers
-           '(("filesystem" :command "mcp-filesystem" :args nil)))
-  (mcp-hub-start-all-server))
-
-(defun jnpw-setup-grok-backend ()
-(let ((key (jnpw-get-xai-key)))
-  (when key
-    (setq gptel-model 'grok-4.5
-	    jnpw-grok-backend (gptel-make-xai "jnpw_grok"
-				:key key
-				:models '(grok-4.5)
-				:request-params nil
-				:stream nil)))))
-
-
-(defun jnpw-setup-agents ()
+(defun ai-setup-agents ()
   (setq gptel-agent-dirs (list (expand-file-name "toolboxes/ai_toolbox/" (project-root (project-current)))))
   (gptel-agent-update)
   ;; add the vizier agent as a preset so that gptel can use it as the default agent
-  (when-let* ((gptel-agent-plist (assoc-default "vizier" gptel-agent--agents nil nil)))
-  (apply #'gptel-make-preset 'vizier gptel-agent-plist)))
+  (when-let* ((gptel-agent-plist (assoc-default "ai_vizier" gptel-agent--agents nil nil)))
+  (apply #'gptel-make-preset 'ai_vizier gptel-agent-plist)))
 
-(defun jnpw-setup-ai ()
-  (interactive)
-  (inheritenv
-   (progn
-     (message "setting up ai for %s project" (project-name (project-current)))
-     (jnpw-setup-grok-backend)
-     (setq gptel-backend jnpw-grok-backend
-  	   gptel-default-mode 'org-mode
-  	   gptel-include-reasoning nil
-  	   gptel-model 'grok-4.5)
-     (jnpw-setup-mcp-servers)
-     (jnpw-setup-agents)
-	 (message "ai for %s project ready" (project-name (project-current))))))
+ (message "setting up ai for %s project" (project-name (project-current)))
+ (ai-setup-agents)
+ ;; (ai-setup-mcp-servers)
+ (message "ai for %s project ready" (project-name (project-current)))

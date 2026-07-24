@@ -1,5 +1,5 @@
 :properties:
-:backend: jnpw_grok
+:backend: jn_grok
 :confirm-tool-calls: auto
 :description: "Works directly with the user and acts as liaison between the user and other AI agents"
 :model: grok-4.5
