@@ -1,6 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
 let 
-envrc = ./programs/.envrc;
+  envrc = ./programs/.envrc;
+  gitignore = ./settings/.gitignore;
 in
 {
   config = {
@@ -41,6 +42,15 @@ in
           chmod u+w ${config.devenv.root}/.envrc
 
           echo "copied programs/envrc to .envrc"
+        '';
+        showOutput = true;
+      };
+      "emacs_toolbox:copy_gitignore" = {
+        before = [ "devenv:enterShell" ];
+        exec = ''
+          mkdir -p ${config.devenv.root}/.toolboxes/emacs_toolbox
+          cat ${gitignore} > ${config.devenv.root}/.toolboxes/emacs_toolbox/.gitignore
+          echo "copied emacs toolbox .gitignore"
         '';
         showOutput = true;
       };

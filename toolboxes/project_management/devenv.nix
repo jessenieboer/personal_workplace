@@ -29,11 +29,11 @@ in
           # annoying to produce a series of double-quoted strings
           subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management_toolbox.subproject_agenda_files;
         in ''
-          mkdir -p ${config.devenv.root}/toolboxes/project_management_toolbox
+          mkdir -p ${config.devenv.root}/.toolboxes/project_management_toolbox
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
           -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
           -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
-          ${dirLocalsTemplate} > ${config.devenv.root}/toolboxes/project_management_toolbox/project_management_toolbox_dir_locals
+          ${dirLocalsTemplate} > ${config.devenv.root}/.toolboxes/project_management_toolbox/project_management_toolbox_dir_locals
 
           echo "project_management_toolbox_dir_locals generated successfully"
         '';

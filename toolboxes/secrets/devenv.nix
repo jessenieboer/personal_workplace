@@ -19,7 +19,6 @@ in
           fi
           mkdir -p ${config.devenv.root}/toolboxes/secrets_toolbox
           cp ${gh_devenv} ${config.devenv.root}/toolboxes/secrets_toolbox/gh_devenv.sh
-          chmod u+w ${config.devenv.root}/toolboxes/secrets_toolbox/gh_devenv.sh
 
           echo "copied github devenv program to toolboxes/secrets_toolbox/gh_devenv.sh"
         '';
