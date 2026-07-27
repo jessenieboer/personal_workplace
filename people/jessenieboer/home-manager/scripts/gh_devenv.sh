@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # machine account token in pass
-MAT_NAME_IN_PASS="bws/<token name>"
+MAT_NAME_IN_PASS="jessenieboer_secretspec_bws_access_token"
 
 # nix_github_pat id in bw secrets manager
 SECRET_ID="2e5149d3-f58c-4e43-87ef-b42601056f73"
