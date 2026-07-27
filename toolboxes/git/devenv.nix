@@ -12,14 +12,14 @@ in
       "git_toolbox:update_gitignore" = {
         before = [ "devenv:enterShell" ];
         exec = ''
-          if [ ! -f .gitignore ]; then
-          rsync -a --chmod=a+rw ${gitIgnore} .gitignore
-          echo "Copied new .gitignore"
-          else
-          cat ${gitIgnore} .gitignore | sort -u >  .gitignore.tmp && mv .gitignore.tmp .gitignore
-          echo "Updated existing .gitignore"
-          fi
-        '';      
+          tmp=$(mktemp)
+          {
+          cat ${gitIgnore}
+          echo
+          find . -name .gitignore -type f -exec cat {} \; -exec echo \;
+          } 2>/dev/null | grep -v '^$' | sort -u > "$tmp" && mv "$tmp" .gitignore
+          echo "Merged template + all nested .gitignore files into ./.gitignore"
+        '';
         showOutput = true;
       };
     };
