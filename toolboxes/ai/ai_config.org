@@ -3,7 +3,7 @@
 :ID:       d51b4603-5443-421f-8f66-a066d052cc95
 :END:
 #+BEGIN_SRC emacs-lisp :tangle ./programs/ai_dir_locals :noweb tangle
-  ((nil . ((eval . (load (expand-file-name "toolboxes/ai_toolbox/ai_toolbox_setup" (project-root (project-current))) t t t)))))
+  ((nil . ((eval . (load (expand-file-name ".toolboxes/ai_toolbox/ai_toolbox_setup" (project-root (project-current))) t t t)))))
 #+END_SRC
 ** setup functions
 :PROPERTIES:
@@ -18,7 +18,7 @@
   ;;   (mcp-hub-start-all-server))
 
   (defun ai-setup-agents ()
-    (setq gptel-agent-dirs (list (expand-file-name "toolboxes/ai_toolbox/" (project-root (project-current)))))
+    (setq gptel-agent-dirs (list (expand-file-name ".toolboxes/agents/" (project-root (project-current)))))
     (gptel-agent-update)
     ;; add the vizier agent as a preset so that gptel can use it as the default agent
     (when-let* ((gptel-agent-plist (assoc-default "ai_vizier" gptel-agent--agents nil nil)))

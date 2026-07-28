@@ -1,6 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
 let
   dirLocals = ./programs/ai_dir_locals;
+  gitignore = ./settings/.gitignore;
   helloWorldAgent = ./settings/ai_hello_world_agent.org;
   mcpFsScript = pkgs.writeShellScriptBin "mcp-filesystem" ''
     exec npx @modelcontextprotocol/server-filesystem "${config.devenv.root}"
@@ -23,18 +24,36 @@ in
     ];
 
     tasks = {
+      "ai_toolbox:copy_agents" = {
+        before = [ "devenv:enterShell" ];
+        exec = ''
+        mkdir -p ${config.devenv.root}/.toolboxes/agents
+          cat ${helloWorldAgent} > ${config.devenv.root}/.toolboxes/agents/ai_hello_world_agent.org
+          cat ${setupTesterAgent} > ${config.devenv.root}/.toolboxes/agents/ai_setup_tester_agent.org
+          cat ${vizier} > ${config.devenv.root}/.toolboxes/agents/ai_vizier.org
+          
+          echo "ai_toolbox agents copied successfully"
+        '';
+          showOutput = true;
+      };
+      "ai_toolbox:copy_gitignore" = {
+        before = [ "devenv:enterShell" ];
+        exec = ''
+          mkdir -p ${config.devenv.root}/.toolboxes/ai_toolbox
+          cat ${gitignore} > ${config.devenv.root}/.toolboxes/ai_toolbox/.gitignore
+          echo "copied ai_toolbox .gitignore"
+        '';
+        showOutput = true;
+      };
       "ai_toolbox:copy_setup_files" = {
         before = [ "devenv:enterShell" ];
         exec = ''
-          mkdir -p ${config.devenv.root}/toolboxes/ai_toolbox
-          chmod 644 ${config.devenv.root}/toolboxes/ai_toolbox/* 2>/dev/null || true
-          cat ${toolboxSetup} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_toolbox_setup
-          cat ${dirLocals} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_dir_locals
-          cat ${helloWorldAgent} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_hello_world_agent.org
-          cat ${setupTesterAgent} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_setup_tester_agent.org
-          cat ${vizier} > ${config.devenv.root}/toolboxes/ai_toolbox/ai_vizier.org
-          chmod 444 ${config.devenv.root}/toolboxes/ai_toolbox/*
-          echo "ai toolbox setup files copied successfully"
+          mkdir -p ${config.devenv.root}/.toolboxes/ai_toolbox
+          
+          cat ${toolboxSetup} > ${config.devenv.root}/.toolboxes/ai_toolbox/ai_toolbox_setup
+          cat ${dirLocals} > ${config.devenv.root}/.toolboxes/ai_toolbox/ai_dir_locals
+          
+          echo "ai_toolbox setup files copied successfully"
         '';
         # execIfModified = [
           #   "devenv.nix"

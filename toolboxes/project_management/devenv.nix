@@ -8,18 +8,18 @@ in
       echo "jessenieboer's project management toolbox available"
     '';
 
-    project_management_toolbox = {
-      project_name = "project_management_toolbox";
-      workers = [
-        {
-          worker_name = "Jesse";
-          worker_email = "jessenieboer@protonmail.com";
-        }
-        {
-          worker_name = "Grok";
-        }
-      ];
-    };
+    # project_management_toolbox = {
+    #   project_name = "project_management_toolbox";
+    #   workers = [
+    #     {
+    #       worker_name = "Jesse";
+    #       worker_email = "jessenieboer@protonmail.com";
+    #     }
+    #     {
+    #       worker_name = "Grok";
+    #     }
+    #   ];
+    # };
 
     # todo use pkgs.replaceVars instead of sed?
     tasks = {

@@ -835,7 +835,7 @@ Returns the value as string or nil if not found / error."
 
 (my-add-to-hydra main-edit-modes
   		 ("Connection"
-		  (("dix" (gptel-agent (project-root (project-current)) 'vizier) "open ai agent") ;; each project with the ai toolbox defines this function
+		  (("dix" (gptel-agent (project-root (project-current)) 'ai_vizier) "open ai agent") 
 		   ("di <f7>" (gptel my-default-ai-chat-name) "open ai chat")
 		   ;; ("diw" gptel-mode "ai mode")
 		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
@@ -855,7 +855,7 @@ Returns the value as string or nil if not found / error."
 
 (my-add-to-hydra 'dired-mode
 		 ("Connection"
-		  (("ix" (gptel-agent (project-root (project-current)) 'vizier) "open ai agent")
+		  (("ix" (gptel-agent (project-root (project-current)) 'ai_vizier) "open ai agent")
 		   ("i <f7>" (gptel my-default-ai-chat-name) "open ai chat")
 		   ;; ("diw" gptel-mode "ai mode")
 		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
