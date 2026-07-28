@@ -29,3 +29,22 @@ prefix toolbox stuff with the name of the toolbox
 - <<worker>> :: a person or ai capable of doing [[work]]
 - <<workplace>> :: an organization in which [[work]] takes place
 - <<workspace>> :: a personalizable configuration of software and options on for an operating system (home manager configs)
+
+
+(defun my/run-project-toolbox-setups ()
+  "Load every *_toolbox_setup file under .toolboxes/ in the current project."
+  (when-let* ((root (and (project-current)
+                         (project-root (project-current))))
+              (toolboxes-dir (expand-file-name ".toolboxes" root)))
+    (when (file-directory-p toolboxes-dir)
+      (dolist (file (directory-files-recursively
+                     toolboxes-dir
+                     "_toolbox_setup\\'"  ; matches anything ending in _toolbox_setup
+                     nil
+                     (lambda (dir)         ; optional: skip hidden dirs if you want
+                       (not (string-prefix-p "." (file-name-nondirectory dir))))))
+        (when (file-regular-p file)
+          (message "Loading toolbox setup: %s" file)
+          (load file t t t))))))
+
+(add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)

@@ -805,33 +805,49 @@ Returns the value as string or nil if not found / error."
       (string-trim output))))
 
 (require 'gptel)
-(require 'gptel-agent)
-(require 'gptel-context)
-(require 'gptel-integrations)
-(require 'gptel-openai-extras)
-(require 'gptel-transient)
-(require 'mcp)
-(require 'mcp-hub)
+  (require 'gptel-agent)
+  (require 'gptel-context)
+  (require 'gptel-integrations)
+  (require 'gptel-openai-extras)
+  (require 'gptel-transient)
+  (require 'mcp)
+  (require 'mcp-hub)
 
-(defun my-gptel-add-project-context ()
-  (interactive)
-  (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
+  (defun my-gptel-add-project-context ()
+    (interactive)
+    (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
 
-(setq gptel-default-mode 'org-mode
-      gptel-include-reasoning nil
-      ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
-      jn-grok-backend (gptel-make-xai "jn_grok"
-			:key (my-secretspec-get "XAI_API_KEY")
-   			:models '(grok-4.5)
-  			:request-params nil
-  			:stream nil)
-      mcp-hub-servers '(("filesystem" :command "mcp-filesystem" :args nil))
-      my-default-ai-chat-name "*ai chat*")
+  (setq gptel-default-mode 'org-mode
+        gptel-include-reasoning nil
+        ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
+        jn-grok-backend (gptel-make-xai "jn_grok"
+  			:key (my-secretspec-get "XAI_API_KEY")
+     			:models '(grok-4.5)
+    			:request-params nil
+    			:stream nil)
+        mcp-hub-servers '(("filesystem" :command "mcp-filesystem" :args nil))
+        my-default-ai-chat-name "*ai chat*")
 
-(setq gptel-backend jn-grok-backend
-      gptel-model 'grok-4.5)
+  (setq gptel-backend jn-grok-backend
+        gptel-model 'grok-4.5)
 
-(my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-agent.*"  "^\\*gptel-context\\*"))
+  (defun my/run-project-toolbox-setups ()
+  "Load every *_toolbox_setup file under .toolboxes/ in the current project."
+  (when-let* ((root (and (project-current)
+                         (project-root (project-current))))
+              (toolboxes-dir (expand-file-name ".toolboxes" root)))
+    (when (file-directory-p toolboxes-dir)
+      (dolist (file (directory-files-recursively
+                     toolboxes-dir
+                     "_toolbox_setup\\'"))
+        (when (file-regular-p file)
+          (message "Loading toolbox setup: %s" file)
+          (load file t t t))))))
+
+(add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
+
+  (my-add-left-buffer-patterns '("^\\*gptel-agent.*"))
+  (my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
 
 (my-add-to-hydra main-edit-modes
   		 ("Connection"

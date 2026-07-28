@@ -1036,7 +1036,23 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   (setq gptel-backend jn-grok-backend
         gptel-model 'grok-4.5)
 
-  (my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-agent.*"  "^\\*gptel-context\\*"))
+  (defun my/run-project-toolbox-setups ()
+  "Load every *_toolbox_setup file under .toolboxes/ in the current project."
+  (when-let* ((root (and (project-current)
+                         (project-root (project-current))))
+              (toolboxes-dir (expand-file-name ".toolboxes" root)))
+    (when (file-directory-p toolboxes-dir)
+      (dolist (file (directory-files-recursively
+                     toolboxes-dir
+                     "_toolbox_setup\\'"))
+        (when (file-regular-p file)
+          (message "Loading toolbox setup: %s" file)
+          (load file t t t))))))
+
+(add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
+
+  (my-add-left-buffer-patterns '("^\\*gptel-agent.*"))
+  (my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
 #+end_src
 *** ai controls
 :PROPERTIES:
