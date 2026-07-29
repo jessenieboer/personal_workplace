@@ -4,17 +4,17 @@
   programs = {
     plasma = {
       window-rules = [
-        # reference screen on left (1)
+        # screen on left (1)
         {
           apply = {
             screen = { apply = "force"; value = 1; };
           };
-          description = "brave: reference";
+          description = "brave: left";
           match = {
             window-class = {
               match-whole = false;
               type = "exact";
-              value = "org.kde.konsole";
+              value = "brave-browser";
             };
           };
         }
@@ -23,7 +23,7 @@
           apply = {
             screen = { apply = "force"; value = 1; };
           };
-          description = "dolphin: reference";
+          description = "dolphin: left";
           match = {
             window-class = {
               match-whole = false;
@@ -48,7 +48,7 @@
           };
         }
 
-        # main screen in center (2)
+        # screen in center (2)
         {
           apply = {
             screen = { apply = "force"; value = 2; };
@@ -64,7 +64,7 @@
           };
         }
 
-        # results screen on right (0)
+        # screen on right (0)
         {
           apply = {
             screen = { apply = "force"; value = 0; };
@@ -76,20 +76,6 @@
               match-whole = false;
               type = "exact";
               value = "emacs";
-            };
-          };
-        }
-
-        {
-          apply = {
-            screen = { apply = "force"; value = 0; };
-          };
-          description = "brave: reference";
-          match = {
-            window-class = {
-              match-whole = false;
-              type = "exact";
-              value = "brave-browser";
             };
           };
         }

@@ -1030,7 +1030,6 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
      			:models '(grok-4.5)
     			:request-params nil
     			:stream nil)
-        mcp-hub-servers '(("filesystem" :command "mcp-filesystem" :args nil))
         my-default-ai-chat-name "*ai chat*")
 
   (setq gptel-backend jn-grok-backend
@@ -1049,10 +1048,11 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
           (message "Loading toolbox setup: %s" file)
           (load file t t t))))))
 
-(add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
+  (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
   (my-add-left-buffer-patterns '("^\\*gptel-agent.*"))
   (my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
+  (my-add-hidden-buffer-patterns '("^\\*Mcp-Hub\\*"))
 #+end_src
 *** ai controls
 :PROPERTIES:
@@ -1074,7 +1074,8 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   		  "AI"
   		  (("di?" (gptel-agent-update) "agent update")
   		   ("i RET" gptel-send "ai send")
-  		   ("i*" (gptel--accept-tool-calls) "accept tool calls")
+  		   ;; ("i*" (gptel--accept-tool-calls) "accept tool calls")
+  		   ;; ("i$" (gptel--reject-tool-calls) "reject tool calls")
   		   ("dio" gptel-add "add ai context")
   		   ("di-" my-gptel-add-project-context "add project context")
   		   ("di DEL" gptel-context-remove-all "remove ai context"))))

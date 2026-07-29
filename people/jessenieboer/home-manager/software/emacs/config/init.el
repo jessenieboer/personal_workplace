@@ -825,7 +825,6 @@ Returns the value as string or nil if not found / error."
      			:models '(grok-4.5)
     			:request-params nil
     			:stream nil)
-        mcp-hub-servers '(("filesystem" :command "mcp-filesystem" :args nil))
         my-default-ai-chat-name "*ai chat*")
 
   (setq gptel-backend jn-grok-backend
@@ -865,6 +864,7 @@ Returns the value as string or nil if not found / error."
 		  (("di?" (gptel-agent-update) "agent update")
 		   ("i RET" gptel-send "ai send")
 		   ("i*" (gptel--accept-tool-calls) "accept tool calls")
+		   ("i$" (gptel--reject-tool-calls) "reject tool calls")
 		   ("dio" gptel-add "add ai context")
 		   ("di-" my-gptel-add-project-context "add project context")
 		   ("di DEL" gptel-context-remove-all "remove ai context"))))

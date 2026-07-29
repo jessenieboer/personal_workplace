@@ -6,10 +6,10 @@
 #+BEGIN_SRC emacs-lisp :tangle ./programs/ai_toolbox_setup :noweb tanale
   (defun ai-setup-mcp-servers ()
   (when-let ((cmd (executable-find "mcp-server-filesystem")))
-    (setq-local mcp-hub-servers   ; ← prefer buffer-local if possible
-                `(("filesystem" . (:command ,cmd
+    (setq mcp-hub-servers
+                `(("mcp-server-filesystem" . (:command ,cmd
                                     :args (".")
-                                    :roots (,(project-root (project-current)))))))))
+                                    :roots (,(expand-file-name (project-root (project-current))))))))))
 
   (defun ai-setup-agents ()
     (setq gptel-agent-dirs (list (expand-file-name ".toolboxes/agents/" (project-root (project-current)))))

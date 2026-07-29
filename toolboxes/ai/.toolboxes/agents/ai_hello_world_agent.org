@@ -1,4 +1,4 @@
-g:properties:
+:properties:
 :backend: jn_grok
 :confirm-tool-calls: 'auto
 :description: "Responds with Hello, world!"
