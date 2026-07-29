@@ -23,6 +23,20 @@
           apply = {
             screen = { apply = "force"; value = 1; };
           };
+          description = "konsole: left";
+          match = {
+            window-class = {
+              match-whole = false;
+              type = "exact";
+              value = "org.kde.konsole";
+            };
+          };
+        }
+
+        {
+          apply = {
+            screen = { apply = "force"; value = 1; };
+          };
           description = "dolphin: left";
           match = {
             window-class = {

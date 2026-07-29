@@ -31,3 +31,6 @@ any toolbox should put its own agents in /toolboxes/agents/
 
 
 (gptel-mcp-connect '(mcp-server-filesystem) 'sync)
+
+
+(pp (mcp--tools (gethash "mcp-server-filesystem" mcp-server-connections)))

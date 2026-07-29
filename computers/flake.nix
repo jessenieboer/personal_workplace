@@ -10,6 +10,7 @@
       modules = [
         ./hardware/uiu57o6a.nix
         ./networking.nix
+        ./os/audio.nix
         ./os/linux.nix
         ./os/nixos.nix
         ./os/ui.nix
@@ -25,6 +26,7 @@
         ./hardware/nucbox.nix
         ./hardware/wd-5T.nix
         ./networking.nix
+        ./os/audio.nix
         ./os/linux.nix
         ./os/nixos.nix
         ./os/ui.nix

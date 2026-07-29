@@ -6,14 +6,6 @@
     ];
   };
 
-  # languages.rust = {
-  #     enable = true;
-  #     channel = "stable";
-  #     version = "1.95.0";
-  #     components = [ "cargo" "rustc" "clippy" "rustfmt" "rust-src" "rust-analyzer" ];
-  #     #targets = [ "wasm32-unknown-unknown" ];  # if needed
-  # };
-
   nix = {
     gc = {
       automatic = true;
@@ -39,5 +31,4 @@
   };
 
   system.stateVersion = "26.05";
-  virtualisation.docker.enable = true;
 }

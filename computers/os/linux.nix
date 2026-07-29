@@ -18,5 +18,8 @@
         efi.canTouchEfiVariables = true;
       };
     };
+
+    virtualisation.docker.enable = true;
   };
+
 }
