@@ -7,18 +7,24 @@ in
   config = {
     enterShell = ''
       echo "jessenieboer's secrets toolbox available"
+      secretspec check
     '';
+
+    packages = with pkgs; [
+      bws
+      secretspec
+    ];
 
     tasks = {
       "secrets_toolbox:copy_github_devenv" = {
         before = [ "devenv:enterShell" ];
         exec = ''
-          if [ -f "${config.devenv.root}/toolboxes/secrets_toolbox/gh_devenv.sh" ]; then
+          if [ -f "${config.devenv.root}/.toolboxes/secrets_toolbox/gh_devenv.sh" ]; then
           echo "gh_devenv.sh already exists — skipping copy."
           exit 0
           fi
-          mkdir -p ${config.devenv.root}/toolboxes/secrets_toolbox
-          cp ${gh_devenv} ${config.devenv.root}/toolboxes/secrets_toolbox/gh_devenv.sh
+          mkdir -p ${config.devenv.root}/.toolboxes/secrets_toolbox
+          cp ${gh_devenv} ${config.devenv.root}/.toolboxes/secrets_toolbox/gh_devenv.sh
 
           echo "copied github devenv program to toolboxes/secrets_toolbox/gh_devenv.sh"
         '';
