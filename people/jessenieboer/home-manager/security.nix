@@ -12,56 +12,14 @@
     '';
 
     file = {
-      ".config/secretspec/config.toml".text = ''
-      [defaults]
-      provider = "bws"
-      profile = "default"
-
-      [defaults.providers]
-      jessenieboer_home_manager = { uri = "bws://ff39ba56-1bfb-46cf-af64-b42601032d0f", credentials = { access_token = "jessenieboer_access_token" } }
-      jessenieboer_access_token = "pass://jessenieboer_secretspec_bws_access_token"
-      '';
-
       ".config/secretspec/secretspec.toml".source = ./secretspec.toml;
     };
 
+    # note that secretspec comes with devenv
     packages = with pkgs; [
-      (pkgs.rustPlatform.buildRustPackage {
-        pname = "secretspec";
-        version = "0.16.0";
-
-        # to update: nix-prefetch-github cachix secretspec --rev v0.16.0
-        src = pkgs.fetchFromGitHub {
-          owner = "cachix";
-          repo = "secretspec";
-          rev = "454546d7cca26f604eea8e8bf85673d7d01d400d";
-          hash = "sha256-TL9S/NFwL9q7h6ImGosGpB7T08HhDFy1v04YLLvVsto=";
-        };
-
-        buildAndTestSubdir = "secretspec";
-        cargoHash = "sha256-+8FGPk/84gW0+LeCufr+uEpWdy35QI2tlgkFRnv6Ycg=";
-        
-        #cargoBuildFlags = [ "--package" "secretspec" "--features" "bws" ];
-        #buildFeatures = [ "bws" ];
-
-        # Optional: native build inputs if needed
-        nativeBuildInputs = [ pkg-config ];
-        buildInputs = [ dbus openssl ];  # often needed for Rust crates
-
-        meta = {
-          mainProgram = "secretspec";
-        };
-      })
-      bitwarden-cli
-      #bitwarden-desktop
-      bws #bitwarden secrets manager
-      jq # for parsing json from bws      
+      bws
+      #jq # for parsing json from bws
       yubikey-manager
-      rustc
-      cargo
-      clippy
-      rustfmt
-      rust-analyzer
     ];
   };
 

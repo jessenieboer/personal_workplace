@@ -3,9 +3,6 @@ let
   dirLocals = ./programs/ai_dir_locals;
   gitignore = ./settings/.gitignore;
   helloWorldAgent = ./settings/ai_hello_world_agent.org;
-  # mcpFsScript = pkgs.writeShellScriptBin "mcp-filesystem" ''
-  #   exec npx @modelcontextprotocol/server-filesystem "${config.devenv.root}"
-  # '';
   setupTesterAgent = ./settings/ai_setup_tester_agent.org;
   toolboxSetup = ./programs/ai_toolbox_setup;
   vizier = ./settings/ai_vizier.org;
@@ -15,9 +12,7 @@ in
 
   config = {
     enterShell = ''
-      cat << EOF
-      jessenieboer's ai toolbox available:
-      EOF
+      jessenieboer's ai toolbox available
     '';
 
     mcp-servers.programs = {
@@ -63,9 +58,6 @@ in
 
           echo "ai_toolbox setup files copied successfully"
         '';
-        # execIfModified = [
-          #   "devenv.nix"
-          # ];
           showOutput = true;
       };
     };
