@@ -7,7 +7,6 @@ in
   config = {
     enterShell = ''
       echo "jessenieboer's secrets toolbox available"
-      secretspec check
     '';
 
     packages = with pkgs; [
@@ -26,7 +25,7 @@ in
           mkdir -p ${config.devenv.root}/.toolboxes/secrets_toolbox
           cp ${gh_devenv} ${config.devenv.root}/.toolboxes/secrets_toolbox/gh_devenv.sh
 
-          echo "copied github devenv program to toolboxes/secrets_toolbox/gh_devenv.sh"
+          echo "copied github devenv program to .toolboxes/secrets_toolbox/gh_devenv.sh"
         '';
         showOutput = true;
       };
