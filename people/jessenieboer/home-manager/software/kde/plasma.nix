@@ -6,6 +6,19 @@
 
   programs = {
     plasma = {
+      configFile."kwinrc" = {
+        TabBox = {
+          # 0 = Show windows from all screens (default)
+          # 1 = Only windows on the current screen   ← what you want
+          MultiScreenMode = 1;
+
+          # Optional but commonly used together
+          LayoutName = "thumbnail_grid";   # or "big_icons", "thumbnails", etc.
+          HighlightWindows = true;
+          ShowDesktopMode = 0;
+        };
+      };
+
       enable = true;
 
       hotkeys.commands = {
@@ -13,6 +26,11 @@
           name = "Reload KWin Window Rules";
           key = "Meta+Z";
           command = "qdbus org.kde.KWin /KWin reconfigure";
+        };
+        "voxtype-toggle" = {
+          name = "Voxtype Toggle";
+          key = "F2";
+          command = "voxtype record toggle";
         };
       };
 
@@ -90,9 +108,9 @@
           "Switch Window Left"                    = ["Meta+S"];
           "Switch Window Right"                   = ["Meta+N"];
           "Switch Window Up"                      = ["Meta+I"];
-          "Walk Through Windows"                  = [];
+          "Walk Through Windows"                  = ["Meta+Y"];
           "Walk Through Windows (Reverse)"        = [];
-          "Walk Through Windows Alternative"      = ["Meta+Y"];
+          #"Walk Through Windows Alternative"      = ["Meta+Y"];
           "Window Close"                          = ["Meta+F"];
           #"Window Fullscreen"                     = ["Meta+B"]; # annoying right now
           "Window Maximize"                       = ["Meta+C"];
@@ -116,6 +134,14 @@
         # plasmashell = {
           #   "Activate Application Launcher" = [ "Meta+R" ];
           # };
+      };
+
+      shortcutSchemes = {
+        dolphin.Custom = {
+          "rename_file" = [ ]; # disable F2 so i can use it for voice toggle
+          # Some versions use this name instead:
+          # "edit_rename" = [ ];
+        };
       };
 
       #windows.allowWindowsToRememberPositions = true;

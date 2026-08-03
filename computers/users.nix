@@ -10,6 +10,7 @@
           extraGroups = [
             "docker"
             "gamemode"
+            "input" # dotool
             "plugdev" # yubikey stuff
             "wheel"
           ];

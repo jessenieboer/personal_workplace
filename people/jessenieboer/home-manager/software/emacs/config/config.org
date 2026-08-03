@@ -96,6 +96,7 @@ interaction: what can i do?
   ;;   (setq hydra-is-helpful nil))
 
   (global-set-key (kbd "<f1>") #'major-mode-hydra)
+  (global-set-key (kbd "<f2>") nil) ;; for voice toggle
   (global-set-key (kbd "<f11>") (setq hydra-is-helpful t))
   (global-set-key (kbd "<f5>") (setq hydra-is-helpful nil))
   (global-set-key (kbd "<f12> <f1>") #'describe-key)
@@ -612,6 +613,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 :PROPERTIES:
 :ID:       4085f53f-f157-46a7-80cf-1a6030ba7ab6
 :END:
+;; ("fy" window-toggle-side-windows "toggle side") ; toggling windows like this prevents autohydra from firing when going back to the buffer
 #+begin_src emacs-lisp
   (my-add-to-hydra all-modes
     		 ("Connection"
@@ -626,8 +628,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 
   (my-add-to-hydra main-modes
     		 ("Connection"
-    		  (("fl" popper-kill-latest-popup "close popup")
-  		   ("fy" window-toggle-side-windows "toggle side"))
+    		  (("fl" popper-kill-latest-popup "close popup"))
     		  "Display"
     		  (("fn" split-window-right "split right")
     		   ("fh" split-window-below "split down")
@@ -654,8 +655,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 
   (my-add-to-hydra alt-nav-modes
     		 ("Connection"
-    		  (("fl" popper-kill-latest-popup "close popup")
-  		   ("fy" window-toggle-side-windows "toggle side"))
+    		  (("fl" popper-kill-latest-popup "close popup"))
     		  "Display"
     		  (("fn" split-window-right "split right")
   		   ("fh" split-window-below "split down")
@@ -1008,6 +1008,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 :PROPERTIES:
 :ID:       212e84d3-68d3-4e5c-ad6e-fa6aebf67eb6
 :END:
+:system "You are a large language model living in Emacs and a helpful assistant. Prompts might be from speech-to-text; if you need more clarity before responding, ask. Responses should be terse."
 #+begin_src emacs-lisp
   (require 'gptel)
   (require 'gptel-agent)
@@ -1696,8 +1697,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   		   ("db" org-babel-tangle "tangle all")
       		   ("d+" (org-babel-tangle '(4)) "tangle block")
   		   ("di RET" org-ctrl-c-ctrl-c "confirm"))
-  		  ;;"Table"
-  		  ;; (("M-r" org-table-toggle-column-width "or col width")
+  		 ;; "Table"
+  		 ;; (
+  		   ;;("M-r" org-table-toggle-column-width "or col width")
     		  ;;  ("M-j" org-table-shrink "or shrink")
     		  ;;  ("M-k" org-table-expand "or expand")
     		  ;;  ("M-q" org-table-move-row-up "or row up")

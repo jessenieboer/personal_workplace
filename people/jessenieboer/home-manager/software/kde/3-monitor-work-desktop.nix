@@ -19,19 +19,19 @@
           };
         }
 
-        {
-          apply = {
-            screen = { apply = "force"; value = 1; };
-          };
-          description = "konsole: left";
-          match = {
-            window-class = {
-              match-whole = false;
-              type = "exact";
-              value = "org.kde.konsole";
-            };
-          };
-        }
+        # {
+        #   apply = {
+        #     screen = { apply = "force"; value = 1; };
+        #   };
+        #   description = "konsole: left";
+        #   match = {
+        #     window-class = {
+        #       match-whole = false;
+        #       type = "exact";
+        #       value = "org.kde.konsole";
+        #     };
+        #   };
+        # }
 
         {
           apply = {
@@ -74,6 +74,20 @@
               match-whole = false;
               type = "exact";
               value = "emacs";
+            };
+          };
+        }
+
+        {
+          apply = {
+            screen = { apply = "force"; value = 2; };
+          };
+          description = "konsole: center";
+          match = {
+            window-class = {
+              match-whole = false;
+              type = "exact";
+              value = "org.kde.konsole";
             };
           };
         }

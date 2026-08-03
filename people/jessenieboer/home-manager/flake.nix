@@ -3,12 +3,12 @@
 
   inputs = {
     emacs-overlay = {
-      url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/emacs-overlay";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager/release-26.05";
     };
     nix-flatpak.url = "github:gmodena/nix-flatpak"; # for boosteroid
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
@@ -17,6 +17,10 @@
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
+    };
+    voxtype = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:peteonrails/voxtype/v1.0.0-rc1";
     };
   };
 
@@ -75,6 +79,7 @@
           ./software/kde/programs.nix
           ./software/maestral/maestral.nix
           ./software/opencode/opencode.nix
+          ./software/voxtype/voxtype.nix
         ];
         extraSpecialArgs = {
           inherit inputs;

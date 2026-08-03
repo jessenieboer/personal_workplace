@@ -12,6 +12,7 @@
 ;;   (setq hydra-is-helpful nil))
 
 (global-set-key (kbd "<f1>") #'major-mode-hydra)
+(global-set-key (kbd "<f2>") nil) ;; for voice toggle
 (global-set-key (kbd "<f11>") (setq hydra-is-helpful t))
 (global-set-key (kbd "<f5>") (setq hydra-is-helpful nil))
 (global-set-key (kbd "<f12> <f1>") #'describe-key)
@@ -475,8 +476,7 @@
 
 (my-add-to-hydra main-modes
   		 ("Connection"
-  		  (("fl" popper-kill-latest-popup "close popup")
-		   ("fy" window-toggle-side-windows "toggle side"))
+  		  (("fl" popper-kill-latest-popup "close popup"))
   		  "Display"
   		  (("fn" split-window-right "split right")
   		   ("fh" split-window-below "split down")
@@ -503,8 +503,7 @@
 
 (my-add-to-hydra alt-nav-modes
   		 ("Connection"
-  		  (("fl" popper-kill-latest-popup "close popup")
-		   ("fy" window-toggle-side-windows "toggle side"))
+  		  (("fl" popper-kill-latest-popup "close popup"))
   		  "Display"
   		  (("fn" split-window-right "split right")
 		   ("fh" split-window-below "split down")
@@ -805,48 +804,49 @@ Returns the value as string or nil if not found / error."
       (string-trim output))))
 
 (require 'gptel)
-  (require 'gptel-agent)
-  (require 'gptel-context)
-  (require 'gptel-integrations)
-  (require 'gptel-openai-extras)
-  (require 'gptel-transient)
-  (require 'mcp)
-  (require 'mcp-hub)
+(require 'gptel-agent)
+(require 'gptel-context)
+(require 'gptel-integrations)
+(require 'gptel-openai-extras)
+(require 'gptel-transient)
+(require 'mcp)
+(require 'mcp-hub)
 
-  (defun my-gptel-add-project-context ()
-    (interactive)
-    (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
+(defun my-gptel-add-project-context ()
+  (interactive)
+  (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
 
-  (setq gptel-default-mode 'org-mode
-        gptel-include-reasoning nil
-        ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
-        jn-grok-backend (gptel-make-xai "jn_grok"
-  			:key (my-secretspec-get "XAI_API_KEY")
-     			:models '(grok-4.5)
-    			:request-params nil
-    			:stream nil)
-        my-default-ai-chat-name "*ai chat*")
+(setq gptel-default-mode 'org-mode
+      gptel-include-reasoning nil
+      ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
+      jn-grok-backend (gptel-make-xai "jn_grok"
+			:key (my-secretspec-get "XAI_API_KEY")
+   			:models '(grok-4.5)
+  			:request-params nil
+  			:stream nil)
+      my-default-ai-chat-name "*ai chat*")
 
-  (setq gptel-backend jn-grok-backend
-        gptel-model 'grok-4.5)
+(setq gptel-backend jn-grok-backend
+      gptel-model 'grok-4.5)
 
-  (defun my/run-project-toolbox-setups ()
-  "Load every *_toolbox_setup file under .toolboxes/ in the current project."
-  (when-let* ((root (and (project-current)
-                         (project-root (project-current))))
-              (toolboxes-dir (expand-file-name ".toolboxes" root)))
-    (when (file-directory-p toolboxes-dir)
-      (dolist (file (directory-files-recursively
-                     toolboxes-dir
-                     "_toolbox_setup\\'"))
-        (when (file-regular-p file)
-          (message "Loading toolbox setup: %s" file)
-          (load file t t t))))))
+(defun my/run-project-toolbox-setups ()
+"Load every *_toolbox_setup file under .toolboxes/ in the current project."
+(when-let* ((root (and (project-current)
+                       (project-root (project-current))))
+            (toolboxes-dir (expand-file-name ".toolboxes" root)))
+  (when (file-directory-p toolboxes-dir)
+    (dolist (file (directory-files-recursively
+                   toolboxes-dir
+                   "_toolbox_setup\\'"))
+      (when (file-regular-p file)
+        (message "Loading toolbox setup: %s" file)
+        (load file t t t))))))
 
 (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
-  (my-add-left-buffer-patterns '("^\\*gptel-agent.*"))
-  (my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
+(my-add-left-buffer-patterns '("^\\*gptel-agent.*"))
+(my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
+(my-add-hidden-buffer-patterns '("^\\*Mcp-Hub\\*"))
 
 (my-add-to-hydra main-edit-modes
   		 ("Connection"
@@ -863,8 +863,8 @@ Returns the value as string or nil if not found / error."
 		  "AI"
 		  (("di?" (gptel-agent-update) "agent update")
 		   ("i RET" gptel-send "ai send")
-		   ("i*" (gptel--accept-tool-calls) "accept tool calls")
-		   ("i$" (gptel--reject-tool-calls) "reject tool calls")
+		   ;; ("i*" (gptel--accept-tool-calls) "accept tool calls")
+		   ;; ("i$" (gptel--reject-tool-calls) "reject tool calls")
 		   ("dio" gptel-add "add ai context")
 		   ("di-" my-gptel-add-project-context "add project context")
 		   ("di DEL" gptel-context-remove-all "remove ai context"))))
@@ -1412,8 +1412,9 @@ Returns the value as string or nil if not found / error."
 		   ("db" org-babel-tangle "tangle all")
     		   ("d+" (org-babel-tangle '(4)) "tangle block")
 		   ("di RET" org-ctrl-c-ctrl-c "confirm"))
-		  ;;"Table"
-		  ;; (("M-r" org-table-toggle-column-width "or col width")
+		 ;; "Table"
+		 ;; (
+		   ;;("M-r" org-table-toggle-column-width "or col width")
   		  ;;  ("M-j" org-table-shrink "or shrink")
   		  ;;  ("M-k" org-table-expand "or expand")
   		  ;;  ("M-q" org-table-move-row-up "or row up")

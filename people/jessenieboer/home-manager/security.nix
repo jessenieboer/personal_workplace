@@ -18,7 +18,7 @@
     # note that secretspec comes with devenv
     packages = with pkgs; [
       bws
-      #jq # for parsing json from bws
+      jq # for parsing json from bws in refresh_devenv.sh
       yubikey-manager
     ];
   };
