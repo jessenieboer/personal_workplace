@@ -25,7 +25,7 @@ todo: nextcloud server
 updating (as root in ~/)
 cp -r /home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/ .
 cp /root/secrets/wifi-passwords.nix /root/personal_workplace/computers/wifi.nix
-nixos-rebuild switch --flake /root/personal_workplace/computers/.#configname
+nixos-rebuild switch --flake /root/personal_workplace/computers/.#nucbox
 
 might need to do a sudo nixos-rebuild boot --flake /root/personal_workplace/computers/.#configname
 
