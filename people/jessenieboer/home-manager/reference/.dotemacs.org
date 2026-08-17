@@ -2,6 +2,7 @@
 :PROPERTIES:
 :ID:       c561baee-bf85-46d4-a105-fa4e977d6588
 :END:
+note that this is an old file for reference only
 * configuration overview :essential:
 :PROPERTIES:
 :ID:       89995582-78b2-41e7-bdd7-f5807e576e45

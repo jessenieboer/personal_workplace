@@ -1,12 +1,8 @@
-# Devenv
-.devenv*
+.devenv
 devenv.local.nix
 devenv.local.yaml
-
-# direnv
 .direnv
-
-# pre-commit
+.envrc
 .pre-commit-config.yaml
-
-toolboxes/*/toolboxes
+.toolboxes/ai_toolbox
+.toolboxes/emacs_toolbox

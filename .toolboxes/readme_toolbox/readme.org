@@ -1,0 +1,109 @@
+:PROPERTIES:
+:ID:       dd217dba-96b0-41b4-a0eb-57e6b500c0b1
+:END:
+#+EXPORT_FILE_NAME: ../../README.md
+#+OPTIONS: toc:t num:nil
+#+TITLE: Personal Workplace
+
+#+html:<h1 align="center">jessenieboer's Personal Workplace</h1>
+
+* What
+:PROPERTIES:
+:CUSTOM_ID: what
+:END:
+My accurately-but-uninspiringly-named work environment
+** Features
+:PROPERTIES:
+:CUSTOM_ID: features
+:END:
+- A couple computers running NixOS and KDE Plasma
+- Personal config via home-manager
+  - Extensive emacs config
+  - A Frankenstein's monster of security stuff: yubikey, gpg, bitwarden secrets manager, secretspec
+  - Dropbox integration via Maestral
+  - Cloud gaming via Boosteroid
+- A growing set of toolboxes based on devenv
+* Why
+:PROPERTIES:
+:CUSTOM_ID: why
+:END:
+- I want to have things organized how it makes sense to me
+- I want things to be solid, dependable, and reproducible
+- Emacs gives me a way to build a work environment I can operate via a heavily customized set of keybindings, which helps me deal with a muscle issue that limits me
+* For Whom
+Myself, and anyone who finds something useful in here
+* How
+:PROPERTIES:
+:CUSTOM_ID: how
+:END:
+** Requirements :noexport:
+:PROPERTIES:
+:CUSTOM_ID: requirements
+:END:
+** Installation
+:PROPERTIES:
+:CUSTOM_ID: installation
+:END:
+This is mostly to remind myself how to do this:
+
+bootstrapping from a new nixos install:
+as root user, type the following into /etc/nixos/configuration.nix:
+<<missing content here, some bare minimum config iirc>>
+
+then cd into .ssh,  ssh-keygen -K to get the stub file, rename the stub file to id_ed25519_sk, delete the .pub file (assuming this is in github already. making this a public repo probably renders this unnecessary)
+
+nixos rebuild switch
+
+git clone git@github.com:jessenieboer/personal_workplace
+
+cd personal_workplace/computers
+
+nixos-generate-config --show-hardware-config >> hardware/hardware-configuration.nix
+
+combine hardware/hardware-configuration.nix with the appropriate machine nix file in hardware/ (if putting this on hardware you haven't before)
+
+mkpasswd -m sha-512 > /root/secrets/root.hash
+mkpasswd -m sha-512 > /root/secrets/username.hash
+
+nixos-rebuild switch --flake .#configname
+** Use
+updating (as root in ~/)
+
+cp -r /home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/ .
+cp /root/secrets/wifi-passwords.nix /root/personal_workplace/computers/wifi.nix
+nixos-rebuild switch --flake /root/personal_workplace/computers/.#configname
+*** Details
+:PROPERTIES:
+:CUSTOM_ID: details
+:END:
+**** Troubleshooting 
+:PROPERTIES:
+:CUSTOM_ID: troubleshooting
+:END::noexport:
+**** License
+:PROPERTIES:
+:CUSTOM_ID: license
+:END:
+MIT
+** Development :noexport:
+:PROPERTIES:
+:CUSTOM_ID: development
+:END:
+*** Process
+:PROPERTIES:
+:CUSTOM_ID: process
+:END:
+*** Important Decisions
+:PROPERTIES:
+:CUSTOM_ID: important-decisions
+:END:
+*** To Do
+:PROPERTIES:
+:CUSTOM_ID: to-do
+:END:
+*** Contributing
+:PROPERTIES:
+:CUSTOM_ID: contributing
+:END:
+* By Whom
+Myself, with gratitude to basically everyone on the internet who shares info about NixOS, Emacs, and the other technologies in use. I doubt I've seen further than anyone else, but I'm definitely standing on the shoulders of giants.
