@@ -17,12 +17,12 @@ My accurately-but-uninspiringly-named work environment
 :CUSTOM_ID: features
 :END:
 - A couple computers running NixOS and KDE Plasma
-- Personal config via home-manager
+- A growing set of toolboxes based on devenv
+- Personal config via home-manager:
   - Extensive emacs config
   - A Frankenstein's monster of security stuff: yubikey, gpg, bitwarden secrets manager, secretspec
   - Dropbox integration via Maestral
   - Cloud gaming via Boosteroid
-- A growing set of toolboxes based on devenv
 * Why
 :PROPERTIES:
 :CUSTOM_ID: why
@@ -76,10 +76,10 @@ nixos-rebuild switch --flake /root/personal_workplace/computers/.#configname
 :PROPERTIES:
 :CUSTOM_ID: details
 :END:
-**** Troubleshooting 
+**** Troubleshooting :noexport:
 :PROPERTIES:
 :CUSTOM_ID: troubleshooting
-:END::noexport:
+:END:
 **** License
 :PROPERTIES:
 :CUSTOM_ID: license
