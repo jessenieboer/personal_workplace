@@ -2,7 +2,7 @@
 :ID:       dd217dba-96b0-41b4-a0eb-57e6b500c0b1
 :END:
 #+EXPORT_FILE_NAME: ../../README.md
-#+OPTIONS: toc:t num:nil
+#+OPTIONS: toc:t num:nil ^:nil
 #+TITLE: Personal Workplace
 
 #+html:<h1 align="center">jessenieboer's Personal Workplace</h1>
