@@ -20,7 +20,11 @@
     };
     voxtype = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:peteonrails/voxtype/v0.7.5";
+      url = "github:peteonrails/voxtype/v1.0.0-rc2";
+    };
+    voxtype-toggle = {
+      url = "git+https://git.eversole.co/James/voxtype-toggle-plasmashell.git";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -44,8 +48,8 @@
         config.allowUnfree = false;  
       };
     in
-      {
-        homeConfigurations."jessenieboer@laptop" = home-manager.lib.homeManagerConfiguration {
+    {
+      homeConfigurations."jessenieboer@laptop" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
           ./home.nix
@@ -84,6 +88,8 @@
         extraSpecialArgs = {
           inherit inputs;
           inherit unstable;
+          inherit (inputs) voxtype-toggle;   # or just pass the whole inputs
+          system = "x86_64-linux";
         }; 
       };
     };

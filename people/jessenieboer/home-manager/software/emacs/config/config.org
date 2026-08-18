@@ -144,6 +144,7 @@ Modes fall into a few high-level categories based on how we generally want to in
   		  compilation-mode
   		  conf-toml-mode
   		  conf-unix-mode
+  		  css-mode
     		  debugger-mode
     		  dired-mode
     		  dirvish-directory-view-mode
@@ -961,6 +962,15 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
                   (load-theme 'solarized-dark t)))))
 
   (add-to-list 'default-frame-alist '(font . "Source Code Pro"))
+
+  (when (display-graphic-p)
+  (set-fontset-font t 'unicode
+                    (font-spec :family "Hack Nerd Font Mono")
+                    nil 'prepend)
+  ;; optional: also cover the specific symbol ranges more aggressively
+  (set-fontset-font t '(#xe000 . #xf8ff)
+                    (font-spec :family "Hack Nerd Font Mono")
+                    nil 'prepend))
 
   (setq custom-safe-themes t
         mode-line-right-align-edge 'right-margin

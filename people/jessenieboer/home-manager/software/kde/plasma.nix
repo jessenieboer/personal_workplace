@@ -56,7 +56,24 @@
 
       overrideConfig = true;
 
-      # panels = [];              
+      panels = [
+        {
+          location = "top";       # change to "bottom" if you prefer
+          height = 32;
+          floating = false;
+
+          widgets = [
+            {
+              digitalClock = {
+                date.enable = true;
+                time.format = "24h";
+              };
+            }
+
+            "org.eversole.voxtype-toggle"
+          ];
+        }
+      ];
 
 
       # todo: separate laptop and desktop specific stuff

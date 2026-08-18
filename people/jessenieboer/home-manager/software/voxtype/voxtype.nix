@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ inputs, pkgs, voxtype-toggle, ... }:
 {
   imports = [
     inputs.voxtype.homeManagerModules.default
@@ -35,6 +35,8 @@
           # }
       };
 
+      status.icon_theme = "nerd-font";
+
       text = {
         spoken_punctuation = true;     # "period" → .
         replacements = {
@@ -53,5 +55,9 @@
           on_demand_loading = false;
       };
     };
+  };
+
+  xdg.dataFile."plasma/plasmoids/org.eversole.voxtype-toggle" = {
+    source = "${voxtype-toggle.packages.${pkgs.stdenv.hostPlatform.system}.plasmaAppletVoxtypeToggle}/share/plasma/plasmoids/org.eversole.voxtype-toggle";
   };
 }

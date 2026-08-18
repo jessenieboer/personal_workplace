@@ -54,6 +54,7 @@
 		  compilation-mode
 		  conf-toml-mode
 		  conf-unix-mode
+		  css-mode
   		  debugger-mode
   		  dired-mode
   		  dirvish-directory-view-mode
@@ -770,6 +771,15 @@
                 (load-theme 'solarized-dark t)))))
 
 (add-to-list 'default-frame-alist '(font . "Source Code Pro"))
+
+(when (display-graphic-p)
+(set-fontset-font t 'unicode
+                  (font-spec :family "Hack Nerd Font Mono")
+                  nil 'prepend)
+;; optional: also cover the specific symbol ranges more aggressively
+(set-fontset-font t '(#xe000 . #xf8ff)
+                  (font-spec :family "Hack Nerd Font Mono")
+                  nil 'prepend))
 
 (setq custom-safe-themes t
       mode-line-right-align-edge 'right-margin
