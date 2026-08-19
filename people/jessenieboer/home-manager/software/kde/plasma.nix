@@ -2,6 +2,8 @@
 
   # todo: task switcher options for kwin; mouse follows focus?
 
+  home.packages = [ pkgs.libnotify ];
+
   imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
 
   programs = {
@@ -30,7 +32,7 @@
         "voxtype-toggle" = {
           name = "Voxtype Toggle";
           key = "F2";
-          command = "voxtype record toggle";
+          command = "voxtype-record-with-project-prompt";
         };
       };
 
@@ -71,6 +73,7 @@
             }
 
             "org.eversole.voxtype-toggle"
+            "org.kde.plasma.systemtray"
           ];
         }
       ];

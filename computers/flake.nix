@@ -25,6 +25,7 @@
       modules = [
         ./hardware/nucbox.nix
         ./hardware/wd-5T.nix
+        ./llm.nix
         ./networking.nix
         ./os/audio.nix
         ./os/linux.nix

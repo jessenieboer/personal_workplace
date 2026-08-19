@@ -32,3 +32,10 @@ curl -L -O https://github.com/bschelst/boosteroid-steamos/releases/latest/downlo
 flatpak install --user ./org.schelstraete.boosteroid.flatpak
 
 then flatpak run org.schelstraete.boosteroid
+
+
+* voxtype
+if voxtype wants to use ollama, that is machine-specific and is configured in the computers/ section
+
+tail -f /run/user/1000/voxtype-record-with-project-prompt.log
+tail -f "${XDG_RUNTIME_DIR:-/tmp}/voxtype-project-correct.log"

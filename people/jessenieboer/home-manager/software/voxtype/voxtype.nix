@@ -1,14 +1,42 @@
 { inputs, pkgs, voxtype-toggle, ... }:
+let
+  voxtypeProjectCorrect = pkgs.writeShellApplication {
+    name = "voxtype-project-correct";
+    runtimeInputs = with pkgs; [
+      coreutils
+      curl
+      findutils
+      gnugrep
+      gnused
+      jq
+      ollama
+      kdotool
+    ];
+    text = builtins.readFile ./voxtype_project_correct.sh;
+  };
+  voxtypeRecordWithProjectPrompt = pkgs.writeShellApplication {
+    name = "voxtype-record-with-project-prompt";
+    runtimeInputs = with pkgs; [
+      coreutils
+      gnugrep
+      gnused
+      kdotool
+    ];
+    text = builtins.readFile ./voxtype_record_with_project_prompt.sh;
+  };
+in
 {
   imports = [
     inputs.voxtype.homeManagerModules.default
   ];
 
   home.packages = with pkgs; [
+    curl
     dotool
-    inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system}.osd-gtk4
-    vulkan-loader
-    vulkan-tools
+    #inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system}.osd-gtk4
+    jq
+    kdotool
+    voxtypeRecordWithProjectPrompt
   ];
 
   programs.voxtype = {
@@ -16,7 +44,7 @@
     package = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system}.vulkan;
 
     # Whisper model
-    model.name = "base.en"; # small.en, medium.en, large-v3-turbo
+    model.name = "large-v3-turbo"; # base.en, small.en, medium.en
 
     service.enable = true;  
 
@@ -26,19 +54,26 @@
         fallback_to_clipboard = true;
         driver_order = ["dotool" "wtype" "clipboard" ]; # note that dotool requires user be in the "input" group
         mode = "type";
-        osd = {
-          frontend = "gtk4";
+        notification = {
+          on_recording_start = false;
+          on_recording_stop = false;
+          on_transcription = false;
         };
-        # type_delay_ms = 0;
-        # pre_type_delay_ms = 100;     # sometimes helps on Plasma
-        # post_process = {
-          # }
+        # osd = {
+        #   frontend = "gtk4";
+        # };
+        pre_type_delay_ms = 300;
+        post_process = {
+          command = "${voxtypeProjectCorrect}/bin/voxtype-project-correct";
+          timeout_ms = 30000;   # Ollama can be slow; give it time
+        };
+        type_delay_ms = 10;
       };
 
       status.icon_theme = "nerd-font";
 
       text = {
-        spoken_punctuation = true;     # "period" → .
+        spoken_punctuation = true;
         replacements = {
           "box type" = "voxtype";
           "nix os" = "NixOS";
@@ -49,10 +84,9 @@
       vad.enabled = false;
 
       whisper = {
-        #initial_prompt =
-          language = "en";
-          translate = false;
-          on_demand_loading = false;
+        language = "en";
+        translate = false;
+        on_demand_loading = false;
       };
     };
   };
