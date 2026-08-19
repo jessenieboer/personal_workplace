@@ -6,7 +6,7 @@ in
 {
   config = {
     enterShell = ''
-      echo "jessenieboer's secrets toolbox available"
+      echo "secrets toolbox available"
     '';
 
     packages = with pkgs; [
