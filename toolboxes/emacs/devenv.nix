@@ -27,7 +27,7 @@ in
       else
       echo "No .toolboxes/ directory found — skipping."
       fi
-      echo "jessenieboer's emacs toolbox available"
+      echo "emacs toolbox available"
     '';
 
     tasks = {

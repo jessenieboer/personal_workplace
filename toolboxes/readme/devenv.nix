@@ -7,7 +7,7 @@ in
 {
   config = {
     enterShell = ''
-      echo "jessenieboer's readme toolbox available"
+      echo "readme toolbox available"
     '';
 
     tasks = {

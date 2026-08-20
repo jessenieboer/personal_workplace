@@ -5,7 +5,7 @@ in
 {
   enterShell = ''
     export XAI_API_KEY=$(secretspec get XAI_API_KEY)
-    echo jessenieboer's agentic coding toolbox available
+    echo agentic coding toolbox available
   '';
 
   packages = [

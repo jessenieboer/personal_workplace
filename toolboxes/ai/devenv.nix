@@ -12,7 +12,7 @@ in
 
   config = {
     enterShell = ''
-      jessenieboer's ai toolbox available
+      ai toolbox available
     '';
 
     mcp-servers.programs = {

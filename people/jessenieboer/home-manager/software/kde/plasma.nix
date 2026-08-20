@@ -8,16 +8,22 @@
 
   programs = {
     plasma = {
-      configFile."kwinrc" = {
-        TabBox = {
-          # 0 = Show windows from all screens (default)
-          # 1 = Only windows on the current screen   ← what you want
-          MultiScreenMode = 1;
+      configFile = {
+        "kwinrc" = {
+          TabBox = {
+            # 0 = Show windows from all screens (default)
+            # 1 = Only windows on the current screen   ← what you want
+            MultiScreenMode = 1;
 
-          # Optional but commonly used together
-          LayoutName = "thumbnail_grid";   # or "big_icons", "thumbnails", etc.
-          HighlightWindows = true;
-          ShowDesktopMode = 0;
+            # Optional but commonly used together
+            LayoutName = "thumbnail_grid";   # or "big_icons", "thumbnails", etc.
+            HighlightWindows = true;
+            ShowDesktopMode = 0;
+          };
+        };
+
+        "plasmanotifyrc"."Notifications" = {
+          PopupPosition = "BottomRight";
         };
       };
 
@@ -60,20 +66,48 @@
 
       panels = [
         {
-          location = "top";       # change to "bottom" if you prefer
           height = 32;
           floating = false;
+          location = "top";
+          screen = 2;
 
           widgets = [
+            "org.kde.plasma.panelspacer"
+            "org.eversole.voxtype-toggle"
+            {
+              systemTray = {
+                icons = {
+                  # optional
+                  # scaleToFit = true;
+                  # spacing = "medium"; # depending on plasma-manager version
+                };
+                items = {
+                  shown = [
+                    "org.kde.plasma.volume"
+                    "org.kde.plasma.networkmanagement"
+                    "org.kde.plasma.battery"
+                  ];
+                  hidden = [                    
+                  "org.kde.plasma.clipboard"
+                  "org.kde.plasma.brightness"
+                  "org.kde.plasma.bluetooth"
+                  "org.kde.plasma.notifications"
+                  "org.kde.plasma.devicenotifier"
+                  "org.kde.plasma.updates"
+                  ];
+                  # extra = [
+                    #   "org.kde.plasma.notifications"
+                    #   "org.kde.plasma.clipboard"
+                    # ];
+                };
+              };
+            }
             {
               digitalClock = {
                 date.enable = true;
                 time.format = "24h";
               };
             }
-
-            "org.eversole.voxtype-toggle"
-            "org.kde.plasma.systemtray"
           ];
         }
       ];

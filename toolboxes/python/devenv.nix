@@ -5,7 +5,7 @@ in
 {
   config = {
     enterShell = ''
-      echo "jessenieboer's python toolbox available"
+      echo "python toolbox available"
       echo "Python version: $(python --version)"
       echo "uv version: $(uv --version)"
     '';
