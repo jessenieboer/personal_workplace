@@ -8,6 +8,7 @@
 :PROPERTIES:
 :CUSTOM_ID: what
 :END:
+A toolbox that makes it easy to write READMEs with a consistent, useful structure.
 ** Features
 :PROPERTIES:
 :CUSTOM_ID: features

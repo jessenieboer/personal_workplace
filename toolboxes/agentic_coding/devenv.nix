@@ -5,7 +5,7 @@ in
 {
   enterShell = ''
     export XAI_API_KEY=$(secretspec get XAI_API_KEY)
-    echo agentic coding toolbox available
+    echo agentic coding toolbox available using grok build
   '';
 
   packages = [

@@ -27,4 +27,4 @@ curl https://api.x.ai/v1/chat/completions \
 
 (gptel-make-preset "ai_toolbox_vizier_agent" (assoc-default "ai_toolbox_vizier_agent" gptel-agent--agents nil nil))
 
-any toolbox should put its own agents in /toolboxes/agents/
+any toolbox should put its own agents in /.toolboxes/agents/
