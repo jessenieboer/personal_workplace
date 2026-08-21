@@ -35,6 +35,10 @@ A gherkin_author agent
 :PROPERTIES:
 :CUSTOM_ID: installation
 :END:
+inputs:
+  gherkin-guidelines:
+    flake: false
+    url: github:AutomationPanda/gherkin-guidelines-for-ai
 ** Use :noexport:
 :PROPERTIES:
 :CUSTOM_ID: use

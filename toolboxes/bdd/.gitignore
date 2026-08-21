@@ -2,7 +2,5 @@
 devenv.local.nix
 devenv.local.yaml
 .direnv
-.envrc
 .pre-commit-config.yaml
-.toolboxes/ai_toolbox
 .toolboxes/secrets_toolbox

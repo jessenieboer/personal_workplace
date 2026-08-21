@@ -19,18 +19,17 @@ in
       exec = ''
         mkdir -p ${config.devenv.root}/.opencode
         mkdir -p ${config.devenv.root}/.eca
-        mkdir -p ${config.devenv.root}/.eca/skills
 
-        if [ -f "${config.devenv.root}/opencode.json" ]; then
-          echo "opencode.json already exists — skipping copy."
+        if [ -f "${config.devenv.root}/.opencode/opencode.json" ]; then
+          echo ".opencode/opencode.json already exists — skipping copy."
         else
-          cat ${opencodeConfig} > ${config.devenv.root}/.opencode/opencode.json
+          cp -f ${opencodeConfig} ${config.devenv.root}/.opencode/opencode.json
         fi
 
         if [ -f "${config.devenv.root}/.eca/config.json" ]; then
           echo ".eca/config.json already exists — skipping copy."
         else
-          cat ${ecaConfig} > ${config.devenv.root}/.eca/config.json
+          cp -f ${ecaConfig} ${config.devenv.root}/.eca/config.json
         fi
 
         echo "agentic_coding_toolbox set up successfully"
