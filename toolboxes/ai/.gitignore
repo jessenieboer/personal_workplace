@@ -5,4 +5,3 @@ devenv.local.yaml
 .envrc
 .pre-commit-config.yaml
 .toolboxes/ai_toolbox
-.toolboxes/emacs_toolbox

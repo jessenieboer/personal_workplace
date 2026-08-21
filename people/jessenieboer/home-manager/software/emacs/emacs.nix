@@ -36,6 +36,7 @@
       default-text-scale
       dirvish
       eat
+      eca
       envrc
       flycheck
       flycheck-posframe

@@ -1,0 +1,8 @@
+inputs:
+  gherkin-guidelines:
+    flake: false
+    url: github:AutomationPanda/gherkin-guidelines-for-ai
+    
+imports:
+  - /toolboxes/git
+  - /toolboxes/readme

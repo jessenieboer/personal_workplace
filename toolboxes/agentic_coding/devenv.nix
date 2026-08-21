@@ -1,5 +1,6 @@
 { pkgs, lib, config, inputs, ... }:
 let
+  ecaConfig = ./settings/config.json;
   opencodeConfig = ./settings/opencode.json;
 in
 {
@@ -17,7 +18,20 @@ in
       before = [ "devenv:enterShell" ];
       exec = ''
         mkdir -p ${config.devenv.root}/.opencode
-        cat ${opencodeConfig} > ${config.devenv.root}/opencode.json
+        mkdir -p ${config.devenv.root}/.eca
+        mkdir -p ${config.devenv.root}/.eca/skills
+
+        if [ -f "${config.devenv.root}/opencode.json" ]; then
+          echo "opencode.json already exists — skipping copy."
+        else
+          cat ${opencodeConfig} > ${config.devenv.root}/.opencode/opencode.json
+        fi
+
+        if [ -f "${config.devenv.root}/.eca/config.json" ]; then
+          echo ".eca/config.json already exists — skipping copy."
+        else
+          cat ${ecaConfig} > ${config.devenv.root}/.eca/config.json
+        fi
 
         echo "agentic_coding_toolbox set up successfully"
       '';

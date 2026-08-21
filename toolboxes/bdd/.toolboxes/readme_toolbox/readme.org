@@ -1,17 +1,20 @@
 #+EXPORT_FILE_NAME: ../../README.md
 #+OPTIONS: toc:t num:nil
-#+TITLE: Title
+#+TITLE: bdd toolbox
 
-#+html:<h1 align="center">Title</h1>
+#+html:<h1 align="center">bdd toolbox</h1>
 
 * What
 :PROPERTIES:
 :CUSTOM_ID: what
 :END:
+A set of tools that aids behavior-driven development
 ** Features
 :PROPERTIES:
 :CUSTOM_ID: features
 :END:
+A gherkin_author agent
+- brainstorm with this agent to generate feature files
 * Why
 :PROPERTIES:
 :CUSTOM_ID: why
@@ -28,26 +31,6 @@
 :PROPERTIES:
 :CUSTOM_ID: requirements
 :END:
-declare this input in project yaml:
-#+begin_src yaml
-inputs:
-  llm-agents:
-    url: github:numtide/llm-agents.nix
-  personal_workplace:
-    flake: false
-    url: github:jessenieboer/personal_workplace/jn
-    
-imports:
-  - personal_workplace/toolboxes/agentic_coding
-  - personal_workplace/toolboxes/secrets
-
-nixpkgs:
-  permitted_unfree_packages:
-    - bws
-#+end_src
-
-also need in secretspec.toml:
-XAI_API_KEY = { description = "jessenieboer's xai api key", required = true }
 ** Installation :noexport:
 :PROPERTIES:
 :CUSTOM_ID: installation
@@ -92,3 +75,5 @@ XAI_API_KEY = { description = "jessenieboer's xai api key", required = true }
 :PROPERTIES:
 :CUSTOM_ID: by-whom
 :END:
+Myself, with gratitude to
+https://github.com/AutomationPanda/gherkin-guidelines-for-ai

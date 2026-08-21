@@ -31,6 +31,9 @@ My accurately-but-uninspiringly-named work environment
 - I want things to be solid, dependable, and reproducible
 - Emacs gives me a way to build a work environment I can operate via a heavily customized set of keybindings, which helps me deal with a muscle issue that limits me
 * For Whom
+:PROPERTIES:
+:CUSTOM_ID: for-whom
+:END:
 Myself, and anyone who finds something useful in here
 * How
 :PROPERTIES:
@@ -67,6 +70,9 @@ mkpasswd -m sha-512 > /root/secrets/username.hash
 
 nixos-rebuild switch --flake .#configname
 ** Use
+:PROPERTIES:
+:CUSTOM_ID: use
+:END:
 updating (as root in ~/)
 
 cp -r /home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/ .

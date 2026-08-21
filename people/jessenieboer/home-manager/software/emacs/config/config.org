@@ -1020,6 +1020,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 :END:
 :system "You are a large language model living in Emacs and a helpful assistant. Prompts might be from speech-to-text; if you need more clarity before responding, ask. Responses should be terse."
 #+begin_src emacs-lisp
+  (require 'eca)
   (require 'gptel)
   (require 'gptel-agent)
   (require 'gptel-context)
@@ -1058,7 +1059,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
         (when (file-regular-p file)
           (message "Loading toolbox setup: %s" file)
           (load file t t t))))))
-
+  
   (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
   (my-add-left-buffer-patterns '("^\\*gptel-agent.*"))

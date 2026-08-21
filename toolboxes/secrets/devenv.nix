@@ -1,6 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
 let
   gh_devenv = ./programs/gh_devenv.sh;
+  gitignore = ./settings/.gitignore;
   secretspecTemplate = ./templates/secretspec.toml;
 in
 {
@@ -26,6 +27,15 @@ in
           cp ${gh_devenv} ${config.devenv.root}/.toolboxes/secrets_toolbox/gh_devenv.sh
 
           echo "copied github devenv program to .toolboxes/secrets_toolbox/gh_devenv.sh"
+        '';
+        showOutput = true;
+      };
+      "secrets_toolbox:copy_gitignore" = {
+        before = [ "devenv:enterShell" ];
+        exec = ''
+          mkdir -p ${config.devenv.root}/.toolboxes/secrets_toolbox
+          cat ${gitignore} > ${config.devenv.root}/.toolboxes/secrets_toolbox/.gitignore
+          echo "copied secrets_toolbox .gitignore"
         '';
         showOutput = true;
       };

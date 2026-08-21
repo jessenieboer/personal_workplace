@@ -813,6 +813,7 @@ Returns the value as string or nil if not found / error."
         nil
       (string-trim output))))
 
+(require 'eca)
 (require 'gptel)
 (require 'gptel-agent)
 (require 'gptel-context)
@@ -1416,7 +1417,7 @@ Returns the value as string or nil if not found / error."
 		   ("TAB C-<f7>" org-schedule "schedule")
 		   ("TAB C-o" my-org-timestamp-headline "timestamp headline")
 		   ("TAB C-h" org-deadline "deadline")
-    		     ;; ("TAB C-s" org-set-tags-command "set tags")
+    		     ("TAB C-s" org-set-tags-command "set tags")
 		   ("d <f12>" org-gfm-export-to-markdown "tangle to md")
 		   ("C-d C-b" org-org-export-to-org "export to org")
 		   ("db" org-babel-tangle "tangle all")

@@ -1,0 +1,12 @@
+.devenv/
+.envrc
+.gitignore
+*.el
+*.lock
+*.md
+*.nix
+*.sh
+*.yaml
+_journal.org
+#*
+#.*

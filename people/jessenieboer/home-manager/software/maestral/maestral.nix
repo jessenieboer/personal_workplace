@@ -16,7 +16,6 @@
 
   home.packages = with pkgs; [
     maestral      # CLI + daemon
-    #maestral-gui  # Qt GUI + tray icon (recommended)
   ];
 
   # Declarative systemd user service for the daemon
