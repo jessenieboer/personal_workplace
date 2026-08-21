@@ -19,6 +19,8 @@ in
         cp -f ${gherkinAuthorSkill} "$SKILL_DIR/SKILL.md"
         cp -f ${gherkinGuidelines} "$REF_DIR/gherkin-guidelines.md"
 
+        mkdir -p ${config.devenv.root}/features
+
         echo "bdd_toolbox set up successfully"
       '';
       showOutput = true;

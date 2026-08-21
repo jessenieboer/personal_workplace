@@ -60,6 +60,8 @@
   		  dirvish-directory-view-mode
   		  dirvish-special-preview-mode
 		  eat-mode
+		  eca-chat-mode
+		  eca-settings
   		  emacs-lisp-mode
 		  gptel-context-buffer-mode
   		  fundamental-mode
