@@ -28,26 +28,6 @@
 :PROPERTIES:
 :CUSTOM_ID: requirements
 :END:
-declare this input in project yaml:
-#+begin_src yaml
-inputs:
-  llm-agents:
-    url: github:numtide/llm-agents.nix
-  personal_workplace:
-    flake: false
-    url: github:jessenieboer/personal_workplace/jn
-    
-imports:
-  - personal_workplace/toolboxes/agentic_coding
-  - personal_workplace/toolboxes/secrets
-
-nixpkgs:
-  permitted_unfree_packages:
-    - bws
-#+end_src
-
-also need in secretspec.toml:
-XAI_API_KEY = { description = "jessenieboer's xai api key", required = true }
 ** Installation :noexport:
 :PROPERTIES:
 :CUSTOM_ID: installation

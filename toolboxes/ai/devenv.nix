@@ -1,65 +1,55 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  dirLocals = ./programs/ai_dir_locals;
-  gitignore = ./settings/.gitignore;
-  helloWorldAgent = ./settings/ai_hello_world_agent.org;
-  setupTesterAgent = ./settings/ai_setup_tester_agent.org;
-  toolboxSetup = ./programs/ai_toolbox_setup;
-  vizier = ./settings/ai_vizier.org;
+  agentTemplate = ./templates/agent_template.md;
+  ecaConfig = ./settings/eca/config.json;
+  opencodeConfig = ./settings/opencode/opencode.json;
+  ruleTemplate = ./templates/rule_template.md;
+  skillTemplate = ./templates/skill_template.md;
 in
 {
-  imports = [ inputs.mcp-servers-nix.devenvModules.default ];
+  enterShell = ''
+    echo ai toolbox available
+  '';
 
-  config = {
-    enterShell = ''
-      ai toolbox available
-    '';
+  packages = [
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
+  ];
 
-    mcp-servers.programs = {
-      filesystem = {
-        enable = true;
-        args = [ "." ];
-      };
-    };
+  tasks = {
+    "ai_toolbox:copy_setup_files" = {
+      before = [ "devenv:enterShell" ];
+      exec = ''
+        TOOLBOX_DIR="${config.devenv.root}/.toolboxes/ai_toolbox"
+        mkdir -p "$TOOLBOX_DIR/templates"
+        cp -f ${agentTemplate} "$TOOLBOX_DIR/templates/agent_template.md"
+        cp -f ${ruleTemplate} "$TOOLBOX_DIR/templates/rule_template.md"
+        cp -f ${skillTemplate} "$TOOLBOX_DIR/templates/skill_template.md"
 
-    packages = [
-      inputs.mcp-servers-nix.packages.${pkgs.stdenv.hostPlatform.system}.mcp-server-filesystem
-    ];
+        ECA_DIR="${config.devenv.root}/.eca"
 
-    tasks = {
-      "ai_toolbox:copy_agents" = {
-        before = [ "devenv:enterShell" ];
-        exec = ''
-          mkdir -p ${config.devenv.root}/.toolboxes/agents
-          cat ${helloWorldAgent} > ${config.devenv.root}/.toolboxes/agents/ai_hello_world_agent.org
-          cat ${setupTesterAgent} > ${config.devenv.root}/.toolboxes/agents/ai_setup_tester_agent.org
-          cat ${vizier} > ${config.devenv.root}/.toolboxes/agents/ai_vizier.org
+        mkdir -p "$ECA_DIR"
+        mkdir -p "$ECA_DIR/agents"
+        mkdir -p "$ECA_DIR/rules"
+        mkdir -p "$ECA_DIR/skills"
 
-          echo "ai_toolbox agents copied successfully"
-        '';
-        showOutput = true;
-      };
-      "ai_toolbox:copy_gitignore" = {
-        before = [ "devenv:enterShell" ];
-        exec = ''
-          mkdir -p ${config.devenv.root}/.toolboxes/ai_toolbox
-          cat ${gitignore} > ${config.devenv.root}/.toolboxes/ai_toolbox/.gitignore
-          echo "copied ai_toolbox .gitignore"
-        '';
-        showOutput = true;
-      };
-      "ai_toolbox:copy_setup_files" = {
-        before = [ "devenv:enterShell" ];
-        exec = ''
-          mkdir -p ${config.devenv.root}/.toolboxes/ai_toolbox
+        if [ -f "$ECA_DIR/config.json" ]; then
+        echo "$ECA_DIR/config.json already exists — skipping copy."
+        else
+        cp -f ${ecaConfig} "$ECA_DIR/config.json"
+        fi
 
-          cat ${toolboxSetup} > ${config.devenv.root}/.toolboxes/ai_toolbox/ai_toolbox_setup
-          cat ${dirLocals} > ${config.devenv.root}/.toolboxes/ai_toolbox/ai_dir_locals
+        OPENCODE_DIR="${config.devenv.root}/.opencode"
+        mkdir -p "$OPENCODE_DIR"
 
-          echo "ai_toolbox setup files copied successfully"
-        '';
-          showOutput = true;
-      };
+        if [ -f "$OPENCODE_DIR/opencode.json" ]; then
+        echo "$OPENCODE_DIR/opencode.json already exists — skipping copy."
+        else
+        cp -f ${opencodeConfig} "$OPENCODE_DIR/opencode.json"
+        fi
+
+        echo "agentic_coding_toolbox set up successfully"
+      '';
+      showOutput = true;
     };
   };
 }

@@ -12,6 +12,9 @@
 :PROPERTIES:
 :CUSTOM_ID: features
 :END:
+- eca for emacs-first llm interaction
+- opencode for multi-agent and fire-and-forget
+- agents, skills, and rules that can be shared by both platforms
 * Why
 :PROPERTIES:
 :CUSTOM_ID: why
@@ -28,6 +31,26 @@
 :PROPERTIES:
 :CUSTOM_ID: requirements
 :END:
+declare this input in project yaml:
+#+begin_src yaml
+inputs:
+  llm-agents:
+    url: github:numtide/llm-agents.nix
+  personal_workplace:
+    flake: false
+    url: github:jessenieboer/personal_workplace/jn
+    
+imports:
+  - personal_workplace/toolboxes/agentic_coding
+  - personal_workplace/toolboxes/secrets
+
+nixpkgs:
+  permitted_unfree_packages:
+    - bws
+#+end_src
+
+also need in secretspec.toml:
+XAI_API_KEY = { description = "jessenieboer's xai api key", required = true }
 ** Installation :noexport:
 :PROPERTIES:
 :CUSTOM_ID: installation
@@ -40,6 +63,7 @@
 :PROPERTIES:
 :CUSTOM_ID: details
 :END:
+- need to have each agent defined in .eca/config.json for eca to use it, even if 
 **** Troubleshooting
 :PROPERTIES:
 :CUSTOM_ID: troubleshooting

@@ -30,15 +30,15 @@ in
         '';
         showOutput = true;
       };
-      "secrets_toolbox:copy_gitignore" = {
-        before = [ "devenv:enterShell" ];
-        exec = ''
-          mkdir -p ${config.devenv.root}/.toolboxes/secrets_toolbox
-          cat ${gitignore} > ${config.devenv.root}/.toolboxes/secrets_toolbox/.gitignore
-          echo "copied secrets_toolbox .gitignore"
-        '';
-        showOutput = true;
-      };
+      # "secrets_toolbox:copy_gitignore" = {
+      #   before = [ "devenv:enterShell" ];
+      #   exec = ''
+      #     mkdir -p ${config.devenv.root}/.toolboxes/secrets_toolbox
+      #     cat ${gitignore} > ${config.devenv.root}/.toolboxes/secrets_toolbox/.gitignore
+      #     echo "copied secrets_toolbox .gitignore"
+      #   '';
+      #   showOutput = true;
+      # };
       "secrets_toolbox:copy_secretspec_template" = {
         before = [ "devenv:enterShell" ];
         exec = ''

@@ -1,8 +1,0 @@
-inputs:
-  llm-agents:
-    url: github:numtide/llm-agents.nix
-
-imports:
-  - /toolboxes/git
-  - /toolboxes/readme
-  - /toolboxes/secrets

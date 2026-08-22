@@ -61,7 +61,7 @@
   		  dirvish-special-preview-mode
 		  eat-mode
 		  eca-chat-mode
-		  eca-settings
+		  eca-settings-mode
   		  emacs-lisp-mode
 		  gptel-context-buffer-mode
   		  fundamental-mode
@@ -857,7 +857,7 @@ Returns the value as string or nil if not found / error."
 
 (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
-(my-add-left-buffer-patterns '("^\\*gptel-agent.*"))
+(my-add-left-buffer-patterns '("^\\*gptel-agent.*" ".*eca-chat.*"))
 (my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
 (my-add-hidden-buffer-patterns '("^\\*Mcp-Hub\\*"))
 

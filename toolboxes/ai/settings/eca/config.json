@@ -3,7 +3,7 @@
     "xai": {
       "api": "openai-chat",
       "url": "https://api.x.ai/v1",
-      "key": "${env:XAI_API_KEY}",
+      "key": "${cmd:secretspec get XAI_API_KEY}",
       "models": {
         "grok-4.6": {},
         "grok-4.5": {},
@@ -45,7 +45,7 @@
   "mcpKeepAliveSeconds": 30,
   "lspTimeoutSeconds": 30,
   "mcpServers": {},
-  "agent": {
+    "agent": {
     "code": {
       "prompts": {
         "chat": "${classpath:prompts/code_agent.md}"
