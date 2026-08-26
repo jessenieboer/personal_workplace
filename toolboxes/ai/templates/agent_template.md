@@ -2,7 +2,7 @@
 name: agent-name
 description: Short one-line description (shown in the picker and used for routing).
 mode: primary                 # primary | subagent | [primary, subagent]
-model: xai/grok-4.5
+model: xai/grok-4.6
 # maxSteps: 25                # subagent turn cap
 # spawnableBy:                # subagent-only
 #   - vizier

@@ -12,7 +12,7 @@
       }
     }
   },
-  "defaultModel": "xai/grok-4.5",
+  "defaultModel": "xai/grok-4.6",
   "netrcFile": null,
   "hooks": {},
   "rules": [],
