@@ -239,6 +239,9 @@
       (expand-file-name "emacs/undo/" 
                         (or (getenv "XDG_STATE_HOME") "~/.local/state")))
 
+(setq-default indent-tabs-mode nil)  ; insert spaces, not tab characters
+(setq-default tab-width 4)           ; how wide a tab *displays*
+
 (my-add-to-hydra main-edit-modes
   		 ("Connection"
   		  ()

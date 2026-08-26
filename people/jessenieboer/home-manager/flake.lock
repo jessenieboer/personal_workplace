@@ -8,11 +8,11 @@
         "nixpkgs-stable": "nixpkgs-stable"
       },
       "locked": {
-        "lastModified": 1786959046,
-        "narHash": "sha256-oIZrQq5BzU4Nz5oXQ/FVekw83cXevMSWSC//aFT8pDw=",
+        "lastModified": 1787737656,
+        "narHash": "sha256-lH37bAgW5j06UiooGD7kZeOTh3vxJLvp6O08h6HS074=",
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "395f4135ef7163fab36b262599a0c888a3ca9875",
+        "rev": "49b54cc128924701e4cf12517deb499f138198e4",
         "type": "github"
       },
       "original": {
@@ -46,11 +46,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786924861,
-        "narHash": "sha256-hftabkb+73OcGzvwFAjCiQorAhprs9TnU1+FkGO5CIw=",
+        "lastModified": 1787377438,
+        "narHash": "sha256-Sxu1NLTD/Ern6hFGLlZmtKCSct3YQXZI/lls8RE1XeM=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "09ae1b85a6db412d841d60f924b23f881f0d0a38",
+        "rev": "65258d5c65a250189fde2e35f490d15e064c4c62",
         "type": "github"
       },
       "original": {
@@ -77,11 +77,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1786943417,
-        "narHash": "sha256-b4qgjdFtlz5TAZ1Hi7DFJeqX3sjaDUnrwr9OO+O1rM0=",
+        "lastModified": 1787640266,
+        "narHash": "sha256-MrkfE5hF5xx4L/0h5NyJ3xQkKVftwSuKSkFSrvlTxGY=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "0dd31db7e6dbf9ce05697c4545f6fe01accec994",
+        "rev": "f4f698677b11021a8f84f452e23ae9ef2427bec3",
         "type": "github"
       },
       "original": {
@@ -93,11 +93,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1786943417,
-        "narHash": "sha256-b4qgjdFtlz5TAZ1Hi7DFJeqX3sjaDUnrwr9OO+O1rM0=",
+        "lastModified": 1787640266,
+        "narHash": "sha256-MrkfE5hF5xx4L/0h5NyJ3xQkKVftwSuKSkFSrvlTxGY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "0dd31db7e6dbf9ce05697c4545f6fe01accec994",
+        "rev": "f4f698677b11021a8f84f452e23ae9ef2427bec3",
         "type": "github"
       },
       "original": {
@@ -109,11 +109,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1786862985,
-        "narHash": "sha256-FBJRXmbGXiSUDvYEbfLYRkckayyZ6SK1UEqhCrIZ2Cs=",
+        "lastModified": 1787498568,
+        "narHash": "sha256-9i/VTdusq/+NM/tz+J1Re+ojkMB8MBf0QshnYfzHz30=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "e5bdc4a41d4c072fe1e3787eaa0320a384741d44",
+        "rev": "56c02bc00adcf003215cc4bd996d6efaf4cff188",
         "type": "github"
       },
       "original": {
@@ -154,7 +154,8 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "plasma-manager": "plasma-manager",
-        "voxtype": "voxtype"
+        "voxtype": "voxtype",
+        "voxtype-toggle": "voxtype-toggle"
       }
     },
     "systems": {
@@ -180,18 +181,38 @@
         ]
       },
       "locked": {
-        "lastModified": 1780607139,
-        "narHash": "sha256-6biLnRdAGpjpNQNYZjYn0zXeukt0qePNeXehbnqzbTM=",
+        "lastModified": 1787610548,
+        "narHash": "sha256-u/qA5i2iqFY0bOyZtqsCqr2LJ+oCg/v8p+mvDDTf0JA=",
         "owner": "peteonrails",
         "repo": "voxtype",
-        "rev": "0a1a185491fea77b6b7c654b1c0136d5a1a6d428",
+        "rev": "d970a87a31cf5ed4077abd937ea628b48d0184ed",
         "type": "github"
       },
       "original": {
         "owner": "peteonrails",
-        "ref": "v1.0.0-rc1",
+        "ref": "v1.0.0-rc4",
         "repo": "voxtype",
         "type": "github"
+      }
+    },
+    "voxtype-toggle": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1777491719,
+        "narHash": "sha256-+nvMfIYASXw7s+lSTS9LNixmPh8pRLmmpN1ox5SP/nY=",
+        "ref": "refs/heads/master",
+        "rev": "cda2a43a880ce724598959a49b7ec6be54b8d81b",
+        "revCount": 1,
+        "type": "git",
+        "url": "https://git.eversole.co/James/voxtype-toggle-plasmashell.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.eversole.co/James/voxtype-toggle-plasmashell.git"
       }
     }
   },

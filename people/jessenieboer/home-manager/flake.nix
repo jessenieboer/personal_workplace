@@ -20,7 +20,7 @@
     };
     voxtype = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:peteonrails/voxtype/v1.0.0-rc2";
+      url = "github:peteonrails/voxtype/v1.0.0-rc4";
     };
     voxtype-toggle = {
       url = "git+https://git.eversole.co/James/voxtype-toggle-plasmashell.git";

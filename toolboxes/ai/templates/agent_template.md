@@ -21,19 +21,19 @@ tools:
     - eca__edit_file
     - eca__shell_command
   deny:
-    - eca__move_file
+  - eca__move_file
 ---
 
 # Agent Name
 
 One short paragraph that sets the personality and primary goal of this agent.
 
-## What you do (always keep)
+## Do (always keep)
 
 - Bullet list of the main responsibilities
 - Keep this focused — one clear job is better than many vague ones
 
-## What you do not do (always keep)
+## Do not (always keep)
 
 - Explicitly list things this agent should refuse or hand off
 - Example: Do not write final production code / Do not invent requirements

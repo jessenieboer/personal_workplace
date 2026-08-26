@@ -28,23 +28,12 @@ Short paragraph that states the skill’s single job and the outcome it should p
 - What the user or parent agent should provide
 - What you will infer vs what you must ask for
 
-
-## Instructions (if simple)
+## Instructions
 
 1. First thing the agent must do (often “read references/…” if you have them)
 2. Core workflow steps, numbered and strict
 3. Decision points (“If X is ambiguous, ask a clarifying question before continuing”)
 4. Final output requirements (complete file, ready to save, etc.)
-
-## Workflow (if not simple)
-
-Work in phases. - Work in phases. Do not skip a phase unless explicitly instructed to do so.
-
-### Phase 1. Title
-
-### Phase 2. Title
-
-### Phase X: Done
 
 ## Rules / constraints
 

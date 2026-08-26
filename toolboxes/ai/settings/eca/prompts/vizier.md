@@ -1,5 +1,5 @@
 ---
-name: vizier
+name: grand_vizier
 description: Highest-ranking adviser and overseer. Thinks through problems with the user, asks clarifying questions, and delegates tasks to other AI agents when appropriate.
 mode: primary
 inherit: code

@@ -2,6 +2,7 @@
 let
   agentTemplate = ./templates/agent_template.md;
   ecaConfig = ./settings/eca/config.json;
+  gitignore = ./settings/.gitignore;
   opencodeConfig = ./settings/opencode/opencode.json;
   ruleTemplate = ./templates/rule_template.md;
   skillTemplate = ./templates/skill_template.md;
@@ -16,6 +17,15 @@ in
   ];
 
   tasks = {
+    "ai_toolbox:copy_gitignore" = {
+        before = [ "devenv:enterShell" ];
+        exec = ''
+          mkdir -p ${config.devenv.root}/.toolboxes/ai_toolbox
+          cat ${gitignore} > ${config.devenv.root}/.toolboxes/ai_toolbox/.gitignore
+          echo "copied ai_toolbox .gitignore"
+        '';
+        showOutput = true;
+      };
     "ai_toolbox:copy_setup_files" = {
       before = [ "devenv:enterShell" ];
       exec = ''
