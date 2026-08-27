@@ -139,77 +139,78 @@ interaction: what can i do?
 Modes fall into a few high-level categories based on how we generally want to interact with them
 #+begin_src emacs-lisp
   (setq all-modes '(backtrace-mode
-  		  calendar-mode
-  		  comint-mode
-  		  compilation-mode
-  		  conf-toml-mode
-  		  conf-unix-mode
-  		  css-mode
-    		  debugger-mode
-    		  dired-mode
-    		  dirvish-directory-view-mode
-    		  dirvish-special-preview-mode
-  		  eat-mode
-  		  eca-chat-mode
-  		  eca-settings-mode
-    		  emacs-lisp-mode
-  		  gptel-context-buffer-mode
-    		  fundamental-mode
-    		  help-mode
-  		  inferior-python-mode
-    		  Info-mode
-  		  js-json-mode
-    		  lisp-data-mode
-    		  lisp-interaction-mode
-  		  magit-diff-mode
-    		  magit-log-mode
-    		  magit-status-mode
-    		  messages-buffer-mode
-    		  minibuffer-inactive-mode
-    		  minibuffer-mode
-    		  nix-mode
-    		  org-agenda-mode
-    		  org-mode
-  		  python-mode
-    		  sh-mode
-    		  shell-mode
-  		  special-mode
-    		  text-mode))
+  		          calendar-mode
+  		          comint-mode
+  		          compilation-mode
+  		          conf-toml-mode
+  		          conf-unix-mode
+  		          css-mode
+    		    debugger-mode
+    		    dired-mode
+    		    dirvish-directory-view-mode
+    		    dirvish-special-preview-mode
+  		          eat-mode
+  		          eca-chat-mode
+  		          eca-settings-mode
+    		    emacs-lisp-mode
+                    feature-mode
+  		          gptel-context-buffer-mode
+    		    fundamental-mode
+    		    help-mode
+  		          inferior-python-mode
+    		    Info-mode
+  		          js-json-mode
+    		    lisp-data-mode
+    		    lisp-interaction-mode
+  		          magit-diff-mode
+    		    magit-log-mode
+    		    magit-status-mode
+    		    messages-buffer-mode
+    		    minibuffer-inactive-mode
+    		    minibuffer-mode
+    		    nix-mode
+    		    org-agenda-mode
+    		    org-mode
+  		          python-mode
+    		    sh-mode
+    		    shell-mode
+  		          special-mode
+    		    text-mode))
 
   ;; modes that show up "on top" of a buffer
   ;; (setq layered-modes '())
 
   ;; the minibuffer
   (setq minibuffer-modes '(minibuffer-inactive-mode
-      			 minibuffer-mode))
+      			         minibuffer-mode))
 
   ;; modes that show up on the sides of the screen
   ;;(setq side-modes '(dired-mode))
 
   ;; modes that don't navigate text in the usual way
   (setq alt-nav-modes  '(calendar-mode
-  		       dired-mode
-    		       dirvish-directory-view-mode
-  		       eat-mode
-  		       gptel-context-buffer-mode
-  		       magit-diff-mode
-    		       magit-log-mode
-    		       magit-status-mode
-  		       org-agenda-mode))
+  		               dired-mode
+    		               dirvish-directory-view-mode
+  		               eat-mode
+  		               gptel-context-buffer-mode
+  		               magit-diff-mode
+    		               magit-log-mode
+    		               magit-status-mode
+  		               org-agenda-mode))
 
   ;; generally modes that display text content and want to navigate it in the usual way
   (setq main-modes (seq-remove (lambda (m) (or (member m alt-nav-modes)
-  					     (member m minibuffer-modes))) all-modes))
+  					                         (member m minibuffer-modes))) all-modes))
 
   ;; modes where you don't edit the text it displays
   (setq main-non-edit-modes '(backtrace-mode
-  			    compilation-mode
-    			    debugger-mode
-    			    dirvish-special-preview-mode
-    			    help-mode
-    			    Info-mode
-    			    messages-buffer-mode
-  			    special-mode))
+  			                compilation-mode
+    			                debugger-mode
+    			                dirvish-special-preview-mode
+    			                help-mode
+    			                Info-mode
+    			                messages-buffer-mode
+  			                special-mode))
 
   (setq main-edit-modes (seq-remove (lambda (m) (member m main-non-edit-modes)) main-modes))
 
@@ -1076,60 +1077,86 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 :ID:       99e0abc8-a434-4874-bf70-784dfbfa5ef3
 :END:
 #+begin_src emacs-lisp
+  ;; (my-add-to-hydra main-edit-modes
+  ;;   		 ("Connection"
+  ;; 		  (("dix" (gptel-agent (project-root (project-current)) 'ai_vizier) "open ai agent") 
+  ;; 		   ("di <f7>" (gptel my-default-ai-chat-name) "open ai chat")
+  ;; 		   ;; ("diw" gptel-mode "ai mode")
+  ;; 		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
+  ;; 		   ;; ("di\\" gptel-menu "ai login" :exit t)
+  ;; 		   ("dih" (gptel-context--buffer-setup nil nil gptel-context) "show ai context"))
+  ;; 		  "Navigation"
+  ;; 		  ()
+  ;; 		  "Display"
+  ;; 		  ()
+  ;; 		  "AI"
+  ;; 		  (("di?" (gptel-agent-update) "agent update")
+  ;; 		   ("i RET" gptel-send "ai send")
+  ;; 		   ;; ("i*" (gptel--accept-tool-calls) "accept tool calls")
+  ;; 		   ;; ("i$" (gptel--reject-tool-calls) "reject tool calls")
+  ;; 		   ("dio" gptel-add "add ai context")
+  ;; 		   ("di-" my-gptel-add-project-context "add project context")
+  ;; 		   ("di DEL" gptel-context-remove-all "remove ai context"))))
+
   (my-add-to-hydra main-edit-modes
-    		 ("Connection"
-  		  (("dix" (gptel-agent (project-root (project-current)) 'ai_vizier) "open ai agent") 
-  		   ("di <f7>" (gptel my-default-ai-chat-name) "open ai chat")
-  		   ;; ("diw" gptel-mode "ai mode")
-  		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
-  		   ;; ("di\\" gptel-menu "ai login" :exit t)
-  		   ("dih" (gptel-context--buffer-setup nil nil gptel-context) "show ai context"))
-  		  "Navigation"
-  		  ()
-  		  "Display"
-  		  ()
-  		  "AI"
-  		  (("di?" (gptel-agent-update) "agent update")
-  		   ("i RET" gptel-send "ai send")
-  		   ;; ("i*" (gptel--accept-tool-calls) "accept tool calls")
-  		   ;; ("i$" (gptel--reject-tool-calls) "reject tool calls")
-  		   ("dio" gptel-add "add ai context")
-  		   ("di-" my-gptel-add-project-context "add project context")
-  		   ("di DEL" gptel-context-remove-all "remove ai context"))))
+                   ("Connection"
+  		          (("dix" eca "open agentic ai"))
+  		          "Navigation"
+  		          ()
+  		          "Display"
+  		          ()
+  		          "AI"
+  		          ()))
+
+  (my-add-to-hydra 'eca-chat-mode
+                   ("Connection"
+  		          ()
+  		          "Navigation"
+  		          ()
+  		          "Display"
+  		          ()
+  		          "AI"
+  		          (("ix" eca-chat-select-agent "ai choose agent")
+                     ("if" eca-chat-stop-prompt)
+                     ("i$" eca-stop))))
+
+  ;; eca chat tool call accept, accept and remember, reject, view diff
 
   (my-add-to-hydra 'dired-mode
-  		 ("Connection"
-  		  (("ix" (gptel-agent (project-root (project-current)) 'ai_vizier) "open ai agent")
-  		   ("i <f7>" (gptel my-default-ai-chat-name) "open ai chat")
-  		   ;; ("diw" gptel-mode "ai mode")
-  		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
-  		   ;; ("di\\" gptel-menu "ai login" :exit t)
-  		   ("ih" (gptel-context--buffer-setup nil nil gptel-context) "show ai context"))
-  		  "Navigation"
-  		  ()
-  		  "Display"
-  		  ()
-  		  "AI"
-  		  (("i?" (gptel-agent-update) "agent update")
-  		   ("io" gptel-add "add ai context")
-  		   ("i-" my-gptel-add-project-context "add project context")
-  		   ("i DEL" gptel-context-remove-all "remove ai context"))))
+  		         ("Connection"
+  		          (("ix" (gptel-agent (project-root (project-current)) 'ai_vizier) "open ai agent")
+  		           ("i <f7>" (gptel my-default-ai-chat-name) "open ai chat")
+  		           ;; ("diw" gptel-mode "ai mode")
+  		           ;; ("di\\" (my-xAI-login) "ai login" :exit t)
+  		           ;; ("di\\" gptel-menu "ai login" :exit t)
+  		           ("ih" (gptel-context--buffer-setup nil nil gptel-context) "show ai context"))
+  		          "Navigation"
+  		          ()
+  		          "Display"
+  		          ()
+  		          "AI"
+  		          (("i?" (gptel-agent-update) "agent update")
+  		           ("io" gptel-add "add ai context")
+  		           ("i-" my-gptel-add-project-context "add project context")
+  		           ("i DEL" gptel-context-remove-all "remove ai context"))))
+
+
 
   (my-add-to-hydra 'gptel-context-buffer-mode
-  		 ("Connection"
-  		  ()
-  		  "Navigation"
-  		  (("SPC" previous-line "prev line")
-  		   ("e" next-line "nex line")
-  		   ("a" gptel-context-previous "prev context")
-  		   ("n" gptel-context-next "next context"))
-  		  "Display"
-  		  ()
-  		  "AI"
-  		  (("d" gptel-context-visit "visit")
-  		   ("o" gptel-context-flag-deletion "flag deletion")
-  		   ("DEL" gptel-context-confim "confirm delete" :exit t)
-  		   ("f" gptel-context-quit "quit"))))
+  		         ("Connection"
+  		          ()
+  		          "Navigation"
+  		          (("SPC" previous-line "prev line")
+  		           ("e" next-line "nex line")
+  		           ("a" gptel-context-previous "prev context")
+  		           ("n" gptel-context-next "next context"))
+  		          "Display"
+  		          ()
+  		          "AI"
+  		          (("d" gptel-context-visit "visit")
+  		           ("o" gptel-context-flag-deletion "flag deletion")
+  		           ("DEL" gptel-context-confim "confirm delete" :exit t)
+  		           ("f" gptel-context-quit "quit"))))
 		   #+end_src
 
 ** Work with code
@@ -1222,9 +1249,6 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+end_src
 ** Specialize
 *** eat
-:PROPERTIES:
-:ID:       866f74c4-d394-460b-a315-086ed447cfeb
-:END:
 #+begin_src emacs-lisp
   (require 'eat)
   (setq eat-enable-auto-line-mode t
@@ -1311,6 +1335,10 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     		  (("do" eval-last-sexp "eval last")
     		   ("d-" eval-region "eval region")
     		   ("dh" eval-buffer "eval all"))))
+#+end_src
+*** gherkin
+#+begin_src emacs-lisp
+(require 'feature-mode)
 #+end_src
 *** magit
 :PROPERTIES:
@@ -1427,6 +1455,11 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
       					;(require 'origami) ;; for some reason this screws with emacs client frame stuff
 
   (add-hook 'org-mode-hook 'org-tidy-mode)
+
+  ;; fix a warning
+  (add-hook 'org-mode-hook
+          (lambda () (setq-local tab-width 8))
+          90)
 
   (defun my-capture-in-project-at-point ()
     "Load project dir-locals and capture to project at point."

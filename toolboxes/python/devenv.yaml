@@ -1,4 +1,9 @@
 inputs:
+  gherkin-guidelines:
+    flake: false
+    url: github:AutomationPanda/gherkin-guidelines-for-ai
+  llm-agents:
+    url: github:numtide/llm-agents.nix
   nixpkgs:
     url: github:NixOS/nixpkgs/nixpkgs-unstable
   nixpkgs-python:
@@ -6,7 +11,19 @@ inputs:
     inputs:
       nixpkgs:
         follows: nixpkgs
-
+  personal_workplace:
+    flake: false
+    url: github:jessenieboer/personal_workplace/jn
+    
 imports:
-  - /toolboxes/git
-  - /toolboxes/readme
+  - personal_workplace/toolboxes/ai
+  - personal_workplace/toolboxes/bdd
+  - personal_workplace/toolboxes/emacs
+  - personal_workplace/toolboxes/git
+  - personal_workplace/toolboxes/readme
+  - personal_workplace/toolboxes/secrets
+  - personal_workplace/toolboxes/voxtype
+
+nixpkgs:
+  permitted_unfree_packages:
+    - bws

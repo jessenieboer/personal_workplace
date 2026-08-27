@@ -38,6 +38,7 @@
       eat
       eca
       envrc
+      feature-mode
       flycheck
       flycheck-posframe
       golden-ratio

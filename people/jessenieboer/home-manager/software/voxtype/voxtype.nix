@@ -73,7 +73,7 @@ in
       status.icon_theme = "nerd-font";
 
       text = {
-        spoken_punctuation = true;
+        spoken_punctuation = false;
         replacements = {
           "box type" = "voxtype";
           "nix os" = "NixOS";
