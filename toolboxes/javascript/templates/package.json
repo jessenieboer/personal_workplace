@@ -1,0 +1,12 @@
+{
+  "name": "my-javascript-project",
+  "version": "0.1.0",
+  "description": "my desc",
+  "private": true,
+  "license": "MIT",
+  "author": "Jesse Nieboer <jessenieboer@protonmail.com>",
+  "type": "module",
+  "scripts": {
+    "start": "node"
+  }
+}

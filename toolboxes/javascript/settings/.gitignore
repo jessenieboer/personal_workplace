@@ -1,0 +1,8 @@
+node_modules/
+dist/
+build/
+coverage/
+.npm/
+.cache/
+*.log
+npm-debug.log*
