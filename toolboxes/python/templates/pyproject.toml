@@ -11,16 +11,27 @@ authors = [
 
 dependencies = []
 
-# [dependency-groups]
-# dev = [
-#   "pytest>=8.0"
-# #   "pytest-cov>=5.0",
-# #   "ruff>=0.9",           
-# #   "mypy>=1.10",
-# #   "pre-commit>=4.0",
-# ]
+[dependency-groups]
+test = ["pytest>=8.0"]
+dev = [
+  {include-group = "test"},
+  #   "pytest-cov>=5.0",
+#   "ruff>=0.9",           
+#   "mypy>=1.10",
+#   "pre-commit>=4.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# [project.scripts]
+# command_name = "module.path:function"
 
 # Tool settings
+#[tool.hatch.build.targets.wheel]
+#packages = ["src/my_python_project"]
+
 # [tool.pyright]
 # # pyright provides both type checking and import resolution:
 #   # files/directories that should be analyzed for both type checking and import resolution go in "include"
@@ -40,7 +51,7 @@ dependencies = []
 # typeCheckingMode = "strict" # change to "basic" if necessary
 # verboseOutput = false
 
-# [tool.pytest.ini_options]
+[tool.pytest.ini_options]
 # addopts = "--color=yes --exitfirst --maxfail=1 -rfE --tb=no --ff"
 # console_output_style = "progress"
 # log_cli = true
@@ -52,14 +63,10 @@ dependencies = []
 #     "normal: Tests for normal behavior",
 #     "abnormal: Tests for bad input and errors"
 # ]
-# python_files = ["*_test.py", "test_*.py"]
-# python_functions = ["test_*"]
-# pythonpath = ["src"]
-# testpaths = ["tests"]
-
-# [build-system]
-# requires = ["hatchling"]
-# build-backend = "hatchling.build"
+python_files = ["*_test.py", "test_*.py"]
+python_functions = ["test_*"]
+pythonpath = ["src"]
+testpaths = ["tests"]
 
 # [tool.ruff]
 # line-length = 100
@@ -76,7 +83,3 @@ dependencies = []
 # python_version = "3.11"
 # strict = true
 # warn_unused_configs = true
-
-# [build-system]
-# requires = ["hatchling"]
-# build-backend = "hatchling.build"

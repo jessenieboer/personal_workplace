@@ -1098,6 +1098,12 @@ Returns the value as string or nil if not found / error."
   		   ("d-" eval-region "eval region")
   		   ("dh" eval-buffer "eval all"))))
 
+(require 'feature-mode)
+
+
+
+
+
 (require 'magit)
 (setq magit-clone-set-remote.pushDefault t
 					;magit-display-buffer-function
@@ -1622,6 +1628,8 @@ Returns the value as string or nil if not found / error."
   		   ("do" python-shell-send-statement "eval last")
   		   ("d-" python-shell-send-statement "eval region")
   		   ("dh" python-shell-send-buffer "eval all"))))
+
+
 
 
 

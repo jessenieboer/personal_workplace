@@ -1249,6 +1249,9 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+end_src
 ** Specialize
 *** eat
+:PROPERTIES:
+:ID:       08b8f724-bb09-4164-8a77-9ce6d35187cd
+:END:
 #+begin_src emacs-lisp
   (require 'eat)
   (setq eat-enable-auto-line-mode t
@@ -1337,8 +1340,25 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     		   ("dh" eval-buffer "eval all"))))
 #+end_src
 *** gherkin
+:PROPERTIES:
+:ID:       1d02c5cc-d349-4c47-9bea-fc34e23f6c78
+:END:
 #+begin_src emacs-lisp
 (require 'feature-mode)
+#+end_src
+*** html
+:PROPERTIES:
+:ID:       6b066da9-2838-4b71-b7cd-4302f331ba9c
+:END:
+#+begin_src emacs-lisp
+
+#+end_src
+*** javascript
+:PROPERTIES:
+:ID:       ee51422d-d088-41a1-aba7-14c40c13237b
+:END:
+#+begin_src emacs-lisp
+
 #+end_src
 *** magit
 :PROPERTIES:
@@ -1920,9 +1940,16 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     		   ("dh" python-shell-send-buffer "eval all"))))
 #+end_src
 
+*** rust
+:PROPERTIES:
+:ID:       5c3e5627-1b8c-4a5e-b7f5-014070d91b37
+:END:
+#+begin_src emacs-lisp
+
+#+end_src
 *** category
 :PROPERTIES:
-:ID:       489ab1a8-85dc-4302-a32e-9e65f4cada74
+:ID:       5371a955-d513-4709-bcfc-eda9dc613d0b
 :END:
 #+begin_src emacs-lisp
 #+end_src
