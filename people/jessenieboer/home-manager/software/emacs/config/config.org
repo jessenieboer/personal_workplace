@@ -219,6 +219,9 @@ Modes fall into a few high-level categories based on how we generally want to in
 :PROPERTIES:
 :ID:       b2eeffce-db88-467f-a40d-e5359de23021
 :END:
+h = leader key for general emacs stuff
+f12 = leader key for help/info stuff
+i = leader key for mode-specific stuff
 #+begin_src emacs-lisp
   (global-set-key (kbd "<f12> v") #'my-show-major-mode)
 
@@ -1222,30 +1225,160 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 :PROPERTIES:
 :ID:       bd830b00-47a3-4424-9808-d6b109570d09
 :END:
+
+ip = comment
+ib = rename
+in = launch repl
+im = format buffer
+
+d = leader key for code stuff
+
+
+# running
+de = run last
+d) = run region
+dn = run buffer/file
+dc = run project
+
+# testing
+do = test last
+d- = test region
+dh = test buffer/file
+dc = test project verbose
+
+# debug
+
+# lsp
+g/p = lsp ref navigation
+dy = peek def
+dk = peek ref
+hg = lsp imenumenu
+
+# lsp ui peek
+spc/e = nav
+v/x = file nav
+ret = goto xref
+d = goto xref other window
+f = abort
+
+di = leader key for ai stuff?
+
+dx = debug step in
+d f7 = debug next 
+du = debug step out
+d <f12> = debug tooltip
+
+dy = peek def
+ds = 
+de = test file
+dn = simple test project
+d; = verbose test project
+dc = peek ref
+dk = preview
+
+dz = find def other win
+d~ = find def this win
+di = ai leader (see below)
+d TAB = xref back
+dp = xref forward
+db = go xref
+
+dq = detangle to org
+
+dd = breakpoint toggle
+d RET continue
+dg = debug session
+d[ = sessions
+da = run last debug
+df = quit session
+dw = restart debug session
+d\ = lsp restart
+dm = run reports
+
+
+
+diw = ai mode
+di\ = ai login
+dig = ai review region
+di[ = ai review buffer
+dir = ai yank pop
+di DEL = ai fix
+diq = 
+
+dij
+dil 
+dia 
+di SPC = ai yank 
+dit = ai optimize
+dim
+
+di <f6> = open ai chat
+dif = 
+did
+di ret = ai send
+di <f1>
+div 
+
+di TAB
+dii = open ai chat
+dip
+dib
+
+dis = explain symbol 
+die = 
+din = explain function  
+dic = explain region
+
+dix = open ai agent
+di? = update agents
+di <f7> = open ai chat
+dio = add ai context
+dih = show ai context
+diu = clear context
+di <f12> =
+generic controls
+in = launch repl
+g/p = reference naviagtion
+dc = find references
+dy = find definitions
 #+begin_src emacs-lisp
-  (my-add-to-hydra main-edit-modes
-  		 ("Connection"
-  		  (("d\\" lsp-restart-workspace "debug quit"))
-  		  "Navigation"
-  		  (("g" (lsp-ui-find-prev-reference nil) "prev ref")
-  		   ("p" (lsp-ui-find-next-reference nil) "next ref")
-  		   ("[" flycheck-previous-error "prev err")
-  		   ("]" flycheck-next-error "next err")
-  		   ;; ("iy" lsp-ui-doc-focus-frame "focus doc")
-  		   ;;("i|" lsp-ui-doc-unfocus-frame "unfocus doc")
-  		   )
-  		  "Display"
-  		  (("dy" lsp-ui-peek-find-definitions "peek def" :exit t)
-  		   ("dc" (lsp-ui-peek-find-references nil) "peek ref" :exit t)
-  		   ("hg" lsp-ui-imenu "lsp nav"))
-  		  "Code"
-  		  (("ip" comment-dwim "comment") 
-  		   ("im" lsp-format-buffer "format buffer")
-  		   ("ib" lsp-rename "rename")
-  		   ("TAB C-d" org-edit-src-exit "org src exit")
-  		   ("TAB C-f" org-edit-src-abort "org src abort"))
-  		  "Completion"
-  		  ()))
+  (with-eval-after-load 'lsp-ui    
+    ;;Custom keybindings for lsp-ui-peek
+    ;; Connection
+    (define-key lsp-ui-peek-mode-map (kbd "RET") 'lsp-ui-peek--goto-xref)
+    (define-key lsp-ui-peek-mode-map (kbd "d") 'lsp-ui-peek--goto-xref-other-window)
+    (define-key lsp-ui-peek-mode-map (kbd "f") 'lsp-ui-peek--abort) 
+
+    ;; Navigation
+    (define-key lsp-ui-peek-mode-map (kbd "SPC") 'lsp-ui-peek--select-prev)
+    (define-key lsp-ui-peek-mode-map (kbd "e") 'lsp-ui-peek--select-next)
+    (define-key lsp-ui-peek-mode-map (kbd "v") 'lsp-ui-peek--select-prev-file)
+    (define-key lsp-ui-peek-mode-map (kbd "x") 'lsp-ui-peek--select-next-file))
+  
+    (my-add-to-hydra main-edit-modes
+    		 ("Connection"
+    		  (("d\\" lsp-restart-workspace "debug quit"))
+    		  "Navigation"
+    		  (("g" (lsp-ui-find-prev-reference nil) "prev ref")
+    		   ("p" (lsp-ui-find-next-reference nil) "next ref")
+    		   ;; ("[" flycheck-previous-error "prev err")
+    		   ;; ("]" flycheck-next-error "next err")
+    		   ;; ("iy" lsp-ui-doc-focus-frame "focus doc")
+    		   ;;("i|" lsp-ui-doc-unfocus-frame "unfocus doc")
+    		   )
+    		  "Display"
+    		  (("dy" lsp-ui-peek-find-definitions "peek def" :exit t)
+    		   ("dk" (lsp-ui-peek-find-references nil) "peek ref" :exit t)
+    		   ("hg" lsp-ui-imenu "lsp nav"))
+    		  "Code"
+    		  (("ip" comment-dwim "comment") 
+    		   ("im" lsp-format-buffer "format buffer")
+    		   ("ib" lsp-rename "rename")
+    		   ;; ("TAB C-d" org-edit-src-exit "org src exit")
+    		   ;; ("TAB C-f" org-edit-src-abort "org src abort")
+               )
+    		  "Completion"
+    		  ()))
 #+end_src
 ** Specialize
 *** eat
@@ -1914,6 +2047,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
       	    (lsp-deferred)))
 
       (require 'python-pytest)
+      (my-add-left-buffer-patterns '("^\\*Python.*"))
       (my-add-hidden-buffer-patterns '("^\\*pyright.*" "^\\*pytest.*" "^\\*ruff.*"))
       (my-add-right-buffer-patterns '("^\\*pytest.*"))
 #+end_src
@@ -1924,22 +2058,20 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 #+begin_src emacs-lisp
   (my-add-to-hydra 'python-mode
     		 ("Connection"
-    		  (("in" run-python "python command line"))
+    		  (("in" run-python "python repl"))
     		  "Navigation"
     		  ()
     		  "Display"
     		  ()
-    		  "Code"
-    		  (("dn" python-pytest "test project")
-  		   ;;("dn" (python-pytest '("--cucumberjson=bdd/docs/html/features.json")) "test project")
-    		   ("d;" (python-pytest '("--tb=short")) "test project verbose")
-    		   ("ds" python-pytest-last-failed "test last failed")
-    		   ;; ("de" python-pytest-file "test file")
-    		   ("do" python-shell-send-statement "eval last")
-    		   ("d-" python-shell-send-statement "eval region")
-    		   ("dh" python-shell-send-buffer "eval all"))))
+    		  "Python"
+    		  (("de" python-shell-send-statement "run last")
+    		   ("d)" python-shell-send-statement "run region")
+    		   ("dn" python-shell-send-buffer "run buffer")
+                   ("do" python-pytest-last-failed "test last failed")
+                   ("dh" python-pytest-file "test file")
+                   ("du" python-pytest "test project")
+    		   ("d:" (python-pytest '("--tb=short")) "test project verbose"))))
 #+end_src
-
 *** rust
 :PROPERTIES:
 :ID:       5c3e5627-1b8c-4a5e-b7f5-014070d91b37

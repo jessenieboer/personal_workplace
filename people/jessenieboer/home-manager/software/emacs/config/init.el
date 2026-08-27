@@ -999,29 +999,43 @@ Returns the value as string or nil if not found / error."
   (add-to-list 'load-path (expand-file-name "lib/lsp-mode" user-emacs-directory))
   (add-to-list 'load-path (expand-file-name "lib/lsp-mode/clients" user-emacs-directory))
 
-(my-add-to-hydra main-edit-modes
-		 ("Connection"
-		  (("d\\" lsp-restart-workspace "debug quit"))
-		  "Navigation"
-		  (("g" (lsp-ui-find-prev-reference nil) "prev ref")
-		   ("p" (lsp-ui-find-next-reference nil) "next ref")
-		   ("[" flycheck-previous-error "prev err")
-		   ("]" flycheck-next-error "next err")
-		   ;; ("iy" lsp-ui-doc-focus-frame "focus doc")
-		   ;;("i|" lsp-ui-doc-unfocus-frame "unfocus doc")
-		   )
-		  "Display"
-		  (("dy" lsp-ui-peek-find-definitions "peek def" :exit t)
-		   ("dc" (lsp-ui-peek-find-references nil) "peek ref" :exit t)
-		   ("hg" lsp-ui-imenu "lsp nav"))
-		  "Code"
-		  (("ip" comment-dwim "comment") 
-		   ("im" lsp-format-buffer "format buffer")
-		   ("ib" lsp-rename "rename")
-		   ("TAB C-d" org-edit-src-exit "org src exit")
-		   ("TAB C-f" org-edit-src-abort "org src abort"))
-		  "Completion"
-		  ()))
+(with-eval-after-load 'lsp-ui    
+  ;;Custom keybindings for lsp-ui-peek
+  ;; Connection
+  (define-key lsp-ui-peek-mode-map (kbd "RET") 'lsp-ui-peek--goto-xref)
+  (define-key lsp-ui-peek-mode-map (kbd "d") 'lsp-ui-peek--goto-xref-other-window)
+  (define-key lsp-ui-peek-mode-map (kbd "f") 'lsp-ui-peek--abort) 
+
+  ;; Navigation
+  (define-key lsp-ui-peek-mode-map (kbd "SPC") 'lsp-ui-peek--select-prev)
+  (define-key lsp-ui-peek-mode-map (kbd "e") 'lsp-ui-peek--select-next)
+  (define-key lsp-ui-peek-mode-map (kbd "v") 'lsp-ui-peek--select-prev-file)
+  (define-key lsp-ui-peek-mode-map (kbd "x") 'lsp-ui-peek--select-next-file))
+
+  (my-add-to-hydra main-edit-modes
+  		 ("Connection"
+  		  (("d\\" lsp-restart-workspace "debug quit"))
+  		  "Navigation"
+  		  (("g" (lsp-ui-find-prev-reference nil) "prev ref")
+  		   ("p" (lsp-ui-find-next-reference nil) "next ref")
+  		   ;; ("[" flycheck-previous-error "prev err")
+  		   ;; ("]" flycheck-next-error "next err")
+  		   ;; ("iy" lsp-ui-doc-focus-frame "focus doc")
+  		   ;;("i|" lsp-ui-doc-unfocus-frame "unfocus doc")
+  		   )
+  		  "Display"
+  		  (("dy" lsp-ui-peek-find-definitions "peek def" :exit t)
+  		   ("dc" (lsp-ui-peek-find-references nil) "peek ref" :exit t)
+  		   ("hg" lsp-ui-imenu "lsp nav"))
+  		  "Code"
+  		  (("ip" comment-dwim "comment") 
+  		   ("im" lsp-format-buffer "format buffer")
+  		   ("ib" lsp-rename "rename")
+  		   ;; ("TAB C-d" org-edit-src-exit "org src exit")
+  		   ;; ("TAB C-f" org-edit-src-abort "org src abort")
+             )
+  		  "Completion"
+  		  ()))
 
 (require 'eat)
 (setq eat-enable-auto-line-mode t
@@ -1609,25 +1623,25 @@ Returns the value as string or nil if not found / error."
     	    (lsp-deferred)))
 
     (require 'python-pytest)
+    (my-add-left-buffer-patterns '("^\\*Python.*"))
     (my-add-hidden-buffer-patterns '("^\\*pyright.*" "^\\*pytest.*" "^\\*ruff.*"))
     (my-add-right-buffer-patterns '("^\\*pytest.*"))
 
 (my-add-to-hydra 'python-mode
   		 ("Connection"
-  		  (("in" run-python "python command line"))
+  		  (("in" run-python "python repl"))
   		  "Navigation"
   		  ()
   		  "Display"
   		  ()
-  		  "Code"
-  		  (("dn" python-pytest "test project")
-		   ;;("dn" (python-pytest '("--cucumberjson=bdd/docs/html/features.json")) "test project")
-  		   ("d;" (python-pytest '("--tb=short")) "test project verbose")
-  		   ("ds" python-pytest-last-failed "test last failed")
-  		   ;; ("de" python-pytest-file "test file")
-  		   ("do" python-shell-send-statement "eval last")
-  		   ("d-" python-shell-send-statement "eval region")
-  		   ("dh" python-shell-send-buffer "eval all"))))
+  		  "Python"
+  		  (("de" python-shell-send-statement "run last")
+  		   ("d)" python-shell-send-statement "run region")
+  		   ("dn" python-shell-send-buffer "run buffer")
+                 ("do" python-pytest-last-failed "test last failed")
+                 ("dh" python-pytest-file "test file")
+                 ("du" python-pytest "test project")
+  		   ("d:" (python-pytest '("--tb=short")) "test project verbose"))))
 
 
 
