@@ -1,9 +1,6 @@
 inputs:
   nixpkgs:
     url: github:NixOS/nixpkgs/nixpkgs-unstable
-  personal_workplace:
-    flake: false
-    url: github:jessenieboer/personal_workplace/jn
   rust-overlay:
     url: github:oxalica/rust-overlay
     inputs:
@@ -11,10 +8,6 @@ inputs:
         follows: nixpkgs
 
 imports:
-  - personal_workplace/toolboxes/git
-  - personal_workplace/toolboxes/readme
-  - personal_workplace/toolboxes/secrets
-
-nixpkgs:
-  permitted_unfree_packages:
-    - bws
+  - /toolboxes/emacs
+  - /toolboxes/git
+  - /toolboxes/readme

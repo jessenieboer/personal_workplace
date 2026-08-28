@@ -3,6 +3,7 @@ inputs:
     url: github:numtide/llm-agents.nix
 
 imports:
+  - /toolboxes/emacs
   - /toolboxes/git
   - /toolboxes/readme
   - /toolboxes/secrets

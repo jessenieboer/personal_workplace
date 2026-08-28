@@ -1,8 +1,11 @@
+build/
+.cache/
 .devenv
 devenv.local.nix
 devenv.local.yaml
 .direnv
+dist/
 .envrc
+*.log
 .pre-commit-config.yaml
-.toolboxes/ai_toolbox
 .toolboxes/emacs_toolbox

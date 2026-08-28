@@ -6,9 +6,12 @@ in
 {
   config = {
     enterShell = ''
-      echo "javascript toolbox available"
-      echo "Node version: $(node --version)"
-      echo "npm version: $(npm --version)"
+      echo "jessenieboer's javascript toolbox available"
+      echo "node: $(node --version)"
+      echo "npm: $(npm --version)"
+      echo "tsc: $(tsc --version)"
+      echo "ts-ls: $(command -v typescript-language-server)"
+      echo "prettier: $(command -v prettier)"
     '';
 
     languages.javascript = {
@@ -20,6 +23,15 @@ in
         install.enable = true;
       };
     };
+
+    languages.typescript = {
+      enable = true;
+      lsp.enable = true;
+    };
+
+    packages = with pkgs; [
+      prettier
+    ];
 
     tasks = {
       "javascript_toolbox:copy_gitignore" = {

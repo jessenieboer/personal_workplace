@@ -1,0 +1,74 @@
+#+EXPORT_FILE_NAME: ../../README.md
+#+OPTIONS: toc:t num:nil
+#+TITLE: Title
+
+#+html:<h1 align="center">Title</h1>
+
+* What
+:PROPERTIES:
+:CUSTOM_ID: what
+:END:
+** Features
+:PROPERTIES:
+:CUSTOM_ID: features
+:END:
+* Why
+:PROPERTIES:
+:CUSTOM_ID: why
+:END:
+* For Whom :noexport:
+:PROPERTIES:
+:CUSTOM_ID: for-whom
+:END:
+* How
+:PROPERTIES:
+:CUSTOM_ID: how
+:END:
+** Requirements :noexport:
+:PROPERTIES:
+:CUSTOM_ID: requirements
+:END:
+** Installation :noexport:
+:PROPERTIES:
+:CUSTOM_ID: installation
+:END:
+** Use :noexport:
+:PROPERTIES:
+:CUSTOM_ID: use
+:END:
+*** Details
+:PROPERTIES:
+:CUSTOM_ID: details
+:END:
+**** Troubleshooting
+:PROPERTIES:
+:CUSTOM_ID: troubleshooting
+:END:
+**** License
+:PROPERTIES:
+:CUSTOM_ID: license
+:END:
+** Development :noexport:
+:PROPERTIES:
+:CUSTOM_ID: development
+:END:
+*** Process
+:PROPERTIES:
+:CUSTOM_ID: process
+:END:
+*** Important Decisions
+:PROPERTIES:
+:CUSTOM_ID: important-decisions
+:END:
+*** To Do
+:PROPERTIES:
+:CUSTOM_ID: to-do
+:END:
+*** Contributing
+:PROPERTIES:
+:CUSTOM_ID: contributing
+:END:
+* By Whom :noexport:
+:PROPERTIES:
+:CUSTOM_ID: by-whom
+:END:

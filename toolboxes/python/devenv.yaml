@@ -8,5 +8,6 @@ inputs:
         follows: nixpkgs
     
 imports:
+  - /toolboxes/emacs
   - /toolboxes/git
   - /toolboxes/readme

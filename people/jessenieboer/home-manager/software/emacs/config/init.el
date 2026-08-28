@@ -1119,17 +1119,26 @@ Returns the value as string or nil if not found / error."
 (require 'impatient-mode)
 (require 'simple-httpd)
 
+(setq lsp-enable-suggest-server-download nil)
+
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . mhtml-mode))
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 
-(defun my-html-css-setup ()
+(defun my-web-lsp ()
+  "Start HTML/CSS LSP only once the toolbox PATH is visible."
   (setq-local lsp-enabled-clients '(html-ls css-ls))
-  (lsp-deferred)
-  (apheleia-mode 1))
+  (cond
+   ((executable-find "vscode-html-language-server")
+    (lsp-deferred)
+    (apheleia-mode 1))
+   ((bound-and-true-p envrc-mode)
+    (message "html-ls binary not on devenv PATH"))
+   (t
+    (add-hook 'envrc-mode-hook #'my-web-lsp nil t))))
 
-(add-hook 'mhtml-mode-hook #'my-html-css-setup)
-(add-hook 'html-mode-hook #'my-html-css-setup)
-(add-hook 'css-mode-hook #'my-html-css-setup)
+(add-hook 'mhtml-mode-hook #'my-web-lsp)
+(add-hook 'html-mode-hook #'my-web-lsp)
+(add-hook 'css-mode-hook #'my-web-lsp)
 
 (defun my-impatient-preview ()
   "Serve this buffer and open the live preview in Firefox Developer Edition."

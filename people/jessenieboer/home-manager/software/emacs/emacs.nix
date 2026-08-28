@@ -3,9 +3,7 @@
   home = {
     packages = with pkgs; [
       nerd-fonts.hack
-      prettier
       source-code-pro
-      vscode-langservers-extracted
     ];
     sessionVariables = {
       EMACS_CONFIG_HOME = "${config.xdg.configHome}/emacs";

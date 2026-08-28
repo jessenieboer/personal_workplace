@@ -1,8 +1,15 @@
+build/
+.cache/
+coverage/
 .devenv
 devenv.local.nix
 devenv.local.yaml
 .direnv
+dist/
 .envrc
+*.log
+node_modules/
+.npm/
+npm-debug.log*
 .pre-commit-config.yaml
-.toolboxes/ai_toolbox
 .toolboxes/emacs_toolbox
