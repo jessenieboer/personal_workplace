@@ -7,6 +7,7 @@ in
   config = {
     enterShell = ''
       echo "html toolbox available"
+
       echo "html lsp: $(command -v vscode-html-language-server)"
       echo "css lsp: $(command -v vscode-css-language-server)"
       echo "tidy version: $(tidy -version 2>/dev/null | head -n1 || echo 'tidy missing')"

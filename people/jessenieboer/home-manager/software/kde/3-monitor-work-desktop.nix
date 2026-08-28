@@ -1,4 +1,5 @@
 # todo: plasma manager + window rules don't work great together yet
+# use qdbus org.kde.KWin /KWin org.kde.KWin.queryWindowInfo to see window classes
 { inputs, pkgs, ... }: {
 
   programs = {
@@ -104,6 +105,19 @@
               match-whole = false;
               type = "exact";
               value = "emacs";
+            };
+          };
+        }
+        {
+          apply = {
+            screen = { apply = "force"; value = 0; };
+          };
+          description = "firefox-devedition: right";
+          match = {
+            window-class = {
+              match-whole = false;
+              type = "exact";
+              value = "firefox-devedition";
             };
           };
         }

@@ -58,6 +58,7 @@
           ./software/brave/brave.nix
           ./software/docker/docker.nix
           ./software/emacs/emacs.nix
+          ./software/firefox/firefox.nix
           ./software/kde/plasma.nix
           ./software/kde/programs.nix
           ./software/maestral/maestral.nix
@@ -78,6 +79,7 @@
           ./software/brave/brave.nix
           ./software/docker/docker.nix
           ./software/emacs/emacs.nix
+          ./software/firefox/firefox.nix
           ./software/kde/3-monitor-work-desktop.nix
           ./software/kde/plasma.nix
           ./software/kde/programs.nix

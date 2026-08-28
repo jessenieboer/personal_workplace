@@ -3,7 +3,9 @@
   home = {
     packages = with pkgs; [
       nerd-fonts.hack
+      prettier
       source-code-pro
+      vscode-langservers-extracted
     ];
     sessionVariables = {
       EMACS_CONFIG_HOME = "${config.xdg.configHome}/emacs";
@@ -31,6 +33,7 @@
 	      };
       };
     in [
+      apheleia
       buffer-focus-hook
       consult
       default-text-scale
@@ -45,6 +48,7 @@
       unstable.emacsPackages.gptel
       unstable.emacsPackages.gptel-agent
       htmlize
+      impatient-mode
       lsp-mode
       lsp-pyright
       lsp-ui

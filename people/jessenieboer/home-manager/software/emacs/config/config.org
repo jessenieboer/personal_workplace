@@ -157,6 +157,7 @@ Modes fall into a few high-level categories based on how we generally want to in
   		          gptel-context-buffer-mode
     		    fundamental-mode
     		    help-mode
+                    html-mode
   		          inferior-python-mode
     		    Info-mode
   		          js-json-mode
@@ -166,6 +167,7 @@ Modes fall into a few high-level categories based on how we generally want to in
     		    magit-log-mode
     		    magit-status-mode
     		    messages-buffer-mode
+                    mhtml-mode
     		    minibuffer-inactive-mode
     		    minibuffer-mode
     		    nix-mode
@@ -366,7 +368,7 @@ https://github.com/minad/vertico#complementary-packages
                           (or (getenv "XDG_STATE_HOME") "~/.local/state")))
 
   (setq-default indent-tabs-mode nil)  ; insert spaces, not tab characters
-  (setq-default tab-width 4)           ; how wide a tab *displays*
+  ;; (setq-default tab-width 8)           ; how wide a tab *displays*
 #+end_src
 *** edit text controls
 :PROPERTIES:
@@ -585,11 +587,10 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     	(left-frame (my-ensure-frame my-left-frame-name))
     	(right-frame (my-ensure-frame my-right-frame-name))
     	(scratch-frame (seq-find (lambda (frame) (equal (frame-parameter frame 'name) "*scratch*")) (frame-list))))
-      ;; (if center-frame
-      ;; 	(select-frame center-frame))
-      ;; (if scratch-frame
-      ;; 	(delete-frame scratch-frame))
-      ))
+      (if center-frame
+  	(select-frame center-frame))
+      (if scratch-frame
+  	(delete-frame scratch-frame))))
 
 
   ;;tie all reference/results buffers to the reference/results frame
@@ -1239,6 +1240,7 @@ de = run last
 d) = run region
 dn = run buffer/file
 dc = run project
+df = stop
 
 # testing
 do = test last
@@ -1484,8 +1486,49 @@ dy = find definitions
 :ID:       6b066da9-2838-4b71-b7cd-4302f331ba9c
 :END:
 #+begin_src emacs-lisp
+  (require 'apheleia)
+  (require 'impatient-mode)
+  (require 'simple-httpd)
 
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . mhtml-mode))
+  (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
+
+  (defun my-html-css-setup ()
+    (setq-local lsp-enabled-clients '(html-ls css-ls))
+    (lsp-deferred)
+    (apheleia-mode 1))
+
+  (add-hook 'mhtml-mode-hook #'my-html-css-setup)
+  (add-hook 'html-mode-hook #'my-html-css-setup)
+  (add-hook 'css-mode-hook #'my-html-css-setup)
+
+  (defun my-impatient-preview ()
+    "Serve this buffer and open the live preview in Firefox Developer Edition."
+    (interactive)
+    (unless (process-status "httpd")
+      (httpd-start))
+    (impatient-mode 1)
+    (let ((url (format "http://127.0.0.1:%s/imp/live/%s/"
+                       httpd-port
+                       (url-hexify-string (buffer-name)))))
+      (start-process "impatient-preview" nil
+                     "firefox-devedition"
+                     "-P" "dev-edition-default"
+                     "--new-window"
+                     url)))
 #+end_src
+**** html controls
+:PROPERTIES:
+:ID:       17f0d023-330f-4b68-a5b8-c9846aa5a8a7
+:END:
+#+begin_src emacs-lisp
+  (my-add-to-hydra '(css-mode html-mode mhtml-mode)
+                   ("HTML"
+                    (("dn" my-impatient-preview "live preview")
+                     ("df" httpd-stop "stop preview")
+                     ("im" apheleia-format-buffer "format buffer"))))
+#+end_src
+
 *** javascript
 :PROPERTIES:
 :ID:       ee51422d-d088-41a1-aba7-14c40c13237b
@@ -1609,10 +1652,10 @@ dy = find definitions
 
   (add-hook 'org-mode-hook 'org-tidy-mode)
 
-  ;; fix a warning
-  (add-hook 'org-mode-hook
-          (lambda () (setq-local tab-width 8))
-          90)
+  ;; ;; fix a warning
+  ;; (add-hook 'org-mode-hook
+  ;;         (lambda () (setq-local tab-width 8))
+  ;;         90)
 
   (defun my-capture-in-project-at-point ()
     "Load project dir-locals and capture to project at point."

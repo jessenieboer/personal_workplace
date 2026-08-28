@@ -67,6 +67,7 @@
 		          gptel-context-buffer-mode
   		    fundamental-mode
   		    help-mode
+                  html-mode
 		          inferior-python-mode
   		    Info-mode
 		          js-json-mode
@@ -76,6 +77,7 @@
   		    magit-log-mode
   		    magit-status-mode
   		    messages-buffer-mode
+                  mhtml-mode
   		    minibuffer-inactive-mode
   		    minibuffer-mode
   		    nix-mode
@@ -241,7 +243,7 @@
                         (or (getenv "XDG_STATE_HOME") "~/.local/state")))
 
 (setq-default indent-tabs-mode nil)  ; insert spaces, not tab characters
-(setq-default tab-width 4)           ; how wide a tab *displays*
+;; (setq-default tab-width 8)           ; how wide a tab *displays*
 
 (my-add-to-hydra main-edit-modes
   		 ("Connection"
@@ -436,11 +438,10 @@
   	(left-frame (my-ensure-frame my-left-frame-name))
   	(right-frame (my-ensure-frame my-right-frame-name))
   	(scratch-frame (seq-find (lambda (frame) (equal (frame-parameter frame 'name) "*scratch*")) (frame-list))))
-    ;; (if center-frame
-    ;; 	(select-frame center-frame))
-    ;; (if scratch-frame
-    ;; 	(delete-frame scratch-frame))
-    ))
+    (if center-frame
+	(select-frame center-frame))
+    (if scratch-frame
+	(delete-frame scratch-frame))))
 
 
 ;;tie all reference/results buffers to the reference/results frame
@@ -1025,7 +1026,7 @@ Returns the value as string or nil if not found / error."
   		   )
   		  "Display"
   		  (("dy" lsp-ui-peek-find-definitions "peek def" :exit t)
-  		   ("dc" (lsp-ui-peek-find-references nil) "peek ref" :exit t)
+  		   ("dk" (lsp-ui-peek-find-references nil) "peek ref" :exit t)
   		   ("hg" lsp-ui-imenu "lsp nav"))
   		  "Code"
   		  (("ip" comment-dwim "comment") 
@@ -1114,7 +1115,42 @@ Returns the value as string or nil if not found / error."
 
 (require 'feature-mode)
 
+(require 'apheleia)
+(require 'impatient-mode)
+(require 'simple-httpd)
 
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . mhtml-mode))
+(add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
+
+(defun my-html-css-setup ()
+  (setq-local lsp-enabled-clients '(html-ls css-ls))
+  (lsp-deferred)
+  (apheleia-mode 1))
+
+(add-hook 'mhtml-mode-hook #'my-html-css-setup)
+(add-hook 'html-mode-hook #'my-html-css-setup)
+(add-hook 'css-mode-hook #'my-html-css-setup)
+
+(defun my-impatient-preview ()
+  "Serve this buffer and open the live preview in Firefox Developer Edition."
+  (interactive)
+  (unless (process-status "httpd")
+    (httpd-start))
+  (impatient-mode 1)
+  (let ((url (format "http://127.0.0.1:%s/imp/live/%s/"
+                     httpd-port
+                     (url-hexify-string (buffer-name)))))
+    (start-process "impatient-preview" nil
+                   "firefox-devedition"
+                   "-P" "dev-edition-default"
+                   "--new-window"
+                   url)))
+
+(my-add-to-hydra '(css-mode html-mode mhtml-mode)
+                 ("HTML"
+                  (("dn" my-impatient-preview "live preview")
+                   ("df" httpd-stop "stop preview")
+                   ("im" apheleia-format-buffer "format buffer"))))
 
 
 
@@ -1196,10 +1232,10 @@ Returns the value as string or nil if not found / error."
 
 (add-hook 'org-mode-hook 'org-tidy-mode)
 
-;; fix a warning
-(add-hook 'org-mode-hook
-        (lambda () (setq-local tab-width 8))
-        90)
+;; ;; fix a warning
+;; (add-hook 'org-mode-hook
+;;         (lambda () (setq-local tab-width 8))
+;;         90)
 
 (defun my-capture-in-project-at-point ()
   "Load project dir-locals and capture to project at point."
