@@ -51,6 +51,7 @@ nixpkgs:
 
 also need in secretspec.toml:
 XAI_API_KEY = { description = "jessenieboer's xai api key", required = true }
+
 ** Installation :noexport:
 :PROPERTIES:
 :CUSTOM_ID: installation
@@ -59,6 +60,17 @@ XAI_API_KEY = { description = "jessenieboer's xai api key", required = true }
 :PROPERTIES:
 :CUSTOM_ID: use
 :END:
+agents, skills, and rules
+
+- rules are on-demand; skills are "always on"
+
+*** writing skills
+notes on template use
+required sections:
+Title, When/When Not, only one of Instructions/Workflow, Constraints, Done When, If blocked, 
+
+optional:
+Inputs, Output format, Tools and scripts (only if there are scripts or forbidden tools), References, Example
 *** Details
 :PROPERTIES:
 :CUSTOM_ID: details

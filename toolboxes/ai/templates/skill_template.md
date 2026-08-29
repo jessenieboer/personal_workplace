@@ -1,8 +1,7 @@
 ---
 name: my-skill-name
-description: One or two sentences that tell the agent when to use this skill. Be specific enough that the agent can decide correctly.
+description: Say what and when in one or two sentences
 # license: MIT
-# compatibility: eca
 # metadata:
 #   audience: developers
 #   workflow: bdd
@@ -10,35 +9,32 @@ description: One or two sentences that tell the agent when to use this skill. Be
 
 # Skill Title
 
-Short paragraph that states the skill’s single job and the outcome it should produce.
+Short paragraph that states the skill’s single job and single outcome.
 
 ## When to use this skill
 
-- Concrete trigger 1 (e.g. “user asks to write or improve a Gherkin feature file”)
+- Concrete trigger 1
 - Concrete trigger 2
-- Concrete trigger 3
 
 ## When not to use this skill
 
-- Situations where another skill or the plain agent is more appropriate
+- another skill or the plain agent is better
 - Explicit hand-off cases
 
 ## Inputs you expect
 
-- What the user or parent agent should provide
-- What you will infer vs what you must ask for
+- What is provided vs what you must infer or ask
 
+## Instructions 
 
-## Instructions (if simple)
+1. First action (often read a reference)
+2. Steps
+3. Decision points
+4. What “finished” looks like
 
-1. First thing the agent must do (often “read references/…” if you have them)
-2. Core workflow steps, numbered and strict
-3. Decision points (“If X is ambiguous, ask a clarifying question before continuing”)
-4. Final output requirements (complete file, ready to save, etc.)
+## Workflow 
 
-## Workflow (if not simple)
-
-Work in phases. - Work in phases. Do not skip a phase unless explicitly instructed to do so.
+Work in phases. Do not skip a phase unless explicitly instructed to do so.
 
 ### Phase 1. Title
 
@@ -46,36 +42,29 @@ Work in phases. - Work in phases. Do not skip a phase unless explicitly instruct
 
 ### Phase X: Done
 
-## Rules / constraints
+## Constraints
 
-- Hard rules the agent must never violate
-- Style or quality requirements
-- Things it must never invent or assume
-
-## Project conventions
-
-- Where files live
-- Naming or layout rules this skill must follow
+- Hard rules
+- Style / quality
+- Never invent or assume
 
 ## Done when
 
-- Concrete exit condition
-- What you return (file path, summary, open questions)
+- Exit condition
+- What you return
+
+### Output format
 
 ## If blocked
 
-- Ask one clarifying question, or state the assumption and continue
-- What to do when the task is out of scope
-- When to stop instead of guessing
-
-## Output format
-
-Describe exactly what the agent should produce (file path, structure, tone, etc.).
+- Ask one question, or state the assumption and continue
+- What is out of scope
+- When to stop
 
 ## Tools & scripts
 
 - Optional scripts in `scripts/` this skill may run
-- Tools the agent should prefer or avoid while this skill is active
+- Tools the agent must avoid while this skill is active
 
 ## References
 
