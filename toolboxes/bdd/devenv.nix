@@ -1,8 +1,11 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  featureAssistant = ./settings/agents/feature-assistant.md;
+  bddPaths = ./settings/rules/bdd-paths.md;
+  domainModelingSkill = ./settings/skills/domain-modeling/SKILL.md;
   gherkinAuthoringSkill = ./settings/skills/gherkin-authoring/SKILL.md;
   gherkinGuidelines = "${inputs.gherkin-guidelines}/gherkin-guidelines.md";
+  grillingSkill = ./settings/skills/grilling/SKILL.md;
+  productDesignAssistant = ./settings/agents/product-design-assistant.md;
 in
 {
   enterShell = ''
@@ -20,16 +23,19 @@ in
         mkdir -p "$ECA_DIR/skills"
 
         # agents
-        cp -f ${featureAssistant} "$ECA_DIR/agents/feature-assistant.md"
+        install -D ${productDesignAssistant} "$ECA_DIR/agents/product-design-assistant.md"
+
+        # rules
+        install -D ${bddPaths} "$ECA_DIR/rules/bdd-paths.md"
 
         # skills
-        GA_DIR="$ECA_DIR/skills/gherkin-authoring"
-        mkdir -p "$GA_DIR/references"
-        cp -f ${gherkinAuthoringSkill} "$GA_DIR/SKILL.md"
-        cp -f ${gherkinGuidelines} "$GA_DIR/references/gherkin-guidelines.md"
+        install -D ${domainModelingSkill} "$ECA_DIR/skills/domain-modeling/SKILL.md"
+        install -D ${gherkinAuthoringSkill} "$ECA_DIR/skills/gherkin-authoring/SKILL.md"
+        install -D ${gherkinGuidelines} "$ECA_DIR/skills/gherkin-authoring/references/gherkin-guidelines.md"
+        install -D ${grillingSkill} "$ECA_DIR/skills/grilling/SKILL.md"
 
         # bdd stuff
-        mkdir -p ${config.devenv.root}/features
+        mkdir -p ${config.devenv.root}.toolboxes/bdd_toolbox/features
 
         echo "bdd_toolbox set up successfully"
       '';

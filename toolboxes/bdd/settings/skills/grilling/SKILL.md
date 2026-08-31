@@ -22,10 +22,6 @@ Interview until the decision frontier is empty. Do not write features or context
 - A term or policy was just settled and only needs to be written down -> use `domain-modeling`
 - The frontier is already empty and context is current
 
-## References
-- context: `.toolboxes/bdd_toolbox/CONTEXT.md`
-- features: `.toolboxes/bdd_toolbox/features/**/*.feature`
-
 ## Inputs you expect
 
 - Provided: freeform product talk; existing context and features if they exist

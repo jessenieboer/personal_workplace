@@ -23,9 +23,6 @@ Update the product context when domain terms or rules are settled. Do not write 
 - The user asked to write features using an agreed context -> use `gherkin-authoring`
 - You only need to *read* the context. That is not this skill
 
-## References
-- context: `.toolboxes/bdd_toolbox/CONTEXT.md`
-
 ## Inputs you expect
 
 - Provided: the settled term or rule; current context if it exists

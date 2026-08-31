@@ -4,7 +4,6 @@ inputs:
     url: github:AutomationPanda/gherkin-guidelines-for-ai
     
 imports:
-  - /toolboxes/ai
   - /toolboxes/emacs
   - /toolboxes/git
   - /toolboxes/readme

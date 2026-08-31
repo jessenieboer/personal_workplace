@@ -38,6 +38,9 @@ One short paragraph that sets the personality and primary goal of this agent.
 - Explicitly list things this agent should refuse or hand off
 - Example: Do not write final production code / Do not invent requirements
 
+## References
+- name: path
+
 ## Inputs you expect
 
 - What the user or parent agent should provide
