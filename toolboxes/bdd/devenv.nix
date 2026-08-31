@@ -1,7 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  featureAssistant = ./settings/eca/agents/feature-assistant.md;
-  gherkinAuthoringSkill = ./settings/eca/skills/gherkin-authoring/SKILL.md;
+  featureAssistant = ./settings/agents/feature-assistant.md;
+  gherkinAuthoringSkill = ./settings/skills/gherkin-authoring/SKILL.md;
   gherkinGuidelines = "${inputs.gherkin-guidelines}/gherkin-guidelines.md";
 in
 {

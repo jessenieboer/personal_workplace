@@ -9,21 +9,31 @@ description: Say what and when in one or two sentences
 
 # Skill Title
 
-Short paragraph that states the skill’s single job and single outcome.
+What is the skill’s single job?
 
 ## When to use this skill
 
-- Concrete trigger 1
-- Concrete trigger 2
+- Concrete trigger situation 1
+- Concrete trigger situation 2
 
 ## When not to use this skill
 
-- another skill or the plain agent is better
-- Explicit hand-off cases
+- Situation where another skill or agent is better -> hand off to skill/agent
+- Situation where there is no work to do
+
+## References
+
+- Point to any supporting files the agent should load on demand (only specify path once)
+  - guidelines: `references/some-guidelines.md`
+  - examples: `references/examples.md`
+
+Keep this section short; the real content lives in the referenced files.
 
 ## Inputs you expect
 
-- What is provided vs what you must infer or ask
+- Provided:
+- Infer:
+- Ask:
 
 ## Instructions 
 
@@ -40,7 +50,7 @@ Work in phases. Do not skip a phase unless explicitly instructed to do so.
 
 ### Phase 2. Title
 
-### Phase X: Done
+### Phase X: Close
 
 ## Constraints
 
@@ -55,24 +65,20 @@ Work in phases. Do not skip a phase unless explicitly instructed to do so.
 
 ### Output format
 
+- If there is a specific format requried; skip otherwise
+
 ## If blocked
 
 - Ask one question, or state the assumption and continue
 - What is out of scope
 - When to stop
 
+## Next step
+
 ## Tools & scripts
 
 - Optional scripts in `scripts/` this skill may run
 - Tools the agent must avoid while this skill is active
-
-## References
-
-- Point to any supporting files the agent should load on demand:
-  - `references/some-guidelines.md`
-  - `references/examples.md`
-
-Keep this section short; the real content lives in the referenced files.
 
 ## Example
 

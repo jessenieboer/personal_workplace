@@ -81,3 +81,5 @@ inputs:
 :END:
 Myself, with gratitude to
 https://github.com/AutomationPanda/gherkin-guidelines-for-ai
+
+grilling and domain modeling from https://github.com/mattpocock/skills 

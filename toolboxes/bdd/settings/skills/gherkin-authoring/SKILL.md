@@ -1,5 +1,5 @@
 ---
-name: gherkin_authoring
+name: gherkin-authoring
 description: Write and edit Gherkin feature files.
 license: MIT
 compatibility: eca
