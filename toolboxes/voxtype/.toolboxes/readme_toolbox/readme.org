@@ -40,6 +40,7 @@
 :PROPERTIES:
 :CUSTOM_ID: details
 :END:
+because voxtype is tied to hardware (uses a gpu) most config stuff is in home-manager
 **** Troubleshooting
 :PROPERTIES:
 :CUSTOM_ID: troubleshooting

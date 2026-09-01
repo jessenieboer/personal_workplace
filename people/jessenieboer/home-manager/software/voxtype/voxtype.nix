@@ -49,7 +49,7 @@ in
     service.enable = true;  
 
     settings = {
-      hotkey.enabled = false;  # recommended on Plasma — use compositor/custom shortcuts instead
+      hotkey.enabled = false;
       output = {
         fallback_to_clipboard = true;
         driver_order = ["dotool" "wtype" "clipboard" ]; # note that dotool requires user be in the "input" group

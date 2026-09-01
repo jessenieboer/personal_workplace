@@ -2,7 +2,7 @@
 name = "my-python-project"
 version = "0.1.0"
 description = "my desc"
-readme = "README.md"
+# readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
@@ -21,9 +21,9 @@ dev = [
 #   "pre-commit>=4.0",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+# [build-system]
+# requires = ["hatchling"]
+# build-backend = "hatchling.build"
 
 # [project.scripts]
 # command_name = "module.path:function"

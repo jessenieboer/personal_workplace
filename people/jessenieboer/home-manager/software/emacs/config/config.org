@@ -1073,7 +1073,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
   (my-add-left-buffer-patterns '("^\\*gptel-agent.*" ".*eca-chat.*"))
-  (my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
+  (my-add-right-buffer-patterns '("^\\*ai chat\\*" ".*eca-workspaces.*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
   (my-add-hidden-buffer-patterns '("^\\*Mcp-Hub\\*"))
 #+end_src
 *** ai controls

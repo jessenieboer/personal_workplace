@@ -32,6 +32,13 @@
 :PROPERTIES:
 :CUSTOM_ID: installation
 :END:
+nixpkgs:
+    url: github:NixOS/nixpkgs/nixpkgs-unstable
+  nixpkgs-python:
+    url: github:cachix/nixpkgs-python
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
 ** Use :noexport:
 :PROPERTIES:
 :CUSTOM_ID: use

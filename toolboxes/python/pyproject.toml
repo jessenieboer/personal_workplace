@@ -2,7 +2,7 @@
 name = "my-python-project"
 version = "0.1.0"
 description = "my desc"
-readme = "README.md"
+# readme = "README.md" # put back later
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
