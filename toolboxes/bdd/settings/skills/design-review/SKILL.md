@@ -22,7 +22,7 @@ Read product context and features. Report whether the design is internally consi
 - A current review already says Ready and the sources have not changed -> summarize and stop
 
 ## References
-- Review template: `references/review-template.md`.
+- Review template: `references/design-review-template.md`.
 
 ## Inputs
 
