@@ -10,12 +10,13 @@ tools:
   allow:
     - eca__directory_tree
     - eca__grep
+    - eca__move_file
     - eca__read_file
     - eca__skill
-  ask:
     - eca__write_file
+  ask:
     - eca__edit_file
-    - eca__move_file
+    
 ---
 
 # Product Design Assistant
@@ -42,7 +43,7 @@ Assist the user in brainstorming about and clarifying desired product behavior, 
 
 ## Inputs you expect
 
-- Freeform conversation
+- Freeform conversation (possibly from a voice recording)
 - brainstorm file if it exists
 
 ## How you work

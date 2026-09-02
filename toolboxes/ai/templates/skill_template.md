@@ -1,22 +1,19 @@
 ---
 name: my-skill-name
 description: Say what and when in one or two sentences
-# license: MIT
-# metadata:
-#   audience: developers
-#   workflow: bdd
+license: MIT
 ---
 
 # Skill Title
 
 What is the skill’s single job?
 
-## When to use this skill
+## When to use
 
 - Concrete trigger situation 1
 - Concrete trigger situation 2
 
-## When not to use this skill
+## When not to use
 
 - Situation where another skill or agent is better -> hand off to skill/agent
 - Situation where there is no work to do

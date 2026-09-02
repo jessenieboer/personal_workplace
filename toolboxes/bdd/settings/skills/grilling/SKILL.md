@@ -1,7 +1,7 @@
 ---
 name: grilling
 description: Interview user about product behavior until decisions are explicit. Use when either the desired product behavior or the product context fuzzy.
-# license: MIT
+license: MIT
 # metadata:
 #   audience: developers
 #   workflow: bdd
@@ -11,22 +11,21 @@ description: Interview user about product behavior until decisions are explicit.
 
 Interview until the decision frontier is empty. Do not write features or context.
 
-## When to use this skill
+## When to use
 
 - The user wants to explore, clarify, or pressure-test product behavior
 - Names, actors, or outcomes are still fuzzy
 
-## When not to use this skill
+## When not to use
 
 - The user asked to write or edit `.feature` files -> use `gherkin-authoring`
 - A term or policy was just settled and only needs to be written down -> use `domain-modeling`
 - The frontier is already empty and context is current
 
-## Inputs you expect
+## Inputs
 
-- Provided: freeform product talk; existing context and features if they exist
-- Infer: contradictions between talk, context, and features
-- Ask: every product decision. Do not infer decisions.
+- Freeform product talk
+- Existing context and features if they exist
 
 ## Workflow
 

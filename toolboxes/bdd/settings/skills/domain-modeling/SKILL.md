@@ -1,10 +1,7 @@
 ---
 name: domain-modeling
 description: Update product context when a domain term or rule is settled. Use during or after grilling when vocabulary must be captured.
-# license: MIT
-# metadata:
-#   audience: developers
-#   workflow: bdd
+license: MIT
 ---
 
 # Domain modeling

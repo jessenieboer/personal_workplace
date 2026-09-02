@@ -35,7 +35,7 @@ in
         install -D ${grillingSkill} "$ECA_DIR/skills/grilling/SKILL.md"
 
         # bdd stuff
-        mkdir -p ${config.devenv.root}.toolboxes/bdd_toolbox/features
+        mkdir -p ${config.devenv.root}/.toolboxes/bdd_toolbox/features
 
         echo "bdd_toolbox set up successfully"
       '';

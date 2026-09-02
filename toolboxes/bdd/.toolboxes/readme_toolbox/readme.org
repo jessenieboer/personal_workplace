@@ -13,8 +13,6 @@ A set of tools that aids behavior-driven development
 :PROPERTIES:
 :CUSTOM_ID: features
 :END:
-A gherkin_author agent
-- brainstorm with this agent to generate feature files
 * Why
 :PROPERTIES:
 :CUSTOM_ID: why
@@ -43,6 +41,13 @@ inputs:
 :PROPERTIES:
 :CUSTOM_ID: use
 :END:
+workflow
+using product-design-assistant:
+1. brainstorm and clarify desired behavior
+2. write features
+3. pre-implementation review
+using planner: 
+4. plan implementation 
 *** Details
 :PROPERTIES:
 :CUSTOM_ID: details
@@ -79,7 +84,8 @@ inputs:
 :PROPERTIES:
 :CUSTOM_ID: by-whom
 :END:
-Myself, with gratitude to
-https://github.com/AutomationPanda/gherkin-guidelines-for-ai
-
-grilling and domain modeling from https://github.com/mattpocock/skills 
+Me and grok, with gratitude to
+https://github.com/AutomationPanda/gherkin-guidelines-for-ai (gherkin authoring)
+https://github.com/mattpocock/skills (grilling and domain modeling)
+https://github.com/addyosmani/agent-skills (planning)
+https://github.com/meirm/BDD (some pre-implementation ideas)

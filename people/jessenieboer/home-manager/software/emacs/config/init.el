@@ -863,7 +863,7 @@ Returns the value as string or nil if not found / error."
 (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
 (my-add-left-buffer-patterns '("^\\*gptel-agent.*" ".*eca-chat.*"))
-(my-add-right-buffer-patterns '("^\\*ai chat\\*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
+(my-add-right-buffer-patterns '("^\\*ai chat\\*" ".*eca-workspaces.*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
 (my-add-hidden-buffer-patterns '("^\\*Mcp-Hub\\*"))
 
 ;; (my-add-to-hydra main-edit-modes
@@ -889,63 +889,75 @@ Returns the value as string or nil if not found / error."
 
 (my-add-to-hydra main-edit-modes
                  ("Connection"
-		          (("dix" eca "open agentic ai"))
-		          "Navigation"
-		          ()
-		          "Display"
-		          ()
-		          "AI"
-		          ()))
+		  (("dix" eca "open agentic ai"))
+		  "Navigation"
+		  ()
+		  "Display"
+		  ()
+		  "AI"
+		  ()))
+
+(my-add-to-hydra alt-nav-modes
+                 ("Connection"
+		  (("ix" eca "open agentic ai"))
+		  "Navigation"
+		  ()
+		  "Display"
+		  ()
+		  "AI"
+		  ()))
 
 (my-add-to-hydra 'eca-chat-mode
                  ("Connection"
-		          ()
-		          "Navigation"
-		          ()
-		          "Display"
-		          ()
-		          "AI"
-		          (("ix" eca-chat-select-agent "ai choose agent")
+		  ()
+		  "Navigation"
+		  ()
+		  "Display"
+		  ()
+		  "AI"
+		  (("ix" eca-chat-select-agent "ai choose agent")
+                   ("i?" eca-chat-select-model "ai choose model")
+                   ("i RET" eca-chat-send-prompt "ai send prompt")
                    ("if" eca-chat-stop-prompt)
                    ("i$" eca-stop))))
 
 ;; eca chat tool call accept, accept and remember, reject, view diff
 
 (my-add-to-hydra 'dired-mode
-		         ("Connection"
-		          (("ix" (gptel-agent (project-root (project-current)) 'ai_vizier) "open ai agent")
-		           ("i <f7>" (gptel my-default-ai-chat-name) "open ai chat")
-		           ;; ("diw" gptel-mode "ai mode")
-		           ;; ("di\\" (my-xAI-login) "ai login" :exit t)
-		           ;; ("di\\" gptel-menu "ai login" :exit t)
-		           ("ih" (gptel-context--buffer-setup nil nil gptel-context) "show ai context"))
-		          "Navigation"
-		          ()
-		          "Display"
-		          ()
-		          "AI"
-		          (("i?" (gptel-agent-update) "agent update")
-		           ("io" gptel-add "add ai context")
-		           ("i-" my-gptel-add-project-context "add project context")
-		           ("i DEL" gptel-context-remove-all "remove ai context"))))
+		 ("Connection"
+		  (("ix" eca "open agentic ai")
+		   ("i <f7>" (gptel my-default-ai-chat-name) "open ai chat")
+		   ;; ("diw" gptel-mode "ai mode")
+		   ;; ("di\\" (my-xAI-login) "ai login" :exit t)
+		   ;; ("di\\" gptel-menu "ai login" :exit t)
+		   ("ih" (gptel-context--buffer-setup nil nil gptel-context) "show ai context"))
+		  "Navigation"
+		  ()
+		  "Display"
+		  ()
+		  "AI"
+		  (("i?" (gptel-agent-update) "agent update")
+		   ("io" gptel-add "add ai context")
+		   ("i-" my-gptel-add-project-context "add project context")
+		   ("i DEL" gptel-context-remove-all "remove ai context"))))
 
 
 
 (my-add-to-hydra 'gptel-context-buffer-mode
-		         ("Connection"
-		          ()
-		          "Navigation"
-		          (("SPC" previous-line "prev line")
-		           ("e" next-line "nex line")
-		           ("a" gptel-context-previous "prev context")
-		           ("n" gptel-context-next "next context"))
-		          "Display"
-		          ()
-		          "AI"
-		          (("d" gptel-context-visit "visit")
-		           ("o" gptel-context-flag-deletion "flag deletion")
-		           ("DEL" gptel-context-confim "confirm delete" :exit t)
-		           ("f" gptel-context-quit "quit"))))
+		 ("Connection"
+		  ()
+		  "Navigation"
+		  (("SPC" previous-line "prev line")
+		   ("e" next-line "nex line")
+		   ("a" gptel-context-previous "prev context")
+		   ("n" gptel-context-next "next context"))
+		  "Display"
+		  ()
+		  "AI"
+		  (("d" gptel-context-visit "visit")
+		   ("o" gptel-context-flag-deletion "flag deletion")
+		   ("DEL" gptel-context-confim "confirm delete" :exit t)
+		   ("f" gptel-context-quit "quit"))))
 
 (require 'flycheck)
   (set-face-attribute 'flycheck-error nil :underline '(:color "red" :style wave))

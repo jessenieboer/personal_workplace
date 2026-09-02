@@ -2,7 +2,6 @@
 name: gherkin-authoring
 description: Write and edit Gherkin feature files.
 license: MIT
-compatibility: eca
 ---
 
 # Gherkin Authoring
@@ -16,19 +15,22 @@ Produce clear, readable, automation-ready Gherkin feature files that serve as li
 
 
 ## When not to use this skill
+
 - Making code changes
 - Implementing step definitions
 - Brainstorming without  `.feature` files
 
+## References
+- Gherkin guidelines: `references/gherkin-guidelines.md`
 
-## Inputs you expect
+## Inputs
 
 - Freeform text about desired software features and behavior. It could describe one specific feature or many.
 
 
 ## Workflow
 
-- **Always follow the rules in `references/gherkin-guidelines.md` strictly.** Do not invent your own style.
+- **Always follow the rules in Gherkin guidelines strictly.** Do not invent your own style.
 - Work in phases. Do not skip a phase unless explicitly instructed to do so.
 
 
