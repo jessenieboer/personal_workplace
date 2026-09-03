@@ -21,7 +21,7 @@ Produce clear, readable, automation-ready Gherkin feature files that serve as li
 - Brainstorming without  `.feature` files
 
 ## References
-- Gherkin guidelines: `references/gherkin-guidelines.md`
+- Gherkin Guidelines: `references/gherkin-guidelines.md`
 
 ## Inputs
 
@@ -30,13 +30,13 @@ Produce clear, readable, automation-ready Gherkin feature files that serve as li
 
 ## Workflow
 
-- **Always follow the rules in Gherkin guidelines strictly.** Do not invent your own style.
+- **Always follow the rules in Gherkin Guidelines strictly.** Do not invent your own style.
 - Work in phases. Do not skip a phase unless explicitly instructed to do so.
 
 
 ### Phase 1: Understand the context
 
-- Read `references/gherkin-guidelines.md` if you have not already done so in this conversation.
+- Read Gherkin Guidelines if you have not already done so in this conversation.
 
 
 ### Phase 2: Understand the input
@@ -66,8 +66,12 @@ If any ASK remains, stop and ask.
 
 - NEW:
   - Write the new file: `features/**/`<kebab-from-title>.feature, one Feature per file.
+  - tag each Scenario with @base, @normal, or @abnormal
+    - @base: simplest working scenario
+    - @normal: expected inputs and behavior
+    - @abnormal: edge cases, unexpected inputs and behaviors, errors
 
-- After each file, run the checklist in `references/gherkin-guidelines.md`.
+- After each file, run the checklist in Gherkin Guidelines.
 
 **If blocked:**
 - State what the blockage is, stop, and ask for guidance

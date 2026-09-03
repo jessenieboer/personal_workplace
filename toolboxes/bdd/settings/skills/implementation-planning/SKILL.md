@@ -1,6 +1,6 @@
 ---
 name: implementation-planning
-description: Break a spec into ordered vertical-slice tasks with acceptance criteria and verification. Use when spec exists but implementation has not started, or when implementation work is too large for one session. Do not use for a single obvious file change.
+description: Break a Spec into ordered vertical-slice tasks with acceptance criteria and verification. Use when Spec exists but implementation has not started, or when implementation work is too large for one session. Do not use for a single obvious file change.
 license: MIT
 ---
 
@@ -10,28 +10,28 @@ Decompose specified behavior into a sequence of small stack-agnostic tasks that 
 
 ## When to use
 
-- Features, context, and review exist and need implementable units
+- Features, Context, and Design Review exist and need implementable units
 - Work should survive a new chat or a language switch
 - Implementation order is not obvious
 
 ## When not to use
 
 - Single-file change with obvious scope
-- Spec already contains a complete task list
+- A complete Task List already exists for Spec
 - User is still shaping product behavior
-- Design review says Not ready
+- Design Review says Not ready
 
 ## References
 
 - Plan template: `references/plan-template.md`
-- Tasks template: `references/tasks-template.md`
+- Task List template: `references/task-list-template.md`
 
 ## Inputs
 
-- Design review: make sure design is ready
+- Design Review: make sure design is ready
 - Context: domain terms and policies
 - Features: acceptance criteria
-- Plan and Tasks if they exist
+- Plan and Task List if they exist
 
 ## Workflow
 
@@ -39,43 +39,25 @@ Work in phases. Do not skip a phase unless the user says to.
 
 ### Phase 1: Orient
 
-- Read design review to check Ready vs Not ready verdict. Stop if not ready.
-- List features and read the ones that match the request
-- Read context
-- Read plan and tasks if they exist
+- Read Design Review to check Ready vs Not ready verdict. Stop if not ready.
+- List Features and read the ones that match the request
+- Read Context
+- Read Plan and Task List if they exist
 
-### Phase 2: Identify dependencies
+### Phase 2: Slice
 
-Map what depends on what, for example:
+From Features and Context, list vertical slices. One slice = one user-visible path that can be made true end to end.
 
-```
-Database schema
-    │
-    ├── API models/types
-    │       │
-    │       ├── API endpoints
-    │       │       │
-    │       │       └── Frontend API client
-    │       │               │
-    │       │               └── UI components
-    │       │
-    │       └── Validation logic
-    │
-    └── Seed data / migrations
-```
-
-Implementation order follows the dependency graph bottom-up: build foundations first.
-
-### Phase 3: Slice
-
-From the features and context, list vertical slices. One slice = one user-visible path that can be made true end to end.
-
+- Each slice delivers working, testable functionality.
+- Start with 
 - Do not slice by layer (all fixtures, then all functions, then all CLI)
 - If slice title needs "and", or acceptance criteria would exceed three bullets, split
 
 If any slice is unclear, stop and ask. Do not write files yet.
 
-### Phase 4: Write the plan
+
+
+### Phase 4: Write tasks
 
 Read `references/task-templates.md` and write:
 

@@ -22,13 +22,13 @@ Read product context and features. Report whether the design is internally consi
 - A current review already says Ready and the sources have not changed -> summarize and stop
 
 ## References
-- Review template: `references/design-review-template.md`.
+- Design Review Template: `references/design-review-template.md`.
 
 ## Inputs
 
-- Product context and features
-- Review if it exists
-- Review template
+- Context and Features
+- Design Review if it exists
+- Design Review Template
 
 ## Workflow
 
@@ -57,7 +57,7 @@ Do not write the review while any ASK remains. Stop and ask.
 
 ### Phase 3: Write the review
 
-Write or replace review using review template. This file is a gate, not a spec. Do not restate context or features here.
+Write or replace Design Review using Design Review Template. This file is a gate, not a spec. Do not restate context or features here.
 
 The file may contain only:
 
@@ -84,13 +84,13 @@ Return, short:
 
 ## Done when
 
-- Review on disk matches the current context and features for the requested scope
+- Review on disk matches the current Context and Features for the requested scope
 - Findings are listed, not silently closed
-- User can hand context + features to the implementation planner, or send findings back to design skills
+- User can hand Context + Features to the implementation planner, or send findings back to design skills
 
 ## If blocked
 
-- Missing context or features -> name which skill should run first
-- Clash between context and a scenario -> stop and load `grilling`
+- Missing Context or Features -> name which skill should run first
+- Clash between Context and a scenario -> stop and load `grilling`
 - User starts talking stack -> remind them this layer is design-only
 - User wants the missing scenarios written now -> stop and load `gherkin-authoring`

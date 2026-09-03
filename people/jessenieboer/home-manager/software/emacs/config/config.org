@@ -1518,7 +1518,7 @@ dy = find definitions
 
   (my-add-to-hydra 'dired-mode
                    ("Connection"
-  		  (("q" ora-ediff-files "ediff files" :exit t))))
+  		  (("iq" ora-ediff-files "ediff files" :exit t))))
 
 
   (my-add-to-hydra 'ediff-mode
@@ -1674,27 +1674,29 @@ dy = find definitions
   		  "Magit"
   		  (
   		   ;; setting up for work
-    		   ("w" magit-fetch "git fetch" :exit t)
-    		   ("\\" magit-remote "git remote" :exit t)
-    		   ("g" magit-checkout "git checkout")
-    		   ("[" magit-branch "git branch" :exit t)
+    		   ("iw" magit-fetch "git fetch" :exit t)
+    		   ("i\\" magit-remote "git remote" :exit t)
+    		   ("ig" magit-checkout "git checkout")
+    		   ("i[" magit-branch "git branch" :exit t)
 
     		   ;; preserving work
-    		   ("RET" magit-stage "git stage")
-    		   ("DEL" magit-unstage "git unstage")
-    		   ("'" magit-reset "git reset" :exit t)
-    		   ("d" magit-stash "git stash" :exit t)
-    		   ("<tab>" magit-commit "git commit" :exit t)
-    		   ("b" magit-push "git push" :exit t)
+    		   ("i RET" magit-stage "git stage")
+    		   ("i DEL" magit-unstage "git unstage")
+    		   ("i '" magit-reset "git reset" :exit t)
+    		   ("i d" magit-stash "git stash" :exit t)
+    		   ("i <tab>" magit-commit "git commit" :exit t)
+    		   ("i b" magit-push "git push" :exit t)
 
     		   ;; integrating work
-    		   ("p" magit-merge "git merge" :exit t)
-    		   ("]" magit-rebase "git rebase" :exit t)
+    		   ("ip" magit-merge "git merge" :exit t)
+    		   ("i ]" magit-rebase "git rebase" :exit t)
     		   ("ie" magit-discard "choose side to keep")
-                   ("q" magit-ediff-show-working-tree "head v changes" :exit t)
+                   ("iq" magit-ediff-show-working-tree "head v changes" :exit t)
 
   		   ;; other
-  		   ("iq" magit-log "git log" :exit t)
+                   ("RET" magit-diff-visit-file "visit")
+                   ("d" magit-diff-visit-file-other-window "visit other")
+  		   ("iv" magit-log "git log" :exit t)
   		   ("iw" magit-refresh "git refresh")
     		   ("o" set-mark-command "mark")
     		   ("-" exchange-point-and-mark "mark switch"))))

@@ -34,7 +34,7 @@ Work in phases. Do not skip a phase unless explicitly instructed to do so.
 ### Phase 1. Orient
 
 - Read context if it exists
-- List feature titles (only read the filenames) if any exist
+- List Feature titles (only read the filenames) if any exist
 - State the subject of this session in one sentence and wait if that subject is unclear
 
 ### Phase 2. Interview
@@ -49,7 +49,7 @@ Work in phases. Do not skip a phase unless explicitly instructed to do so.
 
 - Restate settled actors, terms, behaviors, and leftover open questions
 - Name which terms still need `domain-modeling`
-- Stop. Do not start authoring features.
+- Stop. Do not start authoring Features.
 
 ## Constraints
 
@@ -61,7 +61,7 @@ Work in phases. Do not skip a phase unless explicitly instructed to do so.
 
 ## Done when
 
-- The frontier is empty, or the user asks to write features
+- The frontier is empty, or the user asks to write Features
 - You have returned a short summary of settled language, settled behavior, and open questions
 
 ## If blocked
