@@ -40,6 +40,7 @@
 :PROPERTIES:
 :CUSTOM_ID: details
 :END:
+see https://eagain.net/articles/git-for-computer-scientists/
 **** Troubleshooting
 :PROPERTIES:
 :CUSTOM_ID: troubleshooting

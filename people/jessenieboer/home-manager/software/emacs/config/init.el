@@ -49,80 +49,82 @@
 (add-hook 'buffer-focus-hook--in 'my-autohydra)
 
 (setq all-modes '(backtrace-mode
-		          calendar-mode
-		          comint-mode
-		          compilation-mode
-		          conf-toml-mode
-		          conf-unix-mode
-		          css-mode
-  		    debugger-mode
-  		    dired-mode
-  		    dirvish-directory-view-mode
-  		    dirvish-special-preview-mode
-		          eat-mode
-		          eca-chat-mode
-		          eca-settings-mode
-  		    emacs-lisp-mode
+		  calendar-mode
+		  comint-mode
+		  compilation-mode
+		  conf-toml-mode
+		  conf-unix-mode
+		  css-mode
+  		  debugger-mode
+  		  dired-mode
+  		  dirvish-directory-view-mode
+  		  dirvish-special-preview-mode
+		  eat-mode
+		  eca-chat-mode
+		  eca-settings-mode
+                  ediff-mode
+  		  emacs-lisp-mode
                   feature-mode
-		          gptel-context-buffer-mode
-  		    fundamental-mode
-  		    help-mode
+		  gptel-context-buffer-mode
+  		  fundamental-mode
+  		  help-mode
                   html-mode
-		          inferior-python-mode
-  		    Info-mode
-		          js-json-mode
-  		    lisp-data-mode
-  		    lisp-interaction-mode
-		          magit-diff-mode
-  		    magit-log-mode
-  		    magit-status-mode
-  		    messages-buffer-mode
+		  inferior-python-mode
+  		  Info-mode
+		  js-json-mode
+  		  lisp-data-mode
+  		  lisp-interaction-mode
+		  magit-diff-mode
+  		  magit-log-mode
+  		  magit-status-mode
+  		  messages-buffer-mode
                   mhtml-mode
-  		    minibuffer-inactive-mode
-  		    minibuffer-mode
-  		    nix-mode
-  		    org-agenda-mode
-  		    org-mode
-		          python-mode
-  		    sh-mode
-  		    shell-mode
-		          special-mode
-  		    text-mode))
+  		  minibuffer-inactive-mode
+  		  minibuffer-mode
+  		  nix-mode
+  		  org-agenda-mode
+  		  org-mode
+		  python-mode
+  		  sh-mode
+  		  shell-mode
+		  special-mode
+  		  text-mode))
 
 ;; modes that show up "on top" of a buffer
 ;; (setq layered-modes '())
 
 ;; the minibuffer
 (setq minibuffer-modes '(minibuffer-inactive-mode
-    			         minibuffer-mode))
+    			 minibuffer-mode))
 
 ;; modes that show up on the sides of the screen
 ;;(setq side-modes '(dired-mode))
 
 ;; modes that don't navigate text in the usual way
 (setq alt-nav-modes  '(calendar-mode
-		               dired-mode
-  		               dirvish-directory-view-mode
-		               eat-mode
-		               gptel-context-buffer-mode
-		               magit-diff-mode
-  		               magit-log-mode
-  		               magit-status-mode
-		               org-agenda-mode))
+		       dired-mode
+  		       dirvish-directory-view-mode
+		       eat-mode
+                       ediff-mode
+		       gptel-context-buffer-mode
+		       magit-diff-mode
+  		       magit-log-mode
+  		       magit-status-mode
+		       org-agenda-mode))
 
 ;; generally modes that display text content and want to navigate it in the usual way
 (setq main-modes (seq-remove (lambda (m) (or (member m alt-nav-modes)
-					                         (member m minibuffer-modes))) all-modes))
+					     (member m minibuffer-modes))) all-modes))
 
 ;; modes where you don't edit the text it displays
 (setq main-non-edit-modes '(backtrace-mode
-			                compilation-mode
-  			                debugger-mode
-  			                dirvish-special-preview-mode
-  			                help-mode
-  			                Info-mode
-  			                messages-buffer-mode
-			                special-mode))
+			    compilation-mode
+  			    debugger-mode
+  			    dirvish-special-preview-mode
+  			    help-mode
+  			    Info-mode
+  			    messages-buffer-mode
+			    special-mode))
 
 (setq main-edit-modes (seq-remove (lambda (m) (member m main-non-edit-modes)) main-modes))
 
@@ -839,13 +841,13 @@ Returns the value as string or nil if not found / error."
       ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
       jn-grok-backend (gptel-make-xai "jn_grok"
 			:key (my-secretspec-get "XAI_API_KEY")
-   			:models '(grok-4.5)
+   			:models '(grok-4.6)
   			:request-params nil
   			:stream nil)
       my-default-ai-chat-name "*ai chat*")
 
 (setq gptel-backend jn-grok-backend
-      gptel-model 'grok-4.5)
+      gptel-model 'grok-4.6)
 
 (defun my/run-project-toolbox-setups ()
 "Load every *_toolbox_setup file under .toolboxes/ in the current project."
@@ -917,7 +919,11 @@ Returns the value as string or nil if not found / error."
 		  "AI"
 		  (("ix" eca-chat-select-agent "ai choose agent")
                    ("i?" eca-chat-select-model "ai choose model")
-                   ("i RET" eca-chat-send-prompt "ai send prompt")
+                   ("i RET" eca-chat--key-pressed-return "ai send")
+                   ("in" eca-chat-tool-call-accept-next "ai tool accept")
+                   ("i;" eca-chat-tool-call-reject-next "ai tool reject")
+                   ("ic" eca-chat-tool-call-accept-all "ai tool accept all")
+                   ("i," eca-chat-tool-call-accept-all-and-remember "ai tool accept all remember")
                    ("if" eca-chat-stop-prompt)
                    ("i$" eca-stop))))
 
@@ -1115,6 +1121,65 @@ Returns the value as string or nil if not found / error."
   		   ;; ("if" comint-quit-subjob "quit")
   		   ("i$" eat-kill-process "kill"))))
 
+(setq ediff-window-setup-function 'ediff-setup-windows-plain
+          ediff-split-window-function #'split-window-horizontally)
+    (my-add-hidden-buffer-patterns '(".*Ediff.*"))
+
+;; https://oremacs.com/2017/03/18/dired-ediff/
+  (defun ora-ediff-files ()
+  (interactive)
+  (let ((files (dired-get-marked-files))
+        (wnd (current-window-configuration)))
+    (if (<= (length files) 2)
+        (let ((file1 (car files))
+              (file2 (if (cdr files)
+                         (cadr files)
+                       (read-file-name
+                        "file: "
+                        (dired-dwim-target-directory)))))
+          (if (file-newer-than-file-p file1 file2)
+              (ediff-files file2 file1)
+            (ediff-files file1 file2))
+          (add-hook 'ediff-after-quit-hook-internal
+                    (lambda ()
+                      (setq ediff-after-quit-hook-internal nil)
+                      (set-window-configuration wnd))))
+      (error "no more than 2 files should be marked"))))
+
+(my-add-to-hydra main-modes
+		 ("Connection"
+		  (("hq" ediff-buffers "ediff buffers" :exit t)
+                   ("h`" ediff-files "ediff files" :exit t))))
+
+(my-add-to-hydra 'dired-mode
+                 ("Connection"
+		  (("q" ora-ediff-files "ediff files" :exit t))))
+
+
+(my-add-to-hydra 'ediff-mode
+  		 ("Connection"
+  		  ()
+  		  "Display"
+  		  (("SPC" (ediff-scroll-vertically -1) "scroll up")
+                   ("e" (ediff-scroll-vertically 1) "scroll down")
+                   ("t" (ediff-scroll-horizontally -1) "scroll left")
+                   ("s" (ediff-scroll-horizontally 1) "scroll right"))
+  		  "Navigation"
+                  (("a" ediff-previous-difference "prev diff")
+                   ("n" ediff-next-difference "next diff"))
+  		  "Ediff"
+  		  (("i SPC o h" ediff-copy-A-to-B  "A->B")
+                   ("i SPC o u" ediff-copy-A-to-C  "A->C")
+                   ("i SPC h o" ediff-copy-B-to-A  "B->A")
+                   ("i SPC h u" ediff-copy-B-to-C  "B->C")
+                   ("i SPC u o" ediff-copy-C-to-A  "C->A")
+                   ("i SPC u h" ediff-copy-C-to-B  "C->B")
+                   ("id" ediff-save-buffer  "save")
+                   ("igo" (ediff-restore-diff :key ?A)  "restore A")
+                   ("igh" (ediff-restore-diff :key ?B)  "restore B")
+                   ("igu" (ediff-restore-diff :key ?C)  "restore C")
+                   ("if" ediff-quit "quit"))))
+
 (my-add-to-hydra '(emacs-lisp-mode
   		   lisp-data-mode
   		   lisp-interaction-mode
@@ -1176,11 +1241,13 @@ Returns the value as string or nil if not found / error."
 
 
 (require 'magit)
-(setq magit-clone-set-remote.pushDefault t
-					;magit-display-buffer-function
+(setq ediff-window-setup-function 'ediff-setup-windows-plain
+      ediff-split-window-function #'split-window-horizontally
+      magit-clone-set-remote.pushDefault t
+      magit-diff-refine-hunk 'all
       magit-process-verbose t)
 (my-add-hidden-buffer-patterns '(".*magit.*"))
-(my-add-right-buffer-patterns '(".*magit.*"))
+;; (my-add-right-buffer-patterns '(".*magit.*"))
 
 (my-add-to-hydra (append '(dired-mode) main-modes)
   		 ("Connection"
@@ -1219,6 +1286,7 @@ Returns the value as string or nil if not found / error."
   		   ("p" magit-merge "git merge" :exit t)
   		   ("]" magit-rebase "git rebase" :exit t)
   		   ("ie" magit-discard "choose side to keep")
+                 ("q" magit-ediff-show-working-tree "head v changes" :exit t)
 
 		   ;; other
 		   ("iq" magit-log "git log" :exit t)
