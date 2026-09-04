@@ -7,7 +7,11 @@ let
   gherkinAuthoringSkill = ./settings/skills/gherkin-authoring/SKILL.md;
   gherkinGuidelines = "${inputs.gherkin-guidelines}/gherkin-guidelines.md";
   grillingSkill = ./settings/skills/grilling/SKILL.md;
+  implementationPlanningSkill = ./settings/skills/implementation-planning/SKILL.md;
+  implementationVizier = ./settings/agents/implementation-vizier.md;
+  planTemplate = ./settings/skills/implementation-planning/references/plan-template.md;
   productDesignAssistant = ./settings/agents/product-design-assistant.md;
+  taskTemplate = ./settings/skills/implementation-planning/references/task-template.md;
 in
 {
   enterShell = ''
@@ -25,6 +29,7 @@ in
         mkdir -p "$ECA_DIR/skills"
 
         # agents
+        install -D ${implementationVizier} "$ECA_DIR/agents/implementation-vizier.md"
         install -D ${productDesignAssistant} "$ECA_DIR/agents/product-design-assistant.md"
 
         # rules
@@ -40,6 +45,10 @@ in
         install -D ${gherkinGuidelines} "$ECA_DIR/skills/gherkin-authoring/references/gherkin-guidelines.md"
 
         install -D ${grillingSkill} "$ECA_DIR/skills/grilling/SKILL.md"
+
+        install -D ${implementationPlanningSkill} "$ECA_DIR/skills/implementation-planning/SKILL.md"
+        install -D ${planTemplate} "$ECA_DIR/skills/implementation-planning/references/plan-template.md"
+        install -D ${taskTemplate} "$ECA_DIR/skills/implementation-planning/references/task-template.md"
 
         # bdd stuff
         mkdir -p ${config.devenv.root}/.toolboxes/bdd_toolbox/features
