@@ -36,10 +36,25 @@
 :PROPERTIES:
 :CUSTOM_ID: use
 :END:
+Overview 
+- capture everything out of your brain quickly and easily 
+- make sure any hard dates are accounted for
+- sort items into more/average/less valuable
+- check for dependencies of hard-dated and valuable items
+- sort items into more/average/less effort required for hard-dated, valuable items that don't have dependencies
+
+  define capture, curation
 *** Details
 :PROPERTIES:
 :CUSTOM_ID: details
 :END:
+
+properties:
+hard date = occurrence date or deadline to make sure we don't miss anything
+
+views:
+hard date check: make sure we know everything that needs a date attached
+missing occurrence/task dates: for everything that has a hard date, make sure we know the actual date
 **** Troubleshooting
 :PROPERTIES:
 :CUSTOM_ID: troubleshooting

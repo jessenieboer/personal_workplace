@@ -1,15 +1,12 @@
+current:
+- no scheduled items in tactical eval?
+- add start date to activity view?
+
 this is about recording (capturing) and organizing (curating) all relevant information for a project so that we can work efficiently on what is most valuable
 
 we use tools (capture templates, curation views) to help do this efficiently
 
 have 2 levels of docs: overview and details
-
-Overview 
-- capture everything out of your brain quickly and easily 
-- make sure any hard dates are accounted for
-- sort items into more/average/less valuable
-- check for dependencies of hard-dated and valuable items
-- sort items into more/average/less effort required for hard-dated, valuable items that don't have dependencies
 
 
 * nix and emacs stuff
