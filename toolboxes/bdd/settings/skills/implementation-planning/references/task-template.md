@@ -17,9 +17,5 @@ Use this shape. Drop sections that would be empty.
 
 **Dependencies:**
 
-**Files likely touched:**
-- `src/...`
-- `tests/...`
-
 **Estimated scope:** [scope]
 ```

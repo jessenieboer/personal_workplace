@@ -63,10 +63,10 @@ in
         #   frontend = "gtk4";
         # };
         pre_type_delay_ms = 150;
-        post_process = {
-          command = "${voxtypeProjectCorrect}/bin/voxtype-project-correct";
-          timeout_ms = 30000;   # Ollama can be slow; give it time
-        };
+        # post_process = {
+        #   command = "${voxtypeProjectCorrect}/bin/voxtype-project-correct";
+        #   timeout_ms = 30000;   # Ollama can be slow; give it time
+        # };
         type_delay_ms = 5;
       };
 

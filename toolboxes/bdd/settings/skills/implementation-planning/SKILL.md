@@ -44,10 +44,10 @@ Work in phases. Do not skip a phase unless the user says to.
 
 ### Phase 1: Orient
 
-- Read Design Review. If missing, stop, -> `design-review`. If Not ready, stop and name the findings. Do not plan around them.
-- Read Plan.
+- Read Design Review if you haven't already. If missing, stop, -> `design-review`. If Not ready, stop and name the findings. Do not plan around them.
+- Read Plan if you haven't already.
 - List Features. Ignore Features with complete implementations (all boxes checked in Plan) unless explicitly asked. Otherwise read the files that match the request. 
-- Read Context.
+- Read Context if you haven't already.
 
 ### Phase 2: Inventory scenarios
 
@@ -94,7 +94,6 @@ Task List contains one entry per ordered scenario:
 - Acceptance criteria = the Thens / outcomes from that scenario
 - Verification = Checkboxes for tests and build; human review checkbox if necessary / requested
 - Dependencies = previous task numbers, or None
-- Files likely touched = guessed from existing repo layout
 - Scope = [Small: 1-2 files | Medium: 3-5 files | Large: 5+ files]
 
 Plan contains:

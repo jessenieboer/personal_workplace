@@ -6,7 +6,7 @@ license: MIT
 
 # Grilling
 
-Interview until the decision frontier is empty. Do not write features or context. Do not write code.
+Interview until the decision frontier is empty. Do **not** write features or context. Do **not** write implementation code.
 
 ## When to use
 
@@ -50,12 +50,12 @@ Work in phases. Do not skip a phase unless explicitly instructed to do so.
 
 ## Constraints
 
+- Do not write implementation code
 - Do not write, edit, or draft `.feature` files
 - Do not load `gherkin-authoring`
 - Do not answer a product decision yourself
 - Do not invent actors, terms, or behavior
 - Stay in the product language; no implementation, stack, or step-definition talk
-- Do not write code
 
 ## Done when
 

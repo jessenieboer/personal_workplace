@@ -911,14 +911,14 @@ Returns the value as string or nil if not found / error."
 
 (my-add-to-hydra 'eca-chat-mode
                  ("Connection"
-		  ()
+		  (("C-x" eca-workspaces "ai workspaces"))
 		  "Navigation"
 		  (("C-SPC" previous-line "or pree line")
     		   ("C-e" next-line "or nex line"))
 		  "Display"
 		  (("C-t" eca-chat-toggle-expandable-block "ai close block")
                    ("C-s" (eca-chat-toggle-expandable-block t) "ai open block")
-                   ("C-" eca-chat-toggle-expand-all-blocks "ai open all"))
+                   ("C-u" eca-chat-expand-all-blocks "ai open all"))
 		  "AI"
 		  (("ix" eca-chat-select-agent "ai choose agent")
                    ("i?" eca-chat-select-model "ai choose model")

@@ -32,7 +32,6 @@ Update the product context when domain terms or rules are settled. Do not write 
 2. For each settled item or policy, write or edit the matching section now. Do not batch until the end of the chat.
 3. If the user's term or policy fights an existing entry, stop and ask which meaning is canonical, then edit the context.
 4. If a term is vague, propose one canonical term and one or two rejected synonyms, then wait.
-5. After each edit, one line: what changed in context
 
 ## Constraints
 

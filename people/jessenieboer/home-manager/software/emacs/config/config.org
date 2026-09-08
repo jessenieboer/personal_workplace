@@ -1126,14 +1126,14 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 
   (my-add-to-hydra 'eca-chat-mode
                    ("Connection"
-  		  ()
+  		  (("C-x" eca-workspaces "ai workspaces"))
   		  "Navigation"
   		  (("C-SPC" previous-line "or pree line")
       		   ("C-e" next-line "or nex line"))
   		  "Display"
   		  (("C-t" eca-chat-toggle-expandable-block "ai close block")
                      ("C-s" (eca-chat-toggle-expandable-block t) "ai open block")
-                     ("C-" eca-chat-toggle-expand-all-blocks "ai open all"))
+                     ("C-u" eca-chat-expand-all-blocks "ai open all"))
   		  "AI"
   		  (("ix" eca-chat-select-agent "ai choose agent")
                      ("i?" eca-chat-select-model "ai choose model")
