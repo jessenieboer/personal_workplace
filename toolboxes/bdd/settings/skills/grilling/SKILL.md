@@ -2,14 +2,11 @@
 name: grilling
 description: Interview user about product behavior until decisions are explicit. Use when either the desired product behavior or the product context fuzzy.
 license: MIT
-# metadata:
-#   audience: developers
-#   workflow: bdd
 ---
 
 # Grilling
 
-Interview until the decision frontier is empty. Do not write features or context.
+Interview until the decision frontier is empty. Do not write features or context. Do not write code.
 
 ## When to use
 
@@ -58,6 +55,7 @@ Work in phases. Do not skip a phase unless explicitly instructed to do so.
 - Do not answer a product decision yourself
 - Do not invent actors, terms, or behavior
 - Stay in the product language; no implementation, stack, or step-definition talk
+- Do not write code
 
 ## Done when
 

@@ -1075,7 +1075,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
   (my-add-left-buffer-patterns '("^\\*gptel-agent.*" ".*eca-chat.*"))
-  (my-add-right-buffer-patterns '("^\\*ai chat\\*" ".*eca-workspaces.*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
+  (my-add-right-buffer-patterns '("^\\*ai chat\\*" ".*eca-workspaces.*" ".*eca:stderr.*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
   (my-add-hidden-buffer-patterns '("^\\*Mcp-Hub\\*"))
 #+end_src
 *** ai controls
@@ -1128,9 +1128,12 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
                    ("Connection"
   		  ()
   		  "Navigation"
-  		  ()
+  		  (("C-SPC" previous-line "or pree line")
+      		   ("C-e" next-line "or nex line"))
   		  "Display"
-  		  ()
+  		  (("C-t" eca-chat-toggle-expandable-block "ai close block")
+                     ("C-s" (eca-chat-toggle-expandable-block t) "ai open block")
+                     ("C-" eca-chat-toggle-expand-all-blocks "ai open all"))
   		  "AI"
   		  (("ix" eca-chat-select-agent "ai choose agent")
                      ("i?" eca-chat-select-model "ai choose model")
@@ -1161,7 +1164,6 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   		   ("io" gptel-add "add ai context")
   		   ("i-" my-gptel-add-project-context "add project context")
   		   ("i DEL" gptel-context-remove-all "remove ai context"))))
-
 
 
   (my-add-to-hydra 'gptel-context-buffer-mode
@@ -1647,7 +1649,7 @@ dy = find definitions
         magit-diff-refine-hunk 'all
         magit-process-verbose t)
   (my-add-hidden-buffer-patterns '(".*magit.*"))
-  ;; (my-add-right-buffer-patterns '(".*magit.*"))
+  (my-add-right-buffer-patterns '(".*magit.*"))
 #+end_src
 **** magit controls
 :PROPERTIES:

@@ -865,7 +865,7 @@ Returns the value as string or nil if not found / error."
 (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
 (my-add-left-buffer-patterns '("^\\*gptel-agent.*" ".*eca-chat.*"))
-(my-add-right-buffer-patterns '("^\\*ai chat\\*" ".*eca-workspaces.*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
+(my-add-right-buffer-patterns '("^\\*ai chat\\*" ".*eca-workspaces.*" ".*eca:stderr.*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
 (my-add-hidden-buffer-patterns '("^\\*Mcp-Hub\\*"))
 
 ;; (my-add-to-hydra main-edit-modes
@@ -913,9 +913,12 @@ Returns the value as string or nil if not found / error."
                  ("Connection"
 		  ()
 		  "Navigation"
-		  ()
+		  (("C-SPC" previous-line "or pree line")
+    		   ("C-e" next-line "or nex line"))
 		  "Display"
-		  ()
+		  (("C-t" eca-chat-toggle-expandable-block "ai close block")
+                   ("C-s" (eca-chat-toggle-expandable-block t) "ai open block")
+                   ("C-" eca-chat-toggle-expand-all-blocks "ai open all"))
 		  "AI"
 		  (("ix" eca-chat-select-agent "ai choose agent")
                    ("i?" eca-chat-select-model "ai choose model")
@@ -946,7 +949,6 @@ Returns the value as string or nil if not found / error."
 		   ("io" gptel-add "add ai context")
 		   ("i-" my-gptel-add-project-context "add project context")
 		   ("i DEL" gptel-context-remove-all "remove ai context"))))
-
 
 
 (my-add-to-hydra 'gptel-context-buffer-mode
@@ -1247,7 +1249,7 @@ Returns the value as string or nil if not found / error."
       magit-diff-refine-hunk 'all
       magit-process-verbose t)
 (my-add-hidden-buffer-patterns '(".*magit.*"))
-;; (my-add-right-buffer-patterns '(".*magit.*"))
+(my-add-right-buffer-patterns '(".*magit.*"))
 
 (my-add-to-hydra (append '(dired-mode) main-modes)
   		 ("Connection"
