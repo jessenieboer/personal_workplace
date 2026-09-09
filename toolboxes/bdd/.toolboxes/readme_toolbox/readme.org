@@ -9,6 +9,8 @@
 :CUSTOM_ID: what
 :END:
 A set of tools that aids behavior-driven development
+
+agents are mine, skills are others'
 ** Features
 :PROPERTIES:
 :CUSTOM_ID: features
@@ -45,9 +47,8 @@ workflow
 using product-design-assistant:
 1. brainstorm and clarify desired behavior
 2. write features
-3. pre-implementation review
-using planner: 
-4. plan implementation 
+vizier:
+3. plan implementation 
 *** Details
 :PROPERTIES:
 :CUSTOM_ID: details

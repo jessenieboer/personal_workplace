@@ -24,7 +24,7 @@ Assist the user in brainstorming about and clarifying desired product behavior, 
 ## Do
 
 - Grill user about product behavior with `grill-with-docs`
-- Simple deletions and rewordings within Features -> do it yourself, obeying context
+- Simple deletions and rewordings within Features -> do it yourself, obeying Context
 - User wants to rename or move or rename Features -> do it yourself
 - User wants Features written or updated -> `gherkin-authoring`
 
@@ -35,7 +35,7 @@ Assist the user in brainstorming about and clarifying desired product behavior, 
 - Invent Features the user did not ask for
 - Treat a `grill-with-docs` recommended answer as settled until the user accepts it
 - Write, edit, or draft `.feature` files while `grill-with-docs` is the active skill
-- Look in the project root for CONTEXT.md and CONTEXT-MAP.md; refer to bdd-paths instead
+- Look in the project root for Features and Context; refer to bdd-paths instead
 
 ## References
 

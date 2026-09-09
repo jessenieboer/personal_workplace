@@ -25,9 +25,15 @@ let
   grSkill = "${inputs.mattpocock-skills}/skills/productivity/grilling/SKILL.md";
   grDocsSkill = "${inputs.mattpocock-skills}/skills/engineering/grill-with-docs/SKILL.md";
 
-  implementationPlanningSkill = ./settings/skills/implementation-planning/SKILL.md;
-  planTemplate = ./settings/skills/implementation-planning/references/plan-template.md;
-  taskTemplate = ./settings/skills/implementation-planning/references/task-template.md;
+  # planning
+  planningSkill = "${inputs.addyosmani-agent-skills}/skills/planning-and-task-breakdown/SKILL.md";
+
+  # references
+  ddone = "${inputs.addyosmani-agent-skills}/references/definition-of-done.md";
+
+  # implementationPlanningSkill = ./settings/skills/implementation-planning/SKILL.md;
+  # planTemplate = ./settings/skills/implementation-planning/references/plan-template.md;
+  # taskTemplate = ./settings/skills/implementation-planning/references/task-template.md;
 in
 {
   enterShell = ''
@@ -51,10 +57,10 @@ in
         # rules
         install -D ${bddPaths} "$ECA_DIR/rules/bdd-paths.md"
 
-        # skills
-        install -D ${designReviewSkill} "$ECA_DIR/skills/design-review/SKILL.md"
-        install -D ${designReviewTemplate} "$ECA_DIR/skills/design-review/references/design-review-template.md"
+        # references
+        install -D ${ddone} ${config.devenv.root}/.toolboxes/bdd_toolbox/definition-of-done.md
 
+        # skills
         install -D ${dmSkill} "$ECA_DIR/skills/domain-modeling/SKILL.md"
         install -D ${dmADR} "$ECA_DIR/skills/domain-modeling/ADR-FORMAT.md"
         install -D ${dmContext} "$ECA_DIR/skills/domain-modeling/CONTEXT-FORMAT.md"
@@ -65,9 +71,7 @@ in
         install -D ${grSkill} "$ECA_DIR/skills/grilling/SKILL.md"
         install -D ${grDocsSkill} "$ECA_DIR/skills/grill-with-docs/SKILL.md"
 
-        install -D ${implementationPlanningSkill} "$ECA_DIR/skills/implementation-planning/SKILL.md"
-        install -D ${planTemplate} "$ECA_DIR/skills/implementation-planning/references/plan-template.md"
-        install -D ${taskTemplate} "$ECA_DIR/skills/implementation-planning/references/task-template.md"
+        install -D ${planningSkill} "$ECA_DIR/skills/planning-and-task-breakdown/SKILL.md"
 
         # bdd stuff
         mkdir -p ${config.devenv.root}/.toolboxes/bdd_toolbox/features

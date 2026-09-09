@@ -1,13 +1,30 @@
 {
   "nodes": {
+    "addyosmani-agent-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788578676,
+        "narHash": "sha256-29Kj16nWhmr1l3EP9lI3zxr7bq4iJIZyTPngbC5/m0A=",
+        "owner": "addyosmani",
+        "repo": "agent-skills",
+        "rev": "71e1f11b0842375b86100f90004d14e7e3bde92a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "addyosmani",
+        "ref": "0.6.9",
+        "repo": "agent-skills",
+        "type": "github"
+      }
+    },
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1788543102,
-        "narHash": "sha256-SQ4R+H4f9gDfS+mdoLCp59F7Rq1dMHU6J6Kd+ljRhp4=",
+        "lastModified": 1788956372,
+        "narHash": "sha256-ACop98BNBAWic+KLXd5PBSwzxzMUfEWmefVXDBDFyHQ=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "902476d49e5ae64fc906feb173f79e2a8e324609",
+        "rev": "2a399e9ea5e981f225d75b25c8fa8d76f730131d",
         "type": "github"
       },
       "original": {
@@ -89,6 +106,7 @@
     },
     "root": {
       "inputs": {
+        "addyosmani-agent-skills": "addyosmani-agent-skills",
         "devenv": "devenv",
         "gherkin-guidelines": "gherkin-guidelines",
         "mattpocock-skills": "mattpocock-skills",
