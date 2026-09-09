@@ -1,6 +1,6 @@
 inputs:
   llm-agents:
-    url: github:numtide/llm-agents.nix
+    url: github:numtide/llm-agents.nix/assets
 
 imports:
   - /toolboxes/emacs

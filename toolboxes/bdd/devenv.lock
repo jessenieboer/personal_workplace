@@ -30,6 +30,24 @@
       "original": {
         "owner": "AutomationPanda",
         "repo": "gherkin-guidelines-for-ai",
+        "rev": "ce2b49e786197dc18575a5760fab46d573dc5ee5",
+        "type": "github"
+      }
+    },
+    "mattpocock-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786025105,
+        "narHash": "sha256-I/EXHGW92nXz6JCLp8SKGgzXrbbUTkLAfxv8bc/ThwQ=",
+        "owner": "mattpocock",
+        "repo": "skills",
+        "rev": "835450ef244ab7335f75d95b83e7d979eae22a6d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpocock",
+        "ref": "v1.2.3",
+        "repo": "skills",
         "type": "github"
       }
     },
@@ -73,6 +91,7 @@
       "inputs": {
         "devenv": "devenv",
         "gherkin-guidelines": "gherkin-guidelines",
+        "mattpocock-skills": "mattpocock-skills",
         "nixpkgs": "nixpkgs"
       }
     }

@@ -1,16 +1,32 @@
 { pkgs, lib, config, inputs, ... }:
 let
+  # agents
+  implementationVizier = ./settings/agents/implementation-vizier.md;
+  productDesignAssistant = ./settings/agents/product-design-assistant.md;
+
+  # rules
   bddPaths = ./settings/rules/bdd-paths.md;
+
+  # skills
+  ## designReview
   designReviewSkill = ./settings/skills/design-review/SKILL.md;
   designReviewTemplate = ./settings/skills/design-review/references/design-review-template.md;
-  domainModelingSkill = ./settings/skills/domain-modeling/SKILL.md;
+  
+  ## domain modeling
+  dmADR = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/ADR-FORMAT.md";
+  dmContext = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/CONTEXT-FORMAT.md";
+  dmSkill = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/SKILL.md";
+
+  ## gherkin
   gherkinAuthoringSkill = ./settings/skills/gherkin-authoring/SKILL.md;
   gherkinGuidelines = "${inputs.gherkin-guidelines}/gherkin-guidelines.md";
-  grillingSkill = ./settings/skills/grilling/SKILL.md;
+
+  ## grilling
+  grSkill = "${inputs.mattpocock-skills}/skills/productivity/grilling/SKILL.md";
+  grDocsSkill = "${inputs.mattpocock-skills}/skills/engineering/grill-with-docs/SKILL.md";
+
   implementationPlanningSkill = ./settings/skills/implementation-planning/SKILL.md;
-  implementationVizier = ./settings/agents/implementation-vizier.md;
   planTemplate = ./settings/skills/implementation-planning/references/plan-template.md;
-  productDesignAssistant = ./settings/agents/product-design-assistant.md;
   taskTemplate = ./settings/skills/implementation-planning/references/task-template.md;
 in
 {
@@ -39,12 +55,15 @@ in
         install -D ${designReviewSkill} "$ECA_DIR/skills/design-review/SKILL.md"
         install -D ${designReviewTemplate} "$ECA_DIR/skills/design-review/references/design-review-template.md"
 
-        install -D ${domainModelingSkill} "$ECA_DIR/skills/domain-modeling/SKILL.md"
+        install -D ${dmSkill} "$ECA_DIR/skills/domain-modeling/SKILL.md"
+        install -D ${dmADR} "$ECA_DIR/skills/domain-modeling/ADR-FORMAT.md"
+        install -D ${dmContext} "$ECA_DIR/skills/domain-modeling/CONTEXT-FORMAT.md"
 
         install -D ${gherkinAuthoringSkill} "$ECA_DIR/skills/gherkin-authoring/SKILL.md"
         install -D ${gherkinGuidelines} "$ECA_DIR/skills/gherkin-authoring/references/gherkin-guidelines.md"
 
-        install -D ${grillingSkill} "$ECA_DIR/skills/grilling/SKILL.md"
+        install -D ${grSkill} "$ECA_DIR/skills/grilling/SKILL.md"
+        install -D ${grDocsSkill} "$ECA_DIR/skills/grill-with-docs/SKILL.md"
 
         install -D ${implementationPlanningSkill} "$ECA_DIR/skills/implementation-planning/SKILL.md"
         install -D ${planTemplate} "$ECA_DIR/skills/implementation-planning/references/plan-template.md"
@@ -52,6 +71,7 @@ in
 
         # bdd stuff
         mkdir -p ${config.devenv.root}/.toolboxes/bdd_toolbox/features
+        touch ${config.devenv.root}/.toolboxes/bdd_toolbox/brainstorm.txt
 
         echo "bdd_toolbox set up successfully"
       '';

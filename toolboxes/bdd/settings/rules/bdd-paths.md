@@ -5,10 +5,8 @@ description: Where BDD product files live in this project.
 
 # BDD paths
 
-- Context: `.toolboxes/bdd_toolbox/CONTEXT.md`
-- Design Review: `.toolboxes/bdd_toolbox/DESIGN-REVIEW.md`
+- CONTEXT.md: `.toolboxes/bdd_toolbox/CONTEXT.md`
+- CONTEXT-MAP.md: `.toolboxes/bdd_toolbox/CONTEXT-MAP.md`
 - Features: `.toolboxes/bdd_toolbox/features/**/*.feature`
-- Plan: `.toolboxes/bdd_toolbox/PLAN.md`
-- Task List: `.toolboxes/bdd_toolbox/TASK-LIST.md`
 
 Create those paths if they are missing and a skill needs to write.
