@@ -62,6 +62,7 @@
       origami
       popper
       python-pytest
+      racket-mode
       solarized-theme
       undo-fu
       unstable.emacsPackages.easysession

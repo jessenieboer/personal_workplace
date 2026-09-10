@@ -865,8 +865,8 @@ Returns the value as string or nil if not found / error."
 (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
 (my-add-left-buffer-patterns '("^\\*gptel-agent.*" ".*eca-chat.*"))
-(my-add-right-buffer-patterns '("^\\*ai chat\\*" ".*eca-workspaces.*" ".*eca:stderr.*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
-(my-add-hidden-buffer-patterns '("^\\*Mcp-Hub\\*"))
+(my-add-right-buffer-patterns '("^\\*ai chat\\*" ".*eca-workspaces.*" ".*eca:.*" "^\\*gptel-context\\*" "^\\*Mcp-Hub\\*"))
+(my-add-hidden-buffer-patterns '(".*eca-.*" ".*eca:.*" "^\\*Mcp-Hub\\*"))
 
 ;; (my-add-to-hydra main-edit-modes
 ;;   		 ("Connection"
@@ -1073,6 +1073,7 @@ Returns the value as string or nil if not found / error."
 ;;     (direnv-update-environment (file-name-directory (buffer-file-name)))))
 
 (my-add-left-buffer-patterns '(".*eat\\*"))
+(my-add-hidden-buffer-patterns '(".*eat\\*"))
 
 					;(add-hook 'eat-mode-hook #'my-eat-direnv-hook)
 
@@ -1772,7 +1773,52 @@ Returns the value as string or nil if not found / error."
                  ("du" python-pytest "test project")
   		   ("d:" (python-pytest '("--tb=short")) "test project verbose"))))
 
+(require 'racket-mode)
+(require 'racket-xp)
 
+(setq racket-memory-limit 2048
+      racket-repl-buffer-name-function #'racket-repl-buffer-name-project)
+
+(when (executable-find "racket")
+  (setq racket-program (executable-find "racket")))
+
+(add-hook 'racket-mode-hook #'racket-xp-mode)
+
+(add-to-list 'all-modes 'racket-mode)
+(add-to-list 'all-modes 'racket-repl-mode)
+(add-to-list 'main-edit-modes 'racket-mode)
+(add-to-list 'alt-nav-modes 'racket-repl-mode)
+
+(my-add-hidden-buffer-patterns '("^\\*Racket REPL"))
+(my-add-left-buffer-patterns '("^\\*Racket REPL"))
+
+(my-add-to-hydra 'racket-mode
+                 ("Connection"
+                  (("in" racket-repl "racket repl"))
+                  "Navigation"
+                  ()
+                  "Display"
+                  ()
+                  "Racket"
+                  (("de" racket-send-last-sexp "run last")
+                   ("d)" racket-send-region "run region")
+                   ("dn" racket-run "run buffer")
+                   ("dh" racket-test "test buffer")
+                   ;; ("d:" racket-xp-describe "describe")
+                   ;; ("im" racket-xp-documentation "docs")
+                   )))
+
+(my-add-to-hydra 'racket-repl-mode
+                 ("Connection"
+                  (("if" quit-window "quit repl"))
+                  "Navigation"
+                  ()
+                  "Display"
+                  ()
+                  "Racket"
+                  (
+                   ;; ("dn" racket-repl-switch-to-edit "back to source")
+                   )))
 
 
 

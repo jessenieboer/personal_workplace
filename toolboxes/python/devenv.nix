@@ -9,28 +9,32 @@ in
       echo "python toolbox available"
       echo "Python version: $(python --version)"
       echo "uv version: $(uv --version)"
+      echo "ruff version: $(ruff --version)"
     '';
 
     env = {
       PYTHONUTF8 = "1";
       PYTHONDONTWRITEBYTECODE = "1";
     };
-    
+
     languages.python = {
       enable = true;
       lsp = {
         enable = true;
+        # Emacs eglot/lsp-mode. CLI type-check is ty via `uv run ty check`.
         package = pkgs.pyright;
       };
-      #requirements = 
       uv = {
         enable = true;
-        sync.enable = true; 
+        sync.enable = true;
       };
       venv.enable = true;
       version = "3.12";
     };
 
+    packages = with pkgs; [
+      ruff
+    ];
 
     tasks = {
       "python_toolbox:copy_gitignore" = {
@@ -46,22 +50,15 @@ in
         before = [ "devenv:enterShell" "devenv:python:uv" ];
         exec = ''
           if [ -f "${config.devenv.root}/pyproject.toml" ]; then
-          echo "pyproject.toml already exists — skipping copy."
-          exit 0
+            echo "pyproject.toml already exists — skipping copy."
+            exit 0
           fi
           cp ${pyprojectTemplate} ${config.devenv.root}/pyproject.toml
           chmod u+w ${config.devenv.root}/pyproject.toml
-
           echo "copied templates/pyproject.toml to pyproject.toml"
         '';
         showOutput = true;
       };
     };
-
-    # packages = with pkgs; [
-      #     pytest
-      #   ripgrep
-      #   fd
-      #]
   };
 }
