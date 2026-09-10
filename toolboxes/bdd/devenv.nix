@@ -1,39 +1,35 @@
 { pkgs, lib, config, inputs, ... }:
 let
   # agents
-  implementationVizier = ./settings/agents/implementation-vizier.md;
-  productDesignAssistant = ./settings/agents/product-design-assistant.md;
+  builder = ./settings/agents/builder.md;
+  designer = ./settings/agents/designer.md;
+  planner = ./settings/agents/planner.md;
 
   # rules
   bddPaths = ./settings/rules/bdd-paths.md;
 
   # skills
-  ## designReview
   designReviewSkill = ./settings/skills/design-review/SKILL.md;
   designReviewTemplate = ./settings/skills/design-review/references/design-review-template.md;
-  
-  ## domain modeling
+
   dmADR = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/ADR-FORMAT.md";
   dmContext = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/CONTEXT-FORMAT.md";
   dmSkill = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/SKILL.md";
 
-  ## gherkin
-  gherkinAuthoringSkill = ./settings/skills/gherkin-authoring/SKILL.md;
+  gherkin = ./settings/skills/gherkin-authoring/SKILL.md;
   gherkinGuidelines = "${inputs.gherkin-guidelines}/gherkin-guidelines.md";
 
-  ## grilling
   grSkill = "${inputs.mattpocock-skills}/skills/productivity/grilling/SKILL.md";
   grDocsSkill = "${inputs.mattpocock-skills}/skills/engineering/grill-with-docs/SKILL.md";
 
-  # planning
+  inc = "${inputs.addyosmani-agent-skills}/skills/incremental-implementation/SKILL.md";
+
   planningSkill = "${inputs.addyosmani-agent-skills}/skills/planning-and-task-breakdown/SKILL.md";
+
+  tdd = "${inputs.addyosmani-agent-skills}/skills/test-driven-development/SKILL.md";
 
   # references
   ddone = "${inputs.addyosmani-agent-skills}/references/definition-of-done.md";
-
-  # implementationPlanningSkill = ./settings/skills/implementation-planning/SKILL.md;
-  # planTemplate = ./settings/skills/implementation-planning/references/plan-template.md;
-  # taskTemplate = ./settings/skills/implementation-planning/references/task-template.md;
 in
 {
   enterShell = ''
@@ -51,8 +47,9 @@ in
         mkdir -p "$ECA_DIR/skills"
 
         # agents
-        install -D ${implementationVizier} "$ECA_DIR/agents/implementation-vizier.md"
-        install -D ${productDesignAssistant} "$ECA_DIR/agents/product-design-assistant.md"
+        install -D ${builder} "$ECA_DIR/agents/builder.md"
+        install -D ${designer} "$ECA_DIR/agents/designer.md"
+        install -D ${planner} "$ECA_DIR/agents/planner.md"
 
         # rules
         install -D ${bddPaths} "$ECA_DIR/rules/bdd-paths.md"
@@ -65,13 +62,17 @@ in
         install -D ${dmADR} "$ECA_DIR/skills/domain-modeling/ADR-FORMAT.md"
         install -D ${dmContext} "$ECA_DIR/skills/domain-modeling/CONTEXT-FORMAT.md"
 
-        install -D ${gherkinAuthoringSkill} "$ECA_DIR/skills/gherkin-authoring/SKILL.md"
+        install -D ${gherkin} "$ECA_DIR/skills/gherkin-authoring/SKILL.md"
         install -D ${gherkinGuidelines} "$ECA_DIR/skills/gherkin-authoring/references/gherkin-guidelines.md"
 
         install -D ${grSkill} "$ECA_DIR/skills/grilling/SKILL.md"
         install -D ${grDocsSkill} "$ECA_DIR/skills/grill-with-docs/SKILL.md"
 
+        install -D ${inc} "$ECA_DIR/skills/incremental-implementation/SKILL.md"
+
         install -D ${planningSkill} "$ECA_DIR/skills/planning-and-task-breakdown/SKILL.md"
+
+        install -D ${tdd} "$ECA_DIR/skills/test-driven-development/SKILL.md"
 
         # bdd stuff
         mkdir -p ${config.devenv.root}/.toolboxes/bdd_toolbox/features

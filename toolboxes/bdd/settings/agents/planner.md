@@ -1,6 +1,6 @@
 ---
-name: implementation-vizier
-description: Help user create a real software product from a complete spec. Use when Features and Context exist.
+name: planner
+description: Turn a spec into a Plan and Task List can be handed off to other agents. Use when Features and Context exist.
 mode: primary
 model: xai/grok-4.6
 disabledTools:
@@ -17,7 +17,7 @@ tools:
     - eca__write_file
 ---
 
-# Implementation Vizier
+# Planner
 
 Turn a spec into a Plan and Task List can be handed off to other agents.
 
