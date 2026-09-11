@@ -4,19 +4,23 @@ let
   ecaConfig = ./settings/eca/config.json;
   gitignore = ./settings/.gitignore;
   opencodeConfig = ./settings/opencode/opencode.json;
+  localSkills = ./settings/skills;
 
   cek = inputs.neolabhq-cek;
   cekLicense = "${cek}/LICENSE";
 
   # Only CEK skills for creating, improving, and evaluating agents.
-  # Excluded: create-command, create-hook, create-workflow-command
+  # Excluded: create-agent (replaced by settings/skills/create-eca-agent),
+  # create-command, create-hook, create-workflow-command
   # (Claude Code slash-command / hook machinery), thought-based-reasoning.
   cekSkillRels = [
     # create
-    "plugins/customaize-agent/skills/create-agent"
+    #"plugins/customaize-agent/skills/create-agent"
+    #"plugins/customaize-agent/skills/create-command"
+    #"plugins/customaize-agent/skills/create-hook"
     "plugins/customaize-agent/skills/create-skill"
     "plugins/customaize-agent/skills/create-rule"
-    "plugins/customaize-agent/skills/create-workflow-command"
+    #"plugins/customaize-agent/skills/create-workflow-command"
     "plugins/customaize-agent/skills/prompt-engineering"
     "plugins/customaize-agent/skills/context-engineering"
     "plugins/customaize-agent/skills/apply-anthropic-skill-best-practices"
@@ -28,7 +32,7 @@ let
     "plugins/customaize-agent/skills/agent-evaluation"
     "plugins/customaize-agent/skills/test-skill"
     "plugins/customaize-agent/skills/test-prompt"
-    "plugins/customaize-agent/skills/thought-based-reasoning"
+    #"plugins/customaize-agent/skills/thought-based-reasoning"
   ];
 
   copyCekSkill = rel: ''
@@ -94,6 +98,16 @@ in
           mkdir -p "$ECA_DIR/skills"
 
           ${lib.concatMapStringsSep "\n" copyCekSkill cekSkillRels}
+
+          if [ -d ${localSkills} ]; then
+            for d in ${localSkills}/*; do
+              [ -d "$d" ] || continue
+              name=$(basename "$d")
+              if [ -f "$d/SKILL.md" ]; then
+                install -D "$d/SKILL.md" "$ECA_DIR/skills/$name/SKILL.md"
+              fi
+            done
+          fi
 
           echo "ai toolbox CEK skills copied to $ECA_DIR/skills"
         '';

@@ -85,6 +85,8 @@
   		  org-agenda-mode
   		  org-mode
 		  python-mode
+                  racket-mode
+                  racket-repl-mode
   		  sh-mode
   		  shell-mode
 		  special-mode
@@ -110,7 +112,8 @@
 		       magit-diff-mode
   		       magit-log-mode
   		       magit-status-mode
-		       org-agenda-mode))
+		       org-agenda-mode
+                       racket-repl-mode))
 
 ;; generally modes that display text content and want to navigate it in the usual way
 (setq main-modes (seq-remove (lambda (m) (or (member m alt-nav-modes)
@@ -1151,8 +1154,7 @@ Returns the value as string or nil if not found / error."
 
 (my-add-to-hydra main-modes
 		 ("Connection"
-		  (("hq" ediff-buffers "ediff buffers" :exit t)
-                   ("h`" ediff-files "ediff files" :exit t))))
+		  (("h`" ediff-buffers "ediff buffers" :exit t))))
 
 (my-add-to-hydra 'dired-mode
                  ("Connection"
@@ -1251,6 +1253,10 @@ Returns the value as string or nil if not found / error."
       magit-process-verbose t)
 (my-add-hidden-buffer-patterns '(".*magit.*"))
 (my-add-right-buffer-patterns '(".*magit.*"))
+
+(my-add-to-hydra main-modes
+		 ("Connection"
+		  (("hq" magit-ediff-compare "magit ediff" :exit t))))
 
 (my-add-to-hydra (append '(dired-mode) main-modes)
   		 ("Connection"
@@ -1776,17 +1782,36 @@ Returns the value as string or nil if not found / error."
 (require 'racket-xp)
 
 (setq racket-memory-limit 2048
+      racket-program "racket"
       racket-repl-buffer-name-function #'racket-repl-buffer-name-project)
 
-(when (executable-find "racket")
-  (setq racket-program (executable-find "racket")))
+;; (defun my-racket-on-path-p ()
+;;   (executable-find "racket"))
 
-(add-hook 'racket-mode-hook #'racket-xp-mode)
+;; (defun my-racket-project-root ()
+;;   (or (when-let ((proj (project-current)))
+;;         (project-root proj))
+;;       (and buffer-file-name
+;;            (file-name-directory buffer-file-name))
+;;       default-directory))
 
-(add-to-list 'all-modes 'racket-mode)
-(add-to-list 'all-modes 'racket-repl-mode)
-(add-to-list 'main-edit-modes 'racket-mode)
-(add-to-list 'alt-nav-modes 'racket-repl-mode)
+;; (defun my-racket-setup ()
+;;   "Start racket-xp only after racket is actually findable."
+;;   (when (derived-mode-p 'racket-mode)
+;;     (let ((root (my-racket-project-root)))
+;;       (when (and root (not (file-equal-p root "/")))
+;;         (racket-add-back-end root)))
+;;     (if (my-racket-on-path-p)
+;;         (unless racket-xp-mode
+;;           (racket-xp-mode 1))
+;;       (when racket-xp-mode
+;;         (racket-xp-mode -1))
+;;       (message "racket not on exec-path — allow direnv in this project"))))
+
+;; (add-hook 'envrc-mode-hook #'my-racket-setup)
+;; (add-hook 'racket-mode-hook
+;;           (lambda ()
+;;             (add-hook 'hack-local-variables-hook #'my-racket-setup nil t)))
 
 (my-add-hidden-buffer-patterns '("^\\*Racket REPL"))
 (my-add-left-buffer-patterns '("^\\*Racket REPL"))
