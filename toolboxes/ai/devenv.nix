@@ -9,10 +9,6 @@ let
   cek = inputs.neolabhq-cek;
   cekLicense = "${cek}/LICENSE";
 
-  # Only CEK skills for creating, improving, and evaluating agents.
-  # Excluded: create-agent (replaced by settings/skills/create-eca-agent),
-  # create-command, create-hook, create-workflow-command
-  # (Claude Code slash-command / hook machinery), thought-based-reasoning.
   cekSkillRels = [
     # create
     #"plugins/customaize-agent/skills/create-agent"
