@@ -2,7 +2,7 @@
 name: builder
 description: Build the next Plan task as thin TDD slices. Use when Plan and Task List exist and the user wants working code.
 mode: primary
-model: xai/grok-4.6
+model: xai/grok-build-0.1
 maxSteps: 25
 disabledTools:
   - preview_file_change
@@ -65,8 +65,8 @@ Turn one Task List item into working, tested code. Stay stack-agnostic until a s
 4. Load skills, in this order:
    1. `incremental-implementation`
    2. `test-driven-development` (skip only for pure config / docs / static content)
-   3. The matching stack skill(s) if they exist
-   4. Later, only if blocked: `debugging-and-error-recovery`;
+   3. the `-skill-guide` skill(s) for the stack
+   4. The necessary skill(s) according to the skill guide
 5. Discover this repo's test / build / lint commands. Use those. Do not invent `pytest` / `npm test` / `cargo test` unless the repo or stack skill says so.
 6. Build that one task as vertical slices. Each slice is one red-green-refactor loop. After each slice: tests from the repo command, then the next slice. Commit only if the user asked for commits.
 7. Read Definition of Done (bdd-paths). Check the Task List and Plan boxes only when that scenario's Thens pass *and* DoD is met. Stop at the next checkpoint or when the user-requested task is done.

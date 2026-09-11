@@ -1742,20 +1742,19 @@ Returns the value as string or nil if not found / error."
 
 (setq python-indent-offset 4)
 
-(require 'lsp-pyright)
-    (add-to-list 'lsp-disabled-clients
-      	     '(python-mode . (pyls pylsp ruff-lsp semgrep-ls ty)))
+(require 'lsp-python-ty)
+(setq lsp-python-ty-clients-server-command '("ty" "server"))
+(add-to-list 'lsp-disabled-clients
+             '(python-mode . (pyright pyls pylsp ruff-lsp semgrep-ls)))
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq-local lsp-enabled-clients '(ty-ls))
+            (lsp-deferred)))
 
-    (add-hook 'python-mode-hook 
-    	  (lambda ()
-    	    (setq-local lsp-enabled-clients '(pyright)
-    			lsp-pyright-diagnostic-mode "openFilesOnly")
-    	    (lsp-deferred)))
-
-    (require 'python-pytest)
-    (my-add-left-buffer-patterns '("^\\*Python.*"))
-    (my-add-hidden-buffer-patterns '("^\\*pyright.*" "^\\*pytest.*" "^\\*ruff.*"))
-    (my-add-right-buffer-patterns '("^\\*pytest.*"))
+(require 'python-pytest)
+(my-add-left-buffer-patterns '("^\\*Python.*"))
+(my-add-hidden-buffer-patterns '("^\\*pyright.*" "^\\*pytest.*" "^\\*ruff.*"))
+(my-add-right-buffer-patterns '("^\\*pytest.*"))
 
 (my-add-to-hydra 'python-mode
   		 ("Connection"
