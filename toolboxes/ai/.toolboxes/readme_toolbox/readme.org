@@ -13,8 +13,8 @@
 :CUSTOM_ID: features
 :END:
 - eca for emacs-first llm interaction
-- opencode for multi-agent and fire-and-forget
-- agents, skills, and rules that can be shared by both platforms
+- opencode for multi-agent and fire-and-forget (not using yet)
+- ai-input-engineer for developing agents, skills, etc...
 * Why
 :PROPERTIES:
 :CUSTOM_ID: why
@@ -33,20 +33,23 @@
 :END:
 declare this input in project yaml:
 #+begin_src yaml
-inputs:
-  llm-agents:
-    url: github:numtide/llm-agents.nix
-  personal_workplace:
-    flake: false
-    url: github:jessenieboer/personal_workplace/jn
-    
-imports:
-  - personal_workplace/toolboxes/agentic_coding
-  - personal_workplace/toolboxes/secrets
+  inputs:
+    llm-agents:
+      url: github:numtide/llm-agents.nix
+    neolabhq-cek:
+      flake: false
+      url: github:NeoLabHQ/context-engineering-kit
+    personal_workplace:
+      flake: false
+      url: github:jessenieboer/personal_workplace/jn
+      
+  imports:
+    - personal_workplace/toolboxes/ai
+    - personal_workplace/toolboxes/secrets
 
-nixpkgs:
-  permitted_unfree_packages:
-    - bws
+  nixpkgs:
+    permitted_unfree_packages:
+      - bws
 #+end_src
 
 also need in secretspec.toml:
@@ -108,3 +111,5 @@ Inputs, Output format, Tools and scripts (only if there are scripts or forbidden
 :PROPERTIES:
 :CUSTOM_ID: by-whom
 :END:
+Me with gratitude to
+https://github.com/neolabhq/context-engineering-kit 

@@ -1,0 +1,17 @@
+#*#
+*~
+.#*
+compiled/
+*.dep
+.devenv
+devenv.local.nix
+devenv.local.yaml
+.direnv
+.doc/
+.envrc
+.pre-commit-config.yaml
+.racket
+.toolboxes/emacs_toolbox
+.toolboxes/racket_toolbox
+*.zo
+*.zo.bak

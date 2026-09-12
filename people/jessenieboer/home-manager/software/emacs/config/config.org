@@ -2229,74 +2229,59 @@ dy = find definitions
 #+end_src
 *** racket
 :PROPERTIES:
-:ID:       7cdf6ab0-ee02-445c-91a7-32c720757169
+:ID:       17956bf6-4154-470b-a6c9-5b8a6fdf8c33
 :END:
 #+begin_src emacs-lisp
-  (require 'racket-mode)
-  (require 'racket-xp)
+    (require 'racket-mode)
+    ;;(require 'racket-xp)
 
-  (setq racket-memory-limit 2048
-        racket-program "racket"
-        racket-repl-buffer-name-function #'racket-repl-buffer-name-project)
+    (setq racket-memory-limit 2048
+          racket-program "racket"
+          racket-repl-buffer-name-function #'racket-repl-buffer-name-project)
 
-  ;; (defun my-racket-on-path-p ()
-  ;;   (executable-find "racket"))
+   (add-hook 'racket-mode-hook #'lsp-deferred)
 
-  ;; (defun my-racket-project-root ()
-  ;;   (or (when-let ((proj (project-current)))
-  ;;         (project-root proj))
-  ;;       (and buffer-file-name
-  ;;            (file-name-directory buffer-file-name))
-  ;;       default-directory))
+  (with-eval-after-load 'lsp-mode
+    (add-to-list 'lsp-disabled-clients 'racket-language-server)
+    (lsp-register-client
+     (make-lsp-client
+      :new-connection (lsp-stdio-connection
+                       '("racket" "-l" "racket-langserver"))
+      :activation-fn (lsp-activate-on "racket")
+      :major-modes '(racket-mode)
+      :server-id 'racket-langserver)))
 
-  ;; (defun my-racket-setup ()
-  ;;   "Start racket-xp only after racket is actually findable."
-  ;;   (when (derived-mode-p 'racket-mode)
-  ;;     (let ((root (my-racket-project-root)))
-  ;;       (when (and root (not (file-equal-p root "/")))
-  ;;         (racket-add-back-end root)))
-  ;;     (if (my-racket-on-path-p)
-  ;;         (unless racket-xp-mode
-  ;;           (racket-xp-mode 1))
-  ;;       (when racket-xp-mode
-  ;;         (racket-xp-mode -1))
-  ;;       (message "racket not on exec-path — allow direnv in this project"))))
 
-  ;; (add-hook 'envrc-mode-hook #'my-racket-setup)
-  ;; (add-hook 'racket-mode-hook
-  ;;           (lambda ()
-  ;;             (add-hook 'hack-local-variables-hook #'my-racket-setup nil t)))
+    (my-add-hidden-buffer-patterns '("^\\*Racket REPL"))
+    (my-add-left-buffer-patterns '("^\\*Racket REPL"))
 
-  (my-add-hidden-buffer-patterns '("^\\*Racket REPL"))
-  (my-add-left-buffer-patterns '("^\\*Racket REPL"))
+    (my-add-to-hydra 'racket-mode
+                     ("Connection"
+                      (("in" racket-repl "racket repl"))
+                      "Navigation"
+                      ()
+                      "Display"
+                      ()
+                      "Racket"
+                      (("de" racket-send-last-sexp "run last")
+                       ("d)" racket-send-region "run region")
+                       ("dn" racket-run "run buffer")
+                       ("dh" racket-test "test buffer")
+                       ;; ("d:" racket-xp-describe "describe")
+                       ;; ("im" racket-xp-documentation "docs")
+                       )))
 
-  (my-add-to-hydra 'racket-mode
-                   ("Connection"
-                    (("in" racket-repl "racket repl"))
-                    "Navigation"
-                    ()
-                    "Display"
-                    ()
-                    "Racket"
-                    (("de" racket-send-last-sexp "run last")
-                     ("d)" racket-send-region "run region")
-                     ("dn" racket-run "run buffer")
-                     ("dh" racket-test "test buffer")
-                     ;; ("d:" racket-xp-describe "describe")
-                     ;; ("im" racket-xp-documentation "docs")
-                     )))
-
-  (my-add-to-hydra 'racket-repl-mode
-                   ("Connection"
-                    (("if" quit-window "quit repl"))
-                    "Navigation"
-                    ()
-                    "Display"
-                    ()
-                    "Racket"
-                    (
-                     ;; ("dn" racket-repl-switch-to-edit "back to source")
-                     )))
+    (my-add-to-hydra 'racket-repl-mode
+                     ("Connection"
+                      (("if" quit-window "quit repl"))
+                      "Navigation"
+                      ()
+                      "Display"
+                      ()
+                      "Racket"
+                      (
+                       ;; ("dn" racket-repl-switch-to-edit "back to source")
+                       )))
 #+end_src
 *** category
 :PROPERTIES:

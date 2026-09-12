@@ -1,0 +1,10 @@
+compiled/
+*.zo
+*.dep
+*.zo.bak
+.doc/
+.racket
+*~
+.#*
+#*#
+.toolboxes/racket_toolbox
