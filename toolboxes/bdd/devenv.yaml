@@ -5,11 +5,22 @@ inputs:
   gherkin-guidelines:
     flake: false
     url: github:AutomationPanda/gherkin-guidelines-for-ai/ce2b49e786197dc18575a5760fab46d573dc5ee5
+  llm-agents:
+    url: github:numtide/llm-agents.nix 
   mattpocock-skills:
     flake: false
     url: github:mattpocock/skills/v1.2.3
+  neolabhq-cek:
+    flake: false
+    url: github:NeoLabHQ/context-engineering-kit
     
 imports:
+  - /toolboxes/ai
   - /toolboxes/emacs
   - /toolboxes/git
   - /toolboxes/readme
+  - /toolboxes/secrets
+
+nixpkgs:
+    permitted_unfree_packages:
+      - bws

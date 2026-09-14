@@ -8,10 +8,10 @@ inputs:
         follows: nixpkgs
   trailofbits-skills:
     flake: false
-    url: github:trailofbits/skills/321ccfe628eca0d314b0ee4eaffcdd8a05639aaf
+    url: github:trailofbits/skills
   wshobson-agents:
     flake: false
-    url: github:wshobson/agents/a30778f8c4e6b0a87567941b7cca4f534bf642b6
+    url: github:wshobson/agents
     
 imports:
   - /toolboxes/emacs

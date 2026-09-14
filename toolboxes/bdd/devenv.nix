@@ -9,9 +9,6 @@ let
   bddPaths = ./settings/rules/bdd-paths.md;
 
   # skills
-  designReviewSkill = ./settings/skills/design-review/SKILL.md;
-  designReviewTemplate = ./settings/skills/design-review/references/design-review-template.md;
-
   dmADR = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/ADR-FORMAT.md";
   dmContext = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/CONTEXT-FORMAT.md";
   dmSkill = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/SKILL.md";
