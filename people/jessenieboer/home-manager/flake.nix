@@ -6,6 +6,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/emacs-overlay";
     };
+    grok-bot = {
+      url = "github:jordangarrison/grok-bot-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager/release-26.05";
@@ -59,6 +63,7 @@
           ./software/docker/docker.nix
           ./software/emacs/emacs.nix
           ./software/firefox/firefox.nix
+          ./software/grok-bot/grok-bot.nix
           ./software/kde/plasma.nix
           ./software/kde/programs.nix
           ./software/maestral/maestral.nix
@@ -80,6 +85,7 @@
           ./software/docker/docker.nix
           ./software/emacs/emacs.nix
           ./software/firefox/firefox.nix
+          ./software/grok-bot/grok-bot.nix
           ./software/kde/3-monitor-work-desktop.nix
           ./software/kde/plasma.nix
           ./software/kde/programs.nix

@@ -11,7 +11,7 @@ git clone git@github.com:jessenieboer/home-manager.git
 home-manager switch --flake .#jessenieboer@machine
 
 * update:
-cp -rf ~/kingdoms/Household/Jesse/personal_workplace/people/jessenieboer/home-manager/ ~/.config/; home-manager switch --flake ~/.config/home-manager/.#jessenieboer@nucbox
+cp -rf ~/kingdoms/Household/Jesse/personal_workplace/people/jessenieboer/home-manager/ ~/.config/; home-manager switch --flake ~/.config/home-manager#jessenieboer@nucbox
 
 
 * security stuff

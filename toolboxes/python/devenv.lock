@@ -3,11 +3,11 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1788956372,
-        "narHash": "sha256-ACop98BNBAWic+KLXd5PBSwzxzMUfEWmefVXDBDFyHQ=",
+        "lastModified": 1789340509,
+        "narHash": "sha256-It2AD16uFwiAe9GvuLbk+j+qTDrQxT3XPclL71ZnJ3I=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "2a399e9ea5e981f225d75b25c8fa8d76f730131d",
+        "rev": "6e830506b517d6a373f2dec6ee8c7f4683908856",
         "type": "github"
       },
       "original": {
@@ -35,11 +35,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1789073787,
-        "narHash": "sha256-xfX/toC2QV707s06GbP4II/TxYF0fNQj7s5/LClNDKc=",
+        "lastModified": 1789264731,
+        "narHash": "sha256-llGJbC0CcU8DfROr6mZjRJgMLQd/SKwfpzxJH/2lHO4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "aff8a0b28396750446e5537a96461bc4facdb287",
+        "rev": "02f5696b0e6097e589076d886b317b83ff0437d7",
         "type": "github"
       },
       "original": {
@@ -82,34 +82,32 @@
     "trailofbits-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1788986894,
-        "narHash": "sha256-IXAg57oHBMCYL10sP5WLbo0G21NhaotRZZEhKq+OdwA=",
+        "lastModified": 1789364956,
+        "narHash": "sha256-7VzfoLVGi7IYXREyeQ4fHigrqTjlQAoXIF2OU6MlyGo=",
         "owner": "trailofbits",
         "repo": "skills",
-        "rev": "321ccfe628eca0d314b0ee4eaffcdd8a05639aaf",
+        "rev": "ce9ae2e2dc2de7ea05f4a8a6e636ccf576f83c79",
         "type": "github"
       },
       "original": {
         "owner": "trailofbits",
         "repo": "skills",
-        "rev": "321ccfe628eca0d314b0ee4eaffcdd8a05639aaf",
         "type": "github"
       }
     },
     "wshobson-agents": {
       "flake": false,
       "locked": {
-        "lastModified": 1788302183,
-        "narHash": "sha256-sL/1lVCj20Z7WItLZEbafGuw8ifsou0bnPKR9Z77KDM=",
+        "lastModified": 1789310633,
+        "narHash": "sha256-jJsolFsGXiAxpgvyEAxY8CvO9PDCjcJP1lXDHp8bLFw=",
         "owner": "wshobson",
         "repo": "agents",
-        "rev": "a30778f8c4e6b0a87567941b7cca4f534bf642b6",
+        "rev": "4236bb91f8395b0435f1d8b8baf9e8e4c69a8620",
         "type": "github"
       },
       "original": {
         "owner": "wshobson",
         "repo": "agents",
-        "rev": "a30778f8c4e6b0a87567941b7cca4f534bf642b6",
         "type": "github"
       }
     }

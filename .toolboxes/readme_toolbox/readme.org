@@ -77,7 +77,7 @@ updating (as root in ~/)
 
 cp -r /home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/ .
 cp /root/secrets/wifi-passwords.nix /root/personal_workplace/computers/wifi.nix
-nixos-rebuild switch --flake /root/personal_workplace/computers/.#configname
+nixos-rebuild switch --flake /root/personal_workplace/computers#configname
 *** Details
 :PROPERTIES:
 :CUSTOM_ID: details
@@ -86,6 +86,10 @@ nixos-rebuild switch --flake /root/personal_workplace/computers/.#configname
 :PROPERTIES:
 :CUSTOM_ID: troubleshooting
 :END:
+
+Failed to install bootloader error:
+
+nixos-rebuild switch --install-bootloader --flake /root/personal_workplace/computers#nucbox
 **** License
 :PROPERTIES:
 :CUSTOM_ID: license

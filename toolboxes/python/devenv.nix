@@ -1,15 +1,18 @@
-{ config, inputs, pkgs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 let
+  gitignore = ./settings/.gitignore;
+  pyprojectTemplate = ./templates/pyproject.toml;
+  skillGuide = ./settings/skills/python-skill-guide/SKILL.md;
+
+  modernPython = "${inputs.trailofbits-skills}/plugins/modern-python/skills/modern-python";
+  
+  wshobsonPython = "${inputs.wshobson-agents}/plugins/python-development/skills";
   codeStyle = "${wshobsonPython}/python-code-style";
   designPatterns = "${wshobsonPython}/python-design-patterns";
-  errorHandling = "${wshobsonPython}/python-error-handling";  
-  gitignore = ./settings/.gitignore;
-  modernPython = "${inputs.trailofbits-skills}/plugins/modern-python/skills/modern-python";
+  errorHandling = "${wshobsonPython}/python-error-handling";
   projectStructure = "${wshobsonPython}/python-project-structure";
-  pyprojectTemplate = ./templates/pyproject.toml;
   testingPatterns = "${wshobsonPython}/python-testing-patterns";
   typeSafety = "${wshobsonPython}/python-type-safety";
-  wshobsonPython = "${inputs.wshobson-agents}/plugins/python-development/skills";
 in
 {
   config = {
@@ -18,6 +21,7 @@ in
       echo "Python version: $(python --version)"
       echo "uv version: $(uv --version)"
       echo "ruff version: $(ruff --version)"
+      echo "ty version: $(ty --version)"
     '';
 
     env = {
@@ -27,6 +31,10 @@ in
 
     languages.python = {
       enable = true;
+      lsp = {
+        enable = true;
+        package = pkgs.ty;
+      };
       uv = {
         enable = true;
         sync.enable = true;
@@ -37,9 +45,29 @@ in
 
     packages = with pkgs; [
       ruff
+      ty
     ];
 
     tasks = {
+      # uv drops manylinux ty/ruff into the venv. Those ELFs need Nix's
+      # dynamic linker. Point the venv shims at the nixpkgs binaries so
+      # Emacs ty-ls (which resolves venv/bin/ty) keeps working.
+      "python_toolbox:nixos_venv_bins" = {
+        before = [ "devenv:enterShell" ];
+        after = [ "devenv:python:uv" ];
+        exec = ''
+          VENV_BIN="${config.devenv.root}/.devenv/state/venv/bin"
+          mkdir -p "$VENV_BIN"
+          if [ -e "$VENV_BIN/ty" ] || [ -L "$VENV_BIN/ty" ]; then
+            ln -sfn ${lib.getExe pkgs.ty} "$VENV_BIN/ty"
+          fi
+          if [ -e "$VENV_BIN/ruff" ] || [ -L "$VENV_BIN/ruff" ]; then
+            ln -sfn ${lib.getExe pkgs.ruff} "$VENV_BIN/ruff"
+          fi
+        '';
+        showOutput = true;
+      };
+
       "python_toolbox:copy_gitignore" = {
         before = [ "devenv:enterShell" ];
         exec = ''
@@ -49,6 +77,7 @@ in
         '';
         showOutput = true;
       };
+
       "python_toolbox:copy_pyproject_template" = {
         before = [ "devenv:enterShell" "devenv:python:uv" ];
         exec = ''
@@ -62,11 +91,14 @@ in
         '';
         showOutput = true;
       };
+
       "python_toolbox:copy_skills" = {
         before = [ "devenv:enterShell" ];
         exec = ''
           ECA_DIR="${config.devenv.root}/.eca"
           mkdir -p "$ECA_DIR/skills"
+
+          install -D ${skillGuide} "$ECA_DIR/skills/python-skill-guide/SKILL.md"
 
           install -D ${modernPython}/SKILL.md "$ECA_DIR/skills/modern-python/SKILL.md"
           for f in ${modernPython}/references/*; do

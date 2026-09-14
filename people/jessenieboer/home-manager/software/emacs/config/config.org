@@ -2055,8 +2055,8 @@ dy = find definitions
   		   ("db" org-babel-tangle "tangle all")
       		   ("d+" (org-babel-tangle '(4)) "tangle block")
   		   ("di RET" org-ctrl-c-ctrl-c "confirm"))
-  		 ;; "Table"
-  		 ;; (
+  		 "Table"
+  		 (
   		   ;;("M-r" org-table-toggle-column-width "or col width")
     		  ;;  ("M-j" org-table-shrink "or shrink")
     		  ;;  ("M-k" org-table-expand "or expand")
@@ -2064,7 +2064,7 @@ dy = find definitions
     		  ;;  ("M-z" org-table-move-row-down "or row down")
     		  ;;  ("M-f" org-table-move-column-left "or col left")
     		  ;;  ("M-u" org-table-move-column-right "or col right")
-    		  ;;  ("M-i M-m" org-table-align "or align") ;; alt tab
+    		    ("M-i M-m" org-table-align "or align") ;; alt tab
     		  ;;  ("M-<return>" org-table-edit-field "or edit field")
     		  ;;  ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
     		  ;;  ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
@@ -2084,8 +2084,8 @@ dy = find definitions
     		  ;;  ("M-a" org-table-beginning-of-field "or field first")
     		  ;;  ("M-n" org-table-end-of-field "or field last")
     		  ;;  ("M-l" move-beginning-of-line "line first")
-    		  ;;  ("M-c" move-end-of-line "line last"))
-  		  ))
+    		  ;;  ("M-c" move-end-of-line "line last")
+  		  )))
 
   (my-add-to-hydra minibuffer-modes
   		 ("Navigation"
