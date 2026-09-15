@@ -1,51 +1,30 @@
 ---
 name: python-skill-guide
-description: Dispatch this toolbox's Python skills when writing or changing Python. Use when the project imported the python toolbox or has pyproject.toml plus uv.
+description: Use when writing or changing Python in a project that imported this toolbox or has pyproject.toml — dispatches Python skills, discovers commands from pyproject.toml, runs them from PATH when .envrc and devenv.nix exist, else uv run.
 license: MIT
 ---
 
 # Python Skill Guide
 
-Load the right Python skills for this change. Do not implement the change yourself until those skills are loaded.
-
-## When to use
-
-- Writing or changing Python in a project that imported this toolbox
-- `pyproject.toml` exists and uv is the package manager
-
 ## When not to use
 
-- Another language is the stack → that toolbox's skill guide
-- Process (increments, RED/GREEN) → already-loaded skills; this file does not replace them
+- Other language → that toolbox's skill guide
+- Process (increments, RED/GREEN) → already-loaded skills
 
 ## Instructions
 
-1. Read this project's `pyproject.toml`. That file wins over every skill below.
-2. Load, in order, before the first test file:
-   - `modern-python`
-   - `python-project-structure`
-   - `python-testing-patterns`
-3. Load only if this change needs them:
-   - `python-code-style` — naming, imports, docstrings
-   - `python-type-safety` — new public signatures
-   - `python-error-handling` — invalid input or failure paths
-   - `python-design-patterns` — a third copy of the same idea
-4. Discover commands from `pyproject.toml` and `modern-python`. Prefer `uv run pytest`, `uv run ruff`, `uv run ty check`.
+1. Read `pyproject.toml`. It wins over every skill, including `modern-python`.
+2. Always load before the first test file: `modern-python`, `python-project-structure`, `python-testing-patterns`.
+3. Load only if needed: `python-code-style`, `python-type-safety`, `python-error-handling`, `python-design-patterns`.
+4. Discover commands from this `pyproject.toml` only. Catalog skills do not choose tools.
+5. Run discovered commands from PATH when `.envrc` and `devenv.nix` both exist. Otherwise `uv run <command>`. File presence is the signal — not direnv hook, not `which`.
+6. Return skills loaded and commands to use.
 
 ## Constraints
 
-- Do not load the optional skills by default
-- Do not add tools a catalog skill likes if this `pyproject.toml` did not already choose them
-- Do not run `uv init` or overwrite an existing `pyproject.toml`
-- Do not replace a test-driven-development cycle
-
-## Done when
-
-- The always-load skills are loaded
-- Any optional skill that this change needed is loaded
-- Return: skills loaded, commands to use
+- Do not load optional skills by default, add tools this `pyproject.toml` did not choose, run `uv init`, overwrite `pyproject.toml`, replace TDD, or prefix `uv run` when both devenv files exist
 
 ## If blocked
 
-- `pyproject.toml` missing → stop
-- A named skill is missing from `.eca/skills` → stop and name it
+- No `pyproject.toml` → stop
+- Named skill missing from `.eca/skills` → stop and name it

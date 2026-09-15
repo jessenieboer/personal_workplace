@@ -5,7 +5,7 @@ let
   skillGuide = ./settings/skills/python-skill-guide/SKILL.md;
 
   modernPython = "${inputs.trailofbits-skills}/plugins/modern-python/skills/modern-python";
-  
+
   wshobsonPython = "${inputs.wshobson-agents}/plugins/python-development/skills";
   codeStyle = "${wshobsonPython}/python-code-style";
   designPatterns = "${wshobsonPython}/python-design-patterns";
@@ -17,11 +17,13 @@ in
 {
   config = {
     enterShell = ''
+      if [ -t 1 ]; then
       echo "python toolbox available"
       echo "Python version: $(python --version)"
       echo "uv version: $(uv --version)"
       echo "ruff version: $(ruff --version)"
       echo "ty version: $(ty --version)"
+      fi
     '';
 
     env = {
@@ -59,10 +61,10 @@ in
           VENV_BIN="${config.devenv.root}/.devenv/state/venv/bin"
           mkdir -p "$VENV_BIN"
           if [ -e "$VENV_BIN/ty" ] || [ -L "$VENV_BIN/ty" ]; then
-            ln -sfn ${lib.getExe pkgs.ty} "$VENV_BIN/ty"
+          ln -sfn ${lib.getExe pkgs.ty} "$VENV_BIN/ty"
           fi
           if [ -e "$VENV_BIN/ruff" ] || [ -L "$VENV_BIN/ruff" ]; then
-            ln -sfn ${lib.getExe pkgs.ruff} "$VENV_BIN/ruff"
+          ln -sfn ${lib.getExe pkgs.ruff} "$VENV_BIN/ruff"
           fi
         '';
         showOutput = true;
@@ -82,8 +84,8 @@ in
         before = [ "devenv:enterShell" "devenv:python:uv" ];
         exec = ''
           if [ -f "${config.devenv.root}/pyproject.toml" ]; then
-            echo "pyproject.toml already exists — skipping copy."
-            exit 0
+          echo "pyproject.toml already exists — skipping copy."
+          exit 0
           fi
           cp ${pyprojectTemplate} ${config.devenv.root}/pyproject.toml
           chmod u+w ${config.devenv.root}/pyproject.toml
@@ -102,7 +104,7 @@ in
 
           install -D ${modernPython}/SKILL.md "$ECA_DIR/skills/modern-python/SKILL.md"
           for f in ${modernPython}/references/*; do
-            install -D "$f" "$ECA_DIR/skills/modern-python/references/$(basename "$f")"
+          install -D "$f" "$ECA_DIR/skills/modern-python/references/$(basename "$f")"
           done
 
           install -D ${codeStyle}/SKILL.md "$ECA_DIR/skills/python-code-style/SKILL.md"
@@ -113,7 +115,7 @@ in
 
           install -D ${testingPatterns}/SKILL.md "$ECA_DIR/skills/python-testing-patterns/SKILL.md"
           for f in ${testingPatterns}/references/*; do
-            install -D "$f" "$ECA_DIR/skills/python-testing-patterns/references/$(basename "$f")"
+          install -D "$f" "$ECA_DIR/skills/python-testing-patterns/references/$(basename "$f")"
           done
 
           echo "python toolbox skills copied to $ECA_DIR/skills"

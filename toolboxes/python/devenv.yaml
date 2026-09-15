@@ -1,4 +1,9 @@
 inputs:
+  llm-agents:
+    url: github:numtide/llm-agents.nix/assets
+  neolabhq-cek:
+    flake: false
+    url: github:NeoLabHQ/context-engineering-kit
   nixpkgs:
     url: github:NixOS/nixpkgs/nixpkgs-unstable
   nixpkgs-python:
@@ -14,6 +19,8 @@ inputs:
     url: github:wshobson/agents
     
 imports:
+  - /toolboxes/ai
   - /toolboxes/emacs
   - /toolboxes/git
   - /toolboxes/readme
+  - /toolboxes/secrets

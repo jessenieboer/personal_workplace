@@ -900,7 +900,11 @@ Returns the value as string or nil if not found / error."
 		  "Display"
 		  ()
 		  "AI"
-		  ()))
+		  (("dio" eca-chat-add-context-to-user-prompt "add ai user ctx")
+                   ("di-" eca-chat-add-context-to-system-prompt "add ai system ctx")
+                   ("dih" eca-chat-add-filepath-to-user-prompt "add ai path user ctx")
+                   ("diu" eca-chat-add-workspace-root "add ai root")
+                   ("di:" eca-chat-remove-workspace-root "remove ai root"))))
 
 (my-add-to-hydra alt-nav-modes
                  ("Connection"
@@ -910,11 +914,15 @@ Returns the value as string or nil if not found / error."
 		  "Display"
 		  ()
 		  "AI"
-		  ()))
+		  (("io" eca-chat-add-context-to-user-prompt "add ai user ctx")
+                   ("i-" eca-chat-add-context-to-system-prompt "add ai system ctx")
+                   ("ih" eca-chat-add-filepath-to-user-prompt "add ai user ctxt")
+                   ("iu" eca-chat-add-workspace-root "add ai root")
+                   ("i:" eca-chat-remove-workspace-root "remove ai root"))))
 
 (my-add-to-hydra 'eca-chat-mode
                  ("Connection"
-		  (("C-x" eca-workspaces "ai workspaces"))
+		  (("iu" eca-workspaces "ai workspaces"))
 		  "Navigation"
 		  (("C-SPC" previous-line "or pree line")
     		   ("C-e" next-line "or nex line"))
@@ -925,11 +933,12 @@ Returns the value as string or nil if not found / error."
 		  "AI"
 		  (("ix" eca-chat-select-agent "ai choose agent")
                    ("i?" eca-chat-select-model "ai choose model")
-                   ("i RET" eca-chat--key-pressed-return "ai send")
+                   ("i RET" eca-chat--key-pressed-return  "ai send")
                    ("in" eca-chat-tool-call-accept-next "ai tool accept")
                    ("i;" eca-chat-tool-call-reject-next "ai tool reject")
                    ("ic" eca-chat-tool-call-accept-all "ai tool accept all")
                    ("i," eca-chat-tool-call-accept-all-and-remember "ai tool accept all remember")
+                   ("C-i C-c" eca-chat-toggle-trust "ai trust mode")
                    ("if" eca-chat-stop-prompt)
                    ("i$" eca-stop))))
 

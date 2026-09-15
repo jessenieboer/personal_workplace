@@ -30,7 +30,9 @@ let
 in
 {
   enterShell = ''
+  if [ -t 1 ]; then
     echo bdd toolbox available
+    fi
   '';
 
   tasks = {

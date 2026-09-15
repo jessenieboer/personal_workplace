@@ -259,6 +259,7 @@ i = leader key for mode-specific stuff
 :END:
 https://github.com/minad/vertico#complementary-packages
 #+begin_src emacs-lisp
+  (require 'consult)
   (require 'marginalia)
   (require 'orderless)
   (require 'vertico)
@@ -266,6 +267,7 @@ https://github.com/minad/vertico#complementary-packages
 
   (setq completion-category-overrides '((file (styles basic partial-completion)))
         completion-ignore-case t
+        completion-in-region-function #'consult-completion-in-region
         completion-styles '(orderless basic)
         orderless-matching-styles '(orderless-prefixes orderless-literal)
         vertico-sort-function 'vertico-sort-history-alpha)
@@ -1115,7 +1117,11 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   		  "Display"
   		  ()
   		  "AI"
-  		  ()))
+  		  (("dio" eca-chat-add-context-to-user-prompt "add ai user ctx")
+                     ("di-" eca-chat-add-context-to-system-prompt "add ai system ctx")
+                     ("dih" eca-chat-add-filepath-to-user-prompt "add ai path user ctx")
+                     ("diu" eca-chat-add-workspace-root "add ai root")
+                     ("di:" eca-chat-remove-workspace-root "remove ai root"))))
 
   (my-add-to-hydra alt-nav-modes
                    ("Connection"
@@ -1125,11 +1131,15 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   		  "Display"
   		  ()
   		  "AI"
-  		  ()))
+  		  (("io" eca-chat-add-context-to-user-prompt "add ai user ctx")
+                     ("i-" eca-chat-add-context-to-system-prompt "add ai system ctx")
+                     ("ih" eca-chat-add-filepath-to-user-prompt "add ai user ctxt")
+                     ("iu" eca-chat-add-workspace-root "add ai root")
+                     ("i:" eca-chat-remove-workspace-root "remove ai root"))))
 
   (my-add-to-hydra 'eca-chat-mode
                    ("Connection"
-  		  (("C-x" eca-workspaces "ai workspaces"))
+  		  (("iu" eca-workspaces "ai workspaces"))
   		  "Navigation"
   		  (("C-SPC" previous-line "or pree line")
       		   ("C-e" next-line "or nex line"))
@@ -1140,11 +1150,12 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   		  "AI"
   		  (("ix" eca-chat-select-agent "ai choose agent")
                      ("i?" eca-chat-select-model "ai choose model")
-                     ("i RET" eca-chat--key-pressed-return "ai send")
+                     ("i RET" eca-chat--key-pressed-return  "ai send")
                      ("in" eca-chat-tool-call-accept-next "ai tool accept")
                      ("i;" eca-chat-tool-call-reject-next "ai tool reject")
                      ("ic" eca-chat-tool-call-accept-all "ai tool accept all")
                      ("i," eca-chat-tool-call-accept-all-and-remember "ai tool accept all remember")
+                     ("C-i C-c" eca-chat-toggle-trust "ai trust mode")
                      ("if" eca-chat-stop-prompt)
                      ("i$" eca-stop))))
 
