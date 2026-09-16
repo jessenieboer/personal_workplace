@@ -1,10 +1,19 @@
 { config, inputs, pkgs, ... }:
 let
+  explainer = ./settings/agents/code-explainer.md;
   gitignore = ./settings/.gitignore;
   opencodeConfig = ./settings/opencode/opencode.json;
+
+  atomic = inputs.atomic;
+  howSkill = "${atomic}/packages/workflows/skills/how";
+  
   root = config.devenv.root;
+  ecaDir = "${root}/.eca";
+  howDest = "${ecaDir}/skills/how";
+  explainerDest = "${ecaDir}/agents/code-explainer";
   gitignoreDest = "${root}/.toolboxes/code_toolbox/.gitignore";
   opencodeDest = "${root}/.opencode/opencode.json";
+  
 in
 {
   config = {
@@ -39,6 +48,36 @@ in
         '';
         exec = ''
           install -D -m 0644 ${opencodeConfig} "${opencodeDest}"
+        '';
+      };
+
+      "code_toolbox:copy_setup_files" = {
+        description = "Refresh the code-explainer agent";
+        before = [ "devenv:enterShell" ];
+        status = ''
+          [ -f "${ecaDir}/config.json" ] \
+            && [ -f "${explainerDest}" ] \
+            && cmp -s ${explainer} "${explainerDest}"
+        '';
+        exec = ''
+          mkdir -p "${ecaDir}/agents" "${ecaDir}/rules" "${ecaDir}/skills"
+          install -D -m 0444 ${explainer} "${explainerDest}"
+        '';
+      };
+
+      "code_toolbox:copy_skills" = {
+        description = "Refresh the Atomic how skill under .eca/skills";
+        before = [ "devenv:enterShell" ];
+        status = ''
+          [ -d "${howDest}" ] \
+            && cmp -s ${howSkill}/SKILL.md "${howDest}/SKILL.md" \
+            && diff -rq --exclude LICENSE.txt ${howSkill} "${howDest}" >/dev/null
+        '';
+        exec = ''
+          rm -rf "${howDest}"
+          mkdir -p "${howDest}"
+          cp -a ${howSkill}/. "${howDest}/"
+          find "${howDest}" -type f -exec chmod 0444 {} +
         '';
       };
     };

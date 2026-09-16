@@ -1,8 +1,15 @@
 inputs:
+  atomic:
+    flake: false
+    url: github:bastani-inc/atomic
   llm-agents:
     url: github:numtide/llm-agents.nix/assets
+  neolabhq-cek:
+    flake: false
+    url: github:NeoLabHQ/context-engineering-kit
 
 imports:
+  - /toolboxes/ai
   - /toolboxes/emacs
   - /toolboxes/git
   - /toolboxes/readme
