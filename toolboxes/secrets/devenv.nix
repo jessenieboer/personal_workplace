@@ -3,11 +3,17 @@ let
   gh_devenv = ./programs/gh_devenv.sh;
   gitignore = ./settings/.gitignore;
   secretspecTemplate = ./templates/secretspec.toml;
+  root = config.devenv.root;
+  ghDest = "${root}/.toolboxes/secrets_toolbox/gh_devenv.sh";
+  gitignoreDest = "${root}/.toolboxes/secrets_toolbox/.gitignore";
+  secretspecDest = "${root}/secretspec.toml";
 in
 {
   config = {
     enterShell = ''
-      echo "secrets toolbox available"
+      if [ -t 1 ]; then
+        echo "secrets toolbox available"
+      fi
     '';
 
     packages = with pkgs; [
@@ -17,41 +23,36 @@ in
 
     tasks = {
       "secrets_toolbox:copy_github_devenv" = {
+        description = "Seed gh_devenv.sh once from the toolbox program";
         before = [ "devenv:enterShell" ];
-        exec = ''
-          if [ -f "${config.devenv.root}/.toolboxes/secrets_toolbox/gh_devenv.sh" ]; then
-          echo "gh_devenv.sh already exists — skipping copy."
-          exit 0
-          fi
-          mkdir -p ${config.devenv.root}/.toolboxes/secrets_toolbox
-          cp ${gh_devenv} ${config.devenv.root}/.toolboxes/secrets_toolbox/gh_devenv.sh
-
-          echo "copied github devenv program to .toolboxes/secrets_toolbox/gh_devenv.sh"
+        status = ''
+          test -f "${ghDest}"
         '';
-        showOutput = true;
+        exec = ''
+          install -D -m 0444 ${gh_devenv} "${ghDest}"
+        '';
       };
+
       "secrets_toolbox:copy_gitignore" = {
+        description = "Refresh the secrets_toolbox gitignore fragment from the toolbox";
         before = [ "devenv:enterShell" ];
-        exec = ''
-          mkdir -p ${config.devenv.root}/.toolboxes/secrets_toolbox
-          cat ${gitignore} > ${config.devenv.root}/.toolboxes/secrets_toolbox/.gitignore
-          echo "copied secrets_toolbox .gitignore"
+        status = ''
+          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
         '';
-        showOutput = true;
+        exec = ''
+          install -D -m 0644 ${gitignore} "${gitignoreDest}"
+        '';
       };
-      "secrets_toolbox:copy_secretspec_template" = {
-        before = [ "devenv:enterShell" ];
-        exec = ''
-          if [ -f "${config.devenv.root}/secretspec.toml" ]; then
-          echo "secretspec.toml already exists — skipping copy."
-          exit 0
-          fi
-          cp ${secretspecTemplate} ${config.devenv.root}/secretspec.toml
-          chmod u+w ${config.devenv.root}/secretspec.toml
 
-          echo "copied secretspec template to secretspec.toml"
+      "secrets_toolbox:copy_secretspec_template" = {
+        description = "Seed secretspec.toml once from the toolbox template";
+        before = [ "devenv:enterShell" ];
+        status = ''
+          test -f "${secretspecDest}"
         '';
-        showOutput = true;
+        exec = ''
+          install -D -m 0644 ${secretspecTemplate} "${secretspecDest}"
+        '';
       };
     };
   };

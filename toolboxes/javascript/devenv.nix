@@ -2,16 +2,21 @@
 let
   gitignore = ./settings/.gitignore;
   packageJsonTemplate = ./templates/package.json;
+  root = config.devenv.root;
+  gitignoreDest = "${root}/.toolboxes/javascript_toolbox/.gitignore";
+  packageJsonDest = "${root}/package.json";
 in
 {
   config = {
     enterShell = ''
-      echo "jessenieboer's javascript toolbox available"
-      echo "node: $(node --version)"
-      echo "npm: $(npm --version)"
-      echo "tsc: $(tsc --version)"
-      echo "ts-ls: $(command -v typescript-language-server)"
-      echo "prettier: $(command -v prettier)"
+      if [ -t 1 ]; then
+        echo "jessenieboer's javascript toolbox available"
+        echo "node: $(node --version)"
+        echo "npm: $(npm --version)"
+        echo "tsc: $(tsc --version)"
+        echo "ts-ls: $(command -v typescript-language-server)"
+        echo "prettier: $(command -v prettier)"
+      fi
     '';
 
     languages.javascript = {
@@ -35,27 +40,25 @@ in
 
     tasks = {
       "javascript_toolbox:copy_gitignore" = {
+        description = "Refresh the javascript_toolbox gitignore fragment from the toolbox";
         before = [ "devenv:enterShell" ];
-        exec = ''
-          mkdir -p "${config.devenv.root}/.toolboxes/javascript_toolbox"
-          cp -f ${gitignore} "${config.devenv.root}/.toolboxes/javascript_toolbox/.gitignore"
-          echo "copied javascript_toolbox .gitignore"
+        status = ''
+          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
         '';
-        showOutput = true;
+        exec = ''
+          install -D -m 0644 ${gitignore} "${gitignoreDest}"
+        '';
       };
-      "javascript_toolbox:copy_package_json_template" = {
-        before = [ "devenv:enterShell" ];
-        exec = ''
-          if [ -f "${config.devenv.root}/package.json" ]; then
-          echo "package.json already exists — skipping copy."
-          exit 0
-          fi
-          cp ${packageJsonTemplate} ${config.devenv.root}/package.json
-          chmod u+w ${config.devenv.root}/package.json
 
-          echo "copied templates/package.json to package.json"
+      "javascript_toolbox:copy_package_json_template" = {
+        description = "Seed package.json once from the toolbox template";
+        before = [ "devenv:enterShell" ];
+        status = ''
+          test -f "${packageJsonDest}"
         '';
-        showOutput = true;
+        exec = ''
+          install -D -m 0644 ${packageJsonTemplate} "${packageJsonDest}"
+        '';
       };
     };
   };

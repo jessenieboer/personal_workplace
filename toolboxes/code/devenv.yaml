@@ -1,7 +1,6 @@
 inputs:
-  neolabhq-cek:
-    flake: false
-    url: github:NeoLabHQ/context-engineering-kit
+  llm-agents:
+    url: github:numtide/llm-agents.nix/assets
 
 imports:
   - /toolboxes/emacs

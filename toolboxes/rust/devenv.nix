@@ -2,13 +2,18 @@
 let
   gitignore = ./settings/.gitignore;
   cargoTomlTemplate = ./templates/Cargo.toml;
+  root = config.devenv.root;
+  gitignoreDest = "${root}/.toolboxes/rust_toolbox/.gitignore";
+  cargoTomlDest = "${root}/Cargo.toml";
 in
 {
   config = {
     enterShell = ''
-      echo "rust toolbox available"
-      echo "rustc version: $(rustc --version)"
-      echo "cargo version: $(cargo --version)"
+      if [ -t 1 ]; then
+        echo "rust toolbox available"
+        echo "rustc version: $(rustc --version)"
+        echo "cargo version: $(cargo --version)"
+      fi
     '';
 
     env = {
@@ -30,27 +35,25 @@ in
 
     tasks = {
       "rust_toolbox:copy_gitignore" = {
+        description = "Refresh the rust_toolbox gitignore fragment from the toolbox";
         before = [ "devenv:enterShell" ];
-        exec = ''
-          mkdir -p "${config.devenv.root}/.toolboxes/rust_toolbox"
-          cp -f ${gitignore} "${config.devenv.root}/.toolboxes/rust_toolbox/.gitignore"
-          echo "copied rust_toolbox .gitignore"
+        status = ''
+          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
         '';
-        showOutput = true;
+        exec = ''
+          install -D -m 0644 ${gitignore} "${gitignoreDest}"
+        '';
       };
-      "rust_toolbox:copy_cargo_toml_template" = {
-        before = [ "devenv:enterShell" ];
-        exec = ''
-          if [ -f "${config.devenv.root}/Cargo.toml" ]; then
-          echo "Cargo.toml already exists — skipping copy."
-          exit 0
-          fi
-          cp ${cargoTomlTemplate} ${config.devenv.root}/Cargo.toml
-          chmod u+w ${config.devenv.root}/Cargo.toml
 
-          echo "copied templates/Cargo.toml to Cargo.toml"
+      "rust_toolbox:copy_cargo_toml_template" = {
+        description = "Seed Cargo.toml once from the toolbox template";
+        before = [ "devenv:enterShell" ];
+        status = ''
+          test -f "${cargoTomlDest}"
         '';
-        showOutput = true;
+        exec = ''
+          install -D -m 0644 ${cargoTomlTemplate} "${cargoTomlDest}"
+        '';
       };
     };
   };

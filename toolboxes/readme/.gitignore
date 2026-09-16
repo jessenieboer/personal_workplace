@@ -2,4 +2,6 @@
 devenv.local.nix
 devenv.local.yaml
 .direnv
+.envrc
 .pre-commit-config.yaml
+.toolboxes/emacs_toolbox

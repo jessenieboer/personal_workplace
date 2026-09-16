@@ -1,19 +1,28 @@
 { pkgs, lib, config, inputs, ... }:
 let
   gitIgnore = ./settings/.gitignore;
+  root = config.devenv.root;
+  dest = "${root}/.gitignore";
 in
 {
   config = {
-    # note that this must run after all other tasks in other devenv.nix files (because those tasks copy their own gitignore files that need to be combined, but it has 
-    enterShell = lib.mkAfter '' 
+    # Runs after other toolboxes' before-enterShell copy tasks so
+    # .toolboxes/*/gitignore fragments exist before this merge.
+    enterShell = lib.mkAfter ''
       tmp=$(mktemp)
       {
-      cat ${gitIgnore}
-      echo
-      find . -path '*/.toolboxes/*' -name .gitignore -type f -exec cat {} \; -exec echo \;
-      } 2>/dev/null | grep -v '^$' | sort -u > "$tmp" && mv "$tmp" .gitignore
-      echo "Merged template + all nested .gitignore files into ./.gitignore"
-      echo "git toolbox available"
+        cat ${gitIgnore}
+        echo
+        find "${root}" -path '*/.toolboxes/*' -name .gitignore -type f -exec cat {} \; -exec echo \;
+      } 2>/dev/null | grep -v '^$' | sort -u > "$tmp"
+      if [ ! -f "${dest}" ] || ! cmp -s "$tmp" "${dest}"; then
+        mv "$tmp" "${dest}"
+      else
+        rm -f "$tmp"
+      fi
+      if [ -t 1 ]; then
+        echo "git toolbox available"
+      fi
     '';
   };
 }

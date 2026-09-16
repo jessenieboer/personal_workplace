@@ -34,8 +34,6 @@
 declare this input in project yaml:
 #+begin_src yaml
   inputs:
-    llm-agents:
-      url: github:numtide/llm-agents.nix
     neolabhq-cek:
       flake: false
       url: github:NeoLabHQ/context-engineering-kit

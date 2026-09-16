@@ -4,7 +4,6 @@ devenv.local.yaml
 .direnv
 .eca
 .envrc
-.opencode
 .pre-commit-config.yaml
 .toolboxes/ai_toolbox
 .toolboxes/emacs_toolbox

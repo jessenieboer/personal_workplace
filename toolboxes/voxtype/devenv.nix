@@ -26,54 +26,51 @@
     };
   };
 
-
   config = {
     enterShell = ''
-      echo "voxtype toolbox available"
+      if [ -t 1 ]; then
+        echo "voxtype toolbox available"
+      fi
     '';
 
     tasks = {
       "voxtype_toolbox:generate_initial_prompt" = {
+        description = "Write initial_prompt.txt when the project set a prompt";
         before = [ "devenv:enterShell" ];
-        showOutput = true;
+        status = ''
+          dest="${config.devenv.root}/.toolboxes/voxtype_toolbox/initial_prompt.txt"
+          if [ -z ${lib.escapeShellArg config.voxtype_toolbox.initial_prompt} ]; then
+            exit 0
+          fi
+          [ -f "$dest" ] && cmp -s "$dest" <(printf '%s\n' ${lib.escapeShellArg config.voxtype_toolbox.initial_prompt})
+        '';
         exec = ''
           set -euo pipefail
           dir="${config.devenv.root}/.toolboxes/voxtype_toolbox"
           mkdir -p "$dir"
-
-          # Only write when the project set a prompt
-          if [ -n ${lib.escapeShellArg config.voxtype_toolbox.initial_prompt} ]; then
           printf '%s\n' ${lib.escapeShellArg config.voxtype_toolbox.initial_prompt} \
-          > "$dir/initial_prompt.txt"
-          echo "wrote $dir/initial_prompt.txt"
-          else
-          echo "voxtype_toolbox.initial_prompt is empty; skipped initial_prompt.txt"
-          fi
+            > "$dir/initial_prompt.txt"
         '';
       };
+
       "voxtype_toolbox:generate_post_process_prompt" = {
+        description = "Write post_process_prompt.txt when the project set a prompt";
         before = [ "devenv:enterShell" ];
-        showOutput = true;
+        status = ''
+          dest="${config.devenv.root}/.toolboxes/voxtype_toolbox/post_process_prompt.txt"
+          if [ -z ${lib.escapeShellArg config.voxtype_toolbox.post_process_prompt} ]; then
+            exit 0
+          fi
+          [ -f "$dest" ] && cmp -s "$dest" <(printf '%s\n' ${lib.escapeShellArg config.voxtype_toolbox.post_process_prompt})
+        '';
         exec = ''
           set -euo pipefail
           dir="${config.devenv.root}/.toolboxes/voxtype_toolbox"
           mkdir -p "$dir"
-
-          # Only write when the project sets a prompt
-          if [ -n ${lib.escapeShellArg config.voxtype_toolbox.post_process_prompt} ]; then
           printf '%s\n' ${lib.escapeShellArg config.voxtype_toolbox.post_process_prompt} \
-          > "$dir/post_process_prompt.txt"
-          echo "wrote $dir/post_process_prompt.txt"
-          else
-          echo "voxtype_toolbox.post_process_prompt is empty; skipped post_process_prompt.txt"
-          fi
+            > "$dir/post_process_prompt.txt"
         '';
       };
     };
-
-    # voxtype_toolbox = {
-    #   initial_prompt = "test";
-    #   post_process_prompt = "test2";
-    # };
   };
 }

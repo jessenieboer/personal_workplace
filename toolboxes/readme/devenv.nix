@@ -1,30 +1,26 @@
-
-{ pkgs, lib, config, inputs, ... }:
+{ config, ... }:
 let
   readmeTemplate = ./templates/readme.org;
-  
+  readmeDest = "${config.devenv.root}/.toolboxes/readme_toolbox/readme.org";
 in
 {
   config = {
     enterShell = ''
-      echo "readme toolbox available"
+      if [ -t 1 ]; then
+        echo "readme toolbox available"
+      fi
     '';
 
     tasks = {
       "readme_toolbox:copy_readme_template" = {
+        description = "Seed .toolboxes/readme_toolbox/readme.org once from the toolbox template";
         before = [ "devenv:enterShell" ];
-        exec = ''
-          if [ -f "${config.devenv.root}/.toolboxes/readme_toolbox/readme.org" ]; then
-          echo "readme.org already exists — skipping copy."
-          exit 0
-          fi
-          mkdir -p ${config.devenv.root}/.toolboxes/readme_toolbox
-          cp ${readmeTemplate} ${config.devenv.root}/.toolboxes/readme_toolbox/readme.org
-          chmod u+w ${config.devenv.root}/.toolboxes/readme_toolbox/readme.org
-
-          echo "copied readme template to .toolboxes/readme_toolbox/readme.org"
+        status = ''
+          test -f "${readmeDest}"
         '';
-        showOutput = true;
+        exec = ''
+          install -D -m 0644 ${readmeTemplate} "${readmeDest}"
+        '';
       };
     };
   };

@@ -1,46 +1,41 @@
 { pkgs, lib, config, inputs, ... }:
 let
   dirLocalsTemplate = ./templates/dir-locals.el.in;
+  dest = "${config.devenv.root}/.toolboxes/project_management_toolbox/project_management_toolbox_dir_locals";
+  subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management_toolbox.subproject_agenda_files;
 in
 {
   config = {
     enterShell = ''
-      echo "jessenieboer's project management toolbox available"
+      if [ -t 1 ]; then
+        echo "jessenieboer's project management toolbox available"
+      fi
     '';
 
-    # project_management_toolbox = {
-    #   project_name = "project_management_toolbox";
-    #   workers = [
-    #     {
-    #       worker_name = "Jesse";
-    #       worker_email = "jessenieboer@protonmail.com";
-    #     }
-    #     {
-    #       worker_name = "Grok";
-    #     }
-    #   ];
-    # };
-
-    # todo use pkgs.replaceVars instead of sed?
     tasks = {
       "project_management_toolbox:generate_dir_locals" = {
+        description = "Render project_management_toolbox_dir_locals from devenv options";
         before = [ "devenv:enterShell" ];
-        exec = let
-          # annoying to produce a series of double-quoted strings
-          subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management_toolbox.subproject_agenda_files;
-        in ''
-          mkdir -p ${config.devenv.root}/.toolboxes/project_management_toolbox
+        status = ''
+          tmp=$(mktemp)
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
-          -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
-          -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
-          ${dirLocalsTemplate} > ${config.devenv.root}/.toolboxes/project_management_toolbox/project_management_toolbox_dir_locals
-
-          echo "project_management_toolbox_dir_locals generated successfully"
+              -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
+              -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
+              ${dirLocalsTemplate} > "$tmp"
+          if [ -f "${dest}" ] && cmp -s "$tmp" "${dest}"; then
+            rm -f "$tmp"
+            exit 0
+          fi
+          rm -f "$tmp"
+          exit 1
         '';
-        # execIfModified = [
-          #   "devenv.nix"
-          # ];
-          showOutput = true;
+        exec = ''
+          mkdir -p "$(dirname "${dest}")"
+          sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
+              -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
+              -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
+              ${dirLocalsTemplate} > "${dest}"
+        '';
       };
     };
   };
@@ -57,8 +52,9 @@ in
         type = lib.types.listOf lib.types.str;
         default = [ ];
         description = "List of project management directories of subprojects";
-        example = [ "/path/to/subproj1/subproj1.org" "/path/to/subproj2/subproj2.org"];
+        example = [ "/path/to/subproj1/subproj1.org" "/path/to/subproj2/subproj2.org" ];
       };
+
       workers = lib.mkOption {
         type = lib.types.listOf (lib.types.submodule {
           options = {

@@ -3,7 +3,6 @@ let
   aiInputEngineer = ./settings/agents/ai-input-engineer.md;
   ecaConfig = ./settings/eca/config.json;
   gitignore = ./settings/.gitignore;
-  opencodeConfig = ./settings/opencode/opencode.json;
   localSkills = ./settings/skills;
 
   cek = inputs.neolabhq-cek;
@@ -32,84 +31,84 @@ let
   ];
 
   copyCekSkill = rel: ''
-    install -D ${cek}/${rel}/SKILL.md "$ECA_DIR/skills/${baseNameOf rel}/SKILL.md"
-    install -D ${cekLicense} "$ECA_DIR/skills/${baseNameOf rel}/LICENSE"
+    install -D -m 0444 ${cek}/${rel}/SKILL.md "$ECA_DIR/skills/${baseNameOf rel}/SKILL.md"
+    install -D -m 0444 ${cekLicense} "$ECA_DIR/skills/${baseNameOf rel}/LICENSE"
   '';
+
+  root = config.devenv.root;
+  ecaDir = "${root}/.eca";
+  gitignoreDest = "${root}/.toolboxes/ai_toolbox/.gitignore";
+  agentDest = "${ecaDir}/agents/ai-input-engineer.md";
 in
 {
   config = {
     enterShell = ''
-    if [ -t 1 ]; then
-      echo "ai toolbox available"
-    fi
+      if [ -t 1 ]; then
+        echo "ai toolbox available"
+      fi
     '';
-
-    packages = [
-      inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
-    ];
 
     tasks = {
       "ai_toolbox:copy_gitignore" = {
+        description = "Refresh the ai_toolbox gitignore fragment from the toolbox";
         before = [ "devenv:enterShell" ];
-        exec = ''
-          mkdir -p "${config.devenv.root}/.toolboxes/ai_toolbox"
-          install -D ${gitignore} "${config.devenv.root}/.toolboxes/ai_toolbox/.gitignore"
-          echo "copied ai_toolbox .gitignore"
+        status = ''
+          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
         '';
-        showOutput = true;
+        exec = ''
+          install -D -m 0644 ${gitignore} "${gitignoreDest}"
+        '';
       };
 
       "ai_toolbox:copy_setup_files" = {
+        description = "Seed ECA config once; refresh the input-engineer agent";
         before = [ "devenv:enterShell" ];
-        exec = ''
-          TOOLBOX_DIR="${config.devenv.root}/.toolboxes/ai_toolbox"
-
-          ECA_DIR="${config.devenv.root}/.eca"
-          mkdir -p "$ECA_DIR/agents" "$ECA_DIR/rules" "$ECA_DIR/skills"
-          if [ -f ${aiInputEngineer} ]; then
-             install -D ${aiInputEngineer} "$ECA_DIR/agents/ai-input-engineer.md"
-          fi
-
-          if [ -f "$ECA_DIR/config.json" ]; then
-            echo "$ECA_DIR/config.json already exists — skipping copy."
-          else
-            install -D ${ecaConfig} "$ECA_DIR/config.json"
-          fi
-
-          OPENCODE_DIR="${config.devenv.root}/.opencode"
-          mkdir -p "$OPENCODE_DIR"
-          if [ -f "$OPENCODE_DIR/opencode.json" ]; then
-            echo "$OPENCODE_DIR/opencode.json already exists — skipping copy."
-          else
-            install -D ${opencodeConfig} "$OPENCODE_DIR/opencode.json"
-          fi
-
-          echo "ai_toolbox set up successfully"
+        status = ''
+          [ -f "${ecaDir}/config.json" ] \
+            && [ -f "${agentDest}" ] \
+            && cmp -s ${aiInputEngineer} "${agentDest}"
         '';
-        showOutput = true;
+        exec = ''
+          mkdir -p "${ecaDir}/agents" "${ecaDir}/rules" "${ecaDir}/skills"
+          install -D -m 0444 ${aiInputEngineer} "${agentDest}"
+
+          if [ ! -f "${ecaDir}/config.json" ]; then
+            install -D -m 0644 ${ecaConfig} "${ecaDir}/config.json"
+          fi
+        '';
       };
 
       "ai_toolbox:copy_skills" = {
+        description = "Refresh CEK and local skills under .eca/skills";
         before = [ "devenv:enterShell" ];
+        status = ''
+          same() { [ -f "$2" ] && cmp -s "$1" "$2"; }
+          ${lib.concatMapStringsSep "\n" (rel: ''
+            same ${cek}/${rel}/SKILL.md "${ecaDir}/skills/${baseNameOf rel}/SKILL.md" || exit 1
+            same ${cekLicense} "${ecaDir}/skills/${baseNameOf rel}/LICENSE" || exit 1
+          '') cekSkillRels}
+          if [ -d ${localSkills} ]; then
+            for d in ${localSkills}/*; do
+              [ -d "$d" ] || continue
+              [ -f "$d/SKILL.md" ] || continue
+              same "$d/SKILL.md" "${ecaDir}/skills/$(basename "$d")/SKILL.md" || exit 1
+            done
+          fi
+        '';
         exec = ''
-          ECA_DIR="${config.devenv.root}/.eca"
+          ECA_DIR="${ecaDir}"
           mkdir -p "$ECA_DIR/skills"
-
           ${lib.concatMapStringsSep "\n" copyCekSkill cekSkillRels}
-
           if [ -d ${localSkills} ]; then
             for d in ${localSkills}/*; do
               [ -d "$d" ] || continue
               name=$(basename "$d")
               if [ -f "$d/SKILL.md" ]; then
-                install -D "$d/SKILL.md" "$ECA_DIR/skills/$name/SKILL.md"
+                install -D -m 0444 "$d/SKILL.md" "$ECA_DIR/skills/$name/SKILL.md"
               fi
             done
           fi
-
-          echo "ai toolbox CEK skills copied to $ECA_DIR/skills"
         '';
-        showOutput = true;
       };
     };
   };
