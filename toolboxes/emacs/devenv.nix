@@ -44,7 +44,7 @@ in
           test -f "${envrcDest}"
         '';
         exec = ''
-          install -D -m 0444 ${envrc} "${envrcDest}"
+          install -D -m 0644 ${envrc} "${envrcDest}"
         '';
       };
 

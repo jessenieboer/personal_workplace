@@ -2,6 +2,7 @@
 devenv.local.nix
 devenv.local.yaml
 .direnv
+.dir-locals.el
 .eca
 .envrc
 .pre-commit-config.yaml

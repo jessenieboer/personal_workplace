@@ -1051,7 +1051,8 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
     (interactive)
     (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
 
-  (setq gptel-default-mode 'org-mode
+  (setq eca-worktree-mode 'isolated
+   gptel-default-mode 'org-mode
         gptel-include-reasoning nil
         ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
         jn-grok-backend (gptel-make-xai "jn_grok"
@@ -1076,7 +1077,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
         (when (file-regular-p file)
           (message "Loading toolbox setup: %s" file)
           (load file t t t))))))
-  
+
   (add-hook 'envrc-mode-hook #'my/run-project-toolbox-setups)
 
   (my-add-left-buffer-patterns '("^\\*gptel-agent.*" ".*eca-chat.*"))

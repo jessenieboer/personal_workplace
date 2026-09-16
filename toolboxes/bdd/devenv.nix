@@ -20,10 +20,15 @@ let
   planningSkill = "${inputs.addyosmani-agent-skills}/skills/planning-and-task-breakdown/SKILL.md";
   tdd = "${inputs.addyosmani-agent-skills}/skills/test-driven-development/SKILL.md";
   ddone = "${inputs.addyosmani-agent-skills}/references/definition-of-done.md";
+  contextEngineering = "${inputs.addyosmani-agent-skills}/skills/context-engineering/SKILL.md";
+  aosLicense = "${inputs.addyosmani-agent-skills}/LICENSE";
 
   root = config.devenv.root;
   eca = "${root}/.eca";
   bddDir = "${root}/.toolboxes/bdd_toolbox";
+  contextMgmtDir = "${eca}/skills/context-management";
+  contextMgmtDest = "${contextMgmtDir}/SKILL.md";
+  contextMgmtLicense = "${contextMgmtDir}/LICENSE";
 
   managed = [
     { src = builder; dest = "${eca}/agents/builder.md"; }
@@ -64,12 +69,35 @@ in
       exec = ''
         mkdir -p "${eca}/agents" "${eca}/rules" "${eca}/skills"
         ${lib.concatMapStringsSep "\n" (m: ''
-          install -D -m 0444 ${m.src} "${m.dest}"
+          install -D -m 0644 ${m.src} "${m.dest}"
         '') managed}
         mkdir -p "${bddDir}/features"
         if [ ! -f "${bddDir}/brainstorm.txt" ]; then
           : > "${bddDir}/brainstorm.txt"
         fi
+      '';
+    };
+
+    "bdd_toolbox:copy_context_management" = {
+      description = "Install addyosmani context-engineering as context-management under .eca/skills";
+      before = [ "devenv:enterShell" ];
+      status = ''
+        [ -f "${contextMgmtDest}" ] && [ -f "${contextMgmtLicense}" ] || exit 1
+        cmp -s ${aosLicense} "${contextMgmtLicense}" || exit 1
+        expected=$(mktemp)
+        sed 's/^name: context-engineering$/name: context-management/' \
+          ${contextEngineering} > "$expected"
+        cmp -s "$expected" "${contextMgmtDest}"
+        rc=$?
+        rm -f "$expected"
+        exit "$rc"
+      '';
+      exec = ''
+        mkdir -p "${contextMgmtDir}"
+        sed 's/^name: context-engineering$/name: context-management/' \
+          ${contextEngineering} > "${contextMgmtDest}"
+        chmod 0644 "${contextMgmtDest}"
+        install -D -m 0644 ${aosLicense} "${contextMgmtLicense}"
       '';
     };
   };

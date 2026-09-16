@@ -4,6 +4,7 @@ build/
 devenv.local.nix
 devenv.local.yaml
 .direnv
+.dir-locals.el
 dist/
 .envrc
 *.log

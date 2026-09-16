@@ -136,24 +136,24 @@ in
           fi
         '';
         exec = ''
-          install -D -m 0444 ${skillGuide} "${eca}/python-skill-guide/SKILL.md"
-          install -D -m 0444 ${modernPython}/SKILL.md "${eca}/modern-python/SKILL.md"
+          install -D -m 0644 ${skillGuide} "${eca}/python-skill-guide/SKILL.md"
+          install -D -m 0644 ${modernPython}/SKILL.md "${eca}/modern-python/SKILL.md"
           if [ -d ${modernPython}/references ]; then
             for f in ${modernPython}/references/*; do
               [ -f "$f" ] || continue
-              install -D -m 0444 "$f" "${eca}/modern-python/references/$(basename "$f")"
+              install -D -m 0644 "$f" "${eca}/modern-python/references/$(basename "$f")"
             done
           fi
-          install -D -m 0444 ${codeStyle}/SKILL.md "${eca}/python-code-style/SKILL.md"
-          install -D -m 0444 ${designPatterns}/SKILL.md "${eca}/python-design-patterns/SKILL.md"
-          install -D -m 0444 ${errorHandling}/SKILL.md "${eca}/python-error-handling/SKILL.md"
-          install -D -m 0444 ${projectStructure}/SKILL.md "${eca}/python-project-structure/SKILL.md"
-          install -D -m 0444 ${typeSafety}/SKILL.md "${eca}/python-type-safety/SKILL.md"
-          install -D -m 0444 ${testingPatterns}/SKILL.md "${eca}/python-testing-patterns/SKILL.md"
+          install -D -m 0644 ${codeStyle}/SKILL.md "${eca}/python-code-style/SKILL.md"
+          install -D -m 0644 ${designPatterns}/SKILL.md "${eca}/python-design-patterns/SKILL.md"
+          install -D -m 0644 ${errorHandling}/SKILL.md "${eca}/python-error-handling/SKILL.md"
+          install -D -m 0644 ${projectStructure}/SKILL.md "${eca}/python-project-structure/SKILL.md"
+          install -D -m 0644 ${typeSafety}/SKILL.md "${eca}/python-type-safety/SKILL.md"
+          install -D -m 0644 ${testingPatterns}/SKILL.md "${eca}/python-testing-patterns/SKILL.md"
           if [ -d ${testingPatterns}/references ]; then
             for f in ${testingPatterns}/references/*; do
               [ -f "$f" ] || continue
-              install -D -m 0444 "$f" "${eca}/python-testing-patterns/references/$(basename "$f")"
+              install -D -m 0644 "$f" "${eca}/python-testing-patterns/references/$(basename "$f")"
             done
           fi
         '';

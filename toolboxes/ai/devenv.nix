@@ -31,8 +31,8 @@ let
   ];
 
   copyCekSkill = rel: ''
-    install -D -m 0444 ${cek}/${rel}/SKILL.md "$ECA_DIR/skills/${baseNameOf rel}/SKILL.md"
-    install -D -m 0444 ${cekLicense} "$ECA_DIR/skills/${baseNameOf rel}/LICENSE"
+    install -D -m 0644 ${cek}/${rel}/SKILL.md "$ECA_DIR/skills/${baseNameOf rel}/SKILL.md"
+    install -D -m 0644 ${cekLicense} "$ECA_DIR/skills/${baseNameOf rel}/LICENSE"
   '';
 
   root = config.devenv.root;
@@ -70,7 +70,7 @@ in
         '';
         exec = ''
           mkdir -p "${ecaDir}/agents" "${ecaDir}/rules" "${ecaDir}/skills"
-          install -D -m 0444 ${aiInputEngineer} "${agentDest}"
+          install -D -m 0644 ${aiInputEngineer} "${agentDest}"
 
           if [ ! -f "${ecaDir}/config.json" ]; then
             install -D -m 0644 ${ecaConfig} "${ecaDir}/config.json"
@@ -104,7 +104,7 @@ in
               [ -d "$d" ] || continue
               name=$(basename "$d")
               if [ -f "$d/SKILL.md" ]; then
-                install -D -m 0444 "$d/SKILL.md" "$ECA_DIR/skills/$name/SKILL.md"
+                install -D -m 0644 "$d/SKILL.md" "$ECA_DIR/skills/$name/SKILL.md"
               fi
             done
           fi

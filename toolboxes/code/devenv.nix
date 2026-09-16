@@ -6,14 +6,13 @@ let
 
   atomic = inputs.atomic;
   howSkill = "${atomic}/packages/workflows/skills/how";
-  
+
   root = config.devenv.root;
   ecaDir = "${root}/.eca";
   howDest = "${ecaDir}/skills/how";
   explainerDest = "${ecaDir}/agents/code-explainer";
   gitignoreDest = "${root}/.toolboxes/code_toolbox/.gitignore";
   opencodeDest = "${root}/.opencode/opencode.json";
-  
 in
 {
   config = {
@@ -61,7 +60,7 @@ in
         '';
         exec = ''
           mkdir -p "${ecaDir}/agents" "${ecaDir}/rules" "${ecaDir}/skills"
-          install -D -m 0444 ${explainer} "${explainerDest}"
+          install -D -m 0644 ${explainer} "${explainerDest}"
         '';
       };
 

@@ -1,6 +1,5 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  gh_devenv = ./programs/gh_devenv.sh;
   gitignore = ./settings/.gitignore;
   secretspecTemplate = ./templates/secretspec.toml;
   root = config.devenv.root;
@@ -22,16 +21,6 @@ in
     ];
 
     tasks = {
-      "secrets_toolbox:copy_github_devenv" = {
-        description = "Seed gh_devenv.sh once from the toolbox program";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          test -f "${ghDest}"
-        '';
-        exec = ''
-          install -D -m 0444 ${gh_devenv} "${ghDest}"
-        '';
-      };
 
       "secrets_toolbox:copy_gitignore" = {
         description = "Refresh the secrets_toolbox gitignore fragment from the toolbox";
