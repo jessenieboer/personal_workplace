@@ -1459,12 +1459,12 @@ dy = find definitions
     		  (
   		   ;;("SPC" previous-line "prev line")
   		   ;;("e" next-line "next line")
-  		   ("t" backward-char  "next char")
+  		 ("t" backward-char  "next char")
     		   ("s" forward-char  "next char")
     		   ("a" backward-word "prev word")
     		   ("n" forward-word "next word")
-    		   ("w" backward-sexp "prev exp")
-    		   ("b" forward-sexp "next exp")
+    		   ;; ("w" backward-sexp "prev exp")
+    		   ;; ("b" forward-sexp "next exp")
     		   ("l" move-beginning-of-line "line first")
     		   ("c" move-end-of-line "line last")
   		   ("r" consult-line "search" :exit t)
@@ -1473,8 +1473,7 @@ dy = find definitions
     		   ;; 
   		   )
     		  "Terminal"
-    		  (("in" eat-line-mode "eat line mode")
-  		   ("(" eat-previous-shell-prompt "prev prompt")
+    		  (("(" eat-previous-shell-prompt "prev prompt")
   		   (")" eat-next-shell-prompt "next prompt")
   		   ("o" set-mark-command "mark")
   		   ("-" exchange-point-and-mark "mark switch")
@@ -2245,7 +2244,6 @@ dy = find definitions
 :END:
 #+begin_src emacs-lisp
     (require 'racket-mode)
-    ;;(require 'racket-xp)
 
     (setq racket-memory-limit 2048
           racket-program "racket"
@@ -2285,9 +2283,18 @@ dy = find definitions
 
     (my-add-to-hydra 'racket-repl-mode
                      ("Connection"
-                      (("if" quit-window "quit repl"))
+                      (("h SPC" my-dirvish-side-project "dir side")
+                       ("if" quit-window "quit repl"))
                       "Navigation"
-                      ()
+                      (("t" backward-char  "next char")
+    		   ("s" forward-char  "next char")
+    		   ("a" backward-word "prev word")
+    		   ("n" forward-word "next word")
+    		   ("w" backward-sexp "prev exp")
+    		   ("b" forward-sexp "next exp")
+    		   ("l" move-beginning-of-line "line first")
+    		   ("c" move-end-of-line "line last")
+  		   ("r" consult-line "search" :exit t))
                       "Display"
                       ()
                       "Racket"

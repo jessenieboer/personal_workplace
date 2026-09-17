@@ -154,6 +154,7 @@
     		 ("Connection"
     		  (("f" abort-recursive-edit "quit"))))
 
+(require 'consult)
 (require 'marginalia)
 (require 'orderless)
 (require 'vertico)
@@ -161,6 +162,7 @@
 
 (setq completion-category-overrides '((file (styles basic partial-completion)))
       completion-ignore-case t
+      completion-in-region-function #'consult-completion-in-region
       completion-styles '(orderless basic)
       orderless-matching-styles '(orderless-prefixes orderless-literal)
       vertico-sort-function 'vertico-sort-history-alpha)
@@ -839,7 +841,8 @@ Returns the value as string or nil if not found / error."
   (interactive)
   (gptel-context--add-directory (expand-file-name (project-root (project-current))) 'add))
 
-(setq gptel-default-mode 'org-mode
+(setq eca-worktree-mode 'isolated
+ gptel-default-mode 'org-mode
       gptel-include-reasoning nil
       ;; key is set in when hotkey is called because it needs to be pulled out of secretspec
       jn-grok-backend (gptel-make-xai "jn_grok"
@@ -1101,12 +1104,12 @@ Returns the value as string or nil if not found / error."
   		  (
 		   ;;("SPC" previous-line "prev line")
 		   ;;("e" next-line "next line")
-		   ("t" backward-char  "next char")
+		 ("t" backward-char  "next char")
   		   ("s" forward-char  "next char")
   		   ("a" backward-word "prev word")
   		   ("n" forward-word "next word")
-  		   ("w" backward-sexp "prev exp")
-  		   ("b" forward-sexp "next exp")
+  		   ;; ("w" backward-sexp "prev exp")
+  		   ;; ("b" forward-sexp "next exp")
   		   ("l" move-beginning-of-line "line first")
   		   ("c" move-end-of-line "line last")
 		   ("r" consult-line "search" :exit t)
@@ -1115,8 +1118,7 @@ Returns the value as string or nil if not found / error."
   		   ;; 
 		   )
   		  "Terminal"
-  		  (("in" eat-line-mode "eat line mode")
-		   ("(" eat-previous-shell-prompt "prev prompt")
+  		  (("(" eat-previous-shell-prompt "prev prompt")
 		   (")" eat-next-shell-prompt "next prompt")
 		   ("o" set-mark-command "mark")
 		   ("-" exchange-point-and-mark "mark switch")
@@ -1828,9 +1830,18 @@ Returns the value as string or nil if not found / error."
 
   (my-add-to-hydra 'racket-repl-mode
                    ("Connection"
-                    (("if" quit-window "quit repl"))
+                    (("h SPC" my-dirvish-side-project "dir side")
+                     ("if" quit-window "quit repl"))
                     "Navigation"
-                    ()
+                    (("t" backward-char  "next char")
+  		   ("s" forward-char  "next char")
+  		   ("a" backward-word "prev word")
+  		   ("n" forward-word "next word")
+  		   ("w" backward-sexp "prev exp")
+  		   ("b" forward-sexp "next exp")
+  		   ("l" move-beginning-of-line "line first")
+  		   ("c" move-end-of-line "line last")
+		   ("r" consult-line "search" :exit t))
                     "Display"
                     ()
                     "Racket"
