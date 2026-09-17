@@ -11,7 +11,6 @@ let
   dmSkill = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/SKILL.md";
 
   gherkin = ./settings/skills/gherkin-authoring/SKILL.md;
-  gherkinGuidelines = "${inputs.gherkin-guidelines}/gherkin-guidelines.md";
 
   grSkill = "${inputs.mattpocock-skills}/skills/productivity/grilling/SKILL.md";
   grDocsSkill = "${inputs.mattpocock-skills}/skills/engineering/grill-with-docs/SKILL.md";
@@ -40,7 +39,6 @@ let
     { src = dmADR; dest = "${eca}/skills/domain-modeling/ADR-FORMAT.md"; }
     { src = dmContext; dest = "${eca}/skills/domain-modeling/CONTEXT-FORMAT.md"; }
     { src = gherkin; dest = "${eca}/skills/gherkin-authoring/SKILL.md"; }
-    { src = gherkinGuidelines; dest = "${eca}/skills/gherkin-authoring/references/gherkin-guidelines.md"; }
     { src = grSkill; dest = "${eca}/skills/grilling/SKILL.md"; }
     { src = grDocsSkill; dest = "${eca}/skills/grill-with-docs/SKILL.md"; }
     { src = inc; dest = "${eca}/skills/incremental-implementation/SKILL.md"; }

@@ -259,7 +259,10 @@ i = leader key for mode-specific stuff
 :END:
 https://github.com/minad/vertico#complementary-packages
 #+begin_src emacs-lisp
+  (require 'cape)
   (require 'consult)
+  (require 'corfu)
+  (require 'corfu-popupinfo)
   (require 'marginalia)
   (require 'orderless)
   (require 'vertico)
@@ -267,34 +270,65 @@ https://github.com/minad/vertico#complementary-packages
 
   (setq completion-category-overrides '((file (styles basic partial-completion)))
         completion-ignore-case t
-        completion-in-region-function #'consult-completion-in-region
         completion-styles '(orderless basic)
+        corfu-auto t
+        corfu-auto-delay 0.2
+        corfu-auto-prefix 2
+        corfu-cycle t
+        corfu-preview-current nil
+        corfu-quit-at-boundary nil
+        corfu-quit-no-match t
+        corfu-popupinfo-delay '(0.4 . 0.2)
         orderless-matching-styles '(orderless-prefixes orderless-literal)
+        tab-always-indent 'complete
         vertico-sort-function 'vertico-sort-history-alpha)
 
+  (corfu-popupinfo-mode)
+  (global-corfu-mode)
   (marginalia-mode)
   (savehist-mode 1)
   (vertico-mode)
+
+  (add-hook 'completion-at-point-functions #'cape-file 20)
+(add-hook 'completion-at-point-functions #'cape-dabbrev 30)
 #+end_src
 *** completion controls
 :PROPERTIES:
 :ID:       98659969-515f-429e-ba92-45e2062a67a5
 :END:
 #+begin_src emacs-lisp
+  (global-set-key (kbd "<tab>") nil)
+  (global-set-key (kbd "<tab> SPC") 'completion-at-point)
+
   (my-add-to-hydra minibuffer-modes
-    		 ("Connection"
-    		  ()
-    		  "Display"
-    		  ()
-    		  "Navigation"
-    		  (("SPC" vertico-previous "prev line")
-    		   ("e" vertico-next "next line")
-    		   ("(" vertico-previous-group "prev group")
-    		   (")" vertico-next-group "next group"))
-    		  "Completion"
-    		  (("RET" (vertico-exit nil) "select")
-    		   ("*" vertico-exit-input "force select")
-  		   ("<tab> RET" vertico-insert "insert"))))
+      		 ("Connection"
+      		  ()
+      		  "Display"
+      		  ()
+      		  "Navigation"
+      		  (("SPC" vertico-previous "prev line")
+      		   ("e" vertico-next "next line")
+      		   ("(" vertico-previous-group "prev group")
+      		   (")" vertico-next-group "next group"))
+      		  "Completion"
+      		  (("RET" (vertico-exit nil) "select")
+      		   ("*" vertico-exit-input "force select")
+    		   ("<tab> RET" vertico-insert "insert"))))
+
+  ;; (defhydra my-corfu-hydra (:hint nil)
+  ;;   "Corfu"
+  ;;   ("<return>" corfu-insert "insert")
+  ;;   ("SPC" corfu-previous "prev")
+  ;;   ("e" corfu-next "next")
+  ;;   ("a" corfu-scroll-up "scroll up")
+  ;;   ("n" corfu-scroll-down "scroll down")
+  ;;   ("l" corfu-prompt-beginning "beg")
+  ;;   ("c" corfu-prompt-end "end")
+  ;;   ("/" corfu-first "first")
+  ;;   ("," corfu-last "last")
+  ;;   ("b" corfu-info-location "info loc")
+  ;;   ("w" corfu-info-documentation "docs")
+  ;;   ("f" corfu-quit "quit" :exit t))
 #+end_src
 ** Navigate text
 :PROPERTIES:
@@ -1249,6 +1283,15 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
           lsp-ui-peek-enable t
           lsp-ui-sideline-enable -1)
 
+  (defun my-lsp-setup-completion ()
+  (setf (alist-get 'styles
+                   (alist-get 'lsp-capf completion-category-defaults))
+        '(orderless))
+  (setq-local completion-at-point-functions
+              (list (cape-capf-buster #'lsp-completion-at-point)
+                    #'cape-file)))
+
+(add-hook 'lsp-completion-mode-hook #'my-lsp-setup-completion)
 
   (add-hook 'prog-mode-hook (lambda () (eldoc-mode -1)
   	        	    (flymake-mode -1)))
@@ -1391,7 +1434,7 @@ dy = find definitions
     (define-key lsp-ui-peek-mode-map (kbd "e") 'lsp-ui-peek--select-next)
     (define-key lsp-ui-peek-mode-map (kbd "v") 'lsp-ui-peek--select-prev-file)
     (define-key lsp-ui-peek-mode-map (kbd "x") 'lsp-ui-peek--select-next-file))
-  
+
     (my-add-to-hydra main-edit-modes
     		 ("Connection"
     		  (("d\\" lsp-restart-workspace "debug quit"))
@@ -1400,8 +1443,6 @@ dy = find definitions
     		   ("p" (lsp-ui-find-next-reference nil) "next ref")
     		   ;; ("[" flycheck-previous-error "prev err")
     		   ;; ("]" flycheck-next-error "next err")
-    		   ;; ("iy" lsp-ui-doc-focus-frame "focus doc")
-    		   ;;("i|" lsp-ui-doc-unfocus-frame "unfocus doc")
     		   )
     		  "Display"
     		  (("dy" lsp-ui-peek-find-definitions "peek def" :exit t)
@@ -2263,7 +2304,7 @@ dy = find definitions
 
 
     (my-add-hidden-buffer-patterns '("^\\*Racket REPL"))
-    (my-add-left-buffer-patterns '("^\\*Racket REPL"))
+    ;; (my-add-left-buffer-patterns '("^\\*Racket REPL"))
 
     (my-add-to-hydra 'racket-mode
                      ("Connection"

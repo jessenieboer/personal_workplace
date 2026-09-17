@@ -154,37 +154,71 @@
     		 ("Connection"
     		  (("f" abort-recursive-edit "quit"))))
 
-(require 'consult)
-(require 'marginalia)
-(require 'orderless)
-(require 'vertico)
-(require 'vertico-sort)
+(require 'cape)
+  (require 'consult)
+  (require 'corfu)
+  (require 'corfu-popupinfo)
+  (require 'marginalia)
+  (require 'orderless)
+  (require 'vertico)
+  (require 'vertico-sort)
 
-(setq completion-category-overrides '((file (styles basic partial-completion)))
-      completion-ignore-case t
-      completion-in-region-function #'consult-completion-in-region
-      completion-styles '(orderless basic)
-      orderless-matching-styles '(orderless-prefixes orderless-literal)
-      vertico-sort-function 'vertico-sort-history-alpha)
+  (setq completion-category-overrides '((file (styles basic partial-completion)))
+        completion-ignore-case t
+        completion-styles '(orderless basic)
+        corfu-auto t
+        corfu-auto-delay 0.2
+        corfu-auto-prefix 2
+        corfu-cycle t
+        corfu-preview-current nil
+        corfu-quit-at-boundary nil
+        corfu-quit-no-match t
+        corfu-popupinfo-delay '(0.4 . 0.2)
+        orderless-matching-styles '(orderless-prefixes orderless-literal)
+        tab-always-indent 'complete
+        vertico-sort-function 'vertico-sort-history-alpha)
 
-(marginalia-mode)
-(savehist-mode 1)
-(vertico-mode)
+  (corfu-popupinfo-mode)
+  (global-corfu-mode)
+  (marginalia-mode)
+  (savehist-mode 1)
+  (vertico-mode)
+
+  (add-hook 'completion-at-point-functions #'cape-file 20)
+(add-hook 'completion-at-point-functions #'cape-dabbrev 30)
+
+(global-set-key (kbd "<tab>") nil)
+(global-set-key (kbd "<tab> SPC") 'completion-at-point)
 
 (my-add-to-hydra minibuffer-modes
-  		 ("Connection"
-  		  ()
-  		  "Display"
-  		  ()
-  		  "Navigation"
-  		  (("SPC" vertico-previous "prev line")
-  		   ("e" vertico-next "next line")
-  		   ("(" vertico-previous-group "prev group")
-  		   (")" vertico-next-group "next group"))
-  		  "Completion"
-  		  (("RET" (vertico-exit nil) "select")
-  		   ("*" vertico-exit-input "force select")
-		   ("<tab> RET" vertico-insert "insert"))))
+    		 ("Connection"
+    		  ()
+    		  "Display"
+    		  ()
+    		  "Navigation"
+    		  (("SPC" vertico-previous "prev line")
+    		   ("e" vertico-next "next line")
+    		   ("(" vertico-previous-group "prev group")
+    		   (")" vertico-next-group "next group"))
+    		  "Completion"
+    		  (("RET" (vertico-exit nil) "select")
+    		   ("*" vertico-exit-input "force select")
+  		   ("<tab> RET" vertico-insert "insert"))))
+
+;; (defhydra my-corfu-hydra (:hint nil)
+;;   "Corfu"
+;;   ("<return>" corfu-insert "insert")
+;;   ("SPC" corfu-previous "prev")
+;;   ("e" corfu-next "next")
+;;   ("a" corfu-scroll-up "scroll up")
+;;   ("n" corfu-scroll-down "scroll down")
+;;   ("l" corfu-prompt-beginning "beg")
+;;   ("c" corfu-prompt-end "end")
+;;   ("/" corfu-first "first")
+;;   ("," corfu-last "last")
+;;   ("b" corfu-info-location "info loc")
+;;   ("w" corfu-info-documentation "docs")
+;;   ("f" corfu-quit "quit" :exit t))
 
 (require 'consult)
 (global-visual-line-mode t)
@@ -983,57 +1017,66 @@ Returns the value as string or nil if not found / error."
 		   ("f" gptel-context-quit "quit"))))
 
 (require 'flycheck)
-  (set-face-attribute 'flycheck-error nil :underline '(:color "red" :style wave))
-  (set-face-attribute 'flycheck-warning nil :underline '(:color "orange" :style wave))
-  (set-face-attribute 'flycheck-info nil :underline '(:color "blue" :style wave))
-  (setq flycheck-display-errors-delay 0.5)
+    (set-face-attribute 'flycheck-error nil :underline '(:color "red" :style wave))
+    (set-face-attribute 'flycheck-warning nil :underline '(:color "orange" :style wave))
+    (set-face-attribute 'flycheck-info nil :underline '(:color "blue" :style wave))
+    (setq flycheck-display-errors-delay 0.5)
 
-  (require 'flycheck-posframe)
-  (setq flycheck-posframe-border-width 3 
-        flycheck-posframe-position 'frame-bottom-left-corner)
-  (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)
-  (my-add-hidden-buffer-patterns '("^\\*flycheck-.*"))
+    (require 'flycheck-posframe)
+    (setq flycheck-posframe-border-width 3 
+          flycheck-posframe-position 'frame-bottom-left-corner)
+    (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)
+    (my-add-hidden-buffer-patterns '("^\\*flycheck-.*"))
 
-  (require 'lsp-mode)
-  (require 'lsp-headerline)
-  (require 'lsp-modeline)
-  (setq lsp-auto-guess-root t
-   lsp-completion-provider :none
-        lsp-diagnostics-provider :flycheck
-        lsp-eldoc-enable-hover nil
-	lsp-enable-file-watchers t
-        lsp-enable-snippet nil
-        lsp-file-watch-ignored-directories (append lsp-file-watch-ignored-directories '("/nix/store" "[/\\\\]\\.devenv\\'"))
-        lsp-idle-delay 0.5
-	lsp-lens-enable nil
-        lsp-log-io nil
-        lsp-restart 'interactive)
-  ;;:custom	  lsp-use-plists nil ;; t is causing errors at the moment)
+    (require 'lsp-mode)
+    (require 'lsp-headerline)
+    (require 'lsp-modeline)
+    (setq lsp-auto-guess-root t
+     lsp-completion-provider :none
+          lsp-diagnostics-provider :flycheck
+          lsp-eldoc-enable-hover nil
+  	lsp-enable-file-watchers t
+          lsp-enable-snippet nil
+          lsp-file-watch-ignored-directories (append lsp-file-watch-ignored-directories '("/nix/store" "[/\\\\]\\.devenv\\'"))
+          lsp-idle-delay 0.5
+  	lsp-lens-enable nil
+          lsp-log-io nil
+          lsp-restart 'interactive)
+    ;;:custom	  lsp-use-plists nil ;; t is causing errors at the moment)
 
-  (require 'lsp-ui)
-  (setq lsp-ui-doc-alignment 'frame ;; only relevant if lsp-ui-doc-position is not 'at-point
-        lsp-ui-doc-delay 0.5
-        lsp-ui-doc-enable t
-        lsp-ui-doc-header nil
-        lsp-ui-doc-include-signature nil
-        lsp-ui-doc-max-height 80
-        lsp-ui-doc-position 'bottom
-        lsp-ui-doc-show-with-cursor t
-        lsp-ui-doc-show-with-mouse nil
-        lsp-ui-doc-use-childframe t
-        lsp-ui-imenu-mode-map (make-sparse-keymap)
-        lsp-ui-imenu-auto-refresh t
-        lsp-ui-imenu-buffer-position 'left
-        lsp-ui-peek-always-show t
-        lsp-ui-peek-enable t
-        lsp-ui-sideline-enable -1)
+    (require 'lsp-ui)
+    (setq lsp-ui-doc-alignment 'frame ;; only relevant if lsp-ui-doc-position is not 'at-point
+          lsp-ui-doc-delay 0.5
+          lsp-ui-doc-enable t
+          lsp-ui-doc-header nil
+          lsp-ui-doc-include-signature nil
+          lsp-ui-doc-max-height 80
+          lsp-ui-doc-position 'bottom
+          lsp-ui-doc-show-with-cursor t
+          lsp-ui-doc-show-with-mouse nil
+          lsp-ui-doc-use-childframe t
+          lsp-ui-imenu-mode-map (make-sparse-keymap)
+          lsp-ui-imenu-auto-refresh t
+          lsp-ui-imenu-buffer-position 'left
+          lsp-ui-peek-always-show t
+          lsp-ui-peek-enable t
+          lsp-ui-sideline-enable -1)
 
+  (defun my-lsp-setup-completion ()
+  (setf (alist-get 'styles
+                   (alist-get 'lsp-capf completion-category-defaults))
+        '(orderless))
+  (setq-local completion-at-point-functions
+              (list (cape-capf-buster #'lsp-completion-at-point)
+                    #'cape-file)))
 
-(add-hook 'prog-mode-hook (lambda () (eldoc-mode -1)
-	        	    (flymake-mode -1)))
-  ;; (add-hook 'prog-mode-hook #'lsp-deferred)
-  (add-to-list 'load-path (expand-file-name "lib/lsp-mode" user-emacs-directory))
-  (add-to-list 'load-path (expand-file-name "lib/lsp-mode/clients" user-emacs-directory))
+(add-hook 'lsp-completion-mode-hook #'my-lsp-setup-completion)
+
+  (add-hook 'prog-mode-hook (lambda () (eldoc-mode -1)
+  	        	    (flymake-mode -1)))
+    ;; (add-hook 'prog-mode-hook #'lsp-deferred)
+    (add-to-list 'load-path (expand-file-name "lib/lsp-mode" user-emacs-directory))
+    (add-to-list 'load-path (expand-file-name "lib/lsp-mode/clients" user-emacs-directory))
 
 (with-eval-after-load 'lsp-ui    
   ;;Custom keybindings for lsp-ui-peek
@@ -1056,8 +1099,6 @@ Returns the value as string or nil if not found / error."
   		   ("p" (lsp-ui-find-next-reference nil) "next ref")
   		   ;; ("[" flycheck-previous-error "prev err")
   		   ;; ("]" flycheck-next-error "next err")
-  		   ;; ("iy" lsp-ui-doc-focus-frame "focus doc")
-  		   ;;("i|" lsp-ui-doc-unfocus-frame "unfocus doc")
   		   )
   		  "Display"
   		  (("dy" lsp-ui-peek-find-definitions "peek def" :exit t)
@@ -1790,7 +1831,6 @@ Returns the value as string or nil if not found / error."
   		   ("d:" (python-pytest '("--tb=short")) "test project verbose"))))
 
 (require 'racket-mode)
-  ;;(require 'racket-xp)
 
   (setq racket-memory-limit 2048
         racket-program "racket"
@@ -1810,7 +1850,7 @@ Returns the value as string or nil if not found / error."
 
 
   (my-add-hidden-buffer-patterns '("^\\*Racket REPL"))
-  (my-add-left-buffer-patterns '("^\\*Racket REPL"))
+  ;; (my-add-left-buffer-patterns '("^\\*Racket REPL"))
 
   (my-add-to-hydra 'racket-mode
                    ("Connection"

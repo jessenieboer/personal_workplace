@@ -86,7 +86,7 @@ vizier:
 :CUSTOM_ID: by-whom
 :END:
 Me and grok, with gratitude to
-https://github.com/AutomationPanda/gherkin-guidelines-for-ai (gherkin authoring)
+https://github.com/AutomationPanda/gherkin-guidelines-for-ai (gherkin authoring skill consumed this)
 https://github.com/mattpocock/skills (grilling and domain modeling)
 https://github.com/addyosmani/agent-skills (planning)
 https://github.com/meirm/BDD (some pre-implementation ideas)

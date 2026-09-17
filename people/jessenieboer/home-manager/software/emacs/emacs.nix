@@ -33,7 +33,9 @@
     in [
       apheleia
       buffer-focus-hook
+      cape
       consult
+      corfu
       default-text-scale
       dirvish
       eat

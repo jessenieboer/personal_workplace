@@ -10,7 +10,7 @@ let
   root = config.devenv.root;
   ecaDir = "${root}/.eca";
   howDest = "${ecaDir}/skills/how";
-  explainerDest = "${ecaDir}/agents/code-explainer";
+  explainerDest = "${ecaDir}/agents/code-explainer.md";
   gitignoreDest = "${root}/.toolboxes/code_toolbox/.gitignore";
   opencodeDest = "${root}/.opencode/opencode.json";
 in

@@ -4957,7 +4957,7 @@ di <f12> =
   		   ("di[" copilot-chat-review-whole-buffer "ai review buffer")
   		   ("di DEL" copilot-chat-fix "ai fix")
   		   ("dit" copilot-chat-optimize "ai optimize")
-  		   ("di <f12>" copilot-chat-doc "ai document")
+  		   ("diy <f12>" copilot-chat-doc "ai document")
   		   ("dis" copilot-chat-explain-symbol-at-line "ai explain symbol")
   		   ("din" copilot-chat-explain-defun "ai explain function")
   		   ("dic" copilot-chat-explain "ai explain region"))

@@ -2,9 +2,6 @@ inputs:
   addyosmani-agent-skills:
     flake: false
     url: github:addyosmani/agent-skills/0.6.9
-  gherkin-guidelines:
-    flake: false
-    url: github:AutomationPanda/gherkin-guidelines-for-ai/ce2b49e786197dc18575a5760fab46d573dc5ee5
   llm-agents:
     url: github:numtide/llm-agents.nix 
   mattpocock-skills:
