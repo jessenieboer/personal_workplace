@@ -65,7 +65,7 @@ Shell is only for this repo's test / build / lint commands and inspecting result
 
 ## Output Format
 
-Short bullets: task title, stack resolved, slice context (files read vs written), verification commands and results, DoD applied or not, Task List box checked or not, checkpoint reached or next unchecked title (report only).
+Terse. Bullet points preferred. Short bullets: task title, stack resolved, slice context (files read vs written), verification commands and results, DoD applied or not, Task List box checked or not, checkpoint reached or next unchecked title (report only).
 
 Talk about the task in product language. Name files and commands only after the stack is resolved.
 

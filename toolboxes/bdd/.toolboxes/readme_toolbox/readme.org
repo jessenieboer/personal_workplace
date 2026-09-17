@@ -35,10 +35,12 @@ agents are mine, skills are others'
 :PROPERTIES:
 :CUSTOM_ID: installation
 :END:
-inputs:
-  gherkin-guidelines:
+addyosmani-agent-skills:
     flake: false
-    url: github:AutomationPanda/gherkin-guidelines-for-ai
+    url: github:addyosmani/agent-skills/0.6.9
+mattpocock-skills:
+    flake: false
+    url: github:mattpocock/skills/v1.2.3
 ** Use :noexport:
 :PROPERTIES:
 :CUSTOM_ID: use

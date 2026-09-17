@@ -188,37 +188,41 @@
 (add-hook 'completion-at-point-functions #'cape-dabbrev 30)
 
 (global-set-key (kbd "<tab>") nil)
-(global-set-key (kbd "<tab> SPC") 'completion-at-point)
+  (global-set-key (kbd "<tab> SPC") 'completion-at-point)
 
-(my-add-to-hydra minibuffer-modes
-    		 ("Connection"
-    		  ()
-    		  "Display"
-    		  ()
-    		  "Navigation"
-    		  (("SPC" vertico-previous "prev line")
-    		   ("e" vertico-next "next line")
-    		   ("(" vertico-previous-group "prev group")
-    		   (")" vertico-next-group "next group"))
-    		  "Completion"
-    		  (("RET" (vertico-exit nil) "select")
-    		   ("*" vertico-exit-input "force select")
-  		   ("<tab> RET" vertico-insert "insert"))))
+  (my-add-to-hydra minibuffer-modes
+      		 ("Connection"
+      		  ()
+      		  "Display"
+      		  ()
+      		  "Navigation"
+      		  (("SPC" vertico-previous "prev line")
+      		   ("e" vertico-next "next line")
+      		   ("(" vertico-previous-group "prev group")
+      		   (")" vertico-next-group "next group"))
+      		  "Completion"
+      		  (("RET" (vertico-exit nil) "select")
+      		   ("*" vertico-exit-input "force select")
+    		   ("<tab> RET" vertico-insert "insert"))))
 
-;; (defhydra my-corfu-hydra (:hint nil)
-;;   "Corfu"
-;;   ("<return>" corfu-insert "insert")
-;;   ("SPC" corfu-previous "prev")
-;;   ("e" corfu-next "next")
-;;   ("a" corfu-scroll-up "scroll up")
-;;   ("n" corfu-scroll-down "scroll down")
-;;   ("l" corfu-prompt-beginning "beg")
-;;   ("c" corfu-prompt-end "end")
-;;   ("/" corfu-first "first")
-;;   ("," corfu-last "last")
-;;   ("b" corfu-info-location "info loc")
-;;   ("w" corfu-info-documentation "docs")
-;;   ("f" corfu-quit "quit" :exit t))
+  (defhydra my-corfu-hydra (:hint nil)
+    "Corfu"
+    ("<return>" corfu-insert "insert")
+    ("SPC" corfu-previous "prev")
+    ("e" corfu-next "next")
+    ;; ("a" corfu-scroll-up "scroll up")
+    ;; ("n" corfu-scroll-down "scroll down")
+    ;; ("l" corfu-prompt-beginning "beg")
+    ;; ("c" corfu-prompt-end "end")
+    ;; ("/" corfu-first "first")
+    ;; ("," corfu-last "last")
+    ("b" corfu-info-location "info loc")
+    ("w" corfu-info-documentation "docs")
+    ("f" corfu-quit "quit" :exit t))
+
+  (define-key corfu-map (kbd "<f1>") #'my-corfu-hydra/body)
+  (add-to-list 'corfu-continue-commands #'my-corfu-hydra/body)
+(add-to-list 'corfu-continue-commands #'my-corfu-hydra/lambda)
 
 (require 'consult)
 (global-visual-line-mode t)
@@ -1115,7 +1119,7 @@ Returns the value as string or nil if not found / error."
   		  ()))
 
 (require 'eat)
-(setq eat-enable-auto-line-mode t
+(setq eat-enable-auto-line-mode nil
       eat-line-input-history-isearch t)
 
 ;;(eat-eshell-mode 1)

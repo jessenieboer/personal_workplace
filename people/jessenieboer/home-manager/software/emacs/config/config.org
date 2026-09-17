@@ -315,20 +315,24 @@ https://github.com/minad/vertico#complementary-packages
       		   ("*" vertico-exit-input "force select")
     		   ("<tab> RET" vertico-insert "insert"))))
 
-  ;; (defhydra my-corfu-hydra (:hint nil)
-  ;;   "Corfu"
-  ;;   ("<return>" corfu-insert "insert")
-  ;;   ("SPC" corfu-previous "prev")
-  ;;   ("e" corfu-next "next")
-  ;;   ("a" corfu-scroll-up "scroll up")
-  ;;   ("n" corfu-scroll-down "scroll down")
-  ;;   ("l" corfu-prompt-beginning "beg")
-  ;;   ("c" corfu-prompt-end "end")
-  ;;   ("/" corfu-first "first")
-  ;;   ("," corfu-last "last")
-  ;;   ("b" corfu-info-location "info loc")
-  ;;   ("w" corfu-info-documentation "docs")
-  ;;   ("f" corfu-quit "quit" :exit t))
+  (defhydra my-corfu-hydra (:hint nil)
+    "Corfu"
+    ("<return>" corfu-insert "insert")
+    ("SPC" corfu-previous "prev")
+    ("e" corfu-next "next")
+    ;; ("a" corfu-scroll-up "scroll up")
+    ;; ("n" corfu-scroll-down "scroll down")
+    ;; ("l" corfu-prompt-beginning "beg")
+    ;; ("c" corfu-prompt-end "end")
+    ;; ("/" corfu-first "first")
+    ;; ("," corfu-last "last")
+    ("b" corfu-info-location "info loc")
+    ("w" corfu-info-documentation "docs")
+    ("f" corfu-quit "quit" :exit t))
+
+  (define-key corfu-map (kbd "<f1>") #'my-corfu-hydra/body)
+  (add-to-list 'corfu-continue-commands #'my-corfu-hydra/body)
+(add-to-list 'corfu-continue-commands #'my-corfu-hydra/lambda)
 #+end_src
 ** Navigate text
 :PROPERTIES:
@@ -1465,7 +1469,7 @@ dy = find definitions
 :END:
 #+begin_src emacs-lisp
   (require 'eat)
-  (setq eat-enable-auto-line-mode t
+  (setq eat-enable-auto-line-mode nil
         eat-line-input-history-isearch t)
 
   ;;(eat-eshell-mode 1)

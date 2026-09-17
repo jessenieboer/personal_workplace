@@ -59,7 +59,7 @@ Missing Plan or Task List → create. Empty files, or every box checked → repl
 
 ## Output Format
 
-Concise. Paths: `.toolboxes/bdd_toolbox/PLAN.md`, `.toolboxes/bdd_toolbox/TASK-LIST.md`. Ordered task titles. Checkpoints. What was left unplanned.
+Terse. Prefer bullet points. Paths: `.toolboxes/bdd_toolbox/PLAN.md`, `.toolboxes/bdd_toolbox/TASK-LIST.md`. Ordered task titles. Checkpoints. What was left unplanned.
 
 Talk in product language. Name files and commands only if the user already named a stack this session.
 

@@ -68,7 +68,7 @@ Brainstorm: `.toolboxes/bdd_toolbox/brainstorm.txt`. Read once as intake, and on
 
 ## Output Format
 
-Terse. First tokens are slice scope, or the confirm, or paths touched. What is still fuzzy, or which Features and CONTEXT.md terms were written. Stop, or which skill is next if the user still has to accept terms, confirm, or ask for Features.
+Terse. Prefer bullet points. First tokens are slice scope, or the confirm, or paths touched. What is still fuzzy, or which Features and CONTEXT.md terms were written. Stop, or which skill is next if the user still has to accept terms, confirm, or ask for Features.
 
 Talk in product language. Do not name stacks, test commands, or production files.
 

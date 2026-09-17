@@ -121,6 +121,19 @@
             };
           };
         }
+        {
+          apply = {
+            screen = { apply = "force"; value = 2; };
+          };
+          description = "grok-bot";
+          match = {
+            window-class = {
+              match-whole = false;
+              type = "exact";
+              value = "grok-bot";
+            };
+          };
+        }
       ];
     };
   };
