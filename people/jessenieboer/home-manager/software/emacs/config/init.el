@@ -535,6 +535,7 @@
   		   ("fh" split-window-below "split down")
   		   ("ff" delete-window "del win")
   		   ("fd" delete-other-windows "del other wins")
+                 ("fy" window-toggle-side-windows "toggle side")
   		   ("f <tab>" minimize-window "min win")
   		   ("fb" maximize-window "max win")
 		   ;; ("f+" toggle-frame-fullscreen "fullscreen") ;;annoying on wayland
@@ -561,6 +562,7 @@
   		  (("fn" split-window-right "split right")
 		   ("fh" split-window-below "split down")
 		   ("ff" delete-window "del win")
+                   ("fy" window-toggle-side-windows "toggle side")
 		   ("f <tab>" minimize-window "min win")
   		   ("fb" maximize-window "max win")
   		   ("fp" fit-window-to-buffer "fit win")
@@ -1801,19 +1803,32 @@ Returns the value as string or nil if not found / error."
 
 (setq python-indent-offset 4)
 
-(require 'lsp-python-ty)
-(setq lsp-python-ty-clients-server-command '("ty" "server"))
-(add-to-list 'lsp-disabled-clients
-             '(python-mode . (pyright pyls pylsp ruff-lsp semgrep-ls)))
-(add-hook 'python-mode-hook
-          (lambda ()
-            (setq-local lsp-enabled-clients '(ty-ls))
-            (lsp-deferred)))
+  (require 'lsp-python-ty)
+  (setq lsp-python-ty-clients-server-command '("ty" "server"))
+  (add-to-list 'lsp-disabled-clients
+               '(python-mode . (pyright pyls pylsp ruff-lsp semgrep-ls)))
 
-(require 'python-pytest)
-(my-add-left-buffer-patterns '("^\\*Python.*"))
-(my-add-hidden-buffer-patterns '("^\\*pyright.*" "^\\*pytest.*" "^\\*ruff.*"))
-(my-add-right-buffer-patterns '("^\\*pytest.*"))
+  (defun my-python-lsp ()
+  "Start ty-ls only once the toolbox PATH is visible."
+  (setq-local lsp-enabled-clients '(ty-ls))
+  (cond
+   ((executable-find "ty")
+    (lsp-deferred))
+   ((bound-and-true-p envrc-mode)
+    (message "ty binary not on devenv PATH"))
+   (t
+    (add-hook 'envrc-mode-hook #'my-python-lsp nil t))))
+
+(add-hook 'python-mode-hook #'my-python-lsp)
+  ;; (add-hook 'python-mode-hook
+  ;;           (lambda ()
+  ;;             (setq-local lsp-enabled-clients '(ty-ls))
+  ;;             (lsp-deferred)))
+
+  (require 'python-pytest)
+  (my-add-left-buffer-patterns '("^\\*Python.*"))
+  (my-add-hidden-buffer-patterns '("^\\*pyright.*" "^\\*pytest.*" "^\\*ruff.*"))
+  (my-add-right-buffer-patterns '("^\\*pytest.*"))
 
 (my-add-to-hydra 'python-mode
   		 ("Connection"
