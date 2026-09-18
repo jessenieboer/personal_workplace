@@ -123,7 +123,7 @@
         }
         {
           apply = {
-            screen = { apply = "force"; value = 2; };
+            screen = { apply = "force"; value = 0; };
           };
           description = "grok-bot";
           match = {

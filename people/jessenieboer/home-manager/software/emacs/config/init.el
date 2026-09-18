@@ -678,10 +678,7 @@
   (dolist (proj project--list)
     (let* ((root (car proj))
 	   (envrc (when root (expand-file-name ".envrc" root))))
-      (add-to-list 'safe-local-variable-directories root)
-      (when (and envrc (file-exists-p envrc))
-	(let ((default-directory root))
-	  (envrc-allow))))))
+      (add-to-list 'safe-local-variable-directories root))))
 
 
 (defun my-get-project-root-at-point ()
