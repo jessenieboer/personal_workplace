@@ -155,37 +155,37 @@
     		  (("f" abort-recursive-edit "quit"))))
 
 (require 'cape)
-  (require 'consult)
-  (require 'corfu)
-  (require 'corfu-popupinfo)
-  (require 'marginalia)
-  (require 'orderless)
-  (require 'vertico)
-  (require 'vertico-sort)
+(require 'consult)
+(require 'corfu)
+(require 'corfu-popupinfo)
+(require 'marginalia)
+(require 'orderless)
+(require 'vertico)
+(require 'vertico-sort)
 
-  (setq completion-category-overrides '((file (styles basic partial-completion)))
-        completion-ignore-case t
-        completion-styles '(orderless basic)
-        corfu-auto t
-        corfu-auto-delay 0.2
-        corfu-auto-prefix 2
-        corfu-cycle t
-        corfu-preview-current nil
-        corfu-quit-at-boundary nil
-        corfu-quit-no-match t
-        corfu-popupinfo-delay '(0.4 . 0.2)
-        orderless-matching-styles '(orderless-prefixes orderless-literal)
-        tab-always-indent 'complete
-        vertico-sort-function 'vertico-sort-history-alpha)
+(setq completion-category-overrides '((file (styles basic partial-completion)))
+      completion-ignore-case t
+      completion-styles '(orderless basic)
+      corfu-auto t
+      corfu-auto-delay 0.2
+      corfu-auto-prefix 2
+      corfu-cycle t
+      corfu-preview-current nil
+      corfu-quit-at-boundary nil
+      corfu-quit-no-match t
+      corfu-popupinfo-delay '(0.4 . 0.2)
+      orderless-matching-styles '(orderless-prefixes orderless-literal)
+      tab-always-indent 'complete
+      vertico-sort-function 'vertico-sort-history-alpha)
 
-  (corfu-popupinfo-mode)
-  (global-corfu-mode)
-  (marginalia-mode)
-  (savehist-mode 1)
-  (vertico-mode)
+(corfu-popupinfo-mode)
+(global-corfu-mode)
+(marginalia-mode)
+(savehist-mode 1)
+(vertico-mode)
 
-  (add-hook 'completion-at-point-functions #'cape-file 20)
-(add-hook 'completion-at-point-functions #'cape-dabbrev 30)
+;; (add-hook 'completion-at-point-functions #'cape-file 20)
+;; (add-hook 'completion-at-point-functions #'cape-dabbrev 30)
 
 (global-set-key (kbd "<tab>") nil)
   (global-set-key (kbd "<tab> SPC") 'completion-at-point)
@@ -1826,7 +1826,7 @@ Returns the value as string or nil if not found / error."
   ;;             (lsp-deferred)))
 
   (require 'python-pytest)
-  (my-add-left-buffer-patterns '("^\\*Python.*"))
+  ;; (my-add-left-buffer-patterns '("^\\*Python.*"))
   (my-add-hidden-buffer-patterns '("^\\*pyright.*" "^\\*pytest.*" "^\\*ruff.*"))
   (my-add-right-buffer-patterns '("^\\*pytest.*"))
 

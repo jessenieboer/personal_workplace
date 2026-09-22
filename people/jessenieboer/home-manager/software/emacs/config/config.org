@@ -289,8 +289,8 @@ https://github.com/minad/vertico#complementary-packages
   (savehist-mode 1)
   (vertico-mode)
 
-  (add-hook 'completion-at-point-functions #'cape-file 20)
-(add-hook 'completion-at-point-functions #'cape-dabbrev 30)
+  ;; (add-hook 'completion-at-point-functions #'cape-file 20)
+  ;; (add-hook 'completion-at-point-functions #'cape-dabbrev 30)
 #+end_src
 *** completion controls
 :PROPERTIES:
@@ -328,7 +328,7 @@ https://github.com/minad/vertico#complementary-packages
     ;; ("," corfu-last "last")
     ("b" corfu-info-location "info loc")
     ("w" corfu-info-documentation "docs")
-    ("f" corfu-quit "quit" :exit t))
+    ("f" corfu-quit "quit"))
 
   (define-key corfu-map (kbd "<f1>") #'my-corfu-hydra/body)
   (add-to-list 'corfu-continue-commands #'my-corfu-hydra/body)
@@ -2270,7 +2270,7 @@ dy = find definitions
     ;;             (lsp-deferred)))
 
     (require 'python-pytest)
-    (my-add-left-buffer-patterns '("^\\*Python.*"))
+    ;; (my-add-left-buffer-patterns '("^\\*Python.*"))
     (my-add-hidden-buffer-patterns '("^\\*pyright.*" "^\\*pytest.*" "^\\*ruff.*"))
     (my-add-right-buffer-patterns '("^\\*pytest.*"))
 #+end_src

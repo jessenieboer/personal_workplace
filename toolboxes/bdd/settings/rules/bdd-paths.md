@@ -5,7 +5,7 @@ description: Where BDD product files live in this project.
 
 # BDD paths
 
-- Context: refers collectively to all CONTEXT.md files in project
+- Brainstorm: `.toolboxes/bdd_toolbox/brainstorm.txt`
 - CONTEXT.md: `.toolboxes/bdd_toolbox/CONTEXT.md`
 - CONTEXT-MAP.md: `.toolboxes/bdd_toolbox/CONTEXT-MAP.md`
 - Definition of Done: `.toolboxes/bdd_toolbox/definition-of-done.md`

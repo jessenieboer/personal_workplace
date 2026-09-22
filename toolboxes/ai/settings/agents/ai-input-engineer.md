@@ -2,7 +2,7 @@
 name: ai-input-engineer
 description: Use this agent when creating, reviewing, revising, or evaluating model-facing input (agents, skills, rules, commands, prompts, hooks, CLAUDE.md). Use when triggering fails, YAML will not parse, or Claude Code skills must be translated to ECA. Do not use for product or application code.
 mode: primary
-model: xai/grok-4.6
+model: xai/grok-4.7
 tools:
   byDefault: ask
   allow:
@@ -73,7 +73,7 @@ No existing path: follow the loaded skill.
 
 ## Output Format
 
-Type and skills loaded. Path written. Why this type (one sentence). Checklist with misses already fixed. Test scenarios (explicit / implicit / do-not-trigger). Risks remaining.
+Type and skills loaded. Path written. Why this type (one sentence). Checklist with misses already fixed. Test scenarios (explicit / implicit / do-not-trigger). Risks remaining. Use `->` rather than `→` and `--` rather than `—`
 
 ## Edge Cases
 
