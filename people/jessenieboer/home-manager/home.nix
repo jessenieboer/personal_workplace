@@ -48,6 +48,7 @@
         safe.directory = "*";
         user.name = "Jesse Nieboer";
         user.email = "jessenieboer@protonmail.com";
+        github.user = "jessenieboer";
       };
     };
   };

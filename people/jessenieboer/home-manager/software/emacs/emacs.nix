@@ -53,6 +53,7 @@
       lsp-pyright
       lsp-ui
       magit
+      forge
       major-mode-hydra
       marginalia
       markdown-mode

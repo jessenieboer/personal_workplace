@@ -1347,6 +1347,14 @@ Returns the value as string or nil if not found / error."
 (my-add-hidden-buffer-patterns '(".*magit.*"))
 (my-add-right-buffer-patterns '(".*magit.*"))
 
+;; Forge: GitHub PRs/issues inside Magit. Auth uses pass via auth-source-pass.
+;; After home-manager switch, store a classic PAT (scopes: repo, user, read:org):
+;;   pass insert api.github.com/jessenieboer^forge
+;; Then in Magit: ' (forge menu) or hydra i/ ; first time run forge-pull.
+(require 'auth-source-pass)
+(auth-source-pass-enable)
+(require 'forge)
+
 (my-add-to-hydra main-modes
 		 ("Connection"
 		  (("hq" magit-ediff-compare "magit ediff" :exit t))))
@@ -1383,6 +1391,7 @@ Returns the value as string or nil if not found / error."
   		   ("i d" magit-stash "git stash" :exit t)
   		   ("i <tab>" magit-commit "git commit" :exit t)
   		   ("i b" magit-push "git push" :exit t)
+  		   ("i/" forge-dispatch "forge menu" :exit t)
 
   		   ;; integrating work
   		   ("ip" magit-merge "git merge" :exit t)
