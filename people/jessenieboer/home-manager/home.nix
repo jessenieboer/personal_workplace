@@ -1,4 +1,3 @@
-
 { config, inputs, pkgs, unstable, ... }:
 {
   home = {
@@ -42,6 +41,7 @@
           lg = "log --oneline --graph --decorate";
           hist = "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short";
         };
+        github.user = "jessenieboer";
         init.defaultBranch = "master";
         pull.rebase = true;
         push.autoSetupRemote = true;

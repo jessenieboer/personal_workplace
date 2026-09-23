@@ -20,11 +20,11 @@ cp -rf ~/kingdoms/Household/Jesse/personal_workplace/people/jessenieboer/home-ma
 - i created a machine accout token (jessenieboer_secretspec) for secretspec to use, then i stored it in pass as pass://jessenieboer_secretspec_bws_access_token
 - pass is set up with my personal gpg key
 
-
+  
 pass, bws, and devenv:
 - for a physical machine, create a machine access token in the bws web interface
 - logged in as a user on that machine, pass insert -e bws/<token name> and then paste the value
-- use the gh_devenv.sh script to run devenv commands (i.e. ". gh_devenv.sh update")
+- use the gh_devenv.sh script to run devenv commands (i.e. ". gh_devenv.sh update") -- no longer necessary as personal_workplace is public now
 
 
 * boosteroid:

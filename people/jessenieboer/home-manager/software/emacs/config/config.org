@@ -155,6 +155,7 @@ Modes fall into a few high-level categories based on how we generally want to in
                     ediff-mode
     		  emacs-lisp-mode
                     feature-mode
+                    forge-pullreq-mode
   		  gptel-context-buffer-mode
     		  fundamental-mode
     		  help-mode
@@ -198,6 +199,7 @@ Modes fall into a few high-level categories based on how we generally want to in
     		       dirvish-directory-view-mode
   		       eat-mode
                          ediff-mode
+                         forge-pullreq-mode
   		       gptel-context-buffer-mode
   		       magit-diff-mode
     		       magit-log-mode
@@ -1738,6 +1740,7 @@ dy = find definitions
 :ID:       71ccafb2-4e4c-4316-b15c-1cff633b8f44
 :END:
 #+begin_src emacs-lisp
+  (require 'forge)
   (require 'magit)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain
         ediff-split-window-function #'split-window-horizontally
@@ -1746,6 +1749,20 @@ dy = find definitions
         magit-process-verbose t)
   (my-add-hidden-buffer-patterns '(".*magit.*"))
   (my-add-right-buffer-patterns '(".*magit.*"))
+
+  (defun my-forge-github-token ()
+  "GitHub PAT for Forge from secretspec (Bitwarden)."
+  (my-secretspec-get "GITHUB_FORGE_TOKEN"))
+
+(defun my-ghub-token-from-secretspec (orig-fun host username package &rest args)
+  "Use secretspec for github.com forge/ghub tokens; otherwise fall back."
+  (if (and (member host '("github.com" "api.github.com"))
+           (memq package '(forge ghub)))
+      (or (my-forge-github-token)
+          (apply orig-fun host username package args))
+    (apply orig-fun host username package args)))
+
+(advice-add 'ghub--token :around #'my-ghub-token-from-secretspec)
 #+end_src
 **** magit controls
 :PROPERTIES:

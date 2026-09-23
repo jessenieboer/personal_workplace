@@ -44,6 +44,7 @@
       feature-mode
       flycheck
       flycheck-posframe
+      forge
       golden-ratio
       unstable.emacsPackages.gptel
       unstable.emacsPackages.gptel-agent

@@ -20,6 +20,20 @@
           };
         }
 
+        {
+          apply = {
+            screen = { apply = "force"; value = 1; };
+          };
+          description = "grok-bot";
+          match = {
+            window-class = {
+              match-whole = false;
+              type = "exact";
+              value = "grok-bot";
+            };
+          };
+        }
+
         # {
         #   apply = {
         #     screen = { apply = "force"; value = 1; };
@@ -118,19 +132,6 @@
               match-whole = false;
               type = "exact";
               value = "firefox-devedition";
-            };
-          };
-        }
-        {
-          apply = {
-            screen = { apply = "force"; value = 0; };
-          };
-          description = "grok-bot";
-          match = {
-            window-class = {
-              match-whole = false;
-              type = "exact";
-              value = "grok-bot";
             };
           };
         }

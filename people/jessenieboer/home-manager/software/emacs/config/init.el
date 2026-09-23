@@ -1338,14 +1338,29 @@ Returns the value as string or nil if not found / error."
 
 
 
-(require 'magit)
-(setq ediff-window-setup-function 'ediff-setup-windows-plain
-      ediff-split-window-function #'split-window-horizontally
-      magit-clone-set-remote.pushDefault t
-      magit-diff-refine-hunk 'all
-      magit-process-verbose t)
-(my-add-hidden-buffer-patterns '(".*magit.*"))
-(my-add-right-buffer-patterns '(".*magit.*"))
+(require 'forge)
+  (require 'magit)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function #'split-window-horizontally
+        magit-clone-set-remote.pushDefault t
+        magit-diff-refine-hunk 'all
+        magit-process-verbose t)
+  (my-add-hidden-buffer-patterns '(".*magit.*"))
+  (my-add-right-buffer-patterns '(".*magit.*"))
+
+  (defun my-forge-github-token ()
+  "GitHub PAT for Forge from secretspec (Bitwarden)."
+  (my-secretspec-get "GITHUB_FORGE_TOKEN"))
+
+(defun my-ghub-token-from-secretspec (orig-fun host username package &rest args)
+  "Use secretspec for github.com forge/ghub tokens; otherwise fall back."
+  (if (and (member host '("github.com" "api.github.com"))
+           (memq package '(forge ghub)))
+      (or (my-forge-github-token)
+          (apply orig-fun host username package args))
+    (apply orig-fun host username package args)))
+
+(advice-add 'ghub--token :around #'my-ghub-token-from-secretspec)
 
 (my-add-to-hydra main-modes
 		 ("Connection"
