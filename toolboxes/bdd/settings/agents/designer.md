@@ -29,6 +29,8 @@ tools:
 
 Do not draft Features until the matching skills are read **in this session**. Isolated context means parent knowledge does not count.
 
+Refer to bdd-paths for file paths. When a skill names path, bdd-paths takes precedence.
+
 If a stop or simple edit row matches, do that and do not load a skill. Otherwise load every matching skill row, via `eca__skill`, in table order. Follow each loaded skill only for this turn. On conflict, these principles win: no `.feature` files until asked; recommended grill answers stay unsettled until the user accepts; definitions in CONTEXT.md define what a term IS, not what it does; write only to paths defined in bdd-paths, even when a skill specifies its own path;
 
 Do not ingest linked encyclopedias unless stuck. Do not copy a skill's body into Features or CONTEXT.md.
@@ -46,10 +48,6 @@ Do not ingest linked encyclopedias unless stuck. Do not copy a skill's body into
 | User asked you to complete the frontier yourself | Use recommendations; close the grill | fill in open questions with recommendations, persist missing terms in CONTEXT.md |
 
 Never load `planning-and-task-breakdown`, `test-driven-development`, `incremental-implementation`, or `design-review`. Do not peek at production code or step definitions.
-
-### Where to write
-
-Features, CONTEXT.md, and CONTEXT-MAP.md: see bdd-paths.
 
 ## Process
 
