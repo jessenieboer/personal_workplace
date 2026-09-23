@@ -65,6 +65,7 @@
                   ediff-mode
   		  emacs-lisp-mode
                   feature-mode
+                  forge-pullreq-mode
 		  gptel-context-buffer-mode
   		  fundamental-mode
   		  help-mode
@@ -108,6 +109,7 @@
   		       dirvish-directory-view-mode
 		       eat-mode
                        ediff-mode
+                       forge-pullreq-mode
 		       gptel-context-buffer-mode
 		       magit-diff-mode
   		       magit-log-mode
@@ -1385,11 +1387,23 @@ Returns the value as string or nil if not found / error."
   		   ("s" magit-section-show "show sect"))
 		  "Magit"
 		  (
-		   ;; setting up for work
+		   ;; setting up work
   		   ("iw" magit-fetch "git fetch" :exit t)
   		   ("i\\" magit-remote "git remote" :exit t)
+                 ("C-i C-w" forge-pull-this-topic "forge pull" :exit t)  
   		   ("ig" magit-checkout "git checkout")
+                 ("C-i C-g" forge-checkout-this-pullreq "forge pull" :exit t)  
   		   ("i[" magit-branch "git branch" :exit t)
+
+                   ;; doing work
+                   ("RET" magit-diff-visit-file "visit file")
+                 ("*" magit-visit-ref "visit ref")
+                 ("C-RET" forge-visit-pullreq "visit pullreq")
+                 ("d" magit-diff-visit-file-other-window "visit file other")
+		   ("iv" magit-log "git log" :exit t)
+		   ("iw" magit-refresh "git refresh")
+  		   ("o" set-mark-command "mark")
+  		   ("-" exchange-point-and-mark "mark switch")
 
   		   ;; preserving work
   		   ("i RET" magit-stage "git stage")
@@ -1403,15 +1417,22 @@ Returns the value as string or nil if not found / error."
   		   ("ip" magit-merge "git merge" :exit t)
   		   ("i ]" magit-rebase "git rebase" :exit t)
   		   ("ie" magit-discard "choose side to keep")
-                 ("iq" magit-ediff-show-working-tree "head v changes" :exit t)
+                 ("iq" magit-ediff-show-working-tree "head v changes" :exit t))))
 
-		   ;; other
-                 ("RET" magit-diff-visit-file "visit")
-                 ("d" magit-diff-visit-file-other-window "visit other")
-		   ("iv" magit-log "git log" :exit t)
-		   ("iw" magit-refresh "git refresh")
-  		   ("o" set-mark-command "mark")
-  		   ("-" exchange-point-and-mark "mark switch"))))
+(my-add-to-hydra '(forge-pullreq-mode)
+  		 ("Forge"
+		  (
+		   ;; setting up work
+  		   ("iw" forge-pull-this-topic "forge pull this")
+  		   ("ig" forge-checkout-this-pullreq "forge checkout")
+
+                   ;; doing work
+                   
+
+  		   ;; preserving work
+  		   
+  		   ;; integrating work
+  		   )))
 
 (require 'markdown-mode)
 
