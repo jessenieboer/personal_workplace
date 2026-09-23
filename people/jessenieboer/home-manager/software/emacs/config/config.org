@@ -493,6 +493,11 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   (easysession-save-mode -1) ; save manually
   (make-directory easysession-directory t)
 
+  (defun my-string-matches-any-regex-p (str regex-list)
+    "Return t if STR matches any regex in REGEX-LIST."
+    (cl-loop for regex in regex-list
+    	   thereis (string-match-p regex str)))
+
   (defun my-center-buffer-p (buffer-or-name &rest ARGS)
     "Test whether buffer should be displayed in my center frame."
     (let ((buffer (get-buffer buffer-or-name)))
@@ -893,51 +898,82 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   (global-tab-line-mode 1)
   (tab-bar-mode 1)
 
+  (defvar my-project-name-cache (make-hash-table :test 'eq :weakness 'key))
+  (defvar my-tab-display-cache (make-hash-table :test 'equal :weakness 'key))
+  (defvar my-hidden-buffer-regexp nil)
+  (defvar my-tab-cache-timer nil)
+
+  (defun my-rebuild-hidden-buffer-regexp ()
+    (setq my-hidden-buffer-regexp
+          (mapconcat #'identity my-hidden-buffer-patterns "\\|")))
+
   (defun my-add-hidden-buffer-patterns (regex-list)
-    "Add patterns to my list of buffers that won't show up on the tab line."
-    (setq my-hidden-buffer-patterns (append my-hidden-buffer-patterns regex-list)))
-
-  (defun my-cache-for-tab-display (buffer)
-    "Cache given buffer according to visibility."
-    (let ((bname (buffer-name buffer)))
-      (if (my-string-matches-any-regex-p bname my-hidden-buffer-patterns)
-          (puthash bname "Hidden" my-tab-display-cache)
-        (puthash bname (my-get-project-name-for-buffer buffer) my-tab-display-cache))))
-
-  (defvar my-project-name-cache (make-hash-table :test 'eq :weakness 'key)
-    "Buffer -> project name cache.")
+    (setq my-hidden-buffer-patterns
+          (append my-hidden-buffer-patterns regex-list))
+    (my-rebuild-hidden-buffer-regexp))
 
   (defun my-get-project-name-for-buffer (buffer)
-    "Return the project name for BUFFER, or nil if none."
     (let ((buf (get-buffer buffer)))
       (when buf
-        (with-current-buffer buf
-  	(or (gethash buf my-project-name-cache)
-  	    (when-let* ((proj (project-current nil (buffer-file-name buf)))
-  			(proj-name (project-name proj)))
-  	      (puthash buf (or proj-name "no_project") my-project-name-cache)
-  	      proj-name))))))
+        (or (gethash buf my-project-name-cache)
+            (with-current-buffer buf
+              (let* ((dir (or (and (buffer-file-name buf)
+                                   (file-name-directory (buffer-file-name buf)))
+                              default-directory))
+                     (name (if (or (not dir) (file-remote-p dir))
+                               "no_project"
+                             (if-let ((proj (project-current nil dir)))
+                                 (project-name proj)
+                               "no_project"))))
+                (puthash buf name my-project-name-cache)
+                name))))))
 
-  (defun my-string-matches-any-regex-p (str regex-list)
-    "Return t if STR matches any regex in REGEX-LIST."
-    (cl-loop for regex in regex-list
-    	   thereis (string-match-p regex str)))
-
-  (defvar my-tab-display-cache (make-hash-table :test 'equal :weakness 'key)
-    "Cache for hidden buffer checks.")
+  (defun my-cache-for-tab-display (buffer)
+    (when-let ((bname (buffer-name buffer)))
+      (puthash bname
+               (if (and my-hidden-buffer-regexp
+                        (string-match-p my-hidden-buffer-regexp bname))
+                   "Hidden"
+                 (my-get-project-name-for-buffer buffer))
+               my-tab-display-cache)))
 
   (defun my-tab-line-tabs-buffer-group-function (buffer)
-    (gethash (buffer-name buffer) my-tab-display-cache "No tab group"))
+    (let ((bname (buffer-name buffer)))
+      (or (gethash bname my-tab-display-cache)
+          (progn
+            (my-cache-for-tab-display buffer)
+            (gethash bname my-tab-display-cache "No tab group")))))
+
+  (defun my-invalidate-tab-cache-for-buffer (&optional buffer)
+    (let ((buf (or buffer (current-buffer))))
+      (remhash buf my-project-name-cache)
+      (when-let ((bname (buffer-name buf)))
+        (remhash bname my-tab-display-cache))))
 
   (defun my-update-tab-display-cache ()
-    (clrhash my-tab-display-cache)
-    (mapc 'my-cache-for-tab-display (buffer-list)))
+    "Idle rebuild of entries that are actually missing. Not a full scan."
+    (setq my-tab-cache-timer nil)
+    (let ((n 0))
+      (dolist (buf (buffer-list))
+        (when (and (< n 20)
+                   (not (gethash (buffer-name buf) my-tab-display-cache)))
+          (my-cache-for-tab-display buf)
+          (setq n (1+ n))))))
 
-  (add-hook 'buffer-list-update-hook #'my-update-tab-display-cache)
+  (defun my-schedule-tab-cache-update (&rest _)
+    (unless my-tab-cache-timer
+      (setq my-tab-cache-timer
+            (run-with-idle-timer 0.25 nil #'my-update-tab-display-cache))))
+
+  ;; NOT buffer-list-update-hook
+  (add-hook 'find-file-hook #'my-invalidate-tab-cache-for-buffer)
+  (add-hook 'after-change-major-mode-hook #'my-invalidate-tab-cache-for-buffer)
+  (add-hook 'kill-buffer-hook #'my-invalidate-tab-cache-for-buffer)
+  (add-hook 'project-remember-project-hook #'my-schedule-tab-cache-update)
 
   (my-add-hidden-buffer-patterns '("^\\*Async-.*" "^\\*Backtrace\\*$" "\\*envrc\\*" "^\\*Help\\*$" "^\\*Ilist\\*$"
-                			 "^\\*Info\\*$" "^\\*Metahelp\\*$" "^\\*Messages\\*$" ".*Old buffer.*"
-                			 "^\\*Process List\\*$" "^\\*Shell Command Output\\*$" "^\\*Warnings\\*$"))
+                  		 "^\\*Info\\*$" "^\\*Metahelp\\*$" "^\\*Messages\\*$" ".*Old buffer.*"
+                  		 "^\\*Process List\\*$" "^\\*Shell Command Output\\*$" "^\\*Warnings\\*$"))
 
 #+end_src
 *** buffer controls
