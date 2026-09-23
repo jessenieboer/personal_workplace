@@ -1747,13 +1747,25 @@ dy = find definitions
   (my-add-hidden-buffer-patterns '(".*magit.*"))
   (my-add-right-buffer-patterns '(".*magit.*"))
 
-  ;; Forge: GitHub PRs/issues inside Magit. Auth uses pass via auth-source-pass.
-  ;; After home-manager switch, store a classic PAT (scopes: repo, user, read:org):
-  ;;   pass insert api.github.com/jessenieboer^forge
-  ;; Then in Magit: ' (forge menu) or hydra i/ ; first time run forge-pull.
-  (require 'auth-source-pass)
-  (auth-source-pass-enable)
+  ;; Forge: GitHub PRs/issues inside Magit.
+  ;; Token comes from secretspec (Bitwarden via BWS), not pass:
+  ;;   add GITHUB_FORGE_TOKEN in the Bitwarden vault secretspec reads,
+  ;;   declared in home-manager secretspec.toml.
   (require 'forge)
+
+  (defun my-forge-github-token ()
+    "GitHub PAT for Forge from secretspec (Bitwarden)."
+    (my-secretspec-get "GITHUB_FORGE_TOKEN"))
+
+  (defun my-ghub-token-from-secretspec (orig-fun host username package &rest args)
+    "Use secretspec for github.com forge/ghub tokens; otherwise fall back."
+    (if (and (member host '("github.com" "api.github.com"))
+             (memq package '(forge ghub)))
+        (or (my-forge-github-token)
+            (apply orig-fun host username package args))
+      (apply orig-fun host username package args)))
+
+  (advice-add 'ghub--token :around #'my-ghub-token-from-secretspec)
 #+end_src
 **** magit controls
 :PROPERTIES:
