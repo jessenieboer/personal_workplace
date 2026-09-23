@@ -32,6 +32,24 @@ tokens the same way you do for normal projects:
 NIX_CONFIG="access-tokens = github.com=$NIX_GITHUB_PAT" devenv shell -- ./check.sh
 ```
 
+### Unfree packages (`bws`)
+
+devenv applies `nixpkgs.permitted_unfree_packages` / `allow_unfree` on the
+**project root** only. A permit inside an imported toolbox (e.g. `secrets`
+for `bws`) does not reliably merge into a smoke consumer.
+
+Fixtures that import `secrets` directly or transitively (`ai`, `bdd`,
+`code`, `python`, `secrets`) therefore declare:
+
+```yaml
+nixpkgs:
+  permitted_unfree_packages:
+    - bws
+```
+
+in their own `devenv.yaml`. Real projects that import those toolboxes need
+the same root permit.
+
 ### Secrets / XAI
 
 Toolboxes that import `secrets` (and language/AI stacks that vendor
