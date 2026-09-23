@@ -299,40 +299,42 @@ https://github.com/minad/vertico#complementary-packages
 #+begin_src emacs-lisp
   (global-set-key (kbd "<tab>") nil)
   (global-set-key (kbd "<tab> SPC") 'completion-at-point)
+  (global-set-key (kbd "<tab> i") 'cape-abbrev)
+        
 
-  (my-add-to-hydra minibuffer-modes
-      		 ("Connection"
-      		  ()
-      		  "Display"
-      		  ()
-      		  "Navigation"
-      		  (("SPC" vertico-previous "prev line")
-      		   ("e" vertico-next "next line")
-      		   ("(" vertico-previous-group "prev group")
-      		   (")" vertico-next-group "next group"))
-      		  "Completion"
-      		  (("RET" (vertico-exit nil) "select")
-      		   ("*" vertico-exit-input "force select")
-    		   ("<tab> RET" vertico-insert "insert"))))
+        (my-add-to-hydra minibuffer-modes
+            		 ("Connection"
+            		  ()
+            		  "Display"
+            		  ()
+            		  "Navigation"
+            		  (("SPC" vertico-previous "prev line")
+            		   ("e" vertico-next "next line")
+            		   ("(" vertico-previous-group "prev group")
+            		   (")" vertico-next-group "next group"))
+            		  "Completion"
+            		  (("RET" (vertico-exit nil) "select")
+            		   ("*" vertico-exit-input "force select")
+          		   ("<tab> RET" vertico-insert "insert"))))
 
-  (defhydra my-corfu-hydra (:hint nil)
-    "Corfu"
-    ("<return>" corfu-insert "insert")
-    ("SPC" corfu-previous "prev")
-    ("e" corfu-next "next")
-    ;; ("a" corfu-scroll-up "scroll up")
-    ;; ("n" corfu-scroll-down "scroll down")
-    ;; ("l" corfu-prompt-beginning "beg")
-    ;; ("c" corfu-prompt-end "end")
-    ;; ("/" corfu-first "first")
-    ;; ("," corfu-last "last")
-    ("b" corfu-info-location "info loc")
-    ("w" corfu-info-documentation "docs")
-    ("f" corfu-quit "quit"))
+        (defhydra my-corfu-hydra (:hint nil)
+          "Corfu"
+          ("<return>" corfu-insert "insert")
+          ("SPC" corfu-previous "prev")
+          ("e" corfu-next "next")
+          ;; ("a" corfu-scroll-up "scroll up")
+          ;; ("n" corfu-scroll-down "scroll down")
+          ;; ("l" corfu-prompt-beginning "beg")
+          ;; ("c" corfu-prompt-end "end")
+          ;; ("/" corfu-first "first")
+          ;; ("," corfu-last "last")
+          ("b" corfu-info-location "info loc")
+          ("w" corfu-info-documentation "docs")
+          ("f" corfu-quit "quit"))
 
-  (define-key corfu-map (kbd "<f1>") #'my-corfu-hydra/body)
-  (add-to-list 'corfu-continue-commands #'my-corfu-hydra/body)
-(add-to-list 'corfu-continue-commands #'my-corfu-hydra/lambda)
+        (define-key corfu-map (kbd "<f1>") #'my-corfu-hydra/body)
+        (add-to-list 'corfu-continue-commands #'my-corfu-hydra/body)
+      (add-to-list 'corfu-continue-commands #'my-corfu-hydra/lambda)
 #+end_src
 ** Navigate text
 :PROPERTIES:
@@ -2078,6 +2080,10 @@ dy = find definitions
 :ID:       0db0dc5f-8599-4fc4-a1d6-0f381b7e2eca
 :END:
 #+begin_src emacs-lisp
+(define-abbrev-table 'org-mode-abbrev-table
+    '(("s" "#+BEGIN_SRC\n\n#+END_SRC")
+      ("se" "#+BEGIN_SRC emacs-lisp\n\n#+END_SRC")))
+
   (my-add-to-hydra main-modes
     		 ("Connection"
     		  (("ho" my-open-new-org-agenda "agenda"))

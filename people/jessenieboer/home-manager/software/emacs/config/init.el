@@ -188,41 +188,43 @@
 ;; (add-hook 'completion-at-point-functions #'cape-dabbrev 30)
 
 (global-set-key (kbd "<tab>") nil)
-  (global-set-key (kbd "<tab> SPC") 'completion-at-point)
+(global-set-key (kbd "<tab> SPC") 'completion-at-point)
+(global-set-key (kbd "<tab> i") 'cape-abbrev)
+      
 
-  (my-add-to-hydra minibuffer-modes
-      		 ("Connection"
-      		  ()
-      		  "Display"
-      		  ()
-      		  "Navigation"
-      		  (("SPC" vertico-previous "prev line")
-      		   ("e" vertico-next "next line")
-      		   ("(" vertico-previous-group "prev group")
-      		   (")" vertico-next-group "next group"))
-      		  "Completion"
-      		  (("RET" (vertico-exit nil) "select")
-      		   ("*" vertico-exit-input "force select")
-    		   ("<tab> RET" vertico-insert "insert"))))
+      (my-add-to-hydra minibuffer-modes
+          		 ("Connection"
+          		  ()
+          		  "Display"
+          		  ()
+          		  "Navigation"
+          		  (("SPC" vertico-previous "prev line")
+          		   ("e" vertico-next "next line")
+          		   ("(" vertico-previous-group "prev group")
+          		   (")" vertico-next-group "next group"))
+          		  "Completion"
+          		  (("RET" (vertico-exit nil) "select")
+          		   ("*" vertico-exit-input "force select")
+        		   ("<tab> RET" vertico-insert "insert"))))
 
-  (defhydra my-corfu-hydra (:hint nil)
-    "Corfu"
-    ("<return>" corfu-insert "insert")
-    ("SPC" corfu-previous "prev")
-    ("e" corfu-next "next")
-    ;; ("a" corfu-scroll-up "scroll up")
-    ;; ("n" corfu-scroll-down "scroll down")
-    ;; ("l" corfu-prompt-beginning "beg")
-    ;; ("c" corfu-prompt-end "end")
-    ;; ("/" corfu-first "first")
-    ;; ("," corfu-last "last")
-    ("b" corfu-info-location "info loc")
-    ("w" corfu-info-documentation "docs")
-    ("f" corfu-quit "quit"))
+      (defhydra my-corfu-hydra (:hint nil)
+        "Corfu"
+        ("<return>" corfu-insert "insert")
+        ("SPC" corfu-previous "prev")
+        ("e" corfu-next "next")
+        ;; ("a" corfu-scroll-up "scroll up")
+        ;; ("n" corfu-scroll-down "scroll down")
+        ;; ("l" corfu-prompt-beginning "beg")
+        ;; ("c" corfu-prompt-end "end")
+        ;; ("/" corfu-first "first")
+        ;; ("," corfu-last "last")
+        ("b" corfu-info-location "info loc")
+        ("w" corfu-info-documentation "docs")
+        ("f" corfu-quit "quit"))
 
-  (define-key corfu-map (kbd "<f1>") #'my-corfu-hydra/body)
-  (add-to-list 'corfu-continue-commands #'my-corfu-hydra/body)
-(add-to-list 'corfu-continue-commands #'my-corfu-hydra/lambda)
+      (define-key corfu-map (kbd "<f1>") #'my-corfu-hydra/body)
+      (add-to-list 'corfu-continue-commands #'my-corfu-hydra/body)
+    (add-to-list 'corfu-continue-commands #'my-corfu-hydra/lambda)
 
 (require 'consult)
 (global-visual-line-mode t)
@@ -356,6 +358,11 @@
 (easysession-magit-mode 1)
 (easysession-save-mode -1) ; save manually
 (make-directory easysession-directory t)
+
+(defun my-string-matches-any-regex-p (str regex-list)
+  "Return t if STR matches any regex in REGEX-LIST."
+  (cl-loop for regex in regex-list
+  	   thereis (string-match-p regex str)))
 
 (defun my-center-buffer-p (buffer-or-name &rest ARGS)
   "Test whether buffer should be displayed in my center frame."
@@ -1634,203 +1641,207 @@ Returns the value as string or nil if not found / error."
         		       ("now" . (:foreground "lawn green" :weight bold))
         		       ("past" . (:foreground "dark olive green" :weight bold))))
 
-(my-add-to-hydra main-modes
-  		 ("Connection"
-  		  (("ho" my-open-new-org-agenda "agenda"))
-  		  "Display"
-  		  ()
-  		  "Navigation"
-  		  ()
-  		  "General"
-  		  (("j" (progn (org-capture) (org-tidy-buffer)) "org capture" :exit t))))
+(define-abbrev-table 'org-mode-abbrev-table
+    '(("s" "#+BEGIN_SRC\n\n#+END_SRC")
+      ("se" "#+BEGIN_SRC emacs-lisp\n\n#+END_SRC")))
 
-(my-add-to-hydra 'dired-mode
-  		 ("Connection"
-  		  ()
-  		  "Display"
-  		  ()
-  		  "Navigation"
-  		  ()
-  		  "General"
-  		  (("j" (progn (my-capture-in-project-at-point) (org-tidy-buffer)) "org capture" :exit t))))
+  (my-add-to-hydra main-modes
+    		 ("Connection"
+    		  (("ho" my-open-new-org-agenda "agenda"))
+    		  "Display"
+    		  ()
+    		  "Navigation"
+    		  ()
+    		  "General"
+    		  (("j" (progn (org-capture) (org-tidy-buffer)) "org capture" :exit t))))
 
-(my-add-to-hydra 'org-mode
-  		 ("Connection"
-  		  ()
-  		  "Display"
-  		  (("C-s" (org-fold-show-entry nil) "show entry")
-    		   ("C-n" org-fold-show-children "show child")
-    		   ("C-c" org-fold-show-branches "show branch")
-    		   ("C-u" org-fold-show-all "show subtree")
-		   ("C-h" org-cycle "cycle")
-		   ("C-g" org-fold-hide-drawer-toggle "toggle drawer")
-		   ("C-w" org-tidy-mode "toggle tidy")
-		   ("C-a" org-fold-hide-sublevels "hide @lvl")
-    		   ("C-t" org-fold-hide-subtree "or hide sub"))
-  		  "Navigation"
-  		  (("C-SPC" previous-line "or pree line")
-    		   ("C-e" next-line "or nex line")
-		   ("C-<f1>" org-previous-visible-heading "prev head")
-    		   ("C-<f7>" org-next-visible-heading "next head")
-		   ("C-v" org-babel-previous-src-block "prev block")
-  		   ("C-x" org-babel-next-src-block "next block"))
-		  "Text"
-		  (("ip" org-comment-dwim "comment"))
-  		  "Org"
-  		  (("C-<backspace>" org-move-subtree-up "sub up")
-    		   ("C-<tab>" org-move-subtree-down "sub down")
-    		   ("C-q" org-promote-subtree "promote sub")
-    		   ("C-z" org-demote-subtree "demote sub")
-		   ("TAB C-t" org-insert-heading "insert head here")
-    		   ("TAB C-<f1>" org-insert-subheading "insert sub here")
-    		   ("TAB C-SPC" org-insert-heading-respect-content "insert head")
-    		   ("TAB C-<return>" my-insert-subheading-respect-content "insert sub")
-		   ("TAB TAB" org-todo "cycle todo")
-    		   ("TAB C-<tab>" org-priority-down "priority down")
-    		   ("TAB C-p" org-priority-up "priority up")
-    		   ("TAB C-w" org-property-previous-allowed-value "prev prop val")
-    		   ("TAB C-b" org-property-next-allowed-value "next prop val")
-		   ("TAB C-s" org-timestamp-down "timestamp down")
-		   ("TAB C-e" org-timestamp "timestamp")
-		   ("TAB C-n" org-timestamp-up "timestamp up")
-		   ("TAB C-<f7>" org-schedule "schedule")
-		   ("TAB C-o" my-org-timestamp-headline "timestamp headline")
-		   ("TAB C-h" org-deadline "deadline")
-    		     ("TAB C-s" org-set-tags-command "set tags")
-		   ("d <f12>" org-gfm-export-to-markdown "tangle to md")
-		   ("C-d C-b" org-org-export-to-org "export to org")
-		   ("db" org-babel-tangle "tangle all")
-    		   ("d+" (org-babel-tangle '(4)) "tangle block")
-		   ("di RET" org-ctrl-c-ctrl-c "confirm"))
-		 "Table"
-		 (
-		   ;;("M-r" org-table-toggle-column-width "or col width")
-  		  ;;  ("M-j" org-table-shrink "or shrink")
-  		  ;;  ("M-k" org-table-expand "or expand")
-  		  ;;  ("M-q" org-table-move-row-up "or row up")
-  		  ;;  ("M-z" org-table-move-row-down "or row down")
-  		  ;;  ("M-f" org-table-move-column-left "or col left")
-  		  ;;  ("M-u" org-table-move-column-right "or col right")
-  		    ("M-i M-m" org-table-align "or align") ;; alt tab
-  		  ;;  ("M-<return>" org-table-edit-field "or edit field")
-  		  ;;  ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
-  		  ;;  ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
-  		  ;;  ("M-i M-l" org-table-create "or make table")
-  		  ;;  ("M-i M-SPC" (org-table-insert-row '(4)) "or in row")
-  		  ;;  ("M-i M-a" org-table-insert-hline "or in line")
-  		  ;;  ("M-i M-t" org-table-insert-column "or in col")
-  		  ;;  ;; ("M-i M-DEL" org-table-kill-row "or delete row")
-  		  ;;  ;; ("M-i M-q" org-table-delete-column "or delete col")
-  		  ;;  ;; ("M-i M-r" org-table-sort-lines "or sort")
-  		  ;;  ;; ("M-i M-p" org-table-follow-field-mode "or follow mode")
-  		  ;;  ;; ("M-i M-n" org-table-header-line-mode "or head mode")
-  		  ;;  ("M-t" org-table-previous-field "or pree field")
-  		  ;;  ("M-s" org-table-next-field "or nex field")   
-  		  ;;  ("M-SPC" previous-line "pree line")
-  		  ;;  ("M-e" org-table-next-row "next row")
-  		  ;;  ("M-a" org-table-beginning-of-field "or field first")
-  		  ;;  ("M-n" org-table-end-of-field "or field last")
-  		  ;;  ("M-l" move-beginning-of-line "line first")
-  		  ;;  ("M-c" move-end-of-line "line last")
-		  )))
+  (my-add-to-hydra 'dired-mode
+    		 ("Connection"
+    		  ()
+    		  "Display"
+    		  ()
+    		  "Navigation"
+    		  ()
+    		  "General"
+    		  (("j" (progn (my-capture-in-project-at-point) (org-tidy-buffer)) "org capture" :exit t))))
 
-(my-add-to-hydra minibuffer-modes
-		 ("Navigation"
-  		  (("C-SPC" org-calendar-backward-week "prev day week")
-  		   ("C-e" org-calendar-forward-week "next week")
-  		   ("C-t" org-calendar-backward-day "prev day")
-  		   ("C-s" org-calendar-forward-day  "next day")
-  		   ("C-a" org-calendar-backward-month "prev month")	
-  		   ("C-n" org-calendar-forward-month "next month")
-  		   ("C-l" calendar-backward-year "prev year")	
-  		   ("C-c" calendar-forward-year "next year"))))
+  (my-add-to-hydra 'org-mode
+    		 ("Connection"
+    		  ()
+    		  "Display"
+    		  (("C-s" (org-fold-show-entry nil) "show entry")
+      		   ("C-n" org-fold-show-children "show child")
+      		   ("C-c" org-fold-show-branches "show branch")
+      		   ("C-u" org-fold-show-all "show subtree")
+  		   ("C-h" org-cycle "cycle")
+  		   ("C-g" org-fold-hide-drawer-toggle "toggle drawer")
+  		   ("C-w" org-tidy-mode "toggle tidy")
+  		   ("C-a" org-fold-hide-sublevels "hide @lvl")
+      		   ("C-t" org-fold-hide-subtree "or hide sub"))
+    		  "Navigation"
+    		  (("C-SPC" previous-line "or pree line")
+      		   ("C-e" next-line "or nex line")
+  		   ("C-<f1>" org-previous-visible-heading "prev head")
+      		   ("C-<f7>" org-next-visible-heading "next head")
+  		   ("C-v" org-babel-previous-src-block "prev block")
+    		   ("C-x" org-babel-next-src-block "next block"))
+  		  "Text"
+  		  (("ip" org-comment-dwim "comment"))
+    		  "Org"
+    		  (("C-<backspace>" org-move-subtree-up "sub up")
+      		   ("C-<tab>" org-move-subtree-down "sub down")
+      		   ("C-q" org-promote-subtree "promote sub")
+      		   ("C-z" org-demote-subtree "demote sub")
+  		   ("TAB C-t" org-insert-heading "insert head here")
+      		   ("TAB C-<f1>" org-insert-subheading "insert sub here")
+      		   ("TAB C-SPC" org-insert-heading-respect-content "insert head")
+      		   ("TAB C-<return>" my-insert-subheading-respect-content "insert sub")
+  		   ("TAB TAB" org-todo "cycle todo")
+      		   ("TAB C-<tab>" org-priority-down "priority down")
+      		   ("TAB C-p" org-priority-up "priority up")
+      		   ("TAB C-w" org-property-previous-allowed-value "prev prop val")
+      		   ("TAB C-b" org-property-next-allowed-value "next prop val")
+  		   ("TAB C-s" org-timestamp-down "timestamp down")
+  		   ("TAB C-e" org-timestamp "timestamp")
+  		   ("TAB C-n" org-timestamp-up "timestamp up")
+  		   ("TAB C-<f7>" org-schedule "schedule")
+  		   ("TAB C-o" my-org-timestamp-headline "timestamp headline")
+  		   ("TAB C-h" org-deadline "deadline")
+      		     ("TAB C-s" org-set-tags-command "set tags")
+  		   ("d <f12>" org-gfm-export-to-markdown "tangle to md")
+  		   ("C-d C-b" org-org-export-to-org "export to org")
+  		   ("db" org-babel-tangle "tangle all")
+      		   ("d+" (org-babel-tangle '(4)) "tangle block")
+  		   ("di RET" org-ctrl-c-ctrl-c "confirm"))
+  		 "Table"
+  		 (
+  		   ;;("M-r" org-table-toggle-column-width "or col width")
+    		  ;;  ("M-j" org-table-shrink "or shrink")
+    		  ;;  ("M-k" org-table-expand "or expand")
+    		  ;;  ("M-q" org-table-move-row-up "or row up")
+    		  ;;  ("M-z" org-table-move-row-down "or row down")
+    		  ;;  ("M-f" org-table-move-column-left "or col left")
+    		  ;;  ("M-u" org-table-move-column-right "or col right")
+    		    ("M-i M-m" org-table-align "or align") ;; alt tab
+    		  ;;  ("M-<return>" org-table-edit-field "or edit field")
+    		  ;;  ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
+    		  ;;  ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
+    		  ;;  ("M-i M-l" org-table-create "or make table")
+    		  ;;  ("M-i M-SPC" (org-table-insert-row '(4)) "or in row")
+    		  ;;  ("M-i M-a" org-table-insert-hline "or in line")
+    		  ;;  ("M-i M-t" org-table-insert-column "or in col")
+    		  ;;  ;; ("M-i M-DEL" org-table-kill-row "or delete row")
+    		  ;;  ;; ("M-i M-q" org-table-delete-column "or delete col")
+    		  ;;  ;; ("M-i M-r" org-table-sort-lines "or sort")
+    		  ;;  ;; ("M-i M-p" org-table-follow-field-mode "or follow mode")
+    		  ;;  ;; ("M-i M-n" org-table-header-line-mode "or head mode")
+    		  ;;  ("M-t" org-table-previous-field "or pree field")
+    		  ;;  ("M-s" org-table-next-field "or nex field")   
+    		  ;;  ("M-SPC" previous-line "pree line")
+    		  ;;  ("M-e" org-table-next-row "next row")
+    		  ;;  ("M-a" org-table-beginning-of-field "or field first")
+    		  ;;  ("M-n" org-table-end-of-field "or field last")
+    		  ;;  ("M-l" move-beginning-of-line "line first")
+    		  ;;  ("M-c" move-end-of-line "line last")
+  		  )))
 
-(my-add-to-hydra 'org-agenda-mode
-  		 ("Connection"
-  		  (("ho" org-agenda "agenda")
-		   ("RET" (org-agenda-goto t) "goto")
-  		   ("hf" org-agenda-exit "close agenda")
-		   ("h SPC" my-dirvish-side-project "dir side")
-		   ("ir" org-goto-calendar "goto calendar"))
-  		  "Navigation"
-  		  (("SPC" org-agenda-previous-line "pree line")
-  		   ("e" org-agenda-next-line "next line")
-  		   ("t" backward-char "prev column")
-  		   ("s" forward-char "next column")
-  		   ("r" consult-line "search" :exit t))
-  		  "Display"
-  		  (("fd" delete-other-windows "del other wins")
-		   ("d" (org-agenda-show-1 4) "show")
-  		   ("l" org-agenda-earlier "earlier")
-  		   ("c" org-agenda-later "later")
-		   ("/" (my-org-agenda-cycle-span -1) "decrease time spac")
-  		   ("," (my-org-agenda-cycle-span 1) "increase time span")
-  		   ;; ("/" org-agenda-day-view "day view")
-  		   ;; ("," org-agenda-week-view "week view")
-  		   ;; ("\\" org-agenda-month-view "month view")
-  		   ;; ("+" org-agenda-year-view "year view")
-  		   ;; ("i TAB" org-agenda-follow-mode "follow mode")
-  		   ;; ("iz" (my-agenda-indirect-switch) "follow indirect")
-  		   ("ip" org-agenda-filter-by-category "show single cat")
-  		   ("i]" (org-agenda-filter-by-category t) "remove cat")
-  		   ;;("ib" (org-agenda-filter-remove-all) "remove all filters")
-  		   ;; ("ie" (org-agenda-filter-by-tag nil ?\t nil) "show single tag")
-  		   ;; ("ic" (org-agenda-filter-by-tag '(64) ?\t nil) "show tag no subs")
-  		   ;; ("in" (org-agenda-filter-by-tag '(16) ?\t nil)  "add tag")
-  		   ;; ("i;" (org-agenda-filter-by-tag '(4) ?\t nil) "remove tag")
-  		   ;; ("i)" (org-agenda-remove-filter 'tag) "remove tag filter")
-  		   ;;("io" org-agenda-columns "columns view")
-  		   ;;("ih" org-columns "default view")
-  		   ;;("is" org-agenda-show-tags "show tags")
-  		   ;; ("iy" org-agenda-entry-text-show "show entry text")
-  		   ;; ("i|" (org-agenda-entry-text-hide) "hide entry text")
-  		   ("iu" org-agenda-toggle-time-grid "togg time grid")
-  		   ;;("C-t" origami-close-node "fold")
-  		   ;;("C-s" origami-open-node "unfold")
-  		   ("hw" org-agenda-redo-all "refresh")
-  		   ("iw" org-agenda-redo-all "refresh"))
-  		  "Agenda"
-  		  (
-  		   ("a" org-columns-previous-allowed-value "prev val")
-  		   ("n" org-columns-next-allowed-value "next val")  		   
-  		   ("<backspace>" org-agenda-date-earlier "date earlier")
-  		   ("<tab>" org-agenda-date-later "date later")
-  		   ("ii" org-agenda-todo "cycle todo")
-  		   ;; ("it" org-agenda-set-tags "set tag" :exit t)
-  		   ;;("ir" (progn (org-agenda-todo nil) (org-agenda-redo-all)) "cycle todo")
-  		   ;;("ir" org-goto-calendar "goto calendar")
-		 ("io" (progn (org-agenda-schedule nil) (org-agenda-redo-all)) "set scheduled" :exit t)
-  		   ("i-" (progn (org-agenda-schedule '(4)) (org-agenda-redo-all)) "remove scheduled" :exit t)
-  		   ("ih" (progn (org-agenda-deadline nil) (org-agenda-redo-all)) "set deadline" :exit t)
-  		   ("i>" (progn (org-agenda-deadline '(4)) (org-agenda-redo-all)) "remove deadline" :exit t)
-					;("w" (progn (org-agenda-priority-up) (org-agenda-redo-all)) "priority up")
-					;("b" (progn (org-agenda-priority-down) (org-agenda-redo-all)) "priority down")
-  		   ("o" org-agenda-bulk-mark "mark")
-  		   ("-" org-agenda-bulk-mark-all "mark all")
-		   ("<f9>" org-agenda-bulk-unmark "unmark")
-  		   ("<f10>" org-agenda-bulk-unmark-all "unmark all")
-  		   ("hd" (org-save-all-org-buffers) "save and refresh")
-  		   ("i DEL" org-agenda-archive "archive node")
-  		   ("i '" org-agenda-kill :exit t "delete node")
-  		   ("ig" org-agenda-undo "undo"))))
+  (my-add-to-hydra minibuffer-modes
+  		 ("Navigation"
+    		  (("C-SPC" org-calendar-backward-week "prev day week")
+    		   ("C-e" org-calendar-forward-week "next week")
+    		   ("C-t" org-calendar-backward-day "prev day")
+    		   ("C-s" org-calendar-forward-day  "next day")
+    		   ("C-a" org-calendar-backward-month "prev month")	
+    		   ("C-n" org-calendar-forward-month "next month")
+    		   ("C-l" calendar-backward-year "prev year")	
+    		   ("C-c" calendar-forward-year "next year"))))
 
-(my-add-to-hydra 'calendar-mode
-  		 ("Connection"
-  		  (("hf" calendar-exit "exit"))
-  		  "Navigation"
-  		  (("SPC" calendar-backward-week "prev day week")
-  		   ("e" calendar-forward-week "next week")
-  		   ("t" calendar-backward-day "prev day")
-  		   ("s" calendar-forward-day  "next day")
-  		   ("a" calendar-backward-month "prev month")	
-  		   ("n" calendar-forward-month "next month")
-  		   ("l" calendar-backward-year "prev year")	
-  		   ("c" calendar-forward-year "next year"))
-  		  "Display"
-  		  ()
-  		  "Calendar"
-  		  (("RET" my-select-deadline-from-calendar "select deadline")
-		   ("d" my-select-schedule-from-calendar "select scheduled"))))
+  (my-add-to-hydra 'org-agenda-mode
+    		 ("Connection"
+    		  (("ho" org-agenda "agenda")
+  		   ("RET" (org-agenda-goto t) "goto")
+    		   ("hf" org-agenda-exit "close agenda")
+  		   ("h SPC" my-dirvish-side-project "dir side")
+  		   ("ir" org-goto-calendar "goto calendar"))
+    		  "Navigation"
+    		  (("SPC" org-agenda-previous-line "pree line")
+    		   ("e" org-agenda-next-line "next line")
+    		   ("t" backward-char "prev column")
+    		   ("s" forward-char "next column")
+    		   ("r" consult-line "search" :exit t))
+    		  "Display"
+    		  (("fd" delete-other-windows "del other wins")
+  		   ("d" (org-agenda-show-1 4) "show")
+    		   ("l" org-agenda-earlier "earlier")
+    		   ("c" org-agenda-later "later")
+  		   ("/" (my-org-agenda-cycle-span -1) "decrease time spac")
+    		   ("," (my-org-agenda-cycle-span 1) "increase time span")
+    		   ;; ("/" org-agenda-day-view "day view")
+    		   ;; ("," org-agenda-week-view "week view")
+    		   ;; ("\\" org-agenda-month-view "month view")
+    		   ;; ("+" org-agenda-year-view "year view")
+    		   ;; ("i TAB" org-agenda-follow-mode "follow mode")
+    		   ;; ("iz" (my-agenda-indirect-switch) "follow indirect")
+    		   ("ip" org-agenda-filter-by-category "show single cat")
+    		   ("i]" (org-agenda-filter-by-category t) "remove cat")
+    		   ;;("ib" (org-agenda-filter-remove-all) "remove all filters")
+    		   ;; ("ie" (org-agenda-filter-by-tag nil ?\t nil) "show single tag")
+    		   ;; ("ic" (org-agenda-filter-by-tag '(64) ?\t nil) "show tag no subs")
+    		   ;; ("in" (org-agenda-filter-by-tag '(16) ?\t nil)  "add tag")
+    		   ;; ("i;" (org-agenda-filter-by-tag '(4) ?\t nil) "remove tag")
+    		   ;; ("i)" (org-agenda-remove-filter 'tag) "remove tag filter")
+    		   ;;("io" org-agenda-columns "columns view")
+    		   ;;("ih" org-columns "default view")
+    		   ;;("is" org-agenda-show-tags "show tags")
+    		   ;; ("iy" org-agenda-entry-text-show "show entry text")
+    		   ;; ("i|" (org-agenda-entry-text-hide) "hide entry text")
+    		   ("iu" org-agenda-toggle-time-grid "togg time grid")
+    		   ;;("C-t" origami-close-node "fold")
+    		   ;;("C-s" origami-open-node "unfold")
+    		   ("hw" org-agenda-redo-all "refresh")
+    		   ("iw" org-agenda-redo-all "refresh"))
+    		  "Agenda"
+    		  (
+    		   ("a" org-columns-previous-allowed-value "prev val")
+    		   ("n" org-columns-next-allowed-value "next val")  		   
+    		   ("<backspace>" org-agenda-date-earlier "date earlier")
+    		   ("<tab>" org-agenda-date-later "date later")
+    		   ("ii" org-agenda-todo "cycle todo")
+    		   ;; ("it" org-agenda-set-tags "set tag" :exit t)
+    		   ;;("ir" (progn (org-agenda-todo nil) (org-agenda-redo-all)) "cycle todo")
+    		   ;;("ir" org-goto-calendar "goto calendar")
+  		 ("io" (progn (org-agenda-schedule nil) (org-agenda-redo-all)) "set scheduled" :exit t)
+    		   ("i-" (progn (org-agenda-schedule '(4)) (org-agenda-redo-all)) "remove scheduled" :exit t)
+    		   ("ih" (progn (org-agenda-deadline nil) (org-agenda-redo-all)) "set deadline" :exit t)
+    		   ("i>" (progn (org-agenda-deadline '(4)) (org-agenda-redo-all)) "remove deadline" :exit t)
+  					;("w" (progn (org-agenda-priority-up) (org-agenda-redo-all)) "priority up")
+  					;("b" (progn (org-agenda-priority-down) (org-agenda-redo-all)) "priority down")
+    		   ("o" org-agenda-bulk-mark "mark")
+    		   ("-" org-agenda-bulk-mark-all "mark all")
+  		   ("<f9>" org-agenda-bulk-unmark "unmark")
+    		   ("<f10>" org-agenda-bulk-unmark-all "unmark all")
+    		   ("hd" (org-save-all-org-buffers) "save and refresh")
+    		   ("i DEL" org-agenda-archive "archive node")
+    		   ("i '" org-agenda-kill :exit t "delete node")
+    		   ("ig" org-agenda-undo "undo"))))
+
+  (my-add-to-hydra 'calendar-mode
+    		 ("Connection"
+    		  (("hf" calendar-exit "exit"))
+    		  "Navigation"
+    		  (("SPC" calendar-backward-week "prev day week")
+    		   ("e" calendar-forward-week "next week")
+    		   ("t" calendar-backward-day "prev day")
+    		   ("s" calendar-forward-day  "next day")
+    		   ("a" calendar-backward-month "prev month")	
+    		   ("n" calendar-forward-month "next month")
+    		   ("l" calendar-backward-year "prev year")	
+    		   ("c" calendar-forward-year "next year"))
+    		  "Display"
+    		  ()
+    		  "Calendar"
+    		  (("RET" my-select-deadline-from-calendar "select deadline")
+  		   ("d" my-select-schedule-from-calendar "select scheduled"))))
 
 (setq python-indent-offset 4)
 

@@ -32,7 +32,15 @@
 :PROPERTIES:
 :CUSTOM_ID: installation
 :END:
-nixpkgs:
+
+#+BEGIN_SRC yaml
+inputs:
+  llm-agents:
+    url: github:numtide/llm-agents.nix/assets
+  neolabhq-cek:
+    flake: false
+    url: github:NeoLabHQ/context-engineering-kit
+  nixpkgs:
     url: github:NixOS/nixpkgs/nixpkgs-unstable
   nixpkgs-python:
     url: github:cachix/nixpkgs-python
@@ -41,10 +49,18 @@ nixpkgs:
         follows: nixpkgs
   trailofbits-skills:
     flake: false
-    url: github:trailofbits/skills/321ccfe628eca0d314b0ee4eaffcdd8a05639aaf
+    url: github:trailofbits/skills
   wshobson-agents:
     flake: false
-    url: github:wshobson/agents/a30778f8c4e6b0a87567941b7cca4f534bf642b6
+    url: github:wshobson/agents
+    
+imports:
+  - /toolboxes/ai
+  - /toolboxes/emacs
+  - /toolboxes/git
+  - /toolboxes/readme
+  - /toolboxes/secrets
+#+END_SRC
 ** Use :noexport:
 :PROPERTIES:
 :CUSTOM_ID: use
