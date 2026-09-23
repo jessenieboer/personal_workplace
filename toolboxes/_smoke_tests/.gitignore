@@ -1,0 +1,50 @@
+# devenv / direnv state (any smoke fixture)
+**/.devenv/
+**/devenv.lock
+**/devenv.local.nix
+**/devenv.local.yaml
+**/.direnv/
+**/.envrc
+**/.pre-commit-config.yaml
+
+# seeded by toolboxes on shell enter
+**/.dir-locals.el
+**/.toolboxes/
+**/.eca/
+**/.opencode/
+**/secretspec.toml
+
+# git toolbox merges a root .gitignore into the smoke fixture dir
+ai/.gitignore
+bdd/.gitignore
+code/.gitignore
+emacs/.gitignore
+git/.gitignore
+html/.gitignore
+javascript/.gitignore
+project_management/.gitignore
+python/.gitignore
+racket/.gitignore
+readme/.gitignore
+rust/.gitignore
+secrets/.gitignore
+voxtype/.gitignore
+
+# language / template seeds
+**/pyproject.toml
+**/uv.lock
+**/package.json
+**/package-lock.json
+**/node_modules/
+**/index.html
+**/Cargo.toml
+**/Cargo.lock
+**/target/
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.ruff_cache/
+**/.mypy_cache/
+**/.coverage
+**/htmlcov/
