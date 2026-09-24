@@ -32,6 +32,14 @@ tokens the same way you do for normal projects:
 NIX_CONFIG="access-tokens = github.com=$NIX_GITHUB_PAT" devenv shell -- ./check.sh
 ```
 
+### Why every fixture has a `devenv.nix`
+
+devenv 2.2+ finds the project root by walking up to the nearest
+`devenv.nix`. A fixture with only `devenv.yaml` gets skipped, and devenv
+uses `toolboxes/` (which has its own `devenv.nix`) as the root instead,
+ignoring the fixture's imports and unfree permits. Each fixture therefore
+carries a minimal `devenv.nix` (`{ ... }: { }`).
+
 ### Unfree packages (`bws`)
 
 devenv applies `nixpkgs.permitted_unfree_packages` / `allow_unfree` on the
