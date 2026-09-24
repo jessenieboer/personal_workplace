@@ -1390,16 +1390,16 @@ Returns the value as string or nil if not found / error."
 		   ;; setting up work
   		   ("iw" magit-fetch "git fetch" :exit t)
   		   ("i\\" magit-remote "git remote" :exit t)
-                 ("C-i C-w" forge-pull-this-topic "forge pull" :exit t)  
+                   ("C-i C-w" forge-pull-this-topic "forge pull" :exit t)  
   		   ("ig" magit-checkout "git checkout")
-                 ("C-i C-g" forge-checkout-this-pullreq "forge pull" :exit t)  
+                   ("C-i C-g" forge-checkout-this-pullreq "forge pull" :exit t)  
   		   ("i[" magit-branch "git branch" :exit t)
 
                    ;; doing work
                    ("RET" magit-diff-visit-file "visit file")
-                 ("*" magit-visit-ref "visit ref")
-                 ("C-RET" forge-visit-pullreq "visit pullreq")
-                 ("d" magit-diff-visit-file-other-window "visit file other")
+                   ("*" magit-visit-ref "visit ref")
+                   ("C-RET" forge-visit-pullreq "visit pullreq")
+                   ("d" magit-diff-visit-file-other-window "visit file other")
 		   ("iv" magit-log "git log" :exit t)
 		   ("iw" magit-refresh "git refresh")
   		   ("o" set-mark-command "mark")
@@ -1417,22 +1417,35 @@ Returns the value as string or nil if not found / error."
   		   ("ip" magit-merge "git merge" :exit t)
   		   ("i ]" magit-rebase "git rebase" :exit t)
   		   ("ie" magit-discard "choose side to keep")
-                 ("iq" magit-ediff-show-working-tree "head v changes" :exit t))))
+                   ("iq" magit-ediff-show-working-tree "head v changes" :exit t))))
 
 (my-add-to-hydra '(forge-pullreq-mode)
-  		 ("Forge"
-		  (
-		   ;; setting up work
-  		   ("iw" forge-pull-this-topic "forge pull this")
-  		   ("ig" forge-checkout-this-pullreq "forge checkout")
+                 ("Connection"
+  		  (("ht" consult-project-buffer "switch proj buff" :exit t)
+		   ("h SPC" my-dirvish-side-project "dir side")
+		   ("h(" dirvish "dir")
+		   ("h*" find-file "find any file"))
+		  "Navigation"
+  		  (("SPC" magit-previous-line "pree line")
+  		   ("e" magit-next-line "nex line"))
+		  "Display"
+  		  (("t" magit-section-hide "hide sect")
+  		   ("s" magit-section-show "show sect"))
+  		  ("Forge"
+		   (
+		    ;; setting up work
+                  ("ii" forge-topic-menu "forge menu")
+  		    ("iw" forge-pull-this-topic "forge pull this")
+  		    ("ig" forge-checkout-this-pullreq "forge checkout")
 
-                   ;; doing work
-                   
+                    ;; doing work
+                    
 
-  		   ;; preserving work
-  		   
-  		   ;; integrating work
-  		   )))
+  		    ;; preserving work
+  		    
+  		    ;; integrating work
+                    ("ip" forge-merge "forge merge" :exit t)
+  		    ))))
 
 (require 'markdown-mode)
 
