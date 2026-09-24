@@ -1,8 +1,9 @@
+#+TITLE: AI Toolbox
+#+OPTIONS: toc:nil num:nil
 #+EXPORT_FILE_NAME: ../../README.md
-#+OPTIONS: toc:t num:nil
-#+TITLE: Title
 
-#+html:<h1 align="center">Title</h1>
+#+html: <h1 align="center">AI Toolbox</h1>
+#+html: <p align="center">Tools, settings, templates and practices for using AI</p>
 
 * What
 :PROPERTIES:
@@ -12,8 +13,9 @@
 :PROPERTIES:
 :CUSTOM_ID: features
 :END:
-- eca for emacs-first llm interaction
-- opencode for multi-agent and fire-and-forget (not using yet)
+- Editor Code Assistant setup
+  - grok-4.7 and grok-build-0.1
+  - assumes XAI api key through Secrets Toolbox
 - ai-input-engineer for developing agents, skills, etc...
 * Why
 :PROPERTIES:
@@ -31,32 +33,26 @@
 :PROPERTIES:
 :CUSTOM_ID: requirements
 :END:
-declare this input in project yaml:
-#+begin_src yaml
+- Secrets Toolbox for api key
+** Installation :noexport:
+:PROPERTIES:
+:CUSTOM_ID: installation
+:END:
+#+BEGIN_SRC devenv.yaml
   inputs:
     neolabhq-cek:
       flake: false
       url: github:NeoLabHQ/context-engineering-kit
     personal_workplace:
       flake: false
-      url: github:jessenieboer/personal_workplace/jn
-      
+      url: github:jessenieboer/personal_workplace/master
+
   imports:
     - personal_workplace/toolboxes/ai
-    - personal_workplace/toolboxes/secrets
-
-  nixpkgs:
-    permitted_unfree_packages:
-      - bws
-#+end_src
+#+END_SRC
 
 also need in secretspec.toml:
 XAI_API_KEY = { description = "jessenieboer's xai api key", required = true }
-
-** Installation :noexport:
-:PROPERTIES:
-:CUSTOM_ID: installation
-:END:
 ** Use :noexport:
 :PROPERTIES:
 :CUSTOM_ID: use

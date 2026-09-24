@@ -15,7 +15,6 @@
       ".config/secretspec/secretspec.toml".source = ./secretspec.toml;
     };
 
-    # note that secretspec comes with devenv
     packages = with pkgs; [
       bws
       jq # for parsing json from bws in refresh_devenv.sh

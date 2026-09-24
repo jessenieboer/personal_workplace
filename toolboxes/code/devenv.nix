@@ -2,7 +2,7 @@
 let
   explainer = ./settings/agents/code-explainer.md;
   gitignore = ./settings/.gitignore;
-  opencodeConfig = ./settings/opencode/opencode.json;
+  # opencodeConfig = ./settings/opencode/opencode.json;
 
   atomic = inputs.atomic;
   howSkill = "${atomic}/packages/workflows/skills/how";
@@ -12,7 +12,7 @@ let
   howDest = "${ecaDir}/skills/how";
   explainerDest = "${ecaDir}/agents/code-explainer.md";
   gitignoreDest = "${root}/.toolboxes/code_toolbox/.gitignore";
-  opencodeDest = "${root}/.opencode/opencode.json";
+  # opencodeDest = "${root}/.opencode/opencode.json";
 in
 {
   config = {
@@ -23,9 +23,9 @@ in
       fi
     '';
 
-    packages = [
-      inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
-    ];
+    # packages = [
+    #   inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
+    # ];
 
     tasks = {
       "code_toolbox:copy_gitignore" = {
@@ -39,16 +39,16 @@ in
         '';
       };
 
-      "code_toolbox:copy_opencode_config" = {
-        description = "Seed .opencode/opencode.json once from the toolbox template";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          test -f "${opencodeDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${opencodeConfig} "${opencodeDest}"
-        '';
-      };
+      # "code_toolbox:copy_opencode_config" = {
+      #   description = "Seed .opencode/opencode.json once from the toolbox template";
+      #   before = [ "devenv:enterShell" ];
+      #   status = ''
+      #     test -f "${opencodeDest}"
+      #   '';
+      #   exec = ''
+      #     install -D -m 0644 ${opencodeConfig} "${opencodeDest}"
+      #   '';
+      # };
 
       "code_toolbox:copy_setup_files" = {
         description = "Refresh the code-explainer agent";

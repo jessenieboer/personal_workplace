@@ -3,11 +3,11 @@
     "atomic": {
       "flake": false,
       "locked": {
-        "lastModified": 1789746903,
-        "narHash": "sha256-O7hTvAZzqT0sLzEspH3CVjmfzWypzjnRoT8yd+KgKj8=",
+        "lastModified": 1790269858,
+        "narHash": "sha256-5z8mBItT5z0d09HpXfUDSSBaAAF3k7CzPpWZdScAlIo=",
         "owner": "bastani-inc",
         "repo": "atomic",
-        "rev": "33ca4ccb5f39488aeba67c0212a52a31cd14059d",
+        "rev": "81eb8c5d6f26a896099c273c241804513f66ae4d",
         "type": "github"
       },
       "original": {
@@ -41,11 +41,11 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1789691577,
-        "narHash": "sha256-mS9lQo1gpKzwWMYgzdxc4yv4sIdwqI0GfFMCbV4LZtA=",
+        "lastModified": 1790269031,
+        "narHash": "sha256-s2nyZRQlhwp3BpZwFqQCHjkm7plqDeX52F9fsIXNekw=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "ccb4a99d35474afd07634ee194174ae40f7d98af",
+        "rev": "537d9464898192aa23c772f8c048a8cef9adb680",
         "type": "github"
       },
       "original": {
@@ -110,11 +110,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1789632929,
-        "narHash": "sha256-RjR8AyvGlWuw16XRj7C1YDEw4E27ciuyPeB2nDMzgTU=",
+        "lastModified": 1790238896,
+        "narHash": "sha256-ym4BG18Pu2awiJIehla1Lo9xiB2QYRcCzW3SB74gEBY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "a32edd7654519351e48e80372a928df336394670",
+        "rev": "34ca302a9572963c02e385c056be37c85ff51b77",
         "type": "github"
       },
       "original": {

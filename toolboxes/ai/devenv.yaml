@@ -2,9 +2,3 @@ inputs:
   neolabhq-cek:
     flake: false
     url: github:NeoLabHQ/context-engineering-kit
-
-imports:
-  - /toolboxes/emacs
-  - /toolboxes/git
-  - /toolboxes/readme
-  - /toolboxes/secrets
