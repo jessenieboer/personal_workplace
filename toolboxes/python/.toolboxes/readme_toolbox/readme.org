@@ -69,6 +69,29 @@ imports:
 :PROPERTIES:
 :CUSTOM_ID: details
 :END:
+ - attribute ::
+- behavior ::
+- data ::
+- defined ::
+- definition ::
+- iterable :: 
+- method :: 
+- module :: a unit of Python code
+- namespace :: 
+- object :: Any data with state (attributes or value) and defined behavior (methods).
+- package :: A collection of modules
+  - technically a module with a __path__ attribute
+- project ::
+- pyproject.toml :: file containing configurations for various tools
+- sequence :: 
+- value :: 
+- variable ::
+- venv :: a module that creates and manages virtual environments
+- virtual environment :: a directory tree that contains a particular version of Python and additional packages
+- workspace :: a collection of one or more packages that are managed together
+  - should contain uv.lock and pyproject.toml
+- workspace member :: a package in a workspace
+
 **** Troubleshooting
 :PROPERTIES:
 :CUSTOM_ID: troubleshooting
