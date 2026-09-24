@@ -1,0 +1,3 @@
+# Smoke consumer for the project_management toolbox.
+imports:
+  - /toolboxes/project_management

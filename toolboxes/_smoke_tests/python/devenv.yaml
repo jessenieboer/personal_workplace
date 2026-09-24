@@ -1,0 +1,10 @@
+# Smoke consumer for the python toolbox.
+# Import only the toolbox under test; its devenv.yaml pulls the rest.
+imports:
+  - /toolboxes/python
+
+# devenv does not merge nixpkgs unfree policy from imported toolboxes.
+# secrets ships pkgs.bws (unfree); permit it on this project root.
+nixpkgs:
+  permitted_unfree_packages:
+    - bws
