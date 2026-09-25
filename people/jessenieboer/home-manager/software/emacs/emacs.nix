@@ -46,6 +46,7 @@
       flycheck-posframe
       forge
       golden-ratio
+      grip-mode
       unstable.emacsPackages.gptel
       unstable.emacsPackages.gptel-agent
       htmlize
@@ -63,6 +64,7 @@
       org
       org-tidy
       origami
+      ox-gfm
       popper
       python-pytest
       racket-mode

@@ -15,7 +15,7 @@
 :END:
 - Editor Code Assistant setup
   - grok-4.7 and grok-build-0.1
-  - assumes XAI api key through Secrets Toolbox
+  - default config assumes Secrets Toolbox for api keys
 - ai-input-engineer for developing agents, skills, etc...
 * Why
 :PROPERTIES:

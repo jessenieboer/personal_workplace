@@ -78,6 +78,7 @@
 		  magit-diff-mode
   		  magit-log-mode
   		  magit-status-mode
+                markdown-mode
   		  messages-buffer-mode
                   mhtml-mode
   		  minibuffer-inactive-mode
@@ -1296,7 +1297,10 @@ Returns the value as string or nil if not found / error."
 (require 'impatient-mode)
 (require 'simple-httpd)
 
-(setq lsp-enable-suggest-server-download nil)
+(setq browse-url-browser-function #'browse-url-generic
+    browse-url-generic-program "firefox-devedition"
+    browse-url-generic-args '("-P" "dev-edition-default" "--new-window")
+    lsp-enable-suggest-server-download nil)
 
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . mhtml-mode))
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
@@ -1447,17 +1451,17 @@ Returns the value as string or nil if not found / error."
                     ("ip" forge-merge "forge merge" :exit t)
   		    ))))
 
-(require 'markdown-mode)
+(require 'grip-mode)
+  (require 'markdown-mode)
 
-;; (my-add-to-hydra main-modes
-;;   		 ("Connection"
-;;   		  ()
-;;   		  "Display"
-;;   		  ()
-;;   		  "Navigation"
-;;   		  ()
-;;   		  "Interaction"
-;;   		  ()))
+(setq grip-command 'go-grip)
+(setq grip-preview-use-webkit nil)
+(setq grip-update-after-change nil)
+
+(my-add-to-hydra '(markdown-mode)
+               ("Markdown"
+                (("dn" grip-mode "toggle grip preview")
+                 ("db" grip-browse-preview "reopen preview"))))
 
 (require 'nix-mode)
 
@@ -1470,6 +1474,7 @@ Returns the value as string or nil if not found / error."
 (require 'org-agenda)
 (require 'org-clock nil t) ;; avoid clock kill errors on save and exit?
 (require 'org-tidy)
+(require 'ox-gfm)
     					;(require 'origami) ;; for some reason this screws with emacs client frame stuff
 
 (add-hook 'org-mode-hook 'org-tidy-mode)
@@ -1757,8 +1762,7 @@ Returns the value as string or nil if not found / error."
   		   ("TAB C-o" my-org-timestamp-headline "timestamp headline")
   		   ("TAB C-h" org-deadline "deadline")
       		     ("TAB C-s" org-set-tags-command "set tags")
-  		   ("d <f12>" org-gfm-export-to-markdown "tangle to md")
-  		   ("C-d C-b" org-org-export-to-org "export to org")
+  		   ("C-d C-b" org-gfm-export-to-markdown "tangle to md")
   		   ("db" org-babel-tangle "tangle all")
       		   ("d+" (org-babel-tangle '(4)) "tangle block")
   		   ("di RET" org-ctrl-c-ctrl-c "confirm"))

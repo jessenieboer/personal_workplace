@@ -1,21 +1,12 @@
-:PROPERTIES:
-:ID:       dd217dba-96b0-41b4-a0eb-57e6b500c0b1
-:END:
-#+EXPORT_FILE_NAME: ../../README.md
-#+OPTIONS: toc:t num:nil ^:nil
 #+TITLE: Personal Workplace
+#+OPTIONS: toc:nil num:nil
+#+EXPORT_FILE_NAME: ../../README.md
 
-#+html:<h1 align="center">jessenieboer's Personal Workplace</h1>
+#+html: <h1 align="center">My personal workplace</h1>
+#+html: <p align="center">My accurately-but-uninspiringly-named work environment</p>
 
 * What
-:PROPERTIES:
-:CUSTOM_ID: what
-:END:
-My accurately-but-uninspiringly-named work environment
 ** Features
-:PROPERTIES:
-:CUSTOM_ID: features
-:END:
 - A couple computers running NixOS and KDE Plasma
 - A growing set of toolboxes based on devenv
 - Personal config via home-manager:
@@ -24,29 +15,14 @@ My accurately-but-uninspiringly-named work environment
   - Dropbox integration via Maestral
   - Cloud gaming via Boosteroid
 * Why
-:PROPERTIES:
-:CUSTOM_ID: why
-:END:
 - I want to have things organized how it makes sense to me
 - I want things to be solid, dependable, and reproducible
 - Emacs gives me a way to build a work environment I can operate via a heavily customized set of keybindings, which helps me deal with a muscle issue that limits me
 * For Whom
-:PROPERTIES:
-:CUSTOM_ID: for-whom
-:END:
 Myself, and anyone who finds something useful in here
 * How
-:PROPERTIES:
-:CUSTOM_ID: how
-:END:
 ** Requirements :noexport:
-:PROPERTIES:
-:CUSTOM_ID: requirements
-:END:
 ** Installation
-:PROPERTIES:
-:CUSTOM_ID: installation
-:END:
 This is mostly to remind myself how to do this:
 
 bootstrapping from a new nixos install:
@@ -70,50 +46,22 @@ mkpasswd -m sha-512 > /root/secrets/username.hash
 
 nixos-rebuild switch --flake .#configname
 ** Use
-:PROPERTIES:
-:CUSTOM_ID: use
-:END:
 updating (as root in ~/)
 
 cp -r /home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/ .
 cp /root/secrets/wifi-passwords.nix /root/personal_workplace/computers/wifi.nix
 nixos-rebuild switch --flake /root/personal_workplace/computers#configname
 *** Details
-:PROPERTIES:
-:CUSTOM_ID: details
-:END:
 **** Troubleshooting :noexport:
-:PROPERTIES:
-:CUSTOM_ID: troubleshooting
-:END:
-
 Failed to install bootloader error:
 
 nixos-rebuild switch --install-bootloader --flake /root/personal_workplace/computers#nucbox
 **** License
-:PROPERTIES:
-:CUSTOM_ID: license
-:END:
 MIT
 ** Development :noexport:
-:PROPERTIES:
-:CUSTOM_ID: development
-:END:
 *** Process
-:PROPERTIES:
-:CUSTOM_ID: process
-:END:
 *** Important Decisions
-:PROPERTIES:
-:CUSTOM_ID: important-decisions
-:END:
 *** To Do
-:PROPERTIES:
-:CUSTOM_ID: to-do
-:END:
 *** Contributing
-:PROPERTIES:
-:CUSTOM_ID: contributing
-:END:
 * By Whom
 Myself, with gratitude to basically everyone on the internet who shares info about NixOS, Emacs, and the other technologies in use. I doubt I've seen further than anyone else, but I'm definitely standing on the shoulders of giants.

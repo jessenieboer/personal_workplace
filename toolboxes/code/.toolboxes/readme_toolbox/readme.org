@@ -1,0 +1,43 @@
+#+TITLE: Code Toolbox
+#+OPTIONS: toc:nil num:nil
+#+EXPORT_FILE_NAME: ../../README.md
+
+#+html: <h1 align="center">Code Toolbox</h1>
+#+html: <p align="center">Tools, settings, templates and practices for coding</p>
+
+* What
+** Features
+- Editor Code Assistant setup
+  - grok-4.7 and grok-build-0.1
+  - XAI api key through Secrets Toolbox
+- code-explainer agent
+* Why
+* For Whom :noexport:
+* How :noexport:
+** Requirements :noexport:
+uses ai toolbox
+** Installation :noexport:
+#+BEGIN_SRC yaml
+  inputs:
+    neolabhq-cek:
+      flake: false
+      url: github:NeoLabHQ/context-engineering-kit
+    personal_workplace:
+      flake: false
+      url: github:jessenieboer/personal_workplace/master
+
+  imports:
+    - personal_workplace/toolboxes/ai
+#+END_SRC
+** Use :noexport:
+*** Details
+**** Troubleshooting
+**** License
+** Development :noexport:
+*** Process
+*** Important Decisions
+*** To Do
+*** Contributing
+* By Whom :noexport:
+Myself with gratitude to
+- https://github.com/bastani-inc/atomic for the `how` skill for code-explainer

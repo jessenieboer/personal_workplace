@@ -1,75 +1,25 @@
+#+TITLE: Readme Toolbox
+#+OPTIONS: toc:nil num:nil
 #+EXPORT_FILE_NAME: ../../README.md
-#+OPTIONS: toc:t num:nil
-#+TITLE: jesse's readme toolbox
 
-#+html:<h1 align="center">jesse's readme toolbox</h1>
+#+html: <h1 align="center">Readme Toolbox</h1>
+#+html: <p align="center">Tools, settings, templates and practices for writing readmes</p>
 
 * What
-:PROPERTIES:
-:CUSTOM_ID: what
-:END:
-A toolbox that makes it easy to write READMEs with a consistent, useful structure.
+Write Readmes with a consistent, useful structure.
 ** Features
-:PROPERTIES:
-:CUSTOM_ID: features
-:END:
 * Why
-:PROPERTIES:
-:CUSTOM_ID: why
-:END:
 * For Whom :noexport:
-:PROPERTIES:
-:CUSTOM_ID: for-whom
-:END:
 * How
-:PROPERTIES:
-:CUSTOM_ID: how
-:END:
 ** Requirements :noexport:
-:PROPERTIES:
-:CUSTOM_ID: requirements
-:END:
 ** Installation :noexport:
-:PROPERTIES:
-:CUSTOM_ID: installation
-:END:
 ** Use :noexport:
-:PROPERTIES:
-:CUSTOM_ID: use
-:END:
 *** Details
-:PROPERTIES:
-:CUSTOM_ID: details
-:END:
 **** Troubleshooting
-:PROPERTIES:
-:CUSTOM_ID: troubleshooting
-:END:
 **** License
-:PROPERTIES:
-:CUSTOM_ID: license
-:END:
 ** Development :noexport:
-:PROPERTIES:
-:CUSTOM_ID: development
-:END:
 *** Process
-:PROPERTIES:
-:CUSTOM_ID: process
-:END:
 *** Important Decisions
-:PROPERTIES:
-:CUSTOM_ID: important-decisions
-:END:
 *** To Do
-:PROPERTIES:
-:CUSTOM_ID: to-do
-:END:
 *** Contributing
-:PROPERTIES:
-:CUSTOM_ID: contributing
-:END:
 * By Whom :noexport:
-:PROPERTIES:
-:CUSTOM_ID: by-whom
-:END:
