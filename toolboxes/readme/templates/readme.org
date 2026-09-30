@@ -1,5 +1,5 @@
 #+TITLE: Title
-#+OPTIONS: toc:nil num:nil
+#+OPTIONS: toc:nil num:nil ^:{}
 #+EXPORT_FILE_NAME: ../../README.md
 
 #+html: <h1 align="center">Title</h1>

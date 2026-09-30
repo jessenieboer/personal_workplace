@@ -1,89 +1,112 @@
+#+TITLE: Project Management Toolbox
+#+OPTIONS: toc:nil num:nil ^:{}
 #+EXPORT_FILE_NAME: ../../README.md
-#+OPTIONS: toc:t num:nil
-#+TITLE: Title
 
-#+html:<h1 align="center">Title</h1>
+#+html: <h1 align="center">Project Management Toolbox</h1>
+#+html: <p align="center">Tools, settings, templates, and instructions for managing projects</p>
 
 * What
-:PROPERTIES:
-:CUSTOM_ID: what
-:END:
 ** Features
-:PROPERTIES:
-:CUSTOM_ID: features
-:END:
 * Why
-:PROPERTIES:
-:CUSTOM_ID: why
-:END:
 * For Whom :noexport:
-:PROPERTIES:
-:CUSTOM_ID: for-whom
-:END:
 * How
-:PROPERTIES:
-:CUSTOM_ID: how
-:END:
 ** Requirements :noexport:
-:PROPERTIES:
-:CUSTOM_ID: requirements
-:END:
 ** Installation :noexport:
-:PROPERTIES:
-:CUSTOM_ID: installation
-:END:
-** Use :noexport:
-:PROPERTIES:
-:CUSTOM_ID: use
-:END:
-Overview 
-- capture everything out of your brain quickly and easily 
-- make sure any hard dates are accounted for
-- sort items into more/average/less valuable
-- check for dependencies of hard-dated and valuable items
-- sort items into more/average/less effort required for hard-dated, valuable items that don't have dependencies
-
-  define capture, curation
+** Use
+- Capture everything out of your brain and into files
+  - todos
+  - events
+  - potentially useful thoughts
+- Prioritize what you've captured:
+  - make sure any deadlines are accounted for
+  - within each project, sort items into more / average / less valuable
+  - check for dependencies for items that are valuable or have deadlines 
+  - sort any independent items into more / average / less effort required
+- Actually do stuff
+- Curate: keep everything up to date
 *** Details
-:PROPERTIES:
-:CUSTOM_ID: details
-:END:
-
-properties:
-hard date = occurrence date or deadline to make sure we don't miss anything
-
-views:
-hard date check: make sure we know everything that needs a date attached
-missing occurrence/task dates: for everything that has a hard date, make sure we know the actual date
+**** Capture
+Get everything out of your head, using capture templates to capture the right data and put your items in the right place.
+***** Data Captured
+| Name                | Meaning                              | Allowed Values                 | Notes                            |
+|---------------------+--------------------------------------+--------------------------------+----------------------------------|
+| Title               | Name of item                         | text                           | org-mode standard                |
+| CATEGORY            | Project the item belongs to          | project names                  | agenda standard                  |
+| FREQUENCY           | How often does this happen?          | once / repetitive / continuous |                                  |
+| HARD_DATE           | Is there a date we must know about?  | yes / no                       |                                  |
+| INTERNAL_DEPENDENCY | Must we do something else first?     | yes / no                       |                                  |
+| EXTERNAL_DEPENDENCY | Must we wait on someone else first?  | yes / no                       |                                  |
+| TACTICAL_VALUE      | How valuable is finishing this now?  | more / average / less          | relative to other project items  |
+| ESTIMATED_EFFORT    | How much of our effort will it take? | less / average / more          | relative to all our current work |
+| TIMESTAMP           | When does this happen?               | date + time                    | org-mode standard                |
+| SCHEDULED           | When do we plan on doing this?       | date + time                    | org-mode standard                |
+| DEADLINE            | When is this due?                    | date + time                    | org-mode standard                |
+***** Capture Templates
+| Name               | Meaning                            | FREQUENCY  | HARD_DATE | Notes                                   |
+|--------------------+------------------------------------+------------+-----------+-----------------------------------------|
+| Task               | work you do                        | once       | no        |                                         |
+| Imminent Task      | Task to be done now                | once       | no        | tactical value = more, todo state = now |
+| Time-bound Task    | Task with a HARD_DATE              | once       | yes       |                                         |
+| Routine            | repetitive Task                    | repetitive | no        |                                         |
+| Time-bound Routine | Routine with a HARD_DATE           | repetitive | yes       |                                         |
+| Practice           | continous Task                     | continuous | no        |                                         |
+| Occurrence         | something that just happens        | once       | yes       |                                         |
+| Recurrence         | repetitive Occurrence              | repetitive | yes       |                                         |
+| Reference          | potentially useful thought or link |            |           | only data captured is CATEGORY          |
+| Journal Entry      | text filed under today's date      |            |           | captured to project's journal.org       |
+**** Prioritize
+Date and evaluate items, using views, to make sure you're working efficiently on the most important stuff.
+***** Views
+| Name                     | Purpose                                 | Included                                                             | Excluded                                                                            | Notes                                                      |
+|--------------------------+-----------------------------------------+----------------------------------------------------------------------+-------------------------------------------------------------------------------------+------------------------------------------------------------|
+| Hard Date Check          | Make sure we know what items need dates | Items missing HARD_DATE value                                        | Items with HARD_DATE value                                                          | Ususally taken care of by capture template                 |
+| Missing Occurrence Dates | Fill in missing TIMESTAMPs              | Occurrences with HARD_DATE = yes but no TIMESTAMP                    | non-Occurrences, Occurrences with TIMESTAMP                                         |                                                            |
+| Occurrence Dates         | Check Occurrence dates                  | Occurrences with TIMESTAMP                                           | non-Occurrences, Occurrences without TIMESTAMP                                      |                                                            |
+| Missing Deadlines        | Fill in missing DEADLINEs               | Tasks with HARD_DATE = yes but no DEADLINE                           | non-Tasks, Tasks with DEADLINE                                                      |                                                            |
+| Deadlines                | Check DEADLINES                         | Tasks with DEADLINE                                                  | non-Tasks, Tasks without DEADLINE                                                   |                                                            |
+| Tactical Evaluation      | Appraise relative Task value            | Tasks with no DEADLINE or a DEADLINE <= 1 month                      | non-Tasks, Tasks with DEADLINE > 1 month                                            |                                                            |
+| Relevant Dependencies    | Note existing dependencies              | More valuable or DEADLINE <= 1 month or todo state = next / now      | non-Tasks, Tasks with DEADLINE > 1 month, Tasks with less or average value          | Only track dependencies for the most important tasks       |
+| Effort Estimation        | Estimate relative Task effort           | More / average value, DEADLINE <= 1 month or todo state = next / now | non-Tasks, Tasks with dependencies, Tasks with less value                           | Allows us to catch Tasks with average value but low effort |
+| Soft Scheduling          | Tentatively schedule work               | HARD_DATE = no, Tasks with more value or less effort                 | non-Tasks, Tasks with dependencies, Tasks with less value or more effort than value |                                                            |
+| Task Activity            | Update what is happening day-to-day     | DEADLINE or SCHEDULED <= 1 week, or more value / less effort         | non-Tasks, Tasks with dependencies, Tasks with less value or more effort than value |                                                            |
+**** Do
+Actually do stuff.
+***** Views
+| Name     | Purpose                                         | Included                    | Excluded        | Notes |
+|----------+-------------------------------------------------+-----------------------------+-----------------+-------|
+| Focus    | Only look at what we've prioritized for the day | Tasks with todo state = now | Everything else |       |
+| Calendar | Show scheduled items                            | Anything with a date        |                 |       |
+***** Practices
+- put away project management stuff and just use the phone app when doing stuff
+- when something out-of-current-scope comes up, capture and continue
+**** Curate
+Keep everything up to date
+***** Views
+| Name       | Purpose                     | Included                        | Excluded        | Notes |
+|------------+-----------------------------+---------------------------------+-----------------+-------|
+| Past Items | Archive items that are done | Anything with todo state = past | Everything else |       |
+***** Practices
+Daily curation:
+- clear out inboxes
+- Activity: change done items to "past" and choose items for "now"
+  
+Periodic curation:
+- Past Items
+- Hard Dates Check
+- Missing Dates and Missing Deadlines
+- Tactical Evaluation (per project)
+- Relevant Dependencies
+- Effort Estimation
+- Soft Scheduling (if necessary)
 **** Troubleshooting
-:PROPERTIES:
-:CUSTOM_ID: troubleshooting
-:END:
 **** License
-:PROPERTIES:
-:CUSTOM_ID: license
-:END:
 ** Development :noexport:
-:PROPERTIES:
-:CUSTOM_ID: development
-:END:
 *** Process
-:PROPERTIES:
-:CUSTOM_ID: process
-:END:
 *** Important Decisions
-:PROPERTIES:
-:CUSTOM_ID: important-decisions
-:END:
+- relative more / average / less sorting (rather than story points and stuff) to simplify estimations and not waste too much time on them
+- trying to use only org stuff to maximize compatibility
 *** To Do
-:PROPERTIES:
-:CUSTOM_ID: to-do
-:END:
 *** Contributing
-:PROPERTIES:
-:CUSTOM_ID: contributing
-:END:
 * By Whom :noexport:
-:PROPERTIES:
-:CUSTOM_ID: by-whom
-:END:
+GTD
+Beorg

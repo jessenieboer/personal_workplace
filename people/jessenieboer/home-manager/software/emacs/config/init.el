@@ -668,7 +668,7 @@
   		   ("ig" dired-undo "undo"))))
 
 (require 'project)
-(setq my-project-management-directory (file-name-as-directory "~/Dropbox/_project_management")
+(setq my-project-management-directory (file-name-as-directory "~/Dropbox/_kingdom_management")
       my-projects-directory (file-name-as-directory "~/kingdoms")
       project-mode-line nil ;; causes some slowdown if not nil
       project-switch-commands 'project-find-file
@@ -1162,6 +1162,10 @@ Returns the value as string or nil if not found / error."
 (setq eat-enable-auto-line-mode nil
       eat-line-input-history-isearch t)
 
+(define-abbrev-table 'eat-mode-abbrev-table
+    '(("d" "devenv update; devenv shell --refresh-eval-cache")))
+
+
 ;;(eat-eshell-mode 1)
 					;(add-hook 'eat-mode-hook #'eat-line-mode)
 (add-hook 'eat-mode-hook #'eat-line-mode)
@@ -1299,7 +1303,7 @@ Returns the value as string or nil if not found / error."
 
 (setq browse-url-browser-function #'browse-url-generic
     browse-url-generic-program "firefox-devedition"
-    browse-url-generic-args '("-P" "dev-edition-default" "--new-window")
+    browse-url-generic-args '("-P" "dev-edition-default" "--new-tab")
     lsp-enable-suggest-server-download nil)
 
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . mhtml-mode))
@@ -1768,35 +1772,34 @@ Returns the value as string or nil if not found / error."
   		   ("di RET" org-ctrl-c-ctrl-c "confirm"))
   		 "Table"
   		 (
-  		   ;;("M-r" org-table-toggle-column-width "or col width")
-    		  ;;  ("M-j" org-table-shrink "or shrink")
-    		  ;;  ("M-k" org-table-expand "or expand")
+  		   ("M-r" org-table-toggle-column-width "or col width")
+    		    ("M-j" org-table-shrink "or shrink")
+    		    ("M-k" org-table-expand "or expand")
     		  ;;  ("M-q" org-table-move-row-up "or row up")
     		  ;;  ("M-z" org-table-move-row-down "or row down")
     		  ;;  ("M-f" org-table-move-column-left "or col left")
     		  ;;  ("M-u" org-table-move-column-right "or col right")
-    		    ("M-i M-m" org-table-align "or align") ;; alt tab
+    		  ("M-i M-m" org-table-align "or align") ;; alt tab
     		  ;;  ("M-<return>" org-table-edit-field "or edit field")
     		  ;;  ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
     		  ;;  ("M-i M-d" (org-table-finish-edit-field) "or confirm edit")
-    		  ;;  ("M-i M-l" org-table-create "or make table")
-    		  ;;  ("M-i M-SPC" (org-table-insert-row '(4)) "or in row")
-    		  ;;  ("M-i M-a" org-table-insert-hline "or in line")
-    		  ;;  ("M-i M-t" org-table-insert-column "or in col")
-    		  ;;  ;; ("M-i M-DEL" org-table-kill-row "or delete row")
-    		  ;;  ;; ("M-i M-q" org-table-delete-column "or delete col")
+    		  ("M-i M-o" org-table-create "or make table")
+    		  ("M-i M-SPC" (org-table-insert-row '(4)) "or in row")
+    		  ;;  ("M-i M-*" org-table-insert-hline "or in line")
+    		  ("M-i M-t" org-table-insert-column "or in col")
+    		  ("M-i M-DEL" org-table-kill-row "or delete row")
+    		  ("M-i M-q" org-table-delete-column "or delete col")
     		  ;;  ;; ("M-i M-r" org-table-sort-lines "or sort")
     		  ;;  ;; ("M-i M-p" org-table-follow-field-mode "or follow mode")
     		  ;;  ;; ("M-i M-n" org-table-header-line-mode "or head mode")
-    		  ;;  ("M-t" org-table-previous-field "or pree field")
-    		  ;;  ("M-s" org-table-next-field "or nex field")   
-    		  ;;  ("M-SPC" previous-line "pree line")
-    		  ;;  ("M-e" org-table-next-row "next row")
-    		  ;;  ("M-a" org-table-beginning-of-field "or field first")
+    		  ("M-t" org-table-previous-field "or pree field")
+    		  ("M-s" org-table-next-field "or nex field")   
+    		  ("M-SPC" previous-line "pree line")
+    		  ("M-e" org-table-next-row "next row")
+    		  ;;("M-a" org-table-beginning-of-field "or field first")
     		  ;;  ("M-n" org-table-end-of-field "or field last")
     		  ;;  ("M-l" move-beginning-of-line "line first")
-    		  ;;  ("M-c" move-end-of-line "line last")
-  		  )))
+    		  ;;  ("M-c" move-end-of-line "line last"
 
   (my-add-to-hydra minibuffer-modes
   		 ("Navigation"
