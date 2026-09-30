@@ -1,14 +1,19 @@
 { pkgs, lib, config, inputs, ... }:
 let
   dirLocalsTemplate = ./templates/dir-locals.el.in;
-  dest = "${config.devenv.root}/.toolboxes/project_management_toolbox/project_management_toolbox_dir_locals";
+  dirLocalsDest = "${pmDir}/project_management_toolbox_dir_locals";
+  pmDir = "${config.devenv.root}/.toolboxes/project_management_toolbox";
   subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management_toolbox.subproject_agenda_files;
 in
 {
   config = {
+    # project_management_toolbox = {
+    #   project_name = "project_management_toolbox";
+    # };
+                   
     enterShell = ''
       if [ -t 1 ]; then
-        echo "jessenieboer's project management toolbox available"
+        echo "project management toolbox available"
       fi
     '';
 
@@ -19,10 +24,10 @@ in
         status = ''
           tmp=$(mktemp)
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
-              -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
+              -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${pmDir}|g' \
               -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
               ${dirLocalsTemplate} > "$tmp"
-          if [ -f "${dest}" ] && cmp -s "$tmp" "${dest}"; then
+          if [ -f "${dirLocalsDest}" ] && cmp -s "$tmp" "${dirLocalsDest}"; then
             rm -f "$tmp"
             exit 0
           fi
@@ -30,11 +35,11 @@ in
           exit 1
         '';
         exec = ''
-          mkdir -p "$(dirname "${dest}")"
+          mkdir -p "$(dirname "${dirLocalsDest}")"
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
-              -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${config.devenv.root}|g' \
+              -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${pmDir}|g' \
               -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
-              ${dirLocalsTemplate} > "${dest}"
+              ${dirLocalsTemplate} > "${dirLocalsDest}"
         '';
       };
     };
@@ -48,6 +53,13 @@ in
         type = lib.types.str;
       };
 
+      project_benefit = lib.mkOption {
+        default = [ ];
+        description = "The good this project is aiming at";
+        example = "My cool project";
+        type = lib.types.str;
+      };
+
       subproject_agenda_files = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
@@ -55,30 +67,30 @@ in
         example = [ "/path/to/subproj1/subproj1.org" "/path/to/subproj2/subproj2.org" ];
       };
 
-      workers = lib.mkOption {
-        type = lib.types.listOf (lib.types.submodule {
-          options = {
-            name = lib.mkOption {
-              type = lib.types.str;
-              description = "Name of worker";
-              example = "Jane Doe";
-            };
+      # workers = lib.mkOption {
+      #   type = lib.types.listOf (lib.types.submodule {
+      #     options = {
+      #       name = lib.mkOption {
+      #         type = lib.types.str;
+      #         description = "Name of worker";
+      #         example = "Jane Doe";
+      #       };
 
-            email = lib.mkOption {
-              type = lib.types.nullOr lib.types.str;
-              default = null;
-              description = "Email address of the worker (optional)";
-              example = "jane.doe@example.com";
-            };
-          };
-        });
-        default = [ ];
-        description = "List of workers for this project";
-        example = [
-          { name = "Alice Smith"; email = "alice@example.com"; }
-          { name = "Bob Johnson"; }
-        ];
-      };
+      #       email = lib.mkOption {
+      #         type = lib.types.nullOr lib.types.str;
+      #         default = null;
+      #         description = "Email address of the worker (optional)";
+      #         example = "jane.doe@example.com";
+      #       };
+      #     };
+      #   });
+      #   default = [ ];
+      #   description = "List of workers for this project";
+      #   example = [
+      #     { name = "Alice Smith"; email = "alice@example.com"; }
+      #     { name = "Bob Johnson"; }
+      #   ];
+      # };
     };
   };
 }

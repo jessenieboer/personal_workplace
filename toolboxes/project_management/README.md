@@ -15,31 +15,45 @@
 # How
 
 
-## Use
+## Requirements
 
-Process overview:
+must have this in emacs config for agenda to work
+
+```emacs-lisp
+(add-hook 'org-agenda-mode-hook 'hack-dir-local-variables-non-file-buffer)
+```
+
+
+## Use
 
 -   Capture everything out of your brain and into files
     -   todos
     -   events
     -   potentially useful thoughts
--   Curate what you've captured:
+-   Prioritize what you've captured:
     -   make sure any deadlines are accounted for
     -   within each project, sort items into more / average / less valuable
     -   check for dependencies for items that are valuable or have deadlines
     -   sort any independent items into more / average / less effort required
--   Monitor what is going on
-
-Tools overview:
-
--   org capture templates help capture and organize different kinds of items
--   agenda views help curate items, successively narrowing down items we need to look at
+-   Actually do stuff
+-   Curate: keep everything up to date
 
 
 ### Details
 
--   Capturing Items
+Each item (except references) has one of 4 org todo states:
 
+| State  | Meaning                |
+|------ |---------------------- |
+| future | This will happen later |
+| next   | This will happen soon  |
+| now    | This is happening now  |
+| past   | This happened          |
+
+-   Capture
+
+    Get everything out of your head, using capture templates to capture the right data and put your items in the right place.
+    
     -   Data Captured
     
         | Name                 | Meaning                              | Allowed Values                 | Notes                            |
@@ -56,7 +70,7 @@ Tools overview:
         | SCHEDULED            | When do we plan on doing this?       | date + time                    | org-mode standard                |
         | DEADLINE             | When is this due?                    | date + time                    | org-mode standard                |
     
-    -   Capture Types
+    -   Capture Templates
     
         | Name               | Meaning                            | FREQUENCY  | HARD\_DATE | Notes                                   |
         |------------------ |---------------------------------- |---------- |---------- |--------------------------------------- |
@@ -71,8 +85,10 @@ Tools overview:
         | Reference          | potentially useful thought or link |            |            | only data captured is CATEGORY          |
         | Journal Entry      | text filed under today's date      |            |            | captured to project's journal.org       |
 
--   Curation
+-   Prioritize
 
+    Date and evaluate items, using views, to make sure you're working efficiently on the most important stuff.
+    
     -   Views
     
         | Name                     | Purpose                                 | Included                                                             | Excluded                                                                            | Notes                                                      |
@@ -87,8 +103,49 @@ Tools overview:
         | Effort Estimation        | Estimate relative Task effort           | More / average value, DEADLINE <= 1 month or todo state = next / now | non-Tasks, Tasks with dependencies, Tasks with less value                           | Allows us to catch Tasks with average value but low effort |
         | Soft Scheduling          | Tentatively schedule work               | HARD\_DATE = no, Tasks with more value or less effort                | non-Tasks, Tasks with dependencies, Tasks with less value or more effort than value |                                                            |
         | Task Activity            | Update what is happening day-to-day     | DEADLINE or SCHEDULED <= 1 week, or more value / less effort         | non-Tasks, Tasks with dependencies, Tasks with less value or more effort than value |                                                            |
+
+-   Do
+
+    Actually do stuff.
+    
+    -   Views
+    
+        | Name     | Purpose                                         | Included                    | Excluded        | Notes |
+        |-------- |----------------------------------------------- |--------------------------- |--------------- |----- |
+        | Focus    | Only look at what we've prioritized for the day | Tasks with todo state = now | Everything else |       |
+        | Calendar | Show scheduled items                            | Anything with a date        |                 |       |
+    
+    -   Practices
+    
+        -   put away project management stuff and just use the phone app when doing stuff
+        -   when something out-of-current-scope comes up, capture and continue
+
+-   Curate
+
+    Keep everything up to date
+    
+    -   Views
+    
+        | Name       | Purpose                     | Included                        | Excluded        | Notes |
+        |---------- |--------------------------- |------------------------------- |--------------- |----- |
+        | Past Items | Archive items that are done | Anything with todo state = past | Everything else |       |
+    
+    -   Practices
+    
+        Daily curation:
         
-        views: hard date check: make sure we know everything that needs a date attached missing occurrence/task dates: for everything that has a hard date, make sure we know the actual date
+        -   clear out inboxes
+        -   Activity: change done items to "past" and choose items for "now"
+        
+        Periodic curation:
+        
+        -   Past Items
+        -   Hard Dates Check
+        -   Missing Dates and Missing Deadlines
+        -   Tactical Evaluation (per project)
+        -   Relevant Dependencies
+        -   Effort Estimation
+        -   Soft Scheduling (if necessary)
 
 -   Troubleshooting
 

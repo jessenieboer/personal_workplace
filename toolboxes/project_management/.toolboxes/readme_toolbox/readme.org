@@ -10,8 +10,12 @@
 * Why
 * For Whom :noexport:
 * How
-** Requirements :noexport:
-** Installation :noexport:
+** Requirements 
+must have this in emacs config for agenda to work
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-agenda-mode-hook 'hack-dir-local-variables-non-file-buffer)
+#+END_SRC
+** Installation                                                    :noexport:
 ** Use
 - Capture everything out of your brain and into files
   - todos
@@ -25,6 +29,14 @@
 - Actually do stuff
 - Curate: keep everything up to date
 *** Details
+Each item (except references) has one of 4 org todo states:
+| State  | Meaning                |
+|--------+------------------------|
+| future | This will happen later |
+| next   | This will happen soon  |
+| now    | This is happening now  |
+| past   | This happened          |
+
 **** Capture
 Get everything out of your head, using capture templates to capture the right data and put your items in the right place.
 ***** Data Captured
@@ -102,6 +114,7 @@ Periodic curation:
 **** License
 ** Development :noexport:
 *** Process
+I tangle the file project_config.org to generate templates/dir-locals.el.in rather than editing that file directly, so i can use org to organize the lisp code nicely
 *** Important Decisions
 - relative more / average / less sorting (rather than story points and stuff) to simplify estimations and not waste too much time on them
 - trying to use only org stuff to maximize compatibility

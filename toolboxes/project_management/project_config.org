@@ -1,16 +1,11 @@
 #+PROPERTY: header-args:emacs-lisp :tangle yes
 * project config
-I tangle this file to generate templates/dir-locals.el.in rather than editing that file directly, so i can use org to organize the lisp code nicely
-
-must have this in emacs config for agenda to work, and adding it to this file requires eval,
-(add-hook 'org-agenda-mode-hook 'hack-dir-local-variables-non-file-buffer)
 ** dir-locals
 :PROPERTIES:
-:ID:       ff57d5b2-b2a4-4737-a260-717d6df14902
+:ID:       5e716f68-038c-4654-9df8-3d2202704e65
 :END:
 #+BEGIN_SRC emacs-lisp :tangle ./templates/dir-locals.el.in :noweb tangle 
   ((nil . ((org-agenda-custom-commands . (
-  					  ;; curation views
                                           <<hard_date_check_view>>
   					<<missing_occurrence_dates_view>>
   					<<occurrence_dates_view>>
@@ -21,13 +16,9 @@ must have this in emacs config for agenda to work, and adding it to this file re
     					<<effort_estimation_view>>
   					<<soft_scheduling_view>>
     					<<task_activity_view>>
-    					;;reporting views
-    					;;<<basics_view>>
     					<<focus_view>>
     					<<calendar_view>>
-    					;;<<dependent_items_view>>
     					<<past_items_view>>
-    					;;<<all_items_view>>
     					))
       	 (org-agenda-files . ("@PROJECT_MANAGEMENT_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
       	 (org-archive-location . "%s_archive::")
