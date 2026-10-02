@@ -24,6 +24,52 @@ must have this in emacs config for agenda to work
 ```
 
 
+## Installation
+
+Add devenv.yaml and devenv.nix to project root:
+
+```yaml
+inputs:
+  personal_workplace:
+    flake: false
+    url: github:jessenieboer/personal_workplace/jn
+
+imports:
+  - personal_workplace/toolboxes/project_management
+```
+
+```nix
+{ pkgs, lib, config, inputs, ... }:
+let
+  pmDir = "/.toolboxes/project_management_toolbox";
+in
+{
+  enterShell = ''
+    echo "managing ${config.project_management_toolbox.project_name}"
+  '';
+
+  project_management_toolbox = {
+    project_name = "my_project_name";
+    project_benefit = "The benefit this project aims at";
+    subproject_agenda_files = [
+      "${config.devenv.root}/sub1/${pmDir}/sub1.org"
+      "${config.devenv.root}/sub2/${pmDir}/sub2.org"
+    ];
+    workers = [
+      { name = "myname"; email = "myemail@email.com"; } # 
+      { name = "anothername"; }
+    ];
+  };
+}
+```
+
+Then in a shell in that directory
+
+```shelld
+devenv update
+```
+
+
 ## Use
 
 -   Capture everything out of your brain and into files
@@ -52,7 +98,7 @@ Each item (except references) has one of 4 org todo states:
 
 -   Capture
 
-    Get everything out of your head, using capture templates to capture the right data and put your items in the right place.
+    Get everything out of your head. Use capture templates when you are able to capture the right data and put your items in the right place. Otherwise, put freeform text into <project name>\_inbox.org for later processing.
     
     -   Data Captured
     
@@ -150,7 +196,8 @@ Each item (except references) has one of 4 org todo states:
 
 -   Instructions for AI
 
-    -   Each day, for items that have TIMESTAMP, SCHEDULED, or DEADLINE due today, change the todo state to now. Any that are due within a week (but not today), change to next.
     -   When you capture an item, make sure you use one of the org-capture-templates defined in .dir-locals, naming yourself in the CAPTURED\_BY property and marking REVIEWED as no. If you are not defined as a worker in devenv.nix, you cannot capture.
+    -   On request, capture items from the content in <project\_name>\_inbox.org
+    -   Each day, for items that have TIMESTAMP, SCHEDULED, or DEADLINE due today, change the todo state to now. Any that are due within a week (but not today), change to next.
 
 -   License
