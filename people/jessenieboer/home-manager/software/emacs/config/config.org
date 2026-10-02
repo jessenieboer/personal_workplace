@@ -301,6 +301,7 @@ https://github.com/minad/vertico#complementary-packages
 :END:
 #+begin_src emacs-lisp
   (global-set-key (kbd "<tab>") nil)
+  (global-set-key (kbd "<tab> TAB") 'vertico-insert)
   (global-set-key (kbd "<tab> SPC") 'completion-at-point)
   (global-set-key (kbd "<tab> i") 'cape-abbrev)
         
@@ -838,6 +839,15 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 :END:
 #+begin_src emacs-lisp
   (require 'project)
+  
+  (defun my-tab-bar-tab-name ()
+  "Name the tab after the current project, with a marker for which tree it's in."
+  (let* ((dir (expand-file-name default-directory))
+         (proj (project-current))
+         (marker (cond ((file-in-directory-p dir my-project-management-directory) "♔ ")
+                       (t ""))))
+    (concat marker (if proj (project-name proj) "No project"))))
+
   (setq my-project-management-directory (file-name-as-directory "~/Dropbox/_kingdom_management")
         my-projects-directory (file-name-as-directory "~/kingdoms")
         project-mode-line nil ;; causes some slowdown if not nil
@@ -845,10 +855,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
         project-vc-extra-root-markers '(".project" "devenv.nix" "flake.nix")
         project-vc-ignores '(".devenv/")
         project-vc-use-cache t
-        tab-bar-tab-name-function (lambda () (let ((proj (project-current)))
-  					     (if proj
-  						 (project-name proj)
-  					       "No project"))))
+        tab-bar-tab-name-function #'my-tab-bar-tab-name)
 
   (defun my-reset-projects ()
     (interactive)
@@ -2238,7 +2245,8 @@ dy = find definitions
       		  ;;("M-a" org-table-beginning-of-field "or field first")
       		  ;;  ("M-n" org-table-end-of-field "or field last")
       		  ;;  ("M-l" move-beginning-of-line "line first")
-      		  ;;  ("M-c" move-end-of-line "line last"
+      		  ;;  ("M-c" move-end-of-line "line last")
+                    )))
 
     (my-add-to-hydra minibuffer-modes
     		 ("Navigation"

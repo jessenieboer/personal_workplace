@@ -5,6 +5,7 @@
     packages = with pkgs; [
       go-grip
       nix-prefetch-github
+      trash-cli
       unstable.devenv
     ];
     # sessionVariables = {

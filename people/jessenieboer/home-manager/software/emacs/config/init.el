@@ -191,6 +191,7 @@
 ;; (add-hook 'completion-at-point-functions #'cape-dabbrev 30)
 
 (global-set-key (kbd "<tab>") nil)
+(global-set-key (kbd "<tab> TAB") 'vertico-insert)
 (global-set-key (kbd "<tab> SPC") 'completion-at-point)
 (global-set-key (kbd "<tab> i") 'cape-abbrev)
       
@@ -668,6 +669,15 @@
   		   ("ig" dired-undo "undo"))))
 
 (require 'project)
+
+(defun my-tab-bar-tab-name ()
+"Name the tab after the current project, with a marker for which tree it's in."
+(let* ((dir (expand-file-name default-directory))
+       (proj (project-current))
+       (marker (cond ((file-in-directory-p dir my-project-management-directory) "♔ ")
+                     (t ""))))
+  (concat marker (if proj (project-name proj) "No project"))))
+
 (setq my-project-management-directory (file-name-as-directory "~/Dropbox/_kingdom_management")
       my-projects-directory (file-name-as-directory "~/kingdoms")
       project-mode-line nil ;; causes some slowdown if not nil
@@ -675,10 +685,7 @@
       project-vc-extra-root-markers '(".project" "devenv.nix" "flake.nix")
       project-vc-ignores '(".devenv/")
       project-vc-use-cache t
-      tab-bar-tab-name-function (lambda () (let ((proj (project-current)))
-					     (if proj
-						 (project-name proj)
-					       "No project"))))
+      tab-bar-tab-name-function #'my-tab-bar-tab-name)
 
 (defun my-reset-projects ()
   (interactive)
@@ -1799,7 +1806,8 @@ Returns the value as string or nil if not found / error."
     		  ;;("M-a" org-table-beginning-of-field "or field first")
     		  ;;  ("M-n" org-table-end-of-field "or field last")
     		  ;;  ("M-l" move-beginning-of-line "line first")
-    		  ;;  ("M-c" move-end-of-line "line last"
+    		  ;;  ("M-c" move-end-of-line "line last")
+                  )))
 
   (my-add-to-hydra minibuffer-modes
   		 ("Navigation"

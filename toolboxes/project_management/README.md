@@ -69,6 +69,7 @@ Each item (except references) has one of 4 org todo states:
         | TIMESTAMP            | When does this happen?               | date + time                    | org-mode standard                |
         | SCHEDULED            | When do we plan on doing this?       | date + time                    | org-mode standard                |
         | DEADLINE             | When is this due?                    | date + time                    | org-mode standard                |
+        | CAPTURED\_BY         | Who captured this?                   | Worker defined in devenv.nix   |                                  |
     
     -   Capture Templates
     
@@ -147,6 +148,9 @@ Each item (except references) has one of 4 org todo states:
         -   Effort Estimation
         -   Soft Scheduling (if necessary)
 
--   Troubleshooting
+-   Instructions for AI
+
+    -   Each day, for items that have TIMESTAMP, SCHEDULED, or DEADLINE due today, change the todo state to now. Any that are due within a week (but not today), change to next.
+    -   When you capture an item, make sure you use one of the org-capture-templates defined in .dir-locals, naming yourself in the CAPTURED\_BY property. If you are not defined as a worker in devenv.nix, you cannot capture.
 
 -   License

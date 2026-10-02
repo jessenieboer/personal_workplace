@@ -20,37 +20,37 @@
     	 (org-archive-mark-done . t)
     	 (org-capture-templates . (("s" "Task" entry
     				    (file+headline "project_management_toolbox.org" "Tasks")
-    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:END:\n%?")
+    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
 				   ("y" "--Imminent task" entry
     				    (file+headline "project_management_toolbox.org" "Tasks")
-    				    "* now %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: more\n:ESTIMATED_EFFORT: average\n:END:\n%?")
+    				    "* now %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: more\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
     				   ("\t" "--Time-bound task" entry
     				    (file+headline "project_management_toolbox.org" "Tasks")
-    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: yes\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:END:\n%?")
+    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: yes\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
     				   ("e" "Routine" entry
     				    (file+headline "project_management_toolbox.org" "Tasks")
-    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:END:\n%?")
+    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
     				   ("i" "--Time-bound routine" entry
     				    (file+headline "project_management_toolbox.org" "Tasks")
-    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HARD_DATE: yes\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:END:\n%?")
+    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HARD_DATE: yes\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
     				   ("z" "Practice" entry
       				    (file+headline "project_management_toolbox.org" "Tasks")
-      				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: continuous\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:END:\n%?")
+      				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: continuous\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
     				   ("n" "Occurrence" entry
     				    (file+headline "project_management_toolbox.org" "Occurrences")
-    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: yes\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:END:\n%?")
+    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: yes\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
     				   ("p" "Recurrence" entry
       				    (file+headline "project_management_toolbox.org" "Occurrences")
-      				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HARD_DATE: yes\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:END:\n%?")
+      				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: repetitive\n:HARD_DATE: yes\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
     				   ("c" "Reference" entry
     				    (file+headline "project_management_toolbox.org" "References")
-    				    "* %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:END:\n%?")
+    				    "* %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
     				   ("b" "Journal entry" plain
     				    (file+olp+datetree "journal.org")
     				    "%?")
     				   ("h" "User story" entry
     				    (file+headline "project_management_toolbox.org" "User stories")
-    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:END:\n%?")
+    				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: project_management_toolbox\n:FREQUENCY: once\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:END:\n%?")
     				   ("o" "Idea" item
     				    (file+headline "project_management_toolbox.org" "Ideas")
     				    "%^{Title}\n" :immediate-finish t)))
@@ -80,6 +80,7 @@
           			   ;;("ESTIMATED_$_COST_ALL" . "trivial small medium large")
           			   ;;("ACTUAL_EFFORT")
           			   ;; ("ACTUAL_$_COST")
+                                 ("CAPTURED_BY" . "jessenieboer")  
     				   ))
 	 ;; (org-refile-targets . '((org-agenda-files :level . 1)))
          (org-log-done . nil )

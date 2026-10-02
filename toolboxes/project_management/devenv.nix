@@ -4,16 +4,20 @@ let
   dirLocalsDest = "${pmDir}/project_management_toolbox_dir_locals";
   pmDir = "${config.devenv.root}/.toolboxes/project_management_toolbox";
   subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management_toolbox.subproject_agenda_files;
+  workerList = lib.concatMapStringsSep " " (w: w.name) config.project_management_toolbox.workers;
 in
 {
   config = {
     # project_management_toolbox = {
     #   project_name = "project_management_toolbox";
+    #   workers = [
+    #     { name = "jessenieboer"; email = "jessenieboer@protonmail.com"; }
+    #   ];
     # };
-                   
+
     enterShell = ''
       if [ -t 1 ]; then
-        echo "project management toolbox available"
+      echo "project management toolbox available"
       fi
     '';
 
@@ -24,12 +28,13 @@ in
         status = ''
           tmp=$(mktemp)
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
-              -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${pmDir}|g' \
-              -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
-              ${dirLocalsTemplate} > "$tmp"
+          -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${pmDir}|g' \
+          -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
+          -e 's|@WORKER_LIST@|${workerList}|g' \
+          ${dirLocalsTemplate} > "$tmp"
           if [ -f "${dirLocalsDest}" ] && cmp -s "$tmp" "${dirLocalsDest}"; then
-            rm -f "$tmp"
-            exit 0
+          rm -f "$tmp"
+          exit 0
           fi
           rm -f "$tmp"
           exit 1
@@ -37,9 +42,10 @@ in
         exec = ''
           mkdir -p "$(dirname "${dirLocalsDest}")"
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
-              -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${pmDir}|g' \
-              -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
-              ${dirLocalsTemplate} > "${dirLocalsDest}"
+          -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${pmDir}|g' \
+          -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
+          -e 's|@WORKER_LIST@|${workerList}|g' \
+          ${dirLocalsTemplate} > "${dirLocalsDest}"
         '';
       };
     };
@@ -50,7 +56,7 @@ in
       project_name = lib.mkOption {
         description = "The name of this project";
         example = "My cool project";
-        type = lib.types.str;
+        type = lib.types.strMatching "[^[:space:]]+";
       };
 
       project_benefit = lib.mkOption {
@@ -67,30 +73,30 @@ in
         example = [ "/path/to/subproj1/subproj1.org" "/path/to/subproj2/subproj2.org" ];
       };
 
-      # workers = lib.mkOption {
-      #   type = lib.types.listOf (lib.types.submodule {
-      #     options = {
-      #       name = lib.mkOption {
-      #         type = lib.types.str;
-      #         description = "Name of worker";
-      #         example = "Jane Doe";
-      #       };
+      workers = lib.mkOption {
+        type = lib.types.listOf (lib.types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = lib.types.strMatching "[^[:space:]]+";
+              description = "Name of worker (one word, no spaces)";
+              example = "Jane";
+            };
 
-      #       email = lib.mkOption {
-      #         type = lib.types.nullOr lib.types.str;
-      #         default = null;
-      #         description = "Email address of the worker (optional)";
-      #         example = "jane.doe@example.com";
-      #       };
-      #     };
-      #   });
-      #   default = [ ];
-      #   description = "List of workers for this project";
-      #   example = [
-      #     { name = "Alice Smith"; email = "alice@example.com"; }
-      #     { name = "Bob Johnson"; }
-      #   ];
-      # };
+            email = lib.mkOption {
+              type = lib.types.nullOr lib.types.str;
+              default = null;
+              description = "Email address of the worker (optional)";
+              example = "jane.doe@example.com";
+            };
+          };
+        });
+        default = [ ];
+        description = "List of workers for this project";
+        example = [
+          { name = "Alice"; email = "alice@example.com"; }
+          { name = "Bob"; }
+        ];
+      };
     };
   };
 }
