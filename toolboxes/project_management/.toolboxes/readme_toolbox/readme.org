@@ -155,7 +155,7 @@ Periodic curation:
 - Soft Scheduling (if necessary)
 **** Instructions for AI
 - When you capture an item, make sure you use one of the org-capture-templates defined in .dir-locals, naming yourself in the CAPTURED_BY property and marking REVIEWED as no. If you are not defined as a worker in devenv.nix, you cannot capture.
-- On request, capture items from the content in <project_name>_inbox.org. Put any content that got captured under a Captured headline at the bottom of the file.
+- On request, capture uncaptured items from the content in <project_name>_inbox.org. Put any content that got captured under a Captured headline at the bottom of the file.
 - Each day, for items that have TIMESTAMP, SCHEDULED, or DEADLINE due today, change the todo state to now. Any that are due within a week (but not today), change to next.
 **** Troubleshooting                                               :noexport:
 **** License

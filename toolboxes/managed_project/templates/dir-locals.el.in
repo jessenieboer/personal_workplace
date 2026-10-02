@@ -1,0 +1,4 @@
+((nil . ((org-capture-templates . (("b" "Journal entry" plain
+                                    (file+olp+datetree "journal.org")
+                                    "%?")))
+         (org-directory . "@MANAGED_PROJECT_DIRECTORY@/"))))

@@ -1,0 +1,14 @@
+#+PROPERTY: header-args:emacs-lisp :tangle no
+* project config
+** dir-locals
+#+BEGIN_SRC emacs-lisp :tangle ./templates/dir-locals.el.in :noweb tangle
+  ((nil . ((org-capture-templates . (("b" "Journal entry" plain
+                                      (file+olp+datetree "journal.org")
+                                      <<journal_capture_template>>)))
+           (org-directory . "@MANAGED_PROJECT_DIRECTORY@/"))))
+#+END_SRC
+** capture templates
+#+NAME: journal_capture_template
+#+BEGIN_SRC text :tangle no :noweb yes
+  "%?"
+#+END_SRC
