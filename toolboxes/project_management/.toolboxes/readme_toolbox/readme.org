@@ -113,7 +113,7 @@ Periodic curation:
 - Soft Scheduling (if necessary)
 **** Instructions for AI
 - Each day, for items that have TIMESTAMP, SCHEDULED, or DEADLINE due today, change the todo state to now. Any that are due within a week (but not today), change to next.
-- When you capture an item, make sure you use one of the org-capture-templates defined in .dir-locals, naming yourself in the CAPTURED_BY property. If you are not defined as a worker in devenv.nix, you cannot capture.
+- When you capture an item, make sure you use one of the org-capture-templates defined in .dir-locals, naming yourself in the CAPTURED_BY property and marking REVIEWED as no. If you are not defined as a worker in devenv.nix, you cannot capture.
 **** Troubleshooting                                               :noexport:
 **** License
 ** Development :noexport:

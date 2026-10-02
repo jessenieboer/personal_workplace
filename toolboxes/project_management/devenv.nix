@@ -12,6 +12,7 @@ in
     #   project_name = "project_management_toolbox";
     #   workers = [
     #     { name = "jessenieboer"; email = "jessenieboer@protonmail.com"; }
+    #     { name = "Vizier"; }
     #   ];
     # };
 
