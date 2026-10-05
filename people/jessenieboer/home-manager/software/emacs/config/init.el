@@ -336,11 +336,14 @@
 		   ("ia" yank "paste")
 		   ("<tab> RET" vertico-insert "insert"))))
 
+(require 'autorevert)
 (require 'easysession)
 (require 'easysession-magit)
 
 (setq auto-revert-interval 2
       auto-revert-verbose nil
+      auto-revert-avoid-polling t
+      auto-revert-check-vc-info t
       clean-buffer-list-delay-general 1
       clean-buffer-list-delay-special 0.04
       clean-buffer-list-kill-buffer-names '("*Apropos*" "*Backtrace*" "*Buffer List*" "*Compile-Log*" "*diff*"
@@ -353,6 +356,7 @@
     					      (or (getenv "XDG_STATE_HOME") "~/.local/state"))
       easysession-switch-to-save-session nil
       global-auto-revert-mode t
+      global-auto-revert-non-file-buffers t
       my-center-buffer-patterns nil
       my-hidden-buffer-patterns nil
       my-left-buffer-patterns nil
@@ -670,47 +674,55 @@
 
 (require 'project)
 
-(defun my-tab-bar-tab-name ()
-"Name the tab after the current project, with a marker for which tree it's in."
-(let* ((dir (expand-file-name default-directory))
-       (proj (project-current))
-       (marker (cond ((file-in-directory-p dir my-project-management-directory) "♔ ")
-                     (t ""))))
-  (concat marker (if proj (project-name proj) "No project"))))
+  (defun my-tab-bar-tab-name ()
+  "Name the tab after the current project, with a marker for which tree it's in."
+  (let* ((dir (expand-file-name default-directory))
+         (proj (project-current))
+         (marker (cond ((file-in-directory-p dir my-project-management-directory) "♔ ")
+                       (t ""))))
+    (concat marker (if proj (project-name proj) "No project"))))
 
-(setq my-project-management-directory (file-name-as-directory "~/Dropbox/_kingdom_management")
-      my-projects-directory (file-name-as-directory "~/kingdoms")
-      project-mode-line nil ;; causes some slowdown if not nil
-      project-switch-commands 'project-find-file
-      project-vc-extra-root-markers '(".project" "devenv.nix" "flake.nix")
-      project-vc-ignores '(".devenv/")
-      project-vc-use-cache t
-      tab-bar-tab-name-function #'my-tab-bar-tab-name)
+  (setq my-project-management-directory (file-name-as-directory "~/Dropbox/_kingdom_management")
+        my-projects-directory (file-name-as-directory "~/kingdoms")
+        project-mode-line nil ;; causes some slowdown if not nil
+        project-switch-commands 'project-find-file
+        project-vc-extra-root-markers '(".project" "devenv.nix" "flake.nix")
+        project-vc-ignores '(".devenv/")
+        project-vc-use-cache t
+        tab-bar-tab-name-function #'my-tab-bar-tab-name)
 
-(defun my-reset-projects ()
-  (interactive)
-  (project-forget-zombie-projects)
-  (project-forget-projects-under my-project-management-directory t)
-  (project-forget-projects-under my-projects-directory t)
-  (project-remember-projects-under my-project-management-directory t)
-  (project-remember-projects-under my-projects-directory t)
-  (dolist (proj project--list)
-    (let* ((root (car proj))
-	   (envrc (when root (expand-file-name ".envrc" root))))
-      (add-to-list 'safe-local-variable-directories root))))
+  (defun my-reset-projects ()
+    (interactive)
+    (project-forget-zombie-projects)
+    (project-forget-projects-under my-project-management-directory t)
+    (project-forget-projects-under my-projects-directory t)
+    (project-remember-projects-under my-project-management-directory t)
+    (project-remember-projects-under my-projects-directory t)
+    (dolist (proj project--list)
+      (let* ((root (car proj))
+  	   (envrc (when root (expand-file-name ".envrc" root))))
+        (add-to-list 'safe-local-variable-directories root))))
 
 
-(defun my-get-project-root-at-point ()
-  "Return the project root directory at point, or nil if none found."
-  (interactive)
-  (let* ((dir (my-get-dir-at-point))
-	 (project (project-current nil dir)))
-    (if project
-	(let ((root (project-root project)))
-          (message "Project root: %s" root)
-	  root)
-      (message "No project root found at point")
-      nil)))
+  (defun my-get-project-root-at-point ()
+    "Return the project root directory at point, or nil if none found."
+    (interactive)
+    (let* ((dir (my-get-dir-at-point))
+  	 (project (project-current nil dir)))
+      (if project
+  	(let ((root (project-root project)))
+            (message "Project root: %s" root)
+  	  root)
+        (message "No project root found at point")
+        nil)))
+
+  (defun my-auto-revert-kingdom-management ()
+  "Auto-revert file buffers under the kingdom-management tree."
+  (when (and buffer-file-name
+             (file-in-directory-p buffer-file-name
+                                  my-project-management-directory))
+    (auto-revert-mode 1)))
+(add-hook 'find-file-hook #'my-auto-revert-kingdom-management)
 
 (my-add-to-hydra (append main-modes alt-nav-modes)
   		 ("Connection"
@@ -1688,15 +1700,17 @@ Returns the value as string or nil if not found / error."
   (or (pmt-skip-top-level-headlines)
       (if (member (car (org-get-outline-path)) '("References")) 1 nil)))
 
-(defun pmt-skip-hard-dependent-tasks ()
+(defun pmt-skip-dependent-tasks ()
   (or (pmt-skip-non-tasks)
-      (cond ((string= (org-entry-get nil "HARD_INTERNAL_DEPENDENCY") "yes") 1)
-            ((string= (org-entry-get nil "HARD_EXTERNAL_DEPENDENCY") "yes") 1))))
+      (cond ((string= (org-entry-get nil "INTERNAL_DEPENDENCY") "yes") 1)
+            ((string= (org-entry-get nil "EXTERNAL_DEPENDENCY") "yes") 1))))
 
-(defun pmt-skip-all-dependent-tasks ()
-  (or (pmt-skip-hard-dependent-tasks)
-      (cond ((string= (org-entry-get nil "SOFT_INTERNAL_DEPENDENCY") "yes") 1)
-            ((string= (org-entry-get nil "SOFT_EXTERNAL_DEPENDENCY") "yes") 1))))
+(defun pmt-skip-non-references ()
+(or (pmt-skip-top-level-headlines)
+    (if (member (car (org-get-outline-path)) '("Ideas"
+                                               "Occurrences"
+                                               "Tasks"
+                                               "User stories")) 1 nil)))
 
 (setq org-agenda-skip-function-global '(org-agenda-skip-entry-if 'todo 'done)
       org-id-link-to-org-use-id t

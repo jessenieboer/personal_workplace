@@ -472,70 +472,74 @@ https://github.com/minad/vertico#complementary-packages
 :END:
 Contains some caching stuff to speed up buffer grouping for tab line, which is a point of slowdown according to the profiler
 #+begin_src emacs-lisp
-  (require 'easysession)
-  (require 'easysession-magit)
+    (require 'autorevert)
+    (require 'easysession)
+    (require 'easysession-magit)
 
-  (setq auto-revert-interval 2
-        auto-revert-verbose nil
-        clean-buffer-list-delay-general 1
-        clean-buffer-list-delay-special 0.04
-        clean-buffer-list-kill-buffer-names '("*Apropos*" "*Backtrace*" "*Buffer List*" "*Compile-Log*" "*diff*"
-      					    "*envrc*" "*Help*" "*info*" "*lsp-log*" "*nixfmt*" "*Warnings*" "*vc*"
-            				    "*vc-diff*")
-        clean-buffer-list-kill-regexps '("^\\*Async.*" "^\\*Ilist\\*" "^\\*Help\\*")
-        consult-line-start-from-top t
-        consult-preview-key nil ;; if this is set to 'any, it screws up autohydra
-        easysession-directory (expand-file-name "emacs/easysession/"
-      					      (or (getenv "XDG_STATE_HOME") "~/.local/state"))
-        easysession-switch-to-save-session nil
-        global-auto-revert-mode t
-        my-center-buffer-patterns nil
-        my-hidden-buffer-patterns nil
-        my-left-buffer-patterns nil
-        my-right-buffer-patterns nil
-        revert-without-query '("/home/jessenieboer/Dropbox/"))
+    (setq auto-revert-interval 2
+          auto-revert-verbose nil
+          auto-revert-avoid-polling t
+          auto-revert-check-vc-info t
+          clean-buffer-list-delay-general 1
+          clean-buffer-list-delay-special 0.04
+          clean-buffer-list-kill-buffer-names '("*Apropos*" "*Backtrace*" "*Buffer List*" "*Compile-Log*" "*diff*"
+        					    "*envrc*" "*Help*" "*info*" "*lsp-log*" "*nixfmt*" "*Warnings*" "*vc*"
+              				    "*vc-diff*")
+          clean-buffer-list-kill-regexps '("^\\*Async.*" "^\\*Ilist\\*" "^\\*Help\\*")
+          consult-line-start-from-top t
+          consult-preview-key nil ;; if this is set to 'any, it screws up autohydra
+          easysession-directory (expand-file-name "emacs/easysession/"
+        					      (or (getenv "XDG_STATE_HOME") "~/.local/state"))
+          easysession-switch-to-save-session nil
+          global-auto-revert-mode t
+          global-auto-revert-non-file-buffers t
+          my-center-buffer-patterns nil
+          my-hidden-buffer-patterns nil
+          my-left-buffer-patterns nil
+          my-right-buffer-patterns nil
+          revert-without-query '("/home/jessenieboer/Dropbox/"))
 
-  (easysession-magit-mode 1)
-  (easysession-save-mode -1) ; save manually
-  (make-directory easysession-directory t)
+    (easysession-magit-mode 1)
+    (easysession-save-mode -1) ; save manually
+    (make-directory easysession-directory t)
 
-  (defun my-string-matches-any-regex-p (str regex-list)
-    "Return t if STR matches any regex in REGEX-LIST."
-    (cl-loop for regex in regex-list
-    	   thereis (string-match-p regex str)))
+    (defun my-string-matches-any-regex-p (str regex-list)
+      "Return t if STR matches any regex in REGEX-LIST."
+      (cl-loop for regex in regex-list
+      	   thereis (string-match-p regex str)))
 
-  (defun my-center-buffer-p (buffer-or-name &rest ARGS)
-    "Test whether buffer should be displayed in my center frame."
-    (let ((buffer (get-buffer buffer-or-name)))
-      (when (and buffer (buffer-live-p buffer))
-        (my-string-matches-any-regex-p (buffer-name buffer) my-center-buffer-patterns))))
+    (defun my-center-buffer-p (buffer-or-name &rest ARGS)
+      "Test whether buffer should be displayed in my center frame."
+      (let ((buffer (get-buffer buffer-or-name)))
+        (when (and buffer (buffer-live-p buffer))
+          (my-string-matches-any-regex-p (buffer-name buffer) my-center-buffer-patterns))))
 
-  (defun my-left-buffer-p (buffer-or-name &rest ARGS)
-    "Test whether buffer should be displayed in my left frame."
-    (let ((buffer (get-buffer buffer-or-name)))
-      (when (and buffer (buffer-live-p buffer))
-        (my-string-matches-any-regex-p (buffer-name buffer) my-left-buffer-patterns))))
+    (defun my-left-buffer-p (buffer-or-name &rest ARGS)
+      "Test whether buffer should be displayed in my left frame."
+      (let ((buffer (get-buffer buffer-or-name)))
+        (when (and buffer (buffer-live-p buffer))
+          (my-string-matches-any-regex-p (buffer-name buffer) my-left-buffer-patterns))))
 
-  (defun my-right-buffer-p (buffer-or-name &rest ARGS)
-    "Test whether buffer should be displayed in my right frame."
-    (let ((buffer (get-buffer buffer-or-name)))
-      (when (and buffer (buffer-live-p buffer))
-        (my-string-matches-any-regex-p (buffer-name buffer) my-right-buffer-patterns))))
+    (defun my-right-buffer-p (buffer-or-name &rest ARGS)
+      "Test whether buffer should be displayed in my right frame."
+      (let ((buffer (get-buffer buffer-or-name)))
+        (when (and buffer (buffer-live-p buffer))
+          (my-string-matches-any-regex-p (buffer-name buffer) my-right-buffer-patterns))))
 
-  (defun my-add-center-buffer-patterns (regex-list)
-    "Add patterns to my list of buffers that display in my center frame."
-    (setq my-center-buffer-patterns (append my-center-buffer-patterns regex-list)))
+    (defun my-add-center-buffer-patterns (regex-list)
+      "Add patterns to my list of buffers that display in my center frame."
+      (setq my-center-buffer-patterns (append my-center-buffer-patterns regex-list)))
 
-  (defun my-add-left-buffer-patterns (regex-list)
-    "Add patterns to my list of buffers that display in my left frame."
-    (setq my-left-buffer-patterns (append my-left-buffer-patterns regex-list)))
+    (defun my-add-left-buffer-patterns (regex-list)
+      "Add patterns to my list of buffers that display in my left frame."
+      (setq my-left-buffer-patterns (append my-left-buffer-patterns regex-list)))
 
-  (defun my-add-right-buffer-patterns (regex-list)
-    "Add patterns to my list of buffers that display in my right frame."
-    (setq my-right-buffer-patterns (append my-right-buffer-patterns regex-list)))
+    (defun my-add-right-buffer-patterns (regex-list)
+      "Add patterns to my list of buffers that display in my right frame."
+      (setq my-right-buffer-patterns (append my-right-buffer-patterns regex-list)))
 
-  (my-add-left-buffer-patterns '(".*shell\\*" "^\\*Info\\*$" "^\\*Metahelp\\*$" "^\\*Process List\\*$" "^\\*Shell Command Output\\*$""^\\*Warnings\\*$"))
-  (my-add-right-buffer-patterns '("^\\*Async-.*" "^\\*Backtrace\\*$" "\\*envrc\\*" "^\\*Help\\*$" "^\\*Messages\\*$"))
+    (my-add-left-buffer-patterns '(".*shell\\*" "^\\*Info\\*$" "^\\*Metahelp\\*$" "^\\*Process List\\*$" "^\\*Shell Command Output\\*$""^\\*Warnings\\*$"))
+    (my-add-right-buffer-patterns '("^\\*Async-.*" "^\\*Backtrace\\*$" "\\*envrc\\*" "^\\*Help\\*$" "^\\*Messages\\*$"))
 
 #+end_src
 *** buffer controls
@@ -839,7 +843,7 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 :END:
 #+begin_src emacs-lisp
   (require 'project)
-  
+
   (defun my-tab-bar-tab-name ()
   "Name the tab after the current project, with a marker for which tree it's in."
   (let* ((dir (expand-file-name default-directory))
@@ -881,6 +885,14 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
   	  root)
         (message "No project root found at point")
         nil)))
+
+  (defun my-auto-revert-kingdom-management ()
+  "Auto-revert file buffers under the kingdom-management tree."
+  (when (and buffer-file-name
+             (file-in-directory-p buffer-file-name
+                                  my-project-management-directory))
+    (auto-revert-mode 1)))
+(add-hook 'find-file-hook #'my-auto-revert-kingdom-management)
 #+end_src
 *** project controls
 :PROPERTIES:
@@ -2121,15 +2133,17 @@ dy = find definitions
     (or (pmt-skip-top-level-headlines)
         (if (member (car (org-get-outline-path)) '("References")) 1 nil)))
 
-  (defun pmt-skip-hard-dependent-tasks ()
+  (defun pmt-skip-dependent-tasks ()
     (or (pmt-skip-non-tasks)
-        (cond ((string= (org-entry-get nil "HARD_INTERNAL_DEPENDENCY") "yes") 1)
-              ((string= (org-entry-get nil "HARD_EXTERNAL_DEPENDENCY") "yes") 1))))
+        (cond ((string= (org-entry-get nil "INTERNAL_DEPENDENCY") "yes") 1)
+              ((string= (org-entry-get nil "EXTERNAL_DEPENDENCY") "yes") 1))))
 
-  (defun pmt-skip-all-dependent-tasks ()
-    (or (pmt-skip-hard-dependent-tasks)
-        (cond ((string= (org-entry-get nil "SOFT_INTERNAL_DEPENDENCY") "yes") 1)
-              ((string= (org-entry-get nil "SOFT_EXTERNAL_DEPENDENCY") "yes") 1))))
+  (defun pmt-skip-non-references ()
+  (or (pmt-skip-top-level-headlines)
+      (if (member (car (org-get-outline-path)) '("Ideas"
+                                                 "Occurrences"
+                                                 "Tasks"
+                                                 "User stories")) 1 nil)))
 
   (setq org-agenda-skip-function-global '(org-agenda-skip-entry-if 'todo 'done)
         org-id-link-to-org-use-id t
