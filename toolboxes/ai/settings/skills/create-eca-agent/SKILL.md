@@ -1,84 +1,72 @@
 ---
 name: create-eca-agent
-description: Use when creating or revising an ECA agent (.eca/agents, settings/agents), when create-agent would emit Claude Code fields, or when agent YAML will not parse. Writes ECA-loadable agents with map-form eca__ tools and compact descriptions. Replaces create-agent for ECA.
+description: Use when creating or revising an ECA agent, when the file must be spawnable, or when create-agent would emit Claude Code fields. Writes a YAML agent ECA 0.161 lists and spawns, with subagent mode and map-form eca__ tools. Replaces create-agent for ECA.
 ---
 
 # Create ECA Agent
 
-Write agents ECA can list, spawn, and tool. `create-agent` is Claude Code; loading it for ECA work produces unloadable files.
+Write an agent ECA can discover and spawn. Do not load `create-agent`. If it is in context, this skill overrides it. Do not merge.
 
-**Do not load `create-agent`.** If it is already in context, this skill overrides it. Do not merge the two.
+**Not this skill:** skills, rules, commands, product code. Primary-only is a chat persona, not a spawnable agent.
 
-**Not this skill:** skills, rules, commands, product code.
+Checked against ECA 0.161.1. Do not invent a stricter schema.
 
-## Where to write
+## Land
 
-Named or existing path wins. This toolbox: `settings/agents/<kebab-name>.md` is source; `.eca/agents/` is a generated copy. No existing path: `.eca/agents/<kebab-name>.md`. Never `.claude/agents/` or `${CLAUDE_PLUGIN_ROOT}`.
+ECA scans `.eca/agents/*.md` and `~/.config/eca/agents/*.md` only. Not `settings/agents/`.
 
-## Frontmatter (hard)
+Named path wins when it is one of those two. Else write the source a copy task installs, and make that task name this file. One hardcoded install does not install the next. No copy task: write `.eca/agents/<id>.md`. Gitignored `.eca/` is still loaded.
 
-The block between `---` must parse as YAML. If it would not parse, the agent does not exist.
+## Contract
 
-Allowed keys only: `name`, `description`, `mode`, `model`, `variant`, `maxSteps` or `steps`, `tools`, `disabledTools`, `inherit`, `spawnableBy`.
-
-Forbidden: `color`, `permissionMode`, `disallowedTools`, `allowed-tools`, `skills`, `hooks`, `mcpServers`, `isolation`, `memory`, `background`.
-
-| Field | Rule |
-|---|---|
-| `name` | kebab-case, 3–50 chars, matches filename without `.md` |
-| `description` | Single-line unquoted scalar, or quoted/folded. Starts with `Use this agent when...`. Compact. No `<example>`, HTML, or colon-plus-newline in an unquoted value. Examples go in the **body**. |
-| `mode` | `primary`, `subagent`, or `[primary, subagent]` |
-| `model` | Full ECA id (`xai/grok-4.6`). Never `sonnet` / `opus` / `haiku` / `inherit` |
-| `tools` | Map, not a string, not a Claude Code list |
+- `name`: lowercase kebab-case, equals filename stem. No spaces. No `subagent-` prefix.
+- Frontmatter is a `---` mapping. Invalid YAML means no agent. No Claude Code keys (`color`, `permissionMode`, `disallowedTools`, `allowed-tools`, `skills`, `hooks`, `mcpServers`, `isolation`, `memory`, `background`).
+- `mode`: `subagent`, or `[primary, subagent]`. Absent defaults to both. `primary` alone is not spawnable.
+- `model`: omit, or a full id (`xai/grok-4.7`). Never `sonnet`, `opus`, `haiku`, `inherit`.
+- `description`: one line, what and when. No `<example>`, no HTML, no bare colon-newline.
+- `tools`: map, `byDefault: deny`, plus tools the job needs. A Claude list is coerced to allow-with-ask. A string is ignored. Write or shell only if the job cannot finish without them.
+- `disabledTools`: name without `eca__` (`edit_file`), or `server__tool`. `maxSteps`: omit for unlimited. `inherit`: unknown or self is ignored. `spawnableBy`: omit unless a parent must be restricted.
 
 ```yaml
 tools:
-  byDefault: ask
+  byDefault: deny
   allow:
     - eca__directory_tree
     - eca__grep
     - eca__read_file
-  ask:
-    - eca__write_file
-    - eca__edit_file
-    - eca__shell_command
 ```
 
-ECA names only: `eca__read_file`, `eca__write_file`, `eca__edit_file`, `eca__grep`, `eca__directory_tree`, `eca__shell_command`, `eca__skill`, `eca__spawn_agent`, `eca__preview_file_change`, `eca__editor_diagnostics`.
+Use `eca__*` names from this session's tool list. Never `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `Task`, `Skill`. Not `eca__compact_chat`. Spawn is `eca__spawn_agent`. Subagents cannot nest.
 
-Never: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `Task`, `Skill`, `WebFetch`, `WebSearch`, `NotebookEdit`. Never tell the model to use the Task tool. Spawning is `eca__spawn_agent`.
+## Done
 
-Start allow-list read-only. Add write/shell only if the job cannot finish without them. No tabs. Two-space indent.
+Fail the file unless a parent can pass the id to `eca__spawn_agent`: scanned path or a copy task that names this file, `mode` includes `subagent`, `name` is the stem, YAML parses, body tools are on the map.
 
-## Body
+`/subagents` must list the id. No reload this session: say unverified. Do not claim it spawned.
 
-Order: Title, Identity, Goal, Input, CRITICAL Load Context, Process. Reasoning column before decision. Produce the file, then self-critique. Do not dump examples into `description`.
+Body: when to act, when not to, process, output, stop. Short. One example. Do not paste a skill in. Name the skill and the stop condition if the job is to load one.
 
 ## Process
 
-1. **Decompose** — purpose, triggers, constraints, success criteria, existing files, when-NOT.
-2. **Solve** — structure, triggering, workflow, test scenarios. Do not write yet.
-3. **Produce** — write the complete agent to the source path.
-4. **Re-read** — if frontmatter would fail a YAML parse, fix it before returning.
-5. **Self-critique** — run the checklist. Fix every miss. Then output.
-
-User says skip / "just write it": still enforce this contract. Still re-read. Still self-critique.
-
-## Checklist
-
-Path is source. Frontmatter parses. No forbidden keys. Description single-line, starts `Use this agent when...`. Model is a full ECA id. Tools are an ECA `eca__*` map. Body order as specified. File re-read after write.
+1. Decompose: job, trigger, when-not, tools, step cap, scanned path.
+2. Solve the mode, tool map, and filename. Do not write yet.
+3. Produce the source. Change the copy task if ECA will not see it.
+4. Re-read. Fix until Done passes. "Just write it" does not skip this.
 
 ## Rationalizations
 
 | Excuse | Reality |
 |---|---|
-| "`create-agent` is official" | Official for Claude Code. ECA will not list that file. |
-| "Examples in description improve triggering" | Unquoted multi-line YAML does not parse. Agent does not exist. |
-| "Write Claude tools, translate later" | Later never runs. Agent cannot read or write. |
-| "`inherit` / `sonnet` is the default" | Not an ECA model id. |
-| "Write `.eca/agents` even if settings/ is source" | devenv overwrites the copy. |
-| "Task is how agents spawn" | ECA spawning is `eca__spawn_agent`. |
+| "`create-agent` is official" | Official for Claude Code. Follow this file. |
+| "ECA coerces a Claude tool list" | Coercion is allow-with-ask. Ship the map. |
+| "`color` is ignored" | Do not emit Claude Code keys. |
+| "`primary` is enough" | Primary-only is not spawnable. |
+| "settings/agents is source, so ECA loads it" | ECA does not scan that path. |
+| "The copy task will pick it up" | A one-file install will not install the next. |
+| "Omit mode; default is fine" | Default is both. Say `subagent` unless it is also a chat persona. |
+| "Task is how agents spawn" | `eca__spawn_agent`. No nesting. |
+| "I wrote the path, so it loaded" | A path is not a reload. Say unverified. |
 
-## Red flags — rewrite the file
+## Red flags -- rewrite
 
-`color:`, `model: inherit`, `tools: ["Read"`, `<example>` in frontmatter, `Task` as spawner, path under `.claude/` or `${CLAUDE_PLUGIN_ROOT}`.
+`mode: primary` only. `model: inherit` or `sonnet`. `tools:` as a string or Claude names. `name` not the filename stem. File only under `settings/agents/` with no copy. Body says `Task` or "spawn a subagent". `<example>` in frontmatter.

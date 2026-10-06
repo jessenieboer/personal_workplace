@@ -16,7 +16,7 @@
 - Editor Code Assistant setup
   - grok-4.7 and grok-build-0.1
   - default config assumes Secrets Toolbox for api keys
-- ai-input-engineer for developing agents, skills, etc...
+- ai-input-engineer agent for developing agents, skills, etc...
 * Why
 :PROPERTIES:
 :CUSTOM_ID: why
@@ -101,9 +101,6 @@ Inputs, Output format, Tools and scripts (only if there are scripts or forbidden
 :PROPERTIES:
 :CUSTOM_ID: contributing
 :END:
-* By Whom :noexport:
-:PROPERTIES:
-:CUSTOM_ID: by-whom
-:END:
-Me with gratitude to
-https://github.com/neolabhq/context-engineering-kit 
+* By Whom
+Me with gratitude to:
+- https://github.com/neolabhq/context-engineering-kit for their various skills

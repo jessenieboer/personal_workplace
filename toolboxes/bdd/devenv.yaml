@@ -2,8 +2,6 @@ inputs:
   addyosmani-agent-skills:
     flake: false
     url: github:addyosmani/agent-skills/0.6.9
-  llm-agents:
-    url: github:numtide/llm-agents.nix 
   mattpocock-skills:
     flake: false
     url: github:mattpocock/skills/v1.2.3

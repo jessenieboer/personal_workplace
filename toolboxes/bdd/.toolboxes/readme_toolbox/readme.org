@@ -35,12 +35,20 @@ agents are mine, skills are others'
 :PROPERTIES:
 :CUSTOM_ID: installation
 :END:
-addyosmani-agent-skills:
+#+BEGIN_SRC yaml
+  addyosmani-agent-skills:
+      flake: false
+      url: github:addyosmani/agent-skills
+  mattpocock-skills:
+      flake: false
+      url: github:mattpocock/skills
+  personal_workplace:
     flake: false
-    url: github:addyosmani/agent-skills/0.6.9
-mattpocock-skills:
-    flake: false
-    url: github:mattpocock/skills/v1.2.3
+    url: github:jessenieboer/personal_workplace/jn
+
+  imports:
+    - personal_workplace/toolboxes/bdd
+#+END_SRC
 ** Use :noexport:
 :PROPERTIES:
 :CUSTOM_ID: use

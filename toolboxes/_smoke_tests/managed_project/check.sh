@@ -5,4 +5,10 @@ test -f "$fragment"
 grep -q '"Journal entry"' "$fragment"
 ! grep -q '@MANAGED_PROJECT_DIRECTORY@' "$fragment"
 grep -q '"Journal entry"' .dir-locals.el
+
+toolbox_dir=.toolboxes/managed_project_toolbox/templates
+for template in ai_project bdd_project bdd_python_project; do
+  test -d "$toolbox_dir/$template"
+done
+
 echo "PASS: managed_project smoke"

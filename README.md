@@ -36,7 +36,7 @@ Myself, and anyone who finds something useful in here
 
 This is mostly to remind myself how to do this:
 
-bootstrapping from a new nixos install: as root user, type the following into /etc/nixos/configuration.nix: <a id="org6bafb78"></a>
+bootstrapping from a new nixos install: as root user, type the following into /etc/nixos/configuration.nix: <a id="orgac38afa"></a>
 
 then cd into .ssh, ssh-keygen -K to get the stub file, rename the stub file to id<sub>ed25519</sub><sub>sk</sub>, delete the .pub file (assuming this is in github already. making this a public repo probably renders this unnecessary)
 
