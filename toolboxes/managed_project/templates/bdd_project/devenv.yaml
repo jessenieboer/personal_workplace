@@ -19,6 +19,7 @@ imports:
   - personal_workplace/toolboxes/bdd
   - personal_workplace/toolboxes/emacs
   - personal_workplace/toolboxes/git
+  - personal_workplace/toolboxes/managed_project
   - personal_workplace/toolboxes/readme
   - personal_workplace/toolboxes/secrets
 

@@ -51,11 +51,14 @@ in
       };
 
       "managed_project_toolbox:copy_templates" = {
-        description = "Seed each templates/ subdirectory under .toolboxes/managed_project_toolbox/templates once";
+        description = "Refresh each templates/ subdirectory under .toolboxes/managed_project_toolbox/templates when source changes";
         before = [ "devenv:enterShell" ];
         status = ''
-          ${lib.concatMapStringsSep "\n" (name: ''
+          ${lib.concatMapStringsSep "\n" (name: let
+            src = templatesRoot + "/${name}";
+          in ''
             [ -d "${templateDest}/${name}" ] || exit 1
+            diff -rq -x '.#*' ${src} "${templateDest}/${name}" >/dev/null || exit 1
           '') templateNames}
         '';
         exec = ''
@@ -63,10 +66,11 @@ in
           ${lib.concatMapStringsSep "\n" (name: let
             src = templatesRoot + "/${name}";
           in ''
-            if [ ! -d "${templateDest}/${name}" ]; then
-              cp -a ${src} "${templateDest}/${name}"
-              chmod -R u+w "${templateDest}/${name}"
-            fi
+            rm -rf "${templateDest}/${name}"
+            cp -a ${src} "${templateDest}/${name}"
+            chmod -R u+w "${templateDest}/${name}"
+            # Drop Emacs lock files if the source tree had any.
+            find "${templateDest}/${name}" -name '.#*' -delete
           '') templateNames}
         '';
       };
