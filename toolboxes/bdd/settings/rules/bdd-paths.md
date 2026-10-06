@@ -6,8 +6,8 @@ description: Where BDD product files live in this project.
 # BDD paths
 
 - Brainstorm: `.toolboxes/bdd_toolbox/brainstorm.txt`
-- CONTEXT.md: `.toolboxes/bdd_toolbox/CONTEXT.md`
-- CONTEXT-MAP.md: `.toolboxes/bdd_toolbox/CONTEXT-MAP.md`
+- GLOSSARY.md: `.toolboxes/bdd_toolbox/GLOSSARY.md`
+- GLOSSARY-MAP.md: `.toolboxes/bdd_toolbox/GLOSSARY-MAP.md`
 - Definition of Done: `.toolboxes/bdd_toolbox/definition-of-done.md`
 - Features: `.toolboxes/bdd_toolbox/features/**/*.feature`
 - Plan: `.toolboxes/bdd_toolbox/PLAN.md`

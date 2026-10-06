@@ -3,7 +3,6 @@
 #+EXPORT_FILE_NAME: ../../README.md
 
 #+html: <h1 align="center">Title</h1>
-#+html: <p align="center">One-line description of what this is.</p>
 
 * What
 ** Features :noexport:

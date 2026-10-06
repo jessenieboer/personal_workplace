@@ -1,40 +1,17 @@
+#+TITLE: Readme Toolbox
+#+OPTIONS: toc:nil num:nil
 #+EXPORT_FILE_NAME: ../../README.md
-#+OPTIONS: toc:t num:nil
-#+TITLE: bdd toolbox
 
-#+html:<h1 align="center">bdd toolbox</h1>
+#+html: <h1 align="center">BDD Toolbox</h1>
 
 * What
-:PROPERTIES:
-:CUSTOM_ID: what
-:END:
-A set of tools that aids behavior-driven development
-
-agents are mine, skills are others'
-** Features
-:PROPERTIES:
-:CUSTOM_ID: features
-:END:
+Tools, settings, templates and instructions for Behavior-Driven Development
+** Features                                                        :noexport:
 * Why
-:PROPERTIES:
-:CUSTOM_ID: why
-:END:
 * For Whom :noexport:
-:PROPERTIES:
-:CUSTOM_ID: for-whom
-:END:
 * How
-:PROPERTIES:
-:CUSTOM_ID: how
-:END:
 ** Requirements :noexport:
-:PROPERTIES:
-:CUSTOM_ID: requirements
-:END:
-** Installation :noexport:
-:PROPERTIES:
-:CUSTOM_ID: installation
-:END:
+** Installation
 #+BEGIN_SRC yaml
   addyosmani-agent-skills:
       flake: false
@@ -50,52 +27,22 @@ agents are mine, skills are others'
     - personal_workplace/toolboxes/bdd
 #+END_SRC
 ** Use :noexport:
-:PROPERTIES:
-:CUSTOM_ID: use
-:END:
-workflow
-using product-design-assistant:
+workflow:
+using designer:
 1. brainstorm and clarify desired behavior
 2. write features
-vizier:
+planner:
 3. plan implementation 
 *** Details
-:PROPERTIES:
-:CUSTOM_ID: details
-:END:
 **** Troubleshooting
-:PROPERTIES:
-:CUSTOM_ID: troubleshooting
-:END:
 **** License
-:PROPERTIES:
-:CUSTOM_ID: license
-:END:
 ** Development :noexport:
-:PROPERTIES:
-:CUSTOM_ID: development
-:END:
 *** Process
-:PROPERTIES:
-:CUSTOM_ID: process
-:END:
 *** Important Decisions
-:PROPERTIES:
-:CUSTOM_ID: important-decisions
-:END:
 *** To Do
-:PROPERTIES:
-:CUSTOM_ID: to-do
-:END:
 *** Contributing
-:PROPERTIES:
-:CUSTOM_ID: contributing
-:END:
-* By Whom :noexport:
-:PROPERTIES:
-:CUSTOM_ID: by-whom
-:END:
-Me and grok, with gratitude to
+* By Whom
+Me and Grok, with gratitude to
 https://github.com/AutomationPanda/gherkin-guidelines-for-ai (gherkin authoring skill consumed this)
 https://github.com/mattpocock/skills (grilling and domain modeling)
 https://github.com/addyosmani/agent-skills (planning)

@@ -9,3 +9,4 @@ devenv.local.yaml
 .toolboxes/ai_toolbox
 .toolboxes/emacs_toolbox
 .toolboxes/secrets_toolbox
+feedback/

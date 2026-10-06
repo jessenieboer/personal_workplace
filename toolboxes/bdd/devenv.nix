@@ -7,7 +7,7 @@ let
   bddPaths = ./settings/rules/bdd-paths.md;
 
   dmADR = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/ADR-FORMAT.md";
-  dmContext = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/CONTEXT-FORMAT.md";
+  dmContext = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/GLOSSARY-FORMAT.md";
   dmSkill = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/SKILL.md";
 
   gherkin = ./settings/skills/gherkin-authoring/SKILL.md;

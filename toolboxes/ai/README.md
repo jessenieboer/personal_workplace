@@ -1,9 +1,9 @@
 <h1 align="center">AI Toolbox</h1>
 
-<p align="center">Tools, settings, templates and practices for using AI</p>
-
 
 # What
+
+Tools, settings, templates and instructions for using AI
 
 
 ## Features

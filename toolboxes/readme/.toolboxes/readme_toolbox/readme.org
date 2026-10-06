@@ -3,7 +3,7 @@
 #+EXPORT_FILE_NAME: ../../README.md
 
 #+html: <h1 align="center">Readme Toolbox</h1>
-#+html: <p align="center">Tools, settings, templates and practices for writing readmes</p>
+#+html: <p align="center">Tools, settings, templates and instructions for writing readmes</p>
 
 * What
 Write Readmes with a consistent, useful structure.

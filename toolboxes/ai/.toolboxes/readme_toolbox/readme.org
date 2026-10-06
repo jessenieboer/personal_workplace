@@ -3,41 +3,20 @@
 #+EXPORT_FILE_NAME: ../../README.md
 
 #+html: <h1 align="center">AI Toolbox</h1>
-#+html: <p align="center">Tools, settings, templates and practices for using AI</p>
 
 * What
-:PROPERTIES:
-:CUSTOM_ID: what
-:END:
+Tools, settings, templates and instructions for using AI
 ** Features
-:PROPERTIES:
-:CUSTOM_ID: features
-:END:
 - Editor Code Assistant setup
   - grok-4.7 and grok-build-0.1
   - default config assumes Secrets Toolbox for api keys
 - ai-input-engineer agent for developing agents, skills, etc...
 * Why
-:PROPERTIES:
-:CUSTOM_ID: why
-:END:
 * For Whom :noexport:
-:PROPERTIES:
-:CUSTOM_ID: for-whom
-:END:
 * How
-:PROPERTIES:
-:CUSTOM_ID: how
-:END:
 ** Requirements :noexport:
-:PROPERTIES:
-:CUSTOM_ID: requirements
-:END:
 - Secrets Toolbox for api key
 ** Installation :noexport:
-:PROPERTIES:
-:CUSTOM_ID: installation
-:END:
 #+BEGIN_SRC devenv.yaml
   inputs:
     neolabhq-cek:
@@ -54,9 +33,6 @@
 also need in secretspec.toml:
 XAI_API_KEY = { description = "jessenieboer's xai api key", required = true }
 ** Use :noexport:
-:PROPERTIES:
-:CUSTOM_ID: use
-:END:
 agents, skills, and rules
 
 - rules are on-demand; skills are "always on"
@@ -69,38 +45,14 @@ Title, When/When Not, only one of Instructions/Workflow, Constraints, Done When,
 optional:
 Inputs, Output format, Tools and scripts (only if there are scripts or forbidden tools), References, Example
 *** Details
-:PROPERTIES:
-:CUSTOM_ID: details
-:END:
 - need to have each agent defined in .eca/config.json for eca to use it, even if 
 **** Troubleshooting
-:PROPERTIES:
-:CUSTOM_ID: troubleshooting
-:END:
 **** License
-:PROPERTIES:
-:CUSTOM_ID: license
-:END:
 ** Development :noexport:
-:PROPERTIES:
-:CUSTOM_ID: development
-:END:
 *** Process
-:PROPERTIES:
-:CUSTOM_ID: process
-:END:
 *** Important Decisions
-:PROPERTIES:
-:CUSTOM_ID: important-decisions
-:END:
 *** To Do
-:PROPERTIES:
-:CUSTOM_ID: to-do
-:END:
 *** Contributing
-:PROPERTIES:
-:CUSTOM_ID: contributing
-:END:
 * By Whom
 Me with gratitude to:
 - https://github.com/neolabhq/context-engineering-kit for their various skills
