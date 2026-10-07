@@ -2,6 +2,7 @@
 {
   home.packages = [
     inputs.grok-bot.packages.${pkgs.system}.default
+    #pkgs.papirus-icon-theme
   ];
 
   # Plasma is Wayland; without this the app falls back to XWayland.

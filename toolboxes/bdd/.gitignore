@@ -7,6 +7,7 @@ devenv.local.yaml
 .envrc
 .pre-commit-config.yaml
 .toolboxes/ai_toolbox
+.toolboxes/bdd_toolbox
 .toolboxes/emacs_toolbox
 .toolboxes/secrets_toolbox
 feedback/
