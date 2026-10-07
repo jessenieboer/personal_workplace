@@ -2,6 +2,9 @@ inputs:
   addyosmani-agent-skills:
     flake: false
     url: github:addyosmani/agent-skills
+  atomic:
+    flake: false
+    url: github:bastani-inc/atomic
   mattpocock-skills:
     flake: false
     url: github:mattpocock/skills
@@ -17,6 +20,7 @@ inputs:
 imports:
   - personal_workplace/toolboxes/ai
   - personal_workplace/toolboxes/bdd
+  - personal_workplace/toolboxes/code
   - personal_workplace/toolboxes/emacs
   - personal_workplace/toolboxes/git
   - personal_workplace/toolboxes/managed_project
