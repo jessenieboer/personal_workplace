@@ -13,20 +13,9 @@ inputs:
     url: github:NeoLabHQ/context-engineering-kit
   nixpkgs:
     url: github:NixOS/nixpkgs/nixpkgs-unstable
-  nixpkgs-python:
-    url: github:cachix/nixpkgs-python
-    inputs:
-      nixpkgs:
-        follows: nixpkgs
   personal_workplace:
     flake: false
     url: github:jessenieboer/personal_workplace/master
-  trailofbits-skills:
-    flake: false
-    url: github:trailofbits/skills
-  wshobson-agents:
-    flake: false
-    url: github:wshobson/agents
 
 imports:
   - personal_workplace/toolboxes/ai
@@ -34,10 +23,9 @@ imports:
   - personal_workplace/toolboxes/code
   - personal_workplace/toolboxes/emacs
   - personal_workplace/toolboxes/git
-  - personal_workplace/toolboxes/managed_project
   - personal_workplace/toolboxes/readme
-  - personal_workplace/toolboxes/python
   - personal_workplace/toolboxes/secrets
+  - personal_workplace/toolboxes/standard_project
 
 nixpkgs:
   permitted_unfree_packages:

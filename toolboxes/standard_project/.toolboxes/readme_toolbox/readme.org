@@ -1,0 +1,38 @@
+#+TITLE: Standard Project Toolbox
+#+OPTIONS: toc:nil num:nil ^:{}
+#+EXPORT_FILE_NAME: ../../README.md
+
+#+html: <h1 align="center">Standard Project Toolbox</h1>
+
+* What
+Tools, settings, templates, and instructions for how I typically do projects.
+** Features :noexport:
+:PROPERTIES:
+:ID:       ff9d0365-0711-4ac6-978b-e5fcbf3db159
+:END:
+- Templates for different kinds of projects
+- Journal capture setup
+* Why
+* For Whom :noexport:
+* How :noexport:
+** Requirements :noexport:
+** Installation :noexport:
+#+BEGIN_SRC yaml
+inputs:
+  personal_workplace:
+    flake: false
+    url: github:jessenieboer/personal_workplace/master
+
+imports:
+  - personal_workplace/toolboxes/standard_project
+#+END_SRC
+** Use :noexport:
+*** Details
+**** Troubleshooting
+**** License
+** Development :noexport:
+*** Process
+*** Important Decisions
+*** To Do
+*** Contributing
+* By Whom :noexport:

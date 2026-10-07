@@ -3,9 +3,9 @@
 #+EXPORT_FILE_NAME: ../../README.md
 
 #+html: <h1 align="center">Project Management Toolbox</h1>
-#+html: <p align="center">Tools, settings, templates, and instructions for managing projects</p>
 
 * What
+Tools, settings, templates, and instructions for managing projects
 ** Features
 * Why
 * For Whom :noexport:

@@ -1,9 +1,9 @@
 <h1 align="center">Project Management Toolbox</h1>
 
-<p align="center">Tools, settings, templates, and instructions for managing projects</p>
-
 
 # What
+
+Tools, settings, templates, and instructions for managing projects
 
 
 ## Features
@@ -197,7 +197,8 @@ Each item (except references) has one of 4 org todo states:
 -   Instructions for AI
 
     -   When you capture an item, make sure you use one of the org-capture-templates defined in .dir-locals, naming yourself in the CAPTURED\_BY property and marking REVIEWED as no. If you are not defined as a worker in devenv.nix, you cannot capture.
-    -   On request, capture items from the content in <project\_name>\_inbox.org
-    -   Each day, for items that have TIMESTAMP, SCHEDULED, or DEADLINE due today, change the todo state to now. Any that are due within a week (but not today), change to next.
+    -   On request, capture uncaptured items from the content in <project\_name>\_inbox.org under the appropriate headline (Tasks, Occurrences, References). Put any captured content as a subheading under a Captured headline at the bottom of the file,
+    -   Each day, for items that have TIMESTAMP, SCHEDULED, or DEADLINE due today, change the todo state to now. Any that are due within a week (but not today), change to next. For Occurrences that have already happened, set todo state to past.
+    -   Ignore User stories and Ideas for now.
 
 -   License

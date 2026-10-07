@@ -12,11 +12,10 @@ imports:
   - personal_workplace/toolboxes/ai
   - personal_workplace/toolboxes/emacs
   - personal_workplace/toolboxes/git
-  - personal_workplace/toolboxes/managed_project
   - personal_workplace/toolboxes/readme
   - personal_workplace/toolboxes/secrets
+  - personal_workplace/toolboxes/standard_project
 
 nixpkgs:
   permitted_unfree_packages:
     - bws
-

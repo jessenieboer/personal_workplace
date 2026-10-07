@@ -5,4 +5,5 @@ devenv.local.yaml
 .dir-locals.el
 .envrc
 .pre-commit-config.yaml
+.toolboxes/emacs_toolbox
 .toolboxes/managed_project_toolbox

@@ -3,10 +3,10 @@ let
   gitignore = ./settings/.gitignore;
   dirLocalsTemplate = ./templates/dir-locals.el.in;
   templatesRoot = ./templates;
-  toolboxDir = "${config.devenv.root}/.toolboxes/managed_project_toolbox";
+  toolboxDir = "${config.devenv.root}/.toolboxes/standard_project_toolbox";
   templateDest = "${toolboxDir}/templates";
   gitignoreDest = "${toolboxDir}/.gitignore";
-  dirLocalsDest = "${toolboxDir}/managed_project_toolbox_dir_locals";
+  dirLocalsDest = "${toolboxDir}/standard_project_toolbox_dir_locals";
 
   templateDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir templatesRoot);
   templateNames = builtins.attrNames templateDirs;
@@ -15,13 +15,13 @@ in
   config = {
     enterShell = ''
       if [ -t 1 ]; then
-        echo "managed project toolbox available"
+        echo "standard project toolbox available"
       fi
     '';
 
     tasks = {
-      "managed_project_toolbox:copy_gitignore" = {
-        description = "Refresh the managed_project_toolbox gitignore fragment from the toolbox";
+      "standard_project_toolbox:copy_gitignore" = {
+        description = "Refresh the standard_project_toolbox gitignore fragment from the toolbox";
         before = [ "devenv:enterShell" ];
         status = ''
           [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
@@ -31,12 +31,12 @@ in
         '';
       };
 
-      "managed_project_toolbox:generate_dir_locals" = {
-        description = "Render managed_project_toolbox_dir_locals from the template";
+      "standard_project_toolbox:generate_dir_locals" = {
+        description = "Render standard_project_toolbox_dir_locals from the template";
         before = [ "devenv:enterShell" ];
         status = ''
           tmp=$(mktemp)
-          sed -e 's|@MANAGED_PROJECT_DIRECTORY@|${config.devenv.root}|g' ${dirLocalsTemplate} > "$tmp"
+          sed -e 's|@STANDARD_PROJECT_DIRECTORY@|${config.devenv.root}|g' ${dirLocalsTemplate} > "$tmp"
           if [ -f "${dirLocalsDest}" ] && cmp -s "$tmp" "${dirLocalsDest}"; then
             rm -f  "$tmp"
             exit 0
@@ -46,12 +46,12 @@ in
         '';
         exec = ''
           mkdir -p "${toolboxDir}"
-          sed -e 's|@MANAGED_PROJECT_DIRECTORY@|${config.devenv.root}|g' ${dirLocalsTemplate} > "${dirLocalsDest}"
+          sed -e 's|@STANDARD_PROJECT_DIRECTORY@|${config.devenv.root}|g' ${dirLocalsTemplate} > "${dirLocalsDest}"
         '';
       };
 
-      "managed_project_toolbox:copy_templates" = {
-        description = "Refresh each templates/ subdirectory under .toolboxes/managed_project_toolbox/templates when source changes";
+      "standard_project_toolbox:copy_templates" = {
+        description = "Refresh each templates/ subdirectory under .toolboxes/standard_project_toolbox/templates when source changes";
         before = [ "devenv:enterShell" ];
         status = ''
           ${lib.concatMapStringsSep "\n" (name: let
