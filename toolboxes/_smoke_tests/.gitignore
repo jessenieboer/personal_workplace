@@ -22,13 +22,13 @@ emacs/.gitignore
 git/.gitignore
 html/.gitignore
 javascript/.gitignore
-managed_project/.gitignore
 project_management/.gitignore
 python/.gitignore
 racket/.gitignore
 readme/.gitignore
 rust/.gitignore
 secrets/.gitignore
+standard_project/.gitignore
 voxtype/.gitignore
 
 # language / template seeds

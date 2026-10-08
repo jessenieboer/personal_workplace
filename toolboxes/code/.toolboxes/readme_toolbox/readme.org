@@ -24,7 +24,7 @@ uses ai toolbox
       url: github:bastani-inc/atomic
     personal_workplace:
       flake: false
-      url: github:jessenieboer/personal_workplace/master
+      url: github:jessenieboer/personal_workplace/jn
 
   imports:
     - personal_workplace/toolboxes/code

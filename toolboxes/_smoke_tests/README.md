@@ -88,13 +88,13 @@ PATH/tools/templates can pass without XAI.
 | `git/` | `/toolboxes/git` | merged root `.gitignore` present |
 | `html/` | `/toolboxes/html` | html/css LS + prettier; `index.html` |
 | `javascript/` | `/toolboxes/javascript` | node/npm/tsc; `package.json` |
-| `managed_project/` | `/toolboxes/managed_project` | journal capture dir-locals fragment rendered and merged into `.dir-locals.el` |
 | `project_management/` | `/toolboxes/project_management` | requires local `project_name`; dir-locals fragment |
 | `python/` | `/toolboxes/python` | python/uv/ruff/ty; `pyproject.toml` |
 | `racket/` | `/toolboxes/racket` | racket/raco on PATH |
 | `readme/` | `/toolboxes/readme` | readme.org template under `.toolboxes/` |
 | `rust/` | `/toolboxes/rust` | rustc/cargo; `Cargo.toml` |
 | `secrets/` | `/toolboxes/secrets` | `bws` + `secretspec` on PATH; secretspec.toml seeded |
+| `standard_project/` | `/toolboxes/standard_project` | journal capture dir-locals fragment rendered (placeholder filled) and merged into `.dir-locals.el`; every template copied and in sync with source |
 | `voxtype/` | `/toolboxes/voxtype` | enterShell succeeds |
 
 ## Not smoke-tested here

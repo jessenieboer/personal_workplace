@@ -1,0 +1,4 @@
+# Smoke consumer for the standard_project toolbox.
+# Import only the toolbox under test; its devenv.yaml pulls the rest.
+imports:
+  - /toolboxes/standard_project

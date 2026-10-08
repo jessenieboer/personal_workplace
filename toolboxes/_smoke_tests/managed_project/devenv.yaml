@@ -1,4 +1,0 @@
-# Smoke consumer for the managed_project toolbox.
-# Import only the toolbox under test; its devenv.yaml pulls the rest.
-imports:
-  - /toolboxes/managed_project

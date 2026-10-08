@@ -6,4 +6,4 @@ devenv.local.yaml
 .envrc
 .pre-commit-config.yaml
 .toolboxes/emacs_toolbox
-.toolboxes/managed_project_toolbox
+.toolboxes/standard_project_toolbox

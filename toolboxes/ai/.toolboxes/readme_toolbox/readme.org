@@ -24,7 +24,7 @@ Tools, settings, templates and instructions for using AI
       url: github:NeoLabHQ/context-engineering-kit
     personal_workplace:
       flake: false
-      url: github:jessenieboer/personal_workplace/master
+      url: github:jessenieboer/personal_workplace/jn
 
   imports:
     - personal_workplace/toolboxes/ai

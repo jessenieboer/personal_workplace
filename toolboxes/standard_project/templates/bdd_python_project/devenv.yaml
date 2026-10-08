@@ -20,7 +20,7 @@ inputs:
         follows: nixpkgs
   personal_workplace:
     flake: false
-    url: github:jessenieboer/personal_workplace/master
+    url: github:jessenieboer/personal_workplace/jn
   trailofbits-skills:
     flake: false
     url: github:trailofbits/skills
