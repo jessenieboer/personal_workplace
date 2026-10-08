@@ -1,4 +1,4 @@
-{ inputs, pkgs, voxtype-toggle, ... }:
+{ inputs, pkgs, ... }:
 let
   voxtypeProjectCorrect = pkgs.writeShellApplication {
     name = "voxtype-project-correct";
@@ -92,6 +92,23 @@ in
   };
 
   xdg.dataFile."plasma/plasmoids/org.eversole.voxtype-toggle" = {
-    source = "${voxtype-toggle.packages.${pkgs.stdenv.hostPlatform.system}.plasmaAppletVoxtypeToggle}/share/plasma/plasmoids/org.eversole.voxtype-toggle";
+    source = ./voxtype-toggle-plasmoid; # vendored, upstream repo is gone; see VENDORED.md
+  };
+
+  # Plasma bits that only make sense where voxtype runs (nucbox: it needs the GPU).
+  personal_workplace.plasma.panel.extraWidgets = [ "org.eversole.voxtype-toggle" ];
+
+  programs.plasma = {
+    hotkeys.commands."voxtype-toggle" = {
+      name = "Voxtype Toggle";
+      key = "F2";
+      command = "voxtype-record-with-project-prompt";
+    };
+
+    shortcutSchemes.dolphin.Custom = {
+      "rename_file" = [ ]; # disable F2 so i can use it for voice toggle
+      # Some versions use this name instead:
+      # "edit_rename" = [ ];
+    };
   };
 }

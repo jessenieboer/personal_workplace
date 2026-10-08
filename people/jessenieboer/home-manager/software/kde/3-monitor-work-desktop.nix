@@ -1,14 +1,26 @@
 # todo: plasma manager + window rules don't work great together yet
 # use qdbus org.kde.KWin /KWin org.kde.KWin.queryWindowInfo to see window classes
-{ inputs, pkgs, ... }: {
+{ config, inputs, pkgs, ... }:
+let
+  screens = config.personal_workplace.plasma.screens;
+in
+{
+
+  # Plasma screen indices for the nucbox desk (see 3-monitor-work-desktop.sh):
+  # left = DP-1, center = DP-2 (primary; gets the top panel), right = HDMI-A-1
+  personal_workplace.plasma.screens = {
+    left = 1;
+    center = 2;
+    right = 0;
+  };
 
   programs = {
     plasma = {
       window-rules = [
-        # screen on left (1)
+        # left screen
         {
           apply = {
-            screen = { apply = "force"; value = 1; };
+            screen = { apply = "force"; value = screens.left; };
           };
           description = "brave: left";
           match = {
@@ -22,7 +34,7 @@
 
         {
           apply = {
-            screen = { apply = "force"; value = 1; };
+            screen = { apply = "force"; value = screens.left; };
           };
           description = "grok-bot";
           match = {
@@ -36,7 +48,7 @@
 
         # {
         #   apply = {
-        #     screen = { apply = "force"; value = 1; };
+        #     screen = { apply = "force"; value = screens.left; };
         #   };
         #   description = "konsole: left";
         #   match = {
@@ -50,7 +62,7 @@
 
         {
           apply = {
-            screen = { apply = "force"; value = 1; };
+            screen = { apply = "force"; value = screens.left; };
           };
           description = "dolphin: left";
           match = {
@@ -64,7 +76,7 @@
 
         {
           apply = {
-            screen = { apply = "force"; value = 1; };
+            screen = { apply = "force"; value = screens.left; };
           };
           description = "emacs: left";
           match = {
@@ -77,10 +89,10 @@
           };
         }
 
-        # screen in center (2)
+        # center screen
         {
           apply = {
-            screen = { apply = "force"; value = 2; };
+            screen = { apply = "force"; value = screens.center; };
           };
           description = "emacs: center";
           match = {
@@ -95,7 +107,7 @@
 
         {
           apply = {
-            screen = { apply = "force"; value = 2; };
+            screen = { apply = "force"; value = screens.center; };
           };
           description = "konsole: center";
           match = {
@@ -107,10 +119,10 @@
           };
         }
 
-        # screen on right (0)
+        # right screen
         {
           apply = {
-            screen = { apply = "force"; value = 0; };
+            screen = { apply = "force"; value = screens.right; };
           };
           description = "emacs: right";
           match = {
@@ -124,7 +136,7 @@
         }
         {
           apply = {
-            screen = { apply = "force"; value = 0; };
+            screen = { apply = "force"; value = screens.right; };
           };
           description = "firefox-devedition: right";
           match = {

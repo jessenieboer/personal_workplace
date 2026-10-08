@@ -1,0 +1,10 @@
+{
+  "name": "Budget Helper",
+  "title": "",
+  "description": "You help with the household budget on YNAB.",
+  "avatarShape": "",
+  "avatarColor": "",
+  "settings": {
+    "notifyOnAgentUpdates": true
+  }
+}

@@ -26,10 +26,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:peteonrails/voxtype/v1.0.0-rc4";
     };
-    voxtype-toggle = {
-      url = "git+https://git.eversole.co/James/voxtype-toggle-plasmashell.git";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -64,6 +60,7 @@
           ./software/emacs/emacs.nix
           ./software/firefox/firefox.nix
           ./software/grok-bot/grok-bot.nix
+          ./software/kde/1-monitor-desktop.nix
           ./software/kde/plasma.nix
           ./software/kde/programs.nix
           ./software/maestral/maestral.nix
@@ -74,7 +71,7 @@
           inherit unstable;
         }; 
       };
-      # todo: add options to switch monitor configurations
+      # monitor layout: laptop imports 1-monitor-desktop.nix, nucbox 3-monitor-work-desktop.nix
       homeConfigurations."jessenieboer@nucbox" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
@@ -96,8 +93,6 @@
         extraSpecialArgs = {
           inherit inputs;
           inherit unstable;
-          inherit (inputs) voxtype-toggle;   # or just pass the whole inputs
-          system = "x86_64-linux";
         }; 
       };
     };

@@ -175,8 +175,7 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "plasma-manager": "plasma-manager",
-        "voxtype": "voxtype",
-        "voxtype-toggle": "voxtype-toggle"
+        "voxtype": "voxtype"
       }
     },
     "systems": {
@@ -214,26 +213,6 @@
         "ref": "v1.0.0-rc4",
         "repo": "voxtype",
         "type": "github"
-      }
-    },
-    "voxtype-toggle": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1777491719,
-        "narHash": "sha256-+nvMfIYASXw7s+lSTS9LNixmPh8pRLmmpN1ox5SP/nY=",
-        "ref": "refs/heads/master",
-        "rev": "cda2a43a880ce724598959a49b7ec6be54b8d81b",
-        "revCount": 1,
-        "type": "git",
-        "url": "https://git.eversole.co/James/voxtype-toggle-plasmashell.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.eversole.co/James/voxtype-toggle-plasmashell.git"
       }
     }
   },

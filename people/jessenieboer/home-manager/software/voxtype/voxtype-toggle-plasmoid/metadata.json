@@ -1,0 +1,25 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Name": "Voxtype Toggle",
+        "Name[en]": "Voxtype Toggle",
+        "Description": "Toggle voxtype voice typing on/off",
+        "Description[en]": "Toggle voxtype voice typing on/off",
+        "Id": "org.eversole.voxtype-toggle",
+        "Icon": "accessories-voice",
+        "Name[en_US]": "Voxtype Toggle For plasmashell",
+        "Version": "1.0.0",
+        "License": "ISC",
+        "Category": "System Information",
+        "Authors": [
+            {
+                "Name": "James Eversole",
+                "Email": "james@eversole.co"
+            }
+        ],
+        "Website": "https://git.eversole.co/James/voxtype-toggle-plasmashell"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-Required-Data-Engines": "executable",
+    "X-Plasma-MainFile": "main.qml"
+}

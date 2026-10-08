@@ -1,12 +1,69 @@
-{ inputs, pkgs, ... }: {
+{ config, inputs, lib, pkgs, ... }:
+let
+  panelCfg = config.personal_workplace.plasma.panel;
+  screens = config.personal_workplace.plasma.screens;
+
+  # Keys for moving focus / the active window to the monitor at each position.
+  # They bind to KWin's "Switch to Screen N" / "Window to Screen N" actions, with
+  # N taken from personal_workplace.plasma.screens, so the keys follow the layout.
+  screenKeys = {
+    left   = { switch = "Meta+F7"; window = "Meta+Ctrl+F7"; };
+    center = { switch = "Meta+H";  window = "Meta+Ctrl+H"; };
+    right  = { switch = "Meta+O";  window = "Meta+Ctrl+O"; };
+  };
+  # When positions share a screen (1 monitor), all their keys go to that one
+  # action, center first; screens 0-2 that no position uses are left unbound.
+  screenPositions = [ "center" "left" "right" ];
+  screenIndices = lib.unique ([ 0 1 2 ] ++ map (p: screens.${p}) screenPositions);
+  keysForScreen = kind: idx:
+    lib.unique (map (p: screenKeys.${p}.${kind})
+      (builtins.filter (p: screens.${p} == idx) screenPositions));
+  screenShortcuts = lib.listToAttrs (lib.concatMap (idx: [
+    { name = "Switch to Screen ${toString idx}"; value = keysForScreen "switch" idx; }
+    { name = "Window to Screen ${toString idx}"; value = keysForScreen "window" idx; }
+  ]) screenIndices);
+in
+{
 
   # todo: task switcher options for kwin; mouse follows focus?
 
-  home.packages = [ pkgs.libnotify ];
+  config.home.packages = [ pkgs.libnotify ];
 
   imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
+  # Machine/feature modules tweak the shared layout through these.
+  # Monitor layout modules (1-monitor-desktop.nix, 3-monitor-work-desktop.nix)
+  # set the screens; the panel and window rules read them.
+  options.personal_workplace.plasma = {
+    screens = {
+      center = lib.mkOption {
+        type = lib.types.ints.unsigned;
+        default = 0;
+        description = "Plasma screen index of the center (main) monitor. The top panel goes here.";
+      };
+      left = lib.mkOption {
+        type = lib.types.ints.unsigned;
+        default = config.personal_workplace.plasma.screens.center;
+        defaultText = lib.literalExpression "config.personal_workplace.plasma.screens.center";
+        description = "Plasma screen index of the left monitor (same as center on a single-screen machine).";
+      };
+      right = lib.mkOption {
+        type = lib.types.ints.unsigned;
+        default = config.personal_workplace.plasma.screens.center;
+        defaultText = lib.literalExpression "config.personal_workplace.plasma.screens.center";
+        description = "Plasma screen index of the right monitor (same as center on a single-screen machine).";
+      };
+    };
 
-  programs = {
+    # (lists can't be patched across modules, so the panel is built from this)
+    panel.extraWidgets = lib.mkOption {
+      type = lib.types.listOf lib.types.anything;
+      default = [ ];
+      description = "Widgets inserted after the panel spacer, before the system tray (e.g. the voxtype toggle from voxtype.nix).";
+    };
+  };
+
+
+  config.programs = {
     plasma = {
       configFile = {
         "kwinrc" = {
@@ -34,11 +91,6 @@
           name = "Reload KWin Window Rules";
           key = "Meta+Z";
           command = "qdbus org.kde.KWin /KWin reconfigure";
-        };
-        "voxtype-toggle" = {
-          name = "Voxtype Toggle";
-          key = "F2";
-          command = "voxtype-record-with-project-prompt";
         };
       };
 
@@ -69,11 +121,11 @@
           height = 32;
           floating = false;
           location = "top";
-          screen = 2;
+          screen = screens.center;
 
           widgets = [
             "org.kde.plasma.panelspacer"
-            "org.eversole.voxtype-toggle"
+          ] ++ panelCfg.extraWidgets ++ [
             {
               systemTray = {
                 icons = {
@@ -153,9 +205,6 @@
           "Switch to Next Screen"                 = [];
           "Switch to Previous Desktop"            = [];
           "Switch to Previous Screen"             = [];
-          "Switch to Screen 0"                    = ["Meta+O"];
-          "Switch to Screen 1"                    = ["Meta+F7"];
-          "Switch to Screen 2"                    = ["Meta+H"];
           "Switch to Screen to the Left"          = [];
           "Switch to Screen to the Right"         = [];
           "Switch Window Down"                    = ["Meta+E"];
@@ -172,14 +221,11 @@
           "Window No Border"                      = ["Meta+B"]; # less annoying than fullscreen
           "Window One Screen to the Left"         = ["Meta+Ctrl+Tab"];
           "Window One Screen to the Right"        = ["Meta+Ctrl+P"];
-          "Window to Screen 0"                    = ["Meta+Ctrl+O"];
-          "Window to Screen 1"                    = ["Meta+Ctrl+F7"];
-          "Window to Screen 2"                    = ["Meta+Ctrl+H"];
           "Window Quick Tile Bottom"              = ["Meta+Ctrl+E"];
           "Window Quick Tile Left"                = ["Meta+Ctrl+S"];
           "Window Quick Tile Right"               = ["Meta+Ctrl+N"];
           "Window Quick Tile Top"                 = ["Meta+Ctrl+I"];
-        };
+        } // screenShortcuts; # + "Switch/Window to Screen N", built from personal_workplace.plasma.screens (see let)
 
         org_kde_powerdevil = {
           "Sleep" = ["Meta+Ctrl+D"];
@@ -190,13 +236,6 @@
           # };
       };
 
-      shortcutSchemes = {
-        dolphin.Custom = {
-          "rename_file" = [ ]; # disable F2 so i can use it for voice toggle
-          # Some versions use this name instead:
-          # "edit_rename" = [ ];
-        };
-      };
 
       #windows.allowWindowsToRememberPositions = true;
 
