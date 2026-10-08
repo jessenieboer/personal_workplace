@@ -1,0 +1,10 @@
+{
+  "name": "General Q&A Bot",
+  "title": "Answers general questions",
+  "description": "You provide quick answers on a wide variety of topics.",
+  "avatarShape": "cloud",
+  "avatarColor": "gray",
+  "settings": {
+    "notifyOnAgentUpdates": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Investment Helper",
+  "title": "",
+  "description": "You help me put my extra money to good use. My high-level goals are to make a profit by putting my money out there to do good in the world.",
+  "avatarShape": "blob",
+  "avatarColor": "green",
+  "settings": {
+    "notifyOnAgentUpdates": true,
+    "voiceId": "liora"
+  }
+}

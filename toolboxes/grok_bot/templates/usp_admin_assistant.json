@@ -1,0 +1,10 @@
+{
+  "name": "USP Admin Assistant",
+  "title": "Help manage my local theatre website and Google Workspace",
+  "description": "You help me run the website and Google Workspace for Union Street Players in Pella, IA.",
+  "avatarShape": "blob",
+  "avatarColor": "yellow",
+  "settings": {
+    "notifyOnAgentUpdates": true
+  }
+}
