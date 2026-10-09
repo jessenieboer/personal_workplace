@@ -40,9 +40,6 @@ imports:
 
 ```nix
 { pkgs, lib, config, inputs, ... }:
-let
-  pmDir = "/.toolboxes/project_management_toolbox";
-in
 {
   enterShell = ''
     echo "managing ${config.project_management_toolbox.project_name}"
@@ -52,8 +49,8 @@ in
     project_name = "my_project_name";
     project_benefit = "The benefit this project aims at";
     subproject_agenda_files = [
-      "${config.devenv.root}/sub1/${pmDir}/sub1.org"
-      "${config.devenv.root}/sub2/${pmDir}/sub2.org"
+      "${config.devenv.root}/sub1/sub1.org"
+      "${config.devenv.root}/sub2/sub2.org"
     ];
     workers = [
       { name = "myname"; email = "myemail@email.com"; } # 

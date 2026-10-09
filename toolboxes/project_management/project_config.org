@@ -22,7 +22,7 @@
     					<<calendar_view>>
     					<<past_items_view>>
     					))
-      	 (org-agenda-files . ("@PROJECT_MANAGEMENT_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
+      	 (org-agenda-files . ("@ORG_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
       	 (org-archive-location . "%s_archive::")
       	 (org-archive-mark-done . t)
       	 (org-capture-templates . (("s" "Task" entry
@@ -61,7 +61,7 @@
       				   ("o" "Idea" item
       				    (file+headline "@PROJECT_NAME@.org" "Ideas")
       				    <<item_capture_template>> :immediate-finish t)))
-    	 (org-directory . "@PROJECT_MANAGEMENT_DIRECTORY@/")
+    	 (org-directory . "@ORG_DIRECTORY@/")
       	 ;; (org-priority-highest . 2)
       	 ;; (org-priority-default . 2)
       	 ;; (org-priority-lowest . 2)

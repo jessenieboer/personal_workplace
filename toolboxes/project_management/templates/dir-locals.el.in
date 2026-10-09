@@ -15,7 +15,7 @@
   					("e" "Calendar" agenda "*" ((org-agenda-include-deadlines t) (org-agenda-overriding-header "What's on the calendar?") (org-agenda-prefix-format '((agenda . "%?-t "))) (org-agenda-skip-function 'pmt-skip-top-level-headlines) (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled) (org-agenda-skip-scheduled-if-deadline-is-shown t) (org-agenda-sorting-strategy '((tags deadline-up))) (org-agenda-span 'week) (org-agenda-todo-keyword-format "%-7s") (org-agenda-use-time-grid nil) (org-deadline-warning-days 1)))
   					("c" "Past items" tags "TODO=\"past\"" ((org-agenda-overriding-header "What have we done?") (org-agenda-skip-function 'pmt-skip-top-level-headlines) (org-agenda-skip-function-global nil) (org-agenda-sorting-strategy '((tags category-up))) (org-agenda-view-columns-initially t) (org-overriding-columns-format "%7TODO(Status) %40ITEM(Task) %15CATEGORY(Project)")))
   					))
-    	 (org-agenda-files . ("@PROJECT_MANAGEMENT_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
+    	 (org-agenda-files . ("@ORG_DIRECTORY@/@PROJECT_NAME@.org" @SUBPROJECT_AGENDA_FILES@))
     	 (org-archive-location . "%s_archive::")
     	 (org-archive-mark-done . t)
     	 (org-capture-templates . (("s" "Task" entry
@@ -54,7 +54,7 @@
     				   ("o" "Idea" item
     				    (file+headline "@PROJECT_NAME@.org" "Ideas")
     				    "%^{Title}\n" :immediate-finish t)))
-  	 (org-directory . "@PROJECT_MANAGEMENT_DIRECTORY@/")
+  	 (org-directory . "@ORG_DIRECTORY@/")
     	 ;; (org-priority-highest . 2)
     	 ;; (org-priority-default . 2)
     	 ;; (org-priority-lowest . 2)

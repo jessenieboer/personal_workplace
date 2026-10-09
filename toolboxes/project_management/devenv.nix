@@ -2,6 +2,10 @@
 let
   dirLocalsTemplate = ./templates/dir-locals.el.in;
   dirLocalsDest = "${pmDir}/project_management_toolbox_dir_locals";
+  # Org files (<project>.org, its _archive) live at the project root so
+  # Dropbox/beorg can see them. Only the generated dir-locals fragment
+  # stays under .toolboxes/project_management_toolbox.
+  orgDir = config.devenv.root;
   pmDir = "${config.devenv.root}/.toolboxes/project_management_toolbox";
   subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management_toolbox.subproject_agenda_files;
   workerList = lib.concatMapStringsSep " " (w: w.name) config.project_management_toolbox.workers;
@@ -29,7 +33,7 @@ in
         status = ''
           tmp=$(mktemp)
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
-          -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${pmDir}|g' \
+          -e 's|@ORG_DIRECTORY@|${orgDir}|g' \
           -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
           -e 's|@WORKER_LIST@|${workerList}|g' \
           ${dirLocalsTemplate} > "$tmp"
@@ -43,7 +47,7 @@ in
         exec = ''
           mkdir -p "$(dirname "${dirLocalsDest}")"
           sed -e 's|@PROJECT_NAME@|${config.project_management_toolbox.project_name}|g' \
-          -e 's|@PROJECT_MANAGEMENT_DIRECTORY@|${pmDir}|g' \
+          -e 's|@ORG_DIRECTORY@|${orgDir}|g' \
           -e 's|@SUBPROJECT_AGENDA_FILES@|${subprojectAgendaFiles}|g' \
           -e 's|@WORKER_LIST@|${workerList}|g' \
           ${dirLocalsTemplate} > "${dirLocalsDest}"
