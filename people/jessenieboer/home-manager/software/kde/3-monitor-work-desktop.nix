@@ -36,34 +36,6 @@ in
           apply = {
             screen = { apply = "force"; value = screens.left; };
           };
-          description = "grok-bot";
-          match = {
-            window-class = {
-              match-whole = false;
-              type = "exact";
-              value = "grok-bot";
-            };
-          };
-        }
-
-        # {
-        #   apply = {
-        #     screen = { apply = "force"; value = screens.left; };
-        #   };
-        #   description = "konsole: left";
-        #   match = {
-        #     window-class = {
-        #       match-whole = false;
-        #       type = "exact";
-        #       value = "org.kde.konsole";
-        #     };
-        #   };
-        # }
-
-        {
-          apply = {
-            screen = { apply = "force"; value = screens.left; };
-          };
           description = "dolphin: left";
           match = {
             window-class = {
@@ -144,6 +116,19 @@ in
               match-whole = false;
               type = "exact";
               value = "firefox-devedition";
+            };
+          };
+        }
+        {
+          apply = {
+            screen = { apply = "force"; value = screens.right; };
+          };
+          description = "grok-bot";
+          match = {
+            window-class = {
+              match-whole = false;
+              type = "exact";
+              value = "grok-bot";
             };
           };
         }

@@ -63,6 +63,7 @@
           ./software/kde/1-monitor-desktop.nix
           ./software/kde/plasma.nix
           ./software/kde/programs.nix
+          ./software/libreoffice/libreoffice.nix
           ./software/maestral/maestral.nix
           ./software/opencode/opencode.nix
         ];
@@ -86,6 +87,7 @@
           ./software/kde/3-monitor-work-desktop.nix
           ./software/kde/plasma.nix
           ./software/kde/programs.nix
+          ./software/libreoffice/libreoffice.nix
           ./software/maestral/maestral.nix
           ./software/opencode/opencode.nix
           ./software/voxtype/voxtype.nix

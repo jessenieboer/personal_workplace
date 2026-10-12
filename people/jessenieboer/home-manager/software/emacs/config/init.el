@@ -59,6 +59,7 @@
   		  dired-mode
   		  dirvish-directory-view-mode
   		  dirvish-special-preview-mode
+  		  doc-view-mode
 		  eat-mode
 		  eca-chat-mode
 		  eca-settings-mode
@@ -108,6 +109,7 @@
 (setq alt-nav-modes  '(calendar-mode
 		       dired-mode
   		       dirvish-directory-view-mode
+  		       doc-view-mode
 		       eat-mode
                        ediff-mode
                        forge-pullreq-mode
@@ -1176,6 +1178,78 @@ Returns the value as string or nil if not found / error."
              )
   		  "Completion"
   		  ()))
+
+(require 'doc-view)
+
+(my-add-to-hydra 'doc-view-mode
+  		 ("Connection"
+  		  ()
+  		  "Navigation"
+  		  (("SPC" doc-view-scroll-down-or-previous-page "scroll up")
+  		   ("e" doc-view-scroll-up-or-next-page "scroll down")
+  		   ("r" doc-view-search "search")
+                 ("g" doc-view-previous-page "prev page")
+  		   ("n" doc-view-next-page "next page")
+  		   ("l" doc-view-first-page "first page")
+  		   ("c" doc-view-last-page "last page"))
+  		  "Display"
+  		  (("t" doc-view-shrink "zoom out")
+  		   ("s" doc-view-enlarge "zoom in")
+		   ("ip" doc-view-fit-page-to-window "fit page"))
+  		  "Doc View"
+  		  ()))
+
+(require 'dired)
+  (require 'org)
+
+  (defvar my-docx-pandoc-program "pandoc"
+    "Pandoc executable used to show .docx files as org.")
+
+  (defvar-local my-docx-source-file nil
+    "The .docx file shown in this converted org buffer.")
+
+  (defun my-docx--convert (file)
+    "Fill the current buffer with FILE converted to org by pandoc, read-only.
+Images go to a temp dir so inline links work. `revert-buffer' reconverts."
+    (let ((pandoc (or (executable-find my-docx-pandoc-program)
+                      (user-error "pandoc not found on PATH")))
+          (media (make-temp-file "docx-media-" t))
+          (file (expand-file-name file))
+          (inhibit-read-only t))
+      (erase-buffer)
+      (set-buffer-multibyte t)
+      (let* ((coding-system-for-read 'utf-8)
+             (status (call-process pandoc nil t nil
+                                   "-f" "docx" "-t" "org" "--wrap=preserve"
+                                   (concat "--extract-media=" media) file)))
+        (unless (eq status 0)
+          (goto-char (point-min))
+          (insert (format "# pandoc exited with %s converting %s\n\n" status file))))
+      (org-mode)
+      (setq my-docx-source-file file
+            default-directory (file-name-directory file)
+            revert-buffer-function
+            (lambda (&rest _) (my-docx--convert my-docx-source-file)))
+      (set-buffer-modified-p nil)
+      (setq buffer-read-only t)
+      (goto-char (point-min))
+      (when (display-graphic-p)
+        (ignore-errors
+          (if (fboundp (quote org-link-preview-region)) ; org 9.8+
+              (org-link-preview-region t t (point-min) (point-max))
+            (with-no-warnings (org-display-inline-images)))))))
+
+  (defun my-docx-view-as-org (file)
+    "Show FILE (.docx) converted to org in a read-only buffer.
+In dired, uses the file at point."
+    (interactive
+     (list (if (derived-mode-p 'dired-mode)
+               (dired-get-file-for-visit)
+             (read-file-name "docx file: " nil nil t))))
+    (let ((buf (get-buffer-create
+                (concat (file-name-nondirectory file) " (org)"))))
+      (with-current-buffer buf (my-docx--convert file))
+      (pop-to-buffer-same-window buf)))
 
 (require 'eat)
 (setq eat-enable-auto-line-mode nil

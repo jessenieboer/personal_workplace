@@ -3,6 +3,8 @@
   home = {
     packages = with pkgs; [
       nerd-fonts.hack
+      mupdf # mutool: DocView renders PDF pages (.docx via soffice)
+      pandoc # my-docx-view-as-org
       source-code-pro
     ];
     sessionVariables = {
