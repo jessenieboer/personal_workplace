@@ -1,9 +1,0 @@
-.devenv
-devenv.local.nix
-devenv.local.yaml
-.direnv
-.dir-locals.el
-.envrc
-.pre-commit-config.yaml
-.toolboxes/ai_toolbox
-.toolboxes/emacs_toolbox

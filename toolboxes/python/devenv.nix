@@ -2,7 +2,7 @@
 let
   gitignore = ./settings/.gitignore;
   pyprojectTemplate = ./templates/pyproject.toml;
-  skillGuide = ./settings/skills/python-skill-guide/SKILL.md;
+  skillGuide = ./practices/skills/python-skill-guide/SKILL.md;
 
   modernPython = "${inputs.trailofbits-skills}/plugins/modern-python/skills/modern-python";
 

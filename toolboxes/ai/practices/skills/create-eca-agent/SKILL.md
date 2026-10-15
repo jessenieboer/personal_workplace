@@ -13,7 +13,7 @@ Checked against ECA 0.161.1. Do not invent a stricter schema.
 
 ## Land
 
-ECA scans `.eca/agents/*.md` and `~/.config/eca/agents/*.md` only. Not `settings/agents/`.
+ECA scans `.eca/agents/*.md` and `~/.config/eca/agents/*.md` only. Not `practices/agents/`.
 
 Named path wins when it is one of those two. Else write the source a copy task installs, and make that task name this file. One hardcoded install does not install the next. No copy task: write `.eca/agents/<id>.md`. Gitignored `.eca/` is still loaded.
 
@@ -61,7 +61,7 @@ Body: when to act, when not to, process, output, stop. Short. One example. Do no
 | "ECA coerces a Claude tool list" | Coercion is allow-with-ask. Ship the map. |
 | "`color` is ignored" | Do not emit Claude Code keys. |
 | "`primary` is enough" | Primary-only is not spawnable. |
-| "settings/agents is source, so ECA loads it" | ECA does not scan that path. |
+| "practices/agents is source, so ECA loads it" | ECA does not scan that path. |
 | "The copy task will pick it up" | A one-file install will not install the next. |
 | "Omit mode; default is fine" | Default is both. Say `subagent` unless it is also a chat persona. |
 | "Task is how agents spawn" | `eca__spawn_agent`. No nesting. |
@@ -69,4 +69,4 @@ Body: when to act, when not to, process, output, stop. Short. One example. Do no
 
 ## Red flags -- rewrite
 
-`mode: primary` only. `model: inherit` or `sonnet`. `tools:` as a string or Claude names. `name` not the filename stem. File only under `settings/agents/` with no copy. Body says `Task` or "spawn a subagent". `<example>` in frontmatter.
+`mode: primary` only. `model: inherit` or `sonnet`. `tools:` as a string or Claude names. `name` not the filename stem. File only under `practices/agents/` with no copy. Body says `Task` or "spawn a subagent". `<example>` in frontmatter.

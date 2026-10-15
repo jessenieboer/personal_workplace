@@ -1,8 +1,8 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  builder = ./settings/agents/builder.md;
-  designer = ./settings/agents/designer.md;
-  planner = ./settings/agents/planner.md;
+  builder = ./practices/agents/builder.md;
+  designer = ./practices/agents/designer.md;
+  planner = ./practices/agents/planner.md;
 
   bddPaths = ./settings/rules/bdd-paths.md;
 
@@ -10,7 +10,7 @@ let
   dmContext = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/GLOSSARY-FORMAT.md";
   dmSkill = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling/SKILL.md";
 
-  gherkin = ./settings/skills/gherkin-authoring/SKILL.md;
+  gherkin = ./practices/skills/gherkin-authoring/SKILL.md;
 
   grSkill = "${inputs.mattpocock-skills}/skills/productivity/grilling/SKILL.md";
   grDocsSkill = "${inputs.mattpocock-skills}/skills/engineering/grill-with-docs/SKILL.md";

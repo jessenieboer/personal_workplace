@@ -1,9 +1,9 @@
 { config, inputs, lib, pkgs, ... }:
 let
-  aiInputEngineer = ./settings/agents/ai-input-engineer.md;
+  aiInputEngineer = ./practices/agents/ai-input-engineer.md;
   ecaConfig = ./settings/eca/config.json;
   gitignore = ./settings/.gitignore;
-  localSkills = ./settings/skills;
+  localSkills = ./practices/skills;
 
   cek = inputs.neolabhq-cek;
   cekLicense = "${cek}/LICENSE";

@@ -50,7 +50,7 @@ Use create-eca-agent instead of create-agent unless explicitly asked for a non-E
 
 ### Where to write
 
-Named or existing path wins. Otherwise always write under a `settings/` path. `.eca/` is generated. 
+Named or existing path wins. Otherwise always write under a `practices/` path. `.eca/` is generated. 
 
 ## Process
 
@@ -64,7 +64,7 @@ Named or existing path wins. Otherwise always write under a `settings/` path. `.
 
 ## When to trigger
 
-**Do:** "improve settings/agents/foo" -> Revision. Load the create-* skill, revise the source path.
+**Do:** "improve practices/agents/foo" -> Revision. Load the create-* skill, revise the source path.
 
 **Do not:** "add login to the app" -> product code.
 
@@ -80,7 +80,7 @@ Nested subagents unavailable: do not claim tests ran; hand scenarios up.
 
 ## What NOT to Do
 
-Do not implement product features. Do not write from memory of skills. Do not treat `.eca/` as source when `settings/` exists.
+Do not implement product features. Do not write from memory of skills. Do not treat `.eca/` as source when `practices/` exists.
 
 ## KEY REMINDERS
 

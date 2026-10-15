@@ -1,6 +1,6 @@
 { config, inputs, pkgs, ... }:
 let
-  explainer = ./settings/agents/code-explainer.md;
+  explainer = ./practices/agents/code-explainer.md;
   gitignore = ./settings/.gitignore;
   # opencodeConfig = ./settings/opencode/opencode.json;
 
