@@ -47,7 +47,8 @@ devenv applies `nixpkgs.permitted_unfree_packages` / `allow_unfree` on the
 for `bws`) does not reliably merge into a smoke consumer.
 
 Fixtures that import `secrets` directly or transitively (`ai`, `bdd`,
-`code`, `python`, `secrets`) therefore declare:
+`code`, `java`, `javascript`, `postgres`, `python`, `secrets`, `sql`)
+therefore declare:
 
 ```yaml
 nixpkgs:
@@ -67,7 +68,7 @@ That file is gitignored here.
 For full AI/skill behavior you typically need:
 
 - `TEST_SECRET` (secrets smoke / shared profile)
-- `XAI_API_KEY` (ai / python / bdd / code and anything that pulls ai)
+- `XAI_API_KEY` (ai / python / java / javascript / postgres / sql / bdd / code and anything that pulls ai)
 
 Provide them via secretspec + BWS the same way real projects do
 (`secretspec check`). Do **not** commit real secrets.
@@ -87,19 +88,21 @@ PATH/tools/templates can pass without XAI.
 | `emacs/` | `/toolboxes/emacs` | `.envrc` + `.dir-locals.el` seeded |
 | `git/` | `/toolboxes/git` | merged root `.gitignore` present |
 | `html/` | `/toolboxes/html` | html/css LS + prettier; `index.html` |
-| `javascript/` | `/toolboxes/javascript` | node/npm/tsc; `package.json` |
+| `java/` | `/toolboxes/java` | java/javac/mvn/jdtls/google-java-format/xmllint on PATH, JDK 21; `pom.xml` seeded and well-formed + java-skill-guide |
+| `javascript/` | `/toolboxes/javascript` | node/npm/tsc/ts-ls/prettier; `package.json` + JS skills seeded |
+| `postgres/` | `/toolboxes/postgres` | psql/pgcli 16 on PATH; `PGDATABASE=culab`; culab declared; server started with `devenv up -d`, `psql -d culab` answers, then stopped |
 | `project_management/` | `/toolboxes/project_management` | requires local `project_name`; dir-locals fragment |
 | `python/` | `/toolboxes/python` | python/uv/ruff/ty; `pyproject.toml` |
 | `racket/` | `/toolboxes/racket` | racket/raco on PATH |
 | `readme/` | `/toolboxes/readme` | readme.org template under `.toolboxes/` |
 | `rust/` | `/toolboxes/rust` | rustc/cargo; `Cargo.toml` |
 | `secrets/` | `/toolboxes/secrets` | `bws` + `secretspec` on PATH; secretspec.toml seeded |
+| `sql/` | `/toolboxes/sql` | psql/sqlfluff/postgres-language-server; `.sqlfluff` seeded and lints; postgres service off by default |
 | `standard_project/` | `/toolboxes/standard_project` | journal capture dir-locals fragment rendered (placeholder filled) and merged into `.dir-locals.el`; every template copied and in sync with source |
 | `voxtype/` | `/toolboxes/voxtype` | enterShell succeeds |
 
 ## Not smoke-tested here
 
-- **`old_ai`** — legacy predecessor of `ai`; left alone on purpose.
 - **`toolboxes/` root devenv** — aggregator / playground, not a toolbox module.
 - **`_smoke_tests` itself** — meta only; never import it as a toolbox.
 

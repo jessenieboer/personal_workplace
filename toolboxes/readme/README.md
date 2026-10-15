@@ -1,11 +1,11 @@
 <h1 align="center">Readme Toolbox</h1>
 
-<p align="center">Tools, settings, templates and practices for writing readmes</p>
+<p align="center">Tools, settings, templates and instructions for writing readmes</p>
 
 
 # What
 
-Write READMEs with a consistent, useful structure.
+Write Readmes with a consistent, useful structure.
 
 
 ## Features

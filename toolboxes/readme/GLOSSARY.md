@@ -1,26 +1,27 @@
 Terms used to describe glossaries themselves.
 
-<a id="context"></a>
+
+<a id="orge350c7c"></a>
 
 # context
 
-The conceptual boundary within which a [term](#term "A word or phrase with a specific meaning in some context.")'s meaning holds.
+The conceptual boundary within which a <abbr title="A word or phrase with a specific meaning in some context.">term</abbr>'s meaning holds.
 
-<a id="definition"></a>
+
+<a id="orgee77641"></a>
 
 # definition
 
-A statement of what a [term](#term "A word or phrase with a specific meaning in some context.") means.
-
-<a id="glossary"></a>
+A statement of what a <abbr title="A word or phrase with a specific meaning in some context.">term</abbr> means.
 
 
 # glossary
 
-A collection of [terms](#term "A word or phrase with a specific meaning in some context.") and their [definitions](#definition "A statement of what a term means.").
+A collection of <abbr title="A word or phrase with a specific meaning in some context.">terms</abbr> and their <abbr title="A statement of what a term means.">definitions</abbr>.
 
-<a id="term"></a>
+
+<a id="orgb05a12b"></a>
 
 # term
 
-A word or phrase with a specific meaning in some [context](#context "The conceptual boundary within which a term's meaning holds.").
+A word or phrase with a specific meaning in some <abbr title="The conceptual boundary within which a term's meaning holds.">context</abbr>.

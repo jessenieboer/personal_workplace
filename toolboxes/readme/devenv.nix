@@ -2,7 +2,7 @@
 let
   readmeTemplate = ./templates/readme.org;
   readmeDest = "${config.devenv.root}/.toolboxes/readme_toolbox/readme.org";
-  # Exporting glossary.org with ox-gfm (C-c C-e g g) writes GLOSSARY.md to the project root.
+  # Exporting glossary.org with ox-gfm writes GLOSSARY.md to the project root.
   glossaryTemplate = ./templates/glossary.org;
   glossaryDest = "${config.devenv.root}/.toolboxes/readme_toolbox/glossary.org";
 in

@@ -22,7 +22,15 @@ in
         if [ -d "${root}/.toolboxes" ]; then
           files=$(find "${root}/.toolboxes" -type f -name '*dir_locals' | sort)
           if [ -n "$files" ]; then
-            printf '%s\n' "$files" | xargs cat
+            # Emacs reads only the first form of .dir-locals.el, so splice
+            # every fragment's ((MODE . VARS) ...) into one list. Repeated
+            # MODE keys are fine: dir-locals applies every matching entry.
+            echo "("
+            for f in $files; do
+              sed -z 's/^[[:space:]]*(//; s/)[[:space:]]*$//' "$f"
+              echo
+            done
+            echo ")"
           fi
         fi
       } > "$tmp"

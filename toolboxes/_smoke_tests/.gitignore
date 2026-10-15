@@ -21,13 +21,16 @@ code/.gitignore
 emacs/.gitignore
 git/.gitignore
 html/.gitignore
+java/.gitignore
 javascript/.gitignore
+postgres/.gitignore
 project_management/.gitignore
 python/.gitignore
 racket/.gitignore
 readme/.gitignore
 rust/.gitignore
 secrets/.gitignore
+sql/.gitignore
 standard_project/.gitignore
 voxtype/.gitignore
 
@@ -41,6 +44,8 @@ voxtype/.gitignore
 **/Cargo.toml
 **/Cargo.lock
 **/target/
+**/pom.xml
+**/.sqlfluff
 **/.venv/
 **/__pycache__/
 **/*.py[cod]

@@ -1794,64 +1794,41 @@ In dired, uses the file at point."
         		       ("now" . (:foreground "lawn green" :weight bold))
         		       ("past" . (:foreground "dark olive green" :weight bold))))
 
-(require 'eldoc)
-(require 'org-id)
-
-(defun my-org-glossary-strip-links (text)
-  "Replace org links in TEXT with their descriptions (or targets)."
-  (replace-regexp-in-string
-   org-link-bracket-re
-   (lambda (m)
-     (or (match-string 2 m) (match-string 1 m)))
-   text t t))
-
 (defun my-org-glossary-body-at-point ()
   "Return the first definition paragraph of the entry at point.
-Links are reduced to their descriptions.
-Skips the drawer; stops at a blank line or an Example:/See also: line."
+Skips the drawer, stops at a blank, Example: or See also: line, and
+reduces links to their descriptions."
   (org-with-wide-buffer
    (org-back-to-heading t)
    (let ((end (save-excursion (outline-next-heading) (point))))
-     (forward-line 1)
-     (when (looking-at-p "^[ \t]*:PROPERTIES:")
-       (re-search-forward "^[ \t]*:END:[ \t]*$" end t)
-       (forward-line 1))
+     (org-end-of-meta-data)
      (skip-chars-forward " \t\n" end)
      (let ((start (point)))
        (while (and (< (point) end)
-                   (not (looking-at-p "^[ \t]*$"))
-                   (not (looking-at-p "^[ \t]*\\(Example\\|See also\\):")))
+                   (not (looking-at-p "[ \t]*\\(Example:\\|See also:\\|$\\)")))
          (forward-line 1))
-       (my-org-glossary-strip-links
+       (org-link-display-format
         (string-trim
          (replace-regexp-in-string
           "[ \t]*\n[ \t]*" " "
           (buffer-substring-no-properties start (min (point) end)))))))))
 
-(defun my-org-glossary-definition-at (marker)
-  "Return \"Heading: first paragraph\" for the entry at MARKER."
-  (with-current-buffer (marker-buffer marker)
-    (org-with-wide-buffer
-     (goto-char marker)
-     (org-back-to-heading t)
-     (let ((heading (org-get-heading t t t t))
-           (body (my-org-glossary-body-at-point)))
-       (concat (propertize heading 'face 'bold)
-               (unless (string-empty-p body)
-                 (concat ": " body)))))))
-
 (defun my-org-glossary-eldoc-function (&rest _)
   "Eldoc function: show the glossary definition for the id link at point."
-  (let ((ctx (org-element-context)))
-    (when (and (eq (org-element-type ctx) 'link)
-               (string= (org-element-property :type ctx) "id"))
-      (let* ((id (org-element-property :path ctx))
+  (let ((link (org-element-context)))
+    (when (and (eq (org-element-type link) 'link)
+               (string= (org-element-property :type link) "id"))
+      (let* ((id (org-element-property :path link))
              (pos (org-find-property "ID" id))
-             (marker (if pos
-                         (copy-marker pos)
+             (marker (if pos (copy-marker pos)
                        (ignore-errors (org-id-find id 'marker)))))
         (when marker
-          (my-org-glossary-definition-at marker))))))
+          (with-current-buffer (marker-buffer marker)
+            (org-with-wide-buffer
+             (goto-char marker)
+             (let ((body (my-org-glossary-body-at-point)))
+               (concat (propertize (org-get-heading t t t t) 'face 'bold)
+                       (unless (string-empty-p body) (concat ": " body)))))))))))
 
 (defun my-org-glossary-eldoc-setup ()
   "Enable glossary definitions in the echo area for this org buffer."
@@ -1861,53 +1838,41 @@ Skips the drawer; stops at a blank line or an Example:/See also: line."
 
 (add-hook 'org-mode-hook #'my-org-glossary-eldoc-setup)
 
-(defun my-org-glossary-slug (heading)
-  "Return an anchor slug for HEADING, e.g. \"Work item\" -> \"work-item\"."
-  (let ((s (replace-regexp-in-string "[^[:alnum:]]+" "-" (downcase heading))))
-    (replace-regexp-in-string "\\`-+\\|-+\\'" "" s)))
-
-(defun my-org-glossary-export-p (info)
-  "Non-nil when exporting a glossary.org file with a gfm-derived backend."
-  (and (org-export-derived-backend-p (plist-get info :back-end) 'gfm)
-       (let ((file (plist-get info :input-file)))
-         (and file (string= (file-name-nondirectory file) "glossary.org")))))
-
-(defun my-org-glossary-gfm-headline (orig headline contents info)
-  "Emit a slug <a id> anchor before top-level glossary headings.
-Drops ox-md's own generated anchor so each term has exactly one."
-  (let ((out (funcall orig headline contents info)))
-    (if (and (my-org-glossary-export-p info)
-             (= (org-element-property :level headline) 1)
-             (org-element-property :ID headline))
-        (format "<a id=\"%s\"></a>\n\n%s"
-                (my-org-glossary-slug
-                 (org-element-property :raw-value headline))
-                (replace-regexp-in-string
-                 "\\`\n*<a id=\"[^\"]*\"></a>\n*" "" out))
-      out)))
-
 (defun my-org-glossary-gfm-link (orig link contents info)
-  "Export same-file id links to glossary terms as [text](#slug \"definition\")."
-  (let ((target (and (my-org-glossary-export-p info)
-                     (string= (org-element-property :type link) "id")
-                     (org-export-resolve-id-link link info))))
-    (if (and target (eq (org-element-type target) 'headline))
-        (let* ((heading (org-element-property :raw-value target))
-               (pos (org-element-property :begin target))
-               (def (with-current-buffer
-                        (or (find-buffer-visiting (plist-get info :input-file))
-                            (current-buffer))
-                      (save-excursion
-                        (goto-char pos)
-                        (my-org-glossary-body-at-point)))))
-          (format "[%s](#%s \"%s\")"
-                  (or contents heading)
-                  (my-org-glossary-slug heading)
-                  (replace-regexp-in-string "\"" "\\\\\"" def)))
-      (funcall orig link contents info))))
+  "In glossary.org gfm exports, export same-file id links to terms as
+<abbr title=\"definition\">wording</abbr>.  The wording is re-transcoded
+with only its plain text HTML-escaped, so ox-md markup (e.g. <sub>) survives."
+  (let* ((file (plist-get info :input-file))
+         (target (and file
+                      (string= (file-name-nondirectory file) "glossary.org")
+                      (org-export-derived-backend-p
+                       (plist-get info :back-end) 'gfm)
+                      (string= (org-element-property :type link) "id")
+                      (org-export-resolve-id-link link info))))
+    (if (not (eq (org-element-type target) 'headline))
+        (funcall orig link contents info)
+      (format "<abbr title=\"%s\">%s</abbr>"
+              (url-insert-entities-in-string
+               (with-current-buffer (or (find-buffer-visiting file)
+                                        (current-buffer))
+                 (save-excursion
+                   (goto-char (org-element-property :begin target))
+                   (my-org-glossary-body-at-point))))
+              (if contents
+                  (org-export-data-with-backend
+                   (org-element-contents link)
+                   (org-export-create-backend
+                    :parent (plist-get info :back-end)
+                    :transcoders
+                    '((plain-text
+                       . (lambda (text info)
+                           (org-md-plain-text
+                            (url-insert-entities-in-string text) info)))))
+                   info)
+                (url-insert-entities-in-string
+                 (org-element-property :raw-value target)))))))
 
 (with-eval-after-load 'ox-md
-  (advice-add 'org-md-headline :around #'my-org-glossary-gfm-headline)
   (advice-add 'org-md-link :around #'my-org-glossary-gfm-link))
 
 (define-abbrev-table 'org-mode-abbrev-table

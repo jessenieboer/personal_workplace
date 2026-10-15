@@ -1,7 +1,6 @@
 #+title: Personal Workplace Glossary
-#+EXPORT_FILE_NAME: GLOSSARY.md
+#+EXPORT_FILE_NAME: ../../GLOSSARY.md
 #+OPTIONS: toc:nil prop:nil
-Terms used to describe how work, tools, and toolboxes are organized in my personal workplace.
 
 * benefit
 :PROPERTIES:
