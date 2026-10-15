@@ -1794,6 +1794,64 @@ In dired, uses the file at point."
         		       ("now" . (:foreground "lawn green" :weight bold))
         		       ("past" . (:foreground "dark olive green" :weight bold))))
 
+(require 'eldoc)
+(require 'org-id)
+
+(defun my-org-glossary-strip-links (text)
+  "Replace org links in TEXT with their descriptions (or targets)."
+  (replace-regexp-in-string
+   org-link-bracket-re
+   (lambda (m)
+     (or (match-string 2 m) (match-string 1 m)))
+   text t t))
+
+(defun my-org-glossary-definition-at (marker)
+  "Return \"Heading: first paragraph\" for the entry at MARKER."
+  (with-current-buffer (marker-buffer marker)
+    (org-with-wide-buffer
+     (goto-char marker)
+     (org-back-to-heading t)
+     (let ((heading (org-get-heading t t t t))
+           (end (save-excursion (outline-next-heading) (point))))
+       (forward-line 1)
+       (when (looking-at-p "^[ \t]*:PROPERTIES:")
+         (re-search-forward "^[ \t]*:END:[ \t]*$" end t)
+         (forward-line 1))
+       (skip-chars-forward " \t\n" end)
+       (let ((start (point)))
+         (while (and (< (point) end)
+                     (not (looking-at-p "^[ \t]*$"))
+                     (not (looking-at-p "^[ \t]*\\(Example\\|See also\\):")))
+           (forward-line 1))
+         (let ((body (string-trim
+                      (replace-regexp-in-string
+                       "[ \t]*\n[ \t]*" " "
+                       (buffer-substring-no-properties start (min (point) end))))))
+           (concat (propertize heading 'face 'bold)
+                   (unless (string-empty-p body)
+                     (concat ": " (my-org-glossary-strip-links body))))))))))
+
+(defun my-org-glossary-eldoc-function (&rest _)
+  "Eldoc function: show the glossary definition for the id link at point."
+  (let ((ctx (org-element-context)))
+    (when (and (eq (org-element-type ctx) 'link)
+               (string= (org-element-property :type ctx) "id"))
+      (let* ((id (org-element-property :path ctx))
+             (pos (org-find-property "ID" id))
+             (marker (if pos
+                         (copy-marker pos)
+                       (ignore-errors (org-id-find id 'marker)))))
+        (when marker
+          (my-org-glossary-definition-at marker))))))
+
+(defun my-org-glossary-eldoc-setup ()
+  "Enable glossary definitions in the echo area for this org buffer."
+  (add-hook 'eldoc-documentation-functions
+            #'my-org-glossary-eldoc-function nil t)
+  (eldoc-mode 1))
+
+(add-hook 'org-mode-hook #'my-org-glossary-eldoc-setup)
+
 (define-abbrev-table 'org-mode-abbrev-table
     '(("s" "#+BEGIN_SRC\n\n#+END_SRC")
       ("se" "#+BEGIN_SRC emacs-lisp\n\n#+END_SRC")))

@@ -1,0 +1,146 @@
+#+title: Personal Workplace Glossary
+Terms used to describe how work, tools, and toolboxes are organized in my personal workplace.
+
+* benefit
+:PROPERTIES:
+:ID:       826ceedd-982f-4f3d-878f-f122737964e8
+:ALIASES:  benefits
+:CONTEXT:  personal_workplace
+:PRIME:    true
+:END:
+Something good.
+
+* configuration
+:PROPERTIES:
+:ID:       63c2b683-bf4c-403a-b4da-b3e3a4426bf0
+:ALIASES:  configurations
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+A [[id:afbc980d-a768-49f9-b495-ec1946999e44][unit]] of [[id:91e1b13a-d765-4ddb-b013-d7e393da152a][order]] that applies to some object.
+
+* effort
+:PROPERTIES:
+:ID:       676ab9e1-5d28-447f-8ce2-7a6876b72fc6
+:ALIASES:
+:CONTEXT:  personal_workplace
+:PRIME:    true
+:END:
+The application of energy, knowledge, and skill.
+
+* instruction
+:PROPERTIES:
+:ID:       8016670c-a12b-46bb-9597-74b515ff6188
+:ALIASES:  instructions
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+A statement that tells a [[id:d643d9be-188d-4eca-bf57-41d24c509d99][worker]] what to do.
+
+* order
+:PROPERTIES:
+:ID:       91e1b13a-d765-4ddb-b013-d7e393da152a
+:ALIASES:
+:CONTEXT:  personal_workplace
+:PRIME:    true
+:END:
+A neat, clean, logical, and useful arrangement.
+
+* practice
+:PROPERTIES:
+:ID:       52b7a2de-304b-45e2-add0-b54d4ae056b6
+:ALIASES:  practices
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+A [[id:a0d73f0e-b4d9-4251-928e-57e7e62ad99e][process]] that [[id:d643d9be-188d-4eca-bf57-41d24c509d99][workers]] execute repeatedly or continuously.
+
+* process
+:PROPERTIES:
+:ID:       a0d73f0e-b4d9-4251-928e-57e7e62ad99e
+:ALIASES:  processes
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+A [[id:63c2b683-bf4c-403a-b4da-b3e3a4426bf0][configuration]] of [[id:8016670c-a12b-46bb-9597-74b515ff6188][instructions]] about how to do something.
+
+* program
+:PROPERTIES:
+:ID:       bfd7228d-1485-4ada-a8b5-85b5ceadbfbb
+:ALIASES:  programs
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+A [[id:a0d73f0e-b4d9-4251-928e-57e7e62ad99e][process]] that a computer can execute.
+
+* settings
+:PROPERTIES:
+:ID:       d0bc85c6-0ec8-41d8-ba06-efd8353a0630
+:ALIASES:  setting
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+A [[id:63c2b683-bf4c-403a-b4da-b3e3a4426bf0][configuration]] of values for a [[id:67d17158-853d-4dd8-b342-93f59b05598e][tool]]'s options.
+
+* template
+:PROPERTIES:
+:ID:       4d58d9a1-11da-4359-b13a-7d27e2e4774c
+:ALIASES:  templates
+:CONTEXT:  personal_workplace
+:PRIME:    true
+:END:
+A useful pattern to copy and fill in.
+
+* tool
+:PROPERTIES:
+:ID:       67d17158-853d-4dd8-b342-93f59b05598e
+:ALIASES:  tools
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+Something that makes [[id:f27dd965-a5c7-4710-8e4c-3799fb7dfd17][work]] easier, more productive, or both.
+
+* toolbox
+:PROPERTIES:
+:ID:       a90e4af8-b9ae-4418-aa99-d00b635e9a3c
+:ALIASES:  toolboxes
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+A collection of [[id:52b7a2de-304b-45e2-add0-b54d4ae056b6][practices]], [[id:bfd7228d-1485-4ada-a8b5-85b5ceadbfbb][programs]], [[id:d0bc85c6-0ec8-41d8-ba06-efd8353a0630][settings]], and [[id:4d58d9a1-11da-4359-b13a-7d27e2e4774c][templates]] aimed at a specific kind of [[id:f27dd965-a5c7-4710-8e4c-3799fb7dfd17][work]].
+
+* unit
+:PROPERTIES:
+:ID:       afbc980d-a768-49f9-b495-ec1946999e44
+:ALIASES:  units
+:CONTEXT:  personal_workplace
+:PRIME:    true
+:END:
+One cohesive thing.
+
+* work
+:PROPERTIES:
+:ID:       f27dd965-a5c7-4710-8e4c-3799fb7dfd17
+:ALIASES:
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+The act of expending [[id:676ab9e1-5d28-447f-8ce2-7a6876b72fc6][effort]] in [[id:91e1b13a-d765-4ddb-b013-d7e393da152a][order]] to bring about some [[id:826ceedd-982f-4f3d-878f-f122737964e8][benefit]].
+
+* worker
+:PROPERTIES:
+:ID:       d643d9be-188d-4eca-bf57-41d24c509d99
+:ALIASES:  workers
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+A person or AI capable of doing [[id:f27dd965-a5c7-4710-8e4c-3799fb7dfd17][work]].
+
+* workplace
+:PROPERTIES:
+:ID:       ab7fd5ff-d978-4d2c-9580-67211f4d87b8
+:ALIASES:  workplaces
+:CONTEXT:  personal_workplace
+:PRIME:    false
+:END:
+An organization in which [[id:f27dd965-a5c7-4710-8e4c-3799fb7dfd17][work]] takes place.

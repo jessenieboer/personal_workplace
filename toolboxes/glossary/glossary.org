@@ -1,0 +1,29 @@
+#+title: Glossary Toolbox Glossary
+Terms used to describe glossaries themselves.
+
+* definition
+:PROPERTIES:
+:ID:       6a8fc8bc-23ef-4788-b36d-77ea8029d229
+:ALIASES:  definitions
+:CONTEXT:  glossary_toolbox
+:PRIME:    false
+:END:
+A statement of what a [[id:f5e13475-7958-4704-9c78-32605b01cfd7][term]] means.
+
+* glossary
+:PROPERTIES:
+:ID:       db669bc3-72d4-4f0c-8e96-6c2391017d38
+:ALIASES:  glossaries
+:CONTEXT:  glossary_toolbox
+:PRIME:    false
+:END:
+A collection of [[id:f5e13475-7958-4704-9c78-32605b01cfd7][terms]] and their [[id:6a8fc8bc-23ef-4788-b36d-77ea8029d229][definitions]].
+
+* term
+:PROPERTIES:
+:ID:       f5e13475-7958-4704-9c78-32605b01cfd7
+:ALIASES:  terms
+:CONTEXT:  glossary_toolbox
+:PRIME:    true
+:END:
+A word or phrase with a specific meaning in some context.

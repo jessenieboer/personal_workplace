@@ -8,7 +8,7 @@
     };
     grok-bot = {
       url = "github:jordangarrison/grok-bot-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";

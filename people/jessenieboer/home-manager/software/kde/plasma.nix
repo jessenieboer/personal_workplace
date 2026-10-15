@@ -109,7 +109,9 @@ in
       };
 
       kscreenlocker = {
-        timeout = 10;
+        autoLock = false;
+        lockOnResume = false;
+        timeout = 0;
       };
 
       kwin.edgeBarrier = 0;
