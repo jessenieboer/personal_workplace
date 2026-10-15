@@ -1805,6 +1805,29 @@ In dired, uses the file at point."
      (or (match-string 2 m) (match-string 1 m)))
    text t t))
 
+(defun my-org-glossary-body-at-point ()
+  "Return the first definition paragraph of the entry at point.
+Links are reduced to their descriptions.
+Skips the drawer; stops at a blank line or an Example:/See also: line."
+  (org-with-wide-buffer
+   (org-back-to-heading t)
+   (let ((end (save-excursion (outline-next-heading) (point))))
+     (forward-line 1)
+     (when (looking-at-p "^[ \t]*:PROPERTIES:")
+       (re-search-forward "^[ \t]*:END:[ \t]*$" end t)
+       (forward-line 1))
+     (skip-chars-forward " \t\n" end)
+     (let ((start (point)))
+       (while (and (< (point) end)
+                   (not (looking-at-p "^[ \t]*$"))
+                   (not (looking-at-p "^[ \t]*\\(Example\\|See also\\):")))
+         (forward-line 1))
+       (my-org-glossary-strip-links
+        (string-trim
+         (replace-regexp-in-string
+          "[ \t]*\n[ \t]*" " "
+          (buffer-substring-no-properties start (min (point) end)))))))))
+
 (defun my-org-glossary-definition-at (marker)
   "Return \"Heading: first paragraph\" for the entry at MARKER."
   (with-current-buffer (marker-buffer marker)
@@ -1812,24 +1835,10 @@ In dired, uses the file at point."
      (goto-char marker)
      (org-back-to-heading t)
      (let ((heading (org-get-heading t t t t))
-           (end (save-excursion (outline-next-heading) (point))))
-       (forward-line 1)
-       (when (looking-at-p "^[ \t]*:PROPERTIES:")
-         (re-search-forward "^[ \t]*:END:[ \t]*$" end t)
-         (forward-line 1))
-       (skip-chars-forward " \t\n" end)
-       (let ((start (point)))
-         (while (and (< (point) end)
-                     (not (looking-at-p "^[ \t]*$"))
-                     (not (looking-at-p "^[ \t]*\\(Example\\|See also\\):")))
-           (forward-line 1))
-         (let ((body (string-trim
-                      (replace-regexp-in-string
-                       "[ \t]*\n[ \t]*" " "
-                       (buffer-substring-no-properties start (min (point) end))))))
-           (concat (propertize heading 'face 'bold)
-                   (unless (string-empty-p body)
-                     (concat ": " (my-org-glossary-strip-links body))))))))))
+           (body (my-org-glossary-body-at-point)))
+       (concat (propertize heading 'face 'bold)
+               (unless (string-empty-p body)
+                 (concat ": " body)))))))
 
 (defun my-org-glossary-eldoc-function (&rest _)
   "Eldoc function: show the glossary definition for the id link at point."
@@ -1851,6 +1860,55 @@ In dired, uses the file at point."
   (eldoc-mode 1))
 
 (add-hook 'org-mode-hook #'my-org-glossary-eldoc-setup)
+
+(defun my-org-glossary-slug (heading)
+  "Return an anchor slug for HEADING, e.g. \"Work item\" -> \"work-item\"."
+  (let ((s (replace-regexp-in-string "[^[:alnum:]]+" "-" (downcase heading))))
+    (replace-regexp-in-string "\\`-+\\|-+\\'" "" s)))
+
+(defun my-org-glossary-export-p (info)
+  "Non-nil when exporting a glossary.org file with a gfm-derived backend."
+  (and (org-export-derived-backend-p (plist-get info :back-end) 'gfm)
+       (let ((file (plist-get info :input-file)))
+         (and file (string= (file-name-nondirectory file) "glossary.org")))))
+
+(defun my-org-glossary-gfm-headline (orig headline contents info)
+  "Emit a slug <a id> anchor before top-level glossary headings.
+Drops ox-md's own generated anchor so each term has exactly one."
+  (let ((out (funcall orig headline contents info)))
+    (if (and (my-org-glossary-export-p info)
+             (= (org-element-property :level headline) 1)
+             (org-element-property :ID headline))
+        (format "<a id=\"%s\"></a>\n\n%s"
+                (my-org-glossary-slug
+                 (org-element-property :raw-value headline))
+                (replace-regexp-in-string
+                 "\\`\n*<a id=\"[^\"]*\"></a>\n*" "" out))
+      out)))
+
+(defun my-org-glossary-gfm-link (orig link contents info)
+  "Export same-file id links to glossary terms as [text](#slug \"definition\")."
+  (let ((target (and (my-org-glossary-export-p info)
+                     (string= (org-element-property :type link) "id")
+                     (org-export-resolve-id-link link info))))
+    (if (and target (eq (org-element-type target) 'headline))
+        (let* ((heading (org-element-property :raw-value target))
+               (pos (org-element-property :begin target))
+               (def (with-current-buffer
+                        (or (find-buffer-visiting (plist-get info :input-file))
+                            (current-buffer))
+                      (save-excursion
+                        (goto-char pos)
+                        (my-org-glossary-body-at-point)))))
+          (format "[%s](#%s \"%s\")"
+                  (or contents heading)
+                  (my-org-glossary-slug heading)
+                  (replace-regexp-in-string "\"" "\\\\\"" def)))
+      (funcall orig link contents info))))
+
+(with-eval-after-load 'ox-md
+  (advice-add 'org-md-headline :around #'my-org-glossary-gfm-headline)
+  (advice-add 'org-md-link :around #'my-org-glossary-gfm-link))
 
 (define-abbrev-table 'org-mode-abbrev-table
     '(("s" "#+BEGIN_SRC\n\n#+END_SRC")

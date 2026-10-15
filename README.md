@@ -36,7 +36,7 @@ Myself, and anyone who finds something useful in here
 
 This is mostly to remind myself how to do this:
 
-bootstrapping from a new nixos install: as root user, type the following into /etc/nixos/configuration.nix: <a id="orgac38afa"></a>
+bootstrapping from a new nixos install: as root user, type the following into /etc/nixos/configuration.nix: <a id="orgf160236"></a>
 
 then cd into .ssh, ssh-keygen -K to get the stub file, rename the stub file to id<sub>ed25519</sub><sub>sk</sub>, delete the .pub file (assuming this is in github already. making this a public repo probably renders this unnecessary)
 
@@ -63,6 +63,10 @@ cp -r *home/jessenieboer/kingdoms/Household/Jesse/personal<sub>workplace</sub>* 
 
 
 ### Details
+
+-   Toolboxes
+
+    A collection of [practices](../../glossary.md), [programs](../../glossary.md), [settings](../../glossary.md), and [templates](../../glossary.md) aimed at a specific kind of [work](../../glossary.md).
 
 -   License
 
