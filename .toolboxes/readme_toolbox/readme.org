@@ -52,6 +52,8 @@ cp -r /home/jessenieboer/kingdoms/Household/Jesse/personal_workplace/ .
 cp /root/secrets/wifi-passwords.nix /root/personal_workplace/computers/wifi.nix
 nixos-rebuild switch --flake /root/personal_workplace/computers#configname
 *** Details
+**** Toolbox structure
+directories for programs, settings, templates, and practices
 **** Troubleshooting :noexport:
 Failed to install bootloader error:
 

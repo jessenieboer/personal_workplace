@@ -1,4 +1,16 @@
+inputs:
+  neolabhq-cek:
+    flake: false
+    url: github:NeoLabHQ/context-engineering-kit
+  nixpkgs:
+    url: github:NixOS/nixpkgs/nixpkgs-unstable
+  wshobson-agents:
+    flake: false
+    url: github:wshobson/agents
+
 imports:
+  - /toolboxes/ai
   - /toolboxes/emacs
   - /toolboxes/git
   - /toolboxes/readme
+  - /toolboxes/secrets

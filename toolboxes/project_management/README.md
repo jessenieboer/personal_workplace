@@ -179,6 +179,7 @@ Each item (except references) has one of 4 org todo states:
         Daily curation:
         
         -   clear out inboxes
+        -   capture check for ai captures
         -   Activity: change done items to "past" and choose items for "now"
         
         Periodic curation:

@@ -140,6 +140,7 @@ Keep everything up to date
 ***** Practices
 Daily curation:
 - clear out inboxes
+- capture check for ai captures
 - Activity: change done items to "past" and choose items for "now"
   
 Periodic curation:

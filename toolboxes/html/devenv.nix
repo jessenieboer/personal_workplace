@@ -1,10 +1,6 @@
 { config, pkgs, ... }:
 let
-  gitignore = ./settings/.gitignore;
-  indexHtmlTemplate = ./templates/index.html;
-  root = config.devenv.root;
-  gitignoreDest = "${root}/.toolboxes/html_toolbox/.gitignore";
-  indexDest = "${root}/index.html";
+  tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
 in
 {
   config = {
@@ -22,28 +18,10 @@ in
       vscode-langservers-extracted
     ];
 
-    tasks = {
-      "html_toolbox:copy_gitignore" = {
-        description = "Refresh the html_toolbox gitignore fragment from the toolbox";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${gitignore} "${gitignoreDest}"
-        '';
+    tasks = tt.gitignore "html" ./settings/.gitignore
+      // tt.seed {
+        name = "html"; task = "copy_index_html_template";
+        src = ./templates/index.html; dest = "index.html";
       };
-
-      "html_toolbox:copy_index_html_template" = {
-        description = "Seed index.html once from the toolbox template";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          test -f "${indexDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${indexHtmlTemplate} "${indexDest}"
-        '';
-      };
-    };
   };
 }

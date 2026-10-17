@@ -1,11 +1,6 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  gitignore = ./settings/.gitignore;
-  secretspecTemplate = ./templates/secretspec.toml;
-  root = config.devenv.root;
-  ghDest = "${root}/.toolboxes/secrets_toolbox/gh_devenv.sh";
-  gitignoreDest = "${root}/.toolboxes/secrets_toolbox/.gitignore";
-  secretspecDest = "${root}/secretspec.toml";
+  tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
 in
 {
   config = {
@@ -20,29 +15,13 @@ in
       secretspec
     ];
 
-    tasks = {
+    tasks = tt.gitignore "secrets" ./settings/.gitignore
+      // tt.seed {
+        name = "secrets"; task = "copy_secretspec_template";
+        src = ./templates/secretspec.toml; dest = "secretspec.toml";
+      }
+      // {
 
-      "secrets_toolbox:copy_gitignore" = {
-        description = "Refresh the secrets_toolbox gitignore fragment from the toolbox";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${gitignore} "${gitignoreDest}"
-        '';
-      };
-
-      "secrets_toolbox:copy_secretspec_template" = {
-        description = "Seed secretspec.toml once from the toolbox template";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          test -f "${secretspecDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${secretspecTemplate} "${secretspecDest}"
-        '';
-      };
     };
   };
 }

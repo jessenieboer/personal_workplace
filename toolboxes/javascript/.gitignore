@@ -7,10 +7,14 @@ devenv.local.yaml
 .direnv
 .dir-locals.el
 dist/
+.eca
 .envrc
 *.log
 node_modules/
 .npm/
 npm-debug.log*
 .pre-commit-config.yaml
+.toolboxes/ai_toolbox
 .toolboxes/emacs_toolbox
+.toolboxes/javascript_toolbox
+.toolboxes/secrets_toolbox

@@ -1,12 +1,8 @@
 { config, inputs, lib, pkgs, ... }:
 let
-  aiInputEngineer = ./practices/agents/ai-input-engineer.md;
-  ecaConfig = ./settings/eca/config.json;
-  gitignore = ./settings/.gitignore;
-  localSkills = ./practices/skills;
+  tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
 
   cek = inputs.neolabhq-cek;
-  cekLicense = "${cek}/LICENSE";
 
   cekSkillRels = [
     # create
@@ -30,15 +26,15 @@ let
     #"plugins/customaize-agent/skills/thought-based-reasoning"
   ];
 
-  copyCekSkill = rel: ''
-    install -D -m 0644 ${cek}/${rel}/SKILL.md "$ECA_DIR/skills/${baseNameOf rel}/SKILL.md"
-    install -D -m 0644 ${cekLicense} "$ECA_DIR/skills/${baseNameOf rel}/LICENSE"
-  '';
-
-  root = config.devenv.root;
-  ecaDir = "${root}/.eca";
-  gitignoreDest = "${root}/.toolboxes/ai_toolbox/.gitignore";
-  agentDest = "${ecaDir}/agents/ai-input-engineer.md";
+  # Local practices plus each CEK skill (with the CEK license beside it).
+  practicesTasks = tt.practices {
+    name = "ai";
+    local = ./practices;
+    extra = lib.listToAttrs (lib.concatMap (rel: [
+      (lib.nameValuePair "skills/${baseNameOf rel}" "${cek}/${rel}")
+      (lib.nameValuePair "skills/${baseNameOf rel}/LICENSE" "${cek}/LICENSE")
+    ]) cekSkillRels);
+  };
 in
 {
   config = {
@@ -48,68 +44,12 @@ in
       fi
     '';
 
-    tasks = {
-      "ai_toolbox:copy_gitignore" = {
-        description = "Refresh the ai_toolbox gitignore fragment from the toolbox";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${gitignore} "${gitignoreDest}"
-        '';
+    tasks = practicesTasks
+      // tt.gitignore "ai" ./settings/.gitignore
+      // tt.seed {
+        name = "ai"; task = "copy_setup_files"; src = ./settings/eca/config.json;
+        dest = ".eca/config.json"; description = "Seed ECA config once";
+        postExec = ''mkdir -p "$(dirname "$dest")/rules"'';
       };
-
-      "ai_toolbox:copy_setup_files" = {
-        description = "Seed ECA config once; refresh the input-engineer agent";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -f "${ecaDir}/config.json" ] \
-            && [ -f "${agentDest}" ] \
-            && cmp -s ${aiInputEngineer} "${agentDest}"
-        '';
-        exec = ''
-          mkdir -p "${ecaDir}/agents" "${ecaDir}/rules" "${ecaDir}/skills"
-          install -D -m 0644 ${aiInputEngineer} "${agentDest}"
-
-          if [ ! -f "${ecaDir}/config.json" ]; then
-            install -D -m 0644 ${ecaConfig} "${ecaDir}/config.json"
-          fi
-        '';
-      };
-
-      "ai_toolbox:copy_skills" = {
-        description = "Refresh CEK and local skills under .eca/skills";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          same() { [ -f "$2" ] && cmp -s "$1" "$2"; }
-          ${lib.concatMapStringsSep "\n" (rel: ''
-            same ${cek}/${rel}/SKILL.md "${ecaDir}/skills/${baseNameOf rel}/SKILL.md" || exit 1
-            same ${cekLicense} "${ecaDir}/skills/${baseNameOf rel}/LICENSE" || exit 1
-          '') cekSkillRels}
-          if [ -d ${localSkills} ]; then
-            for d in ${localSkills}/*; do
-              [ -d "$d" ] || continue
-              [ -f "$d/SKILL.md" ] || continue
-              same "$d/SKILL.md" "${ecaDir}/skills/$(basename "$d")/SKILL.md" || exit 1
-            done
-          fi
-        '';
-        exec = ''
-          ECA_DIR="${ecaDir}"
-          mkdir -p "$ECA_DIR/skills"
-          ${lib.concatMapStringsSep "\n" copyCekSkill cekSkillRels}
-          if [ -d ${localSkills} ]; then
-            for d in ${localSkills}/*; do
-              [ -d "$d" ] || continue
-              name=$(basename "$d")
-              if [ -f "$d/SKILL.md" ]; then
-                install -D -m 0644 "$d/SKILL.md" "$ECA_DIR/skills/$name/SKILL.md"
-              fi
-            done
-          fi
-        '';
-      };
-    };
   };
 }

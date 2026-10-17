@@ -1,10 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
 let
-  envrc = ./programs/.envrc;
-  gitignore = ./settings/.gitignore;
+  tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
   root = config.devenv.root;
-  envrcDest = "${root}/.envrc";
-  gitignoreDest = "${root}/.toolboxes/emacs_toolbox/.gitignore";
   dirLocalsDest = "${root}/.dir-locals.el";
 in
 {
@@ -44,28 +41,10 @@ in
       fi
     '';
 
-    tasks = {
-      "emacs_toolbox:copy_envrc" = {
-        description = "Seed .envrc once from the toolbox template";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          test -f "${envrcDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${envrc} "${envrcDest}"
-        '';
-      };
-
-      "emacs_toolbox:copy_gitignore" = {
-        description = "Refresh the emacs_toolbox gitignore fragment from the toolbox";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${gitignore} "${gitignoreDest}"
-        '';
-      };
-    };
+    tasks = tt.seed {
+        name = "emacs"; task = "copy_envrc";
+        src = ./programs/.envrc; dest = ".envrc";
+      }
+      // tt.gitignore "emacs" ./settings/.gitignore;
   };
 }

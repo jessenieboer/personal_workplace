@@ -1,8 +1,7 @@
 { config, pkgs, ... }:
 let
-  gitignore = ./settings/.gitignore;
+  tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
   racketAddon = "${config.devenv.state}/racket";
-  gitignoreDest = "${config.devenv.root}/.toolboxes/racket_toolbox/.gitignore";
 in
 {
   config = {
@@ -27,17 +26,8 @@ in
       fi
     '';
 
-    tasks = {
-      "racket_toolbox:copy_gitignore" = {
-        description = "Refresh the racket_toolbox gitignore fragment from the toolbox";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${gitignore} "${gitignoreDest}"
-        '';
-      };
+    tasks = tt.gitignore "racket" ./settings/.gitignore
+      // {
 
       "racket_toolbox:install_langserver" = {
         description = "Install racket-langserver into PLTADDONDIR if missing";

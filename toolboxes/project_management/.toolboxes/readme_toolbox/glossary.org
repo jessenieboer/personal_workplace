@@ -1,0 +1,22 @@
+#+title: Project Management Glossary
+#+EXPORT_FILE_NAME: ../../GLOSSARY.md
+#+OPTIONS: toc:nil prop:nil
+Terms used in the project management toolbox.
+
+* project
+:PROPERTIES:
+:ID:       6282139a-47a9-456f-940a-e7fc09a2abc3
+:ALIASES:  projects
+:CONTEXT:  project_management_toolbox
+:PRIME:    false
+:END:
+An arrangement of [[id:cbb8f749-a180-4534-8e53-a747b0978fef][resources]] aimed at bringing about some definable benefit.
+
+* resource
+:PROPERTIES:
+:ID:       cbb8f749-a180-4534-8e53-a747b0978fef
+:ALIASES:  resources
+:CONTEXT:  project_management_toolbox
+:PRIME:    true
+:END:
+Something that is either occupied or consumed for work, such as workers, time, money, or materials.

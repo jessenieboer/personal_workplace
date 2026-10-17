@@ -1,18 +1,16 @@
-{ config, inputs, pkgs, ... }:
+{ config, inputs, pkgs, lib, ... }:
 let
-  explainer = ./practices/agents/code-explainer.md;
-  gitignore = ./settings/.gitignore;
+  tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
   # opencodeConfig = ./settings/opencode/opencode.json;
 
-  atomic = inputs.atomic;
-  howSkill = "${atomic}/packages/workflows/skills/how";
-
   root = config.devenv.root;
-  ecaDir = "${root}/.eca";
-  howDest = "${ecaDir}/skills/how";
-  explainerDest = "${ecaDir}/agents/code-explainer.md";
-  gitignoreDest = "${root}/.toolboxes/code_toolbox/.gitignore";
   # opencodeDest = "${root}/.opencode/opencode.json";
+
+  practicesTasks = tt.practices {
+    name = "code";
+    local = ./practices;
+    extra."skills/how" = "${inputs.atomic}/packages/workflows/skills/how";
+  };
 in
 {
   config = {
@@ -27,17 +25,9 @@ in
     #   inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
     # ];
 
-    tasks = {
-      "code_toolbox:copy_gitignore" = {
-        description = "Refresh the code_toolbox gitignore fragment from the toolbox";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${gitignore} "${gitignoreDest}"
-        '';
-      };
+    tasks = practicesTasks
+      // tt.gitignore "code" ./settings/.gitignore
+      // {
 
       # "code_toolbox:copy_opencode_config" = {
       #   description = "Seed .opencode/opencode.json once from the toolbox template";
@@ -49,36 +39,6 @@ in
       #     install -D -m 0644 ${opencodeConfig} "${opencodeDest}"
       #   '';
       # };
-
-      "code_toolbox:copy_setup_files" = {
-        description = "Refresh the code-explainer agent";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -f "${ecaDir}/config.json" ] \
-            && [ -f "${explainerDest}" ] \
-            && cmp -s ${explainer} "${explainerDest}"
-        '';
-        exec = ''
-          mkdir -p "${ecaDir}/agents" "${ecaDir}/rules" "${ecaDir}/skills"
-          install -D -m 0644 ${explainer} "${explainerDest}"
-        '';
-      };
-
-      "code_toolbox:copy_skills" = {
-        description = "Refresh the Atomic how skill under .eca/skills";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -d "${howDest}" ] \
-            && cmp -s ${howSkill}/SKILL.md "${howDest}/SKILL.md" \
-            && diff -rq --exclude LICENSE.txt ${howSkill} "${howDest}" >/dev/null
-        '';
-        exec = ''
-          rm -rf "${howDest}"
-          mkdir -p "${howDest}"
-          cp -a ${howSkill}/. "${howDest}/"
-          find "${howDest}" -type f -exec chmod 0444 {} +
-        '';
-      };
     };
   };
 }

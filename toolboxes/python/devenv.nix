@@ -1,26 +1,26 @@
 { config, pkgs, inputs, lib, ... }:
 let
-  gitignore = ./settings/.gitignore;
-  pyprojectTemplate = ./templates/pyproject.toml;
-  skillGuide = ./practices/skills/python-skill-guide/SKILL.md;
-
-  modernPython = "${inputs.trailofbits-skills}/plugins/modern-python/skills/modern-python";
-
-  wshobsonPython = "${inputs.wshobson-agents}/plugins/python-development/skills";
-  codeStyle = "${wshobsonPython}/python-code-style";
-  designPatterns = "${wshobsonPython}/python-design-patterns";
-  errorHandling = "${wshobsonPython}/python-error-handling";
-  projectStructure = "${wshobsonPython}/python-project-structure";
-  testingPatterns = "${wshobsonPython}/python-testing-patterns";
-  typeSafety = "${wshobsonPython}/python-type-safety";
+  tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
 
   root = config.devenv.root;
-  eca = "${root}/.eca/skills";
-  gitignoreDest = "${root}/.toolboxes/python_toolbox/.gitignore";
-  pyprojectDest = "${root}/pyproject.toml";
   venvBin = "${root}/.devenv/state/venv/bin";
   tyExe = lib.getExe pkgs.ty;
   ruffExe = lib.getExe pkgs.ruff;
+
+  wshobson = "${inputs.wshobson-agents}/plugins/python-development/skills";
+  practicesTasks = tt.practices {
+    name = "python";
+    local = ./practices;
+    extra = {
+      "skills/modern-python" = "${inputs.trailofbits-skills}/plugins/modern-python/skills/modern-python";
+      "skills/python-code-style" = "${wshobson}/python-code-style";
+      "skills/python-design-patterns" = "${wshobson}/python-design-patterns";
+      "skills/python-error-handling" = "${wshobson}/python-error-handling";
+      "skills/python-project-structure" = "${wshobson}/python-project-structure";
+      "skills/python-testing-patterns" = "${wshobson}/python-testing-patterns";
+      "skills/python-type-safety" = "${wshobson}/python-type-safety";
+    };
+  };
 in
 {
   config = {
@@ -58,7 +58,13 @@ in
       ty
     ];
 
-    tasks = {
+    tasks = practicesTasks
+      // tt.gitignore "python" ./settings/.gitignore
+      // tt.seed {
+        name = "python"; task = "copy_pyproject_template"; src = ./templates/pyproject.toml;
+        dest = "pyproject.toml"; before = [ "devenv:python:uv" ];
+      }
+      // {
       # uv drops manylinux ty/ruff into the venv. Those ELFs need Nix's
       # dynamic linker. Point the venv shims at the nixpkgs binaries so
       # Emacs ty-ls (which resolves venv/bin/ty) keeps working.
@@ -87,77 +93,6 @@ in
         '';
       };
 
-      "python_toolbox:copy_gitignore" = {
-        description = "Refresh the python_toolbox gitignore fragment from the toolbox";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [ -f "${gitignoreDest}" ] && cmp -s ${gitignore} "${gitignoreDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${gitignore} "${gitignoreDest}"
-        '';
-      };
-
-      "python_toolbox:copy_pyproject_template" = {
-        description = "Seed pyproject.toml once from the toolbox template";
-        before = [ "devenv:enterShell" "devenv:python:uv" ];
-        status = ''
-          test -f "${pyprojectDest}"
-        '';
-        exec = ''
-          install -D -m 0644 ${pyprojectTemplate} "${pyprojectDest}"
-        '';
-      };
-
-      "python_toolbox:copy_skills" = {
-        description = "Refresh Python skills under .eca/skills";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          same() { [ -f "$2" ] && cmp -s "$1" "$2"; }
-          same ${skillGuide} "${eca}/python-skill-guide/SKILL.md" || exit 1
-          same ${modernPython}/SKILL.md "${eca}/modern-python/SKILL.md" || exit 1
-          same ${codeStyle}/SKILL.md "${eca}/python-code-style/SKILL.md" || exit 1
-          same ${designPatterns}/SKILL.md "${eca}/python-design-patterns/SKILL.md" || exit 1
-          same ${errorHandling}/SKILL.md "${eca}/python-error-handling/SKILL.md" || exit 1
-          same ${projectStructure}/SKILL.md "${eca}/python-project-structure/SKILL.md" || exit 1
-          same ${typeSafety}/SKILL.md "${eca}/python-type-safety/SKILL.md" || exit 1
-          same ${testingPatterns}/SKILL.md "${eca}/python-testing-patterns/SKILL.md" || exit 1
-          if [ -d ${modernPython}/references ]; then
-            for f in ${modernPython}/references/*; do
-              [ -f "$f" ] || continue
-              same "$f" "${eca}/modern-python/references/$(basename "$f")" || exit 1
-            done
-          fi
-          if [ -d ${testingPatterns}/references ]; then
-            for f in ${testingPatterns}/references/*; do
-              [ -f "$f" ] || continue
-              same "$f" "${eca}/python-testing-patterns/references/$(basename "$f")" || exit 1
-            done
-          fi
-        '';
-        exec = ''
-          install -D -m 0644 ${skillGuide} "${eca}/python-skill-guide/SKILL.md"
-          install -D -m 0644 ${modernPython}/SKILL.md "${eca}/modern-python/SKILL.md"
-          if [ -d ${modernPython}/references ]; then
-            for f in ${modernPython}/references/*; do
-              [ -f "$f" ] || continue
-              install -D -m 0644 "$f" "${eca}/modern-python/references/$(basename "$f")"
-            done
-          fi
-          install -D -m 0644 ${codeStyle}/SKILL.md "${eca}/python-code-style/SKILL.md"
-          install -D -m 0644 ${designPatterns}/SKILL.md "${eca}/python-design-patterns/SKILL.md"
-          install -D -m 0644 ${errorHandling}/SKILL.md "${eca}/python-error-handling/SKILL.md"
-          install -D -m 0644 ${projectStructure}/SKILL.md "${eca}/python-project-structure/SKILL.md"
-          install -D -m 0644 ${typeSafety}/SKILL.md "${eca}/python-type-safety/SKILL.md"
-          install -D -m 0644 ${testingPatterns}/SKILL.md "${eca}/python-testing-patterns/SKILL.md"
-          if [ -d ${testingPatterns}/references ]; then
-            for f in ${testingPatterns}/references/*; do
-              [ -f "$f" ] || continue
-              install -D -m 0644 "$f" "${eca}/python-testing-patterns/references/$(basename "$f")"
-            done
-          fi
-        '';
-      };
     };
   };
 }
