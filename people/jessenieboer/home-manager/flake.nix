@@ -2,6 +2,7 @@
   description = "Home Manager configuration of jessenieboer";
 
   inputs = {
+    devenv.url = "github:cachix/devenv"; # main branch
     emacs-overlay = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/emacs-overlay";

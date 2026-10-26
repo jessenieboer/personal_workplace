@@ -6,7 +6,7 @@
       go-grip
       nix-prefetch-github
       trash-cli
-      unstable.devenv
+      inputs.devenv.packages.${pkgs.stdenv.hostPlatform.system}.devenv
     ];
     # sessionVariables = {
       #   # EDITOR = "emacs";
