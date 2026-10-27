@@ -3,5 +3,7 @@ inputs:
     flake: false
     url: github:github/awesome-copilot
 
-imports:
-  - /toolboxes/emacs
+# imports:
+#  - /toolboxes/emacs
+#  - /toolboxes/glossary
+#  - /toolboxes/readme
