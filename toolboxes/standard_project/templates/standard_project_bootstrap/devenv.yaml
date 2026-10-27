@@ -1,7 +1,0 @@
-inputs:
-  personal_workplace:
-    flake: false
-    url: github:jessenieboer/personal_workplace/jn
-
-imports:
-  - personal_workplace/toolboxes/standard_project
