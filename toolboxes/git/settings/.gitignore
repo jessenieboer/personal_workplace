@@ -1,5 +1,11 @@
 .devenv
+.devenv*
+.direnv/
 devenv.local.nix
 devenv.local.yaml
-.direnv
 .pre-commit-config.yaml
+result
+result-*
+*.swp
+*.swo
+.DS_Store
