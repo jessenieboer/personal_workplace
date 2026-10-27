@@ -8,3 +8,6 @@ devenv.lock
 .toolboxes/
 .gitignore
 !/.gitignore
+.git
+.gitattributes
+/git/toolboxes/
