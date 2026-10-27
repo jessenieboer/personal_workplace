@@ -43,6 +43,7 @@ in
         name = "emacs"; task = "copy_envrc";
         src = ./programs/.envrc; dest = ".envrc";
       }
-      // tt.gitignore "emacs" ./settings/.gitignore;
+      // tt.gitignore "emacs" ./settings/.gitignore
+      // tt.practices { name = "emacs"; local = ./practices; };
   };
 }
