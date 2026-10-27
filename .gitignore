@@ -2,6 +2,7 @@
 #*#
 *~
 .#*
+\#*\#
 *$py.class
 build/
 .cache/
@@ -12,12 +13,14 @@ compiled/
 coverage/
 *.dep
 .devenv
+.devenv*
 devenv.local.nix
 devenv.local.yaml
-.direnv
+.direnv/
 .dir-locals.el
 dist/
 .doc/
+.DS_Store
 .eca
 *.egg-info/
 .envrc
@@ -37,8 +40,12 @@ __pycache__/
 .pytest_cache/
 .racket
 replay_pid*.log
+result
+result-*
 .ruff_cache/
 .settings/
+*.swo
+*.swp
 target/
 .toolboxes/ai_toolbox
 .toolboxes/code_toolbox
