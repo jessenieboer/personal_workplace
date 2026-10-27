@@ -1,0 +1,10 @@
+#+title: Glossary
+#+EXPORT_FILE_NAME: ../../GLOSSARY.md
+#+OPTIONS: toc:nil prop:nil
+
+* sample term
+:PROPERTIES:
+:ID:       98eaf20c-746b-4303-adc5-66984d81f4cf
+:ALIASES:  sample terms
+:END:
+A placeholder term. Replace it with a word or phrase that has a specific meaning in this project.

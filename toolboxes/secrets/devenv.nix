@@ -5,9 +5,7 @@ in
 {
   config = {
     enterShell = ''
-      if [ -t 1 ]; then
-        echo "secrets toolbox available"
-      fi
+      ${tt.announce "secrets"}
     '';
 
     packages = with pkgs; [

@@ -5,8 +5,8 @@ in
 {
   config = {
     enterShell = ''
+      ${tt.announce "rust"}
       if [ -t 1 ]; then
-        echo "rust toolbox available"
         echo "rustc version: $(rustc --version)"
         echo "cargo version: $(cargo --version)"
       fi

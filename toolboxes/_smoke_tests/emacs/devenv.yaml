@@ -1,4 +1,2 @@
-# Smoke consumer for the emacs toolbox.
-# Import only the toolbox under test; its devenv.yaml pulls the rest.
 imports:
   - /toolboxes/emacs

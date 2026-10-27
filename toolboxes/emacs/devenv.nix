@@ -36,9 +36,7 @@ in
       else
         rm -f "$tmp"
       fi
-      if [ -t 1 ]; then
-        echo "emacs toolbox available"
-      fi
+      ${tt.announce "emacs"}
     '';
 
     tasks = tt.seed {

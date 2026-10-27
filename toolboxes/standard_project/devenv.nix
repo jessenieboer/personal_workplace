@@ -11,9 +11,7 @@ in
 {
   config = {
     enterShell = ''
-      if [ -t 1 ]; then
-        echo "standard project toolbox available"
-      fi
+      ${tt.announce "standard project"}
     '';
 
     tasks = tt.refresh {

@@ -1,111 +1,11 @@
 # Toolbox smoke tests
 
-Minimal devenv consumers under `toolboxes/_smoke_tests/`. The underscore
-prefix marks this tree as meta: it is not itself an importable toolbox.
+One fixture per toolbox. Each fixture imports only its toolbox from this
+checkout (`/toolboxes/<name>`), so uncommitted changes are tested.
 
-Each subdirectory imports **one** pure toolbox the way a real project
-would (`imports: [/toolboxes/<name>]`). Transitive inputs and imports
-come from that toolbox's own `devenv.yaml`.
+Run:
 
-These fixtures replace the old habit of treating a language toolbox
-directory as a half-project just to try it.
+    toolboxes/_smoke_tests/emacs/check.sh
 
-## How to run one smoke test
-
-From a machine with devenv + nix (Jesse's workplace):
-
-```bash
-cd toolboxes/_smoke_tests/python   # or any other fixture
-devenv shell -- ./check.sh
-```
-
-Pass means `check.sh` exits 0. That implies the shell entered, enterShell
-tasks ran (templates / PATH seeds), and the checks in that fixture's
-`check.sh` succeeded.
-
-If flake inputs need a GitHub token (common for toolboxes that pull
-agent/skill repos), use the secrets toolbox helper or set Nix access
-tokens the same way you do for normal projects:
-
-```bash
-# after secrets toolbox has seeded tooling, or via your usual wrapper:
-NIX_CONFIG="access-tokens = github.com=$NIX_GITHUB_PAT" devenv shell -- ./check.sh
-```
-
-### Why every fixture has a `devenv.nix`
-
-devenv 2.2+ finds the project root by walking up to the nearest
-`devenv.nix`. A fixture with only `devenv.yaml` gets skipped, and devenv
-uses `toolboxes/` (which has its own `devenv.nix`) as the root instead,
-ignoring the fixture's imports and unfree permits. Each fixture therefore
-carries a minimal `devenv.nix` (`{ ... }: { }`).
-
-### Unfree packages (`bws`)
-
-devenv applies `nixpkgs.permitted_unfree_packages` / `allow_unfree` on the
-**project root** only. A permit inside an imported toolbox (e.g. `secrets`
-for `bws`) does not reliably merge into a smoke consumer.
-
-Fixtures that import `secrets` directly or transitively (`ai`, `bdd`,
-`code`, `java`, `javascript`, `postgres`, `python`, `secrets`, `sql`)
-therefore declare:
-
-```yaml
-nixpkgs:
-  permitted_unfree_packages:
-    - bws
-```
-
-in their own `devenv.yaml`. Real projects that import those toolboxes need
-the same root permit.
-
-### Secrets / XAI
-
-Toolboxes that import `secrets` (and language/AI stacks that vendor
-skills) may seed a `secretspec.toml` into the smoke dir on shell entry.
-That file is gitignored here.
-
-For full AI/skill behavior you typically need:
-
-- `TEST_SECRET` (secrets smoke / shared profile)
-- `XAI_API_KEY` (ai / python / java / javascript / postgres / sql / bdd / code and anything that pulls ai)
-
-Provide them via secretspec + BWS the same way real projects do
-(`secretspec check`). Do **not** commit real secrets.
-
-Shell entry itself does not currently require secretspec to succeed
-(secretspec is packaged and templated; it is not forced on by devenv
-`secretspec.enable` in these toolboxes). Smoke checks that only need
-PATH/tools/templates can pass without XAI.
-
-## Fixtures
-
-| Fixture | Imports | Pass highlights |
-| --- | --- | --- |
-| `ai/` | `/toolboxes/ai` | enterShell; `.eca` agent/config seeded |
-| `bdd/` | `/toolboxes/bdd` | enterShell; BDD agents/skills seeds |
-| `code/` | `/toolboxes/code` | `opencode` on PATH; code seeds |
-| `emacs/` | `/toolboxes/emacs` | `.envrc` + `.dir-locals.el` seeded |
-| `git/` | `/toolboxes/git` | merged root `.gitignore` present |
-| `html/` | `/toolboxes/html` | html/css LS + prettier; `index.html` |
-| `java/` | `/toolboxes/java` | java/javac/mvn/jdtls/google-java-format/xmllint on PATH, JDK 21; `pom.xml` seeded and well-formed + java-skill-guide |
-| `javascript/` | `/toolboxes/javascript` | node/npm/tsc/ts-ls/prettier; `package.json` + JS skills seeded |
-| `postgres/` | `/toolboxes/postgres` | psql/pgcli 16 on PATH; `PGDATABASE=culab`; culab declared; server started with `devenv up -d`, `psql -d culab` answers, then stopped |
-| `project_management/` | `/toolboxes/project_management` | requires local `project_name`; dir-locals fragment |
-| `python/` | `/toolboxes/python` | python/uv/ruff/ty; `pyproject.toml` |
-| `racket/` | `/toolboxes/racket` | racket/raco on PATH |
-| `readme/` | `/toolboxes/readme` | readme.org template under `.toolboxes/` |
-| `rust/` | `/toolboxes/rust` | rustc/cargo; `Cargo.toml` |
-| `secrets/` | `/toolboxes/secrets` | `bws` + `secretspec` on PATH; secretspec.toml seeded |
-| `sql/` | `/toolboxes/sql` | psql/sqlfluff/postgres-language-server; `.sqlfluff` seeded and lints; postgres service off by default |
-| `standard_project/` | `/toolboxes/standard_project` | journal capture dir-locals fragment rendered (placeholder filled) and merged into `.dir-locals.el`; every template copied and in sync with source |
-| `voxtype/` | `/toolboxes/voxtype` | enterShell succeeds |
-
-## Not smoke-tested here
-
-- **`toolboxes/` root devenv** — aggregator / playground, not a toolbox module.
-- **`_smoke_tests` itself** — meta only; never import it as a toolbox.
-
-If a toolbox later requires options or non-optional secrets to enter the
-shell, either extend that fixture's `devenv.nix` / docs or call out the
-blocker in this README instead of leaving a broken consumer.
+The check wipes the fixture's generated files, enters the shell under a
+pseudo-tty, and asserts what the toolbox should leave behind.

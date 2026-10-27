@@ -15,8 +15,8 @@ in
 {
   config = {
     enterShell = ''
+      ${tt.announce "code"}
       if [ -t 1 ]; then
-        echo "code toolbox available"
         echo "opencode: $(command -v opencode)"
       fi
     '';

@@ -17,8 +17,8 @@ in
 {
   config = {
     enterShell = ''
+      ${tt.announce "javascript"}
       if [ -t 1 ]; then
-        echo "javascript toolbox available"
         echo "node version: $(node --version)"
         echo "npm version: $(npm --version)"
         echo "tsc version: $(tsc --version)"

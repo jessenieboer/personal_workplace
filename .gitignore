@@ -30,7 +30,6 @@ node_modules/
 .npm/
 npm-debug.log*
 .opencode
-*.pdb
 .pre-commit-config.yaml
 .project
 __pycache__/
@@ -38,10 +37,8 @@ __pycache__/
 .pytest_cache/
 .racket
 replay_pid*.log
-**/*.rs.bk
 .ruff_cache/
 .settings/
-/target/
 target/
 .toolboxes/ai_toolbox
 .toolboxes/code_toolbox

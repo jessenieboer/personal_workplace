@@ -13,8 +13,8 @@ in
     };
 
     enterShell = ''
+      ${tt.announce "racket"}
       if [ -t 1 ]; then
-        echo "racket toolbox available"
         echo "racket: $(racket --version)"
         echo "raco: $(command -v raco)"
         echo "PLTADDONDIR: $PLTADDONDIR"

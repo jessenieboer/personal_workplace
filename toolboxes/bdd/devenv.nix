@@ -36,9 +36,7 @@ let
 in
 {
   enterShell = ''
-    if [ -t 1 ]; then
-      echo "bdd toolbox available"
-    fi
+    ${tt.announce "bdd"}
   '';
 
   tasks = practicesTasks // {

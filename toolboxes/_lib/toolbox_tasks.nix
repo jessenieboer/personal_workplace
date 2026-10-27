@@ -22,6 +22,13 @@ let
   };
 in
 rec {
+  # Bold green "✔ <name> toolbox available" line for enterShell, tty only.
+  announce = name: ''
+    if [ -t 1 ]; then
+      printf '\033[1;32m✔ %s toolbox available\033[0m\n' "${name}"
+    fi
+  '';
+
   # Keep dest identical to src; overwrite it whenever they differ.
   refresh = { name, task, src, dest, before ? [ ]
             , description ? "Refresh ${dest} from the ${name} toolbox" }:

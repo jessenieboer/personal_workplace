@@ -1,4 +1,4 @@
-#+title: Readme Toolbox Glossary
+#+title: Glossary Toolbox Glossary
 #+EXPORT_FILE_NAME: ../../GLOSSARY.md
 #+OPTIONS: toc:nil prop:nil
 Terms used to describe glossaries themselves.
@@ -7,7 +7,7 @@ Terms used to describe glossaries themselves.
 :PROPERTIES:
 :ID:       a967b757-69b9-44ee-bf1c-7d30ad3e9955
 :ALIASES:  contexts
-:CONTEXT:  readme_toolbox
+:CONTEXT:  glossary_toolbox
 :PRIME:    false
 :END:
 The conceptual boundary within which a [[id:8a99631b-a1f0-41b8-acc5-8c3720c716bf][term]]'s meaning holds.
@@ -16,7 +16,7 @@ The conceptual boundary within which a [[id:8a99631b-a1f0-41b8-acc5-8c3720c716bf
 :PROPERTIES:
 :ID:       41774663-0710-4fa7-9a45-4892b0f45052
 :ALIASES:  definitions
-:CONTEXT:  readme_toolbox
+:CONTEXT:  glossary_toolbox
 :PRIME:    false
 :END:
 A statement of what a [[id:8a99631b-a1f0-41b8-acc5-8c3720c716bf][term]] means.
@@ -25,7 +25,7 @@ A statement of what a [[id:8a99631b-a1f0-41b8-acc5-8c3720c716bf][term]] means.
 :PROPERTIES:
 :ID:       10afb94f-bde0-4cbb-bf4b-4b8b96bfaf4d
 :ALIASES:  glossaries
-:CONTEXT:  readme_toolbox
+:CONTEXT:  glossary_toolbox
 :PRIME:    false
 :END:
 A collection of [[id:8a99631b-a1f0-41b8-acc5-8c3720c716bf][terms]] and their [[id:41774663-0710-4fa7-9a45-4892b0f45052][definitions]].
@@ -34,7 +34,7 @@ A collection of [[id:8a99631b-a1f0-41b8-acc5-8c3720c716bf][terms]] and their [[i
 :PROPERTIES:
 :ID:       8a99631b-a1f0-41b8-acc5-8c3720c716bf
 :ALIASES:  terms
-:CONTEXT:  readme_toolbox
+:CONTEXT:  glossary_toolbox
 :PRIME:    false
 :END:
 A word or phrase with a specific meaning in some [[id:a967b757-69b9-44ee-bf1c-7d30ad3e9955][context]].

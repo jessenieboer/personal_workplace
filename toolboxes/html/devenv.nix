@@ -5,8 +5,8 @@ in
 {
   config = {
     enterShell = ''
+      ${tt.announce "html"}
       if [ -t 1 ]; then
-        echo "html toolbox available"
         echo "html-ls: $(command -v vscode-html-language-server)"
         echo "css-ls: $(command -v vscode-css-language-server)"
         echo "prettier: $(command -v prettier)"

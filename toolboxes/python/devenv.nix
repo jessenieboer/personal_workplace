@@ -25,8 +25,8 @@ in
 {
   config = {
     enterShell = ''
+      ${tt.announce "python"}
       if [ -t 1 ]; then
-        echo "python toolbox available"
         echo "Python version: $(python --version)"
         echo "uv version: $(uv --version)"
         echo "ruff version: $(ruff --version)"

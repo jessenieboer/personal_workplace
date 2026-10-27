@@ -1,5 +1,6 @@
 { pkgs, lib, config, inputs, ... }:
 let
+  tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
   gitIgnore = ./settings/.gitignore;
   root = config.devenv.root;
   dest = "${root}/.gitignore";
@@ -20,9 +21,7 @@ in
       else
         rm -f "$tmp"
       fi
-      if [ -t 1 ]; then
-        echo "git toolbox available"
-      fi
+      ${tt.announce "git"}
     '';
   };
 }

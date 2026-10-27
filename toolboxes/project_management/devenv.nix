@@ -19,9 +19,7 @@ in
     # };
 
     enterShell = ''
-      if [ -t 1 ]; then
-      echo "project management toolbox available"
-      fi
+      ${tt.announce "project management"}
     '';
 
     tasks = tt.refresh {

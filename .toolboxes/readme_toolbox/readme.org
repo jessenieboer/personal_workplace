@@ -54,6 +54,9 @@ nixos-rebuild switch --flake /root/personal_workplace/computers#configname
 *** Details
 **** Toolbox structure
 directories for programs, settings, templates, and practices
+
+toolbox that use other toolboxes proliferate (hopefully)
+- base toolboxes are emacs (for envrc stuff), readme, and glossary (for documentation)
 **** Troubleshooting :noexport:
 Failed to install bootloader error:
 

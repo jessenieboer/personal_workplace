@@ -39,9 +39,7 @@ in
 {
   config = {
     enterShell = ''
-      if [ -t 1 ]; then
-        echo "ai toolbox available"
-      fi
+      ${tt.announce "ai"}
     '';
 
     tasks = practicesTasks

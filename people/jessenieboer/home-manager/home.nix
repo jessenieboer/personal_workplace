@@ -32,6 +32,11 @@
     direnv = {
       enable = true;
       enableBashIntegration = true;
+      # Trust .envrc files under these roots without `direnv allow`.
+      config.whitelist.prefix = [
+        "${config.home.homeDirectory}/kingdoms"
+        "${config.home.homeDirectory}/Dropbox/_kingdom_management"
+      ];
     };
     git = {
       enable = true;

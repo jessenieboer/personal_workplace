@@ -1,5 +1,7 @@
 { pkgs, lib, config, ... }:
-
+let
+  tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
+in
 {
   options.voxtype_toolbox = {
     initial_prompt = lib.mkOption {
@@ -28,9 +30,7 @@
 
   config = {
     enterShell = ''
-      if [ -t 1 ]; then
-        echo "voxtype toolbox available"
-      fi
+      ${tt.announce "voxtype"}
     '';
 
     tasks = {
