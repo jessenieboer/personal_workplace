@@ -10,15 +10,20 @@ trap 'rm -f "$log"' EXIT
 script -qec "devenv shell -- true" "$log" >/dev/null || { tail -30 "$log"; exit 1; }
 
 fail() { echo "FAIL: $*"; exit 1; }
-s=.toolboxes/bash_toolbox/practices/skills/bash-script-validator
+skills=.toolboxes/bash_toolbox/practices/skills
 
-[ -f "$s/SKILL.md" ] || fail "SKILL.md missing from the mirror"
-grep -q '^name: bash-script-validator' "$s/SKILL.md" || fail "skill content wrong"
-grep -q 'Apache License' "$s/LICENSE" || fail "upstream LICENSE not shipped"
-[ -f "$s/scripts/validate.sh" ] || fail "validator script missing"
-[ -f .eca/skills/bash-script-validator/SKILL.md ] || fail ".eca copy missing"
-devenv shell -- shellcheck --version >/dev/null 2>&1 || fail "shellcheck not on PATH"
-devenv shell -- bash "$s/scripts/validate.sh" "$s/examples/good-bash.sh" >/dev/null 2>&1 || fail "validator rejects its own good example"
+for n in bash-defensive-patterns bash-linux bash-pro bash-scripting; do
+  s=$skills/$n
+  grep -q "^name: $n" "$s/SKILL.md" 2>/dev/null || fail "$n SKILL.md missing or wrong"
+  grep -q 'MIT License' "$s/LICENSE" 2>/dev/null || fail "$n lacks LICENSE"
+  grep -q 'CC BY 4.0' "$s/LICENSE-CONTENT" 2>/dev/null || fail "$n lacks LICENSE-CONTENT"
+  [ -f ".eca/skills/$n/SKILL.md" ] || fail "$n .eca copy missing"
+done
+[ -f "$skills/bash-defensive-patterns/resources/implementation-playbook.md" ] || fail "defensive-patterns resources missing"
+[ -e "$skills/bash-script-validator" ] && fail "old bash-script-validator still shipped"
+for tool in shellcheck shfmt bats; do
+  devenv shell -- "$tool" --version >/dev/null 2>&1 || fail "$tool not on PATH"
+done
 grep -q '✔ bash toolbox available' "$log" || fail "announce line not printed under a tty"
 
 echo "PASS: bash toolbox"
