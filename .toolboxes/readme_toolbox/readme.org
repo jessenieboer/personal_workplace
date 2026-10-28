@@ -55,8 +55,9 @@ nixos-rebuild switch --flake /root/personal_workplace/computers#configname
 **** Toolbox structure
 directories for programs, settings, templates, and practices
 
-toolbox that use other toolboxes proliferate (hopefully)
-- base toolboxes are emacs (for envrc stuff), readme, and glossary (for documentation)
+**** AI use
+skills are included in practices/skills in a toolbox; agents should be able to pick them up. my personal suite of agents is in the grok bot toolbox.
+
 **** Troubleshooting :noexport:
 Failed to install bootloader error:
 

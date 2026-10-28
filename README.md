@@ -36,7 +36,7 @@ Myself, and anyone who finds something useful in here
 
 This is mostly to remind myself how to do this:
 
-bootstrapping from a new nixos install: as root user, type the following into /etc/nixos/configuration.nix: <a id="org1b8892b"></a>
+bootstrapping from a new nixos install: as root user, type the following into /etc/nixos/configuration.nix: <a id="org25907b8"></a>
 
 then cd into .ssh, ssh-keygen -K to get the stub file, rename the stub file to id<sub>ed25519</sub><sub>sk</sub>, delete the .pub file (assuming this is in github already. making this a public repo probably renders this unnecessary)
 
@@ -63,6 +63,14 @@ cp -r *home/jessenieboer/kingdoms/Household/Jesse/personal<sub>workplace</sub>* 
 
 
 ### Details
+
+-   Toolbox structure
+
+    directories for programs, settings, templates, and practices
+
+-   AI use
+
+    skills are included in practices/skills in a toolbox; agents should be able to pick them up. my personal suite of agents is in the grok bot toolbox.
 
 -   License
 
