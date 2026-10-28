@@ -15,5 +15,5 @@ description: >-
    - `duplicate`: two routines (same or different bots) doing the same job.
    - `orphan-skill`: the prompt names a skill that doesn't exist, or a skill exists only for a removed routine.
 3. **Skip what's fixed.** Check later chat messages for a stop, pause, or reschedule before flagging.
-4. **Report.** A short numbered list, one line each: `bot | routine | flag | suggested fix`. Then one line naming what was checked and cleared, and any visibility gaps. If nothing is worth proposing, send nothing.
+4. **Report.** A short numbered list, one line each: `bot | routine | flag | suggested fix`. Write each fix as an edit to the routine's existing prompt or schedule (the line to change and its replacement), not as new text added to the prompt. Then one line naming what was checked and cleared, and any visibility gaps. If nothing is worth proposing, send nothing.
 5. **Don't act.** Edit no routine, skill, or bot until the user picks. Never edit another bot's routines directly; ask that bot to do it after the user approves.
