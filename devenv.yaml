@@ -1,4 +1,6 @@
 imports:
+  - /toolboxes/emacs
   - /toolboxes/git
+  - /toolboxes/nixos
+  - /toolboxes/glossary
   - /toolboxes/readme
-  - /toolboxes/voxtype
