@@ -22,7 +22,7 @@ in
         STANDARD_PROJECT_DIRECTORY = config.devenv.root;
       };
     }
-    // tt.gitignore "standard_project" ./settings/.gitignore
+    // tt.gitignoreFor { name = "standard_project"; }
     // {
       "standard_project_toolbox:copy_templates" = {
         description = "Refresh each templates/ subdirectory under .toolboxes/standard_project_toolbox/templates when source changes";

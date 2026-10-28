@@ -39,7 +39,11 @@ in
     ${tt.announce "bdd"}
   '';
 
-  tasks = practicesTasks // {
+  # brainstorm.txt and features/ are seeded once and then edited, so the
+  # folder stays visible to git.
+  tasks = practicesTasks
+    // tt.gitignoreFor { name = "bdd"; ignoreSelf = false; }
+    // {
     "bdd_toolbox:copy_setup_files" = {
       description = "Refresh definition-of-done.md; seed features/ and brainstorm.txt once";
       before = [ "devenv:enterShell" ];

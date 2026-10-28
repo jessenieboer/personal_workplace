@@ -12,7 +12,9 @@ let
 in
 {
   config = {
-    tasks = tt.refresh {
+    # gitconfig is committed so clones pick up the include.path target.
+    tasks = tt.gitignoreFor { name = "git"; ignoreSelf = false; }
+      // tt.refresh {
         name = "git"; task = "copy_gitconfig";
         src = ./settings/gitconfig; dest = gitconfig;
       }

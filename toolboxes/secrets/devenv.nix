@@ -13,7 +13,7 @@ in
       secretspec
     ];
 
-    tasks = tt.gitignore "secrets" ./settings/.gitignore
+    tasks = tt.gitignoreFor { name = "secrets"; }
       // tt.seed {
         name = "secrets"; task = "copy_secretspec_template";
         src = ./templates/secretspec.toml; dest = "secretspec.toml";

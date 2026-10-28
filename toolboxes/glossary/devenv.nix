@@ -8,8 +8,10 @@ in
       ${tt.announce "glossary"}
     '';
 
-    # Exporting glossary.org with ox-gfm writes GLOSSARY.md to the project root.
-    tasks = tt.seed {
+    # glossary.org is user-edited, so the folder stays visible to git.
+    # Exporting it with ox-gfm writes GLOSSARY.md to the project root.
+    tasks = tt.gitignoreFor { name = "glossary"; ignoreSelf = false; }
+      // tt.seed {
       name = "glossary"; task = "copy_glossary_template";
       src = ./templates/glossary.org; dest = ".toolboxes/glossary_toolbox/glossary.org";
       postExec = ''sed -i "s/00000000-0000-0000-0000-000000000000/$(cat /proc/sys/kernel/random/uuid)/" "$dest"'';

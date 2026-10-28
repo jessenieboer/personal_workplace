@@ -6,4 +6,3 @@ coverage/
 .cache/
 *.log
 npm-debug.log*
-.toolboxes/javascript_toolbox

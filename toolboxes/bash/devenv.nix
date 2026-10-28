@@ -42,6 +42,7 @@ in
       ${tt.announce "bash"}
     '';
 
-    tasks = tt.practices { name = "bash"; local = ./practices; inherit extra; };
+    tasks = tt.practices { name = "bash"; local = ./practices; inherit extra; }
+      // tt.gitignoreFor { name = "bash"; };
   };
 }

@@ -33,7 +33,8 @@ in
       ${tt.announce "voxtype"}
     '';
 
-    tasks = {
+    # The generated prompts are committed, so the folder stays visible to git.
+    tasks = tt.gitignoreFor { name = "voxtype"; ignoreSelf = false; } // {
       "voxtype_toolbox:generate_initial_prompt" = {
         description = "Write initial_prompt.txt when the project set a prompt";
         before = [ "devenv:enterShell" ];

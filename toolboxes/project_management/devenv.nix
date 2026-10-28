@@ -22,7 +22,8 @@ in
       ${tt.announce "project management"}
     '';
 
-    tasks = tt.refresh {
+    tasks = tt.gitignoreFor { name = "project_management"; }
+    // tt.refresh {
       name = "project_management"; task = "generate_dir_locals";
       description = "Render project_management_toolbox_dir_locals from devenv options";
       dest = ".toolboxes/project_management_toolbox/project_management_toolbox_dir_locals";

@@ -17,6 +17,7 @@ in
         "skills/nixos/SKILL.md" = "${skill}/SKILL.md";
         "skills/nixos/references" = "${skill}/references";
       };
-    };
+    }
+    // tt.gitignoreFor { name = "nixos"; };
   };
 }
