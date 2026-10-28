@@ -1,7 +1,6 @@
 .devenv
 .devenv*
 .direnv/
-.eca/
 devenv.local.nix
 devenv.local.yaml
 .pre-commit-config.yaml
