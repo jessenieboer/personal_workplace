@@ -6,5 +6,7 @@
 :PROPERTIES:
 :ID:       98eaf20c-746b-4303-adc5-66984d81f4cf
 :ALIASES:  sample terms
+:CONTEXT:  standard_project_toolbox
+:PRIME:    true
 :END:
 A placeholder term. Replace it with a word or phrase that has a specific meaning in this project.

@@ -6,5 +6,7 @@
 :PROPERTIES:
 :ID:       dd029e03-d922-4738-9a08-cf1c5cd0cd70
 :ALIASES:  sample terms
+:CONTEXT:  emacs_toolbox
+:PRIME:    true
 :END:
 A placeholder term. Replace it with a word or phrase that has a specific meaning in this project.

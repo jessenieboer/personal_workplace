@@ -6,5 +6,7 @@
 :PROPERTIES:
 :ID:       00000000-0000-0000-0000-000000000000
 :ALIASES:  sample terms
+:CONTEXT:  project_name
+:PRIME:    true
 :END:
 A placeholder term. Replace it with a word or phrase that has a specific meaning in this project.

@@ -6,5 +6,7 @@
 :PROPERTIES:
 :ID:       e4829571-2b3a-4764-8f8b-fddf4b12ef96
 :ALIASES:  sample terms
+:CONTEXT:  personal_workplace
+:PRIME:    true
 :END:
 A placeholder term. Replace it with a word or phrase that has a specific meaning in this project.
