@@ -26,4 +26,15 @@ for tool in shellcheck shfmt bats; do
 done
 grep -q '✔ bash toolbox available' "$log" || fail "announce line not printed under a tty"
 
+# The toolbox keeps its generated folder out of git by itself. Check in a
+# scratch repo: this fixture sits under a repo that already ignores .toolboxes.
+repo=$(mktemp -d)
+trap 'rm -f "$log"; rm -rf "$repo"' EXIT
+cp -r --no-preserve=mode .toolboxes "$repo/"
+git -C "$repo" init -q
+git -C "$repo" check-ignore -q .toolboxes/bash_toolbox/practices/skills/bash-pro/SKILL.md || fail "bash_toolbox is not ignored"
+[ -z "$(git -C "$repo" status --porcelain -uall)" ] || fail "bash_toolbox shows up in git status"
+[ "$(cat .toolboxes/bash_toolbox/.gitignore)" = "*" ] || fail "bash_toolbox/.gitignore is not a lone *"
+[ ! -e .toolboxes/bash_toolbox/project.gitignore ] || fail "bash_toolbox wrote a project.gitignore without project ignores"
+
 echo "PASS: bash toolbox"

@@ -30,7 +30,9 @@ if command -v emacs >/dev/null; then
 fi
 [ -f .envrc ] || fail ".envrc not seeded"
 cmp -s .envrc ../../emacs/programs/.envrc || fail ".envrc differs from template"
-[ -f .toolboxes/emacs_toolbox/.gitignore ] || fail "gitignore fragment missing"
+[ -f .toolboxes/emacs_toolbox/project.gitignore ] || fail "project.gitignore missing"
+grep -qx '.dir-locals.el' .toolboxes/emacs_toolbox/project.gitignore || fail "project.gitignore lacks the toolbox ignores"
+[ "$(cat .toolboxes/emacs_toolbox/.gitignore)" = "*" ] || fail "emacs_toolbox/.gitignore is not a lone *"
 grep -q '✔ emacs toolbox available' "$log" || fail "announce line not printed under a tty"
 devenv shell -- true 2>/dev/null | grep -q 'toolbox available' && fail "announce printed without a tty"
 

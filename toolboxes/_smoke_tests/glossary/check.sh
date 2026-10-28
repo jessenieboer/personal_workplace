@@ -19,6 +19,16 @@ grep -Eq '^:ID: +[0-9a-f]{8}-[0-9a-f]{4}-' "$f" || fail "seeded term lacks a UUI
 [ -e .toolboxes/readme_toolbox ] && fail "glossary toolbox seeded readme files"
 grep -q '✔ glossary toolbox available' "$log" || fail "announce line not printed under a tty"
 
+
+# glossary.org is user-edited: the toolbox must not ignore its own folder.
+repo=$(mktemp -d)
+trap 'rm -f "$log"; rm -rf "$repo"' EXIT
+cp -r --no-preserve=mode .toolboxes "$repo/"
+git -C "$repo" init -q
+[ ! -e .toolboxes/glossary_toolbox/.gitignore ] || fail "glossary_toolbox wrote a .gitignore"
+git -C "$repo" check-ignore -q .toolboxes/glossary_toolbox/glossary.org && fail "glossary.org is ignored"
+git -C "$repo" status --porcelain -uall | grep -qF '.toolboxes/glossary_toolbox/glossary.org' || fail "glossary.org not visible to git"
+
 # A second entry must keep the user's edits.
 echo "* my term" >> "$f"
 devenv shell -- true >/dev/null 2>&1

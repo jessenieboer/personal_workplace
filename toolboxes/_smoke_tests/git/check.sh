@@ -38,6 +38,7 @@ git config -f "$inc" --get-regexp "^commit\." >/dev/null && fail "toolbox config
 git config -f "$inc" --get core.filemode >/dev/null && fail "toolbox sets core.fileMode"
 grep -qx '\* text=auto eol=lf' .gitattributes || fail ".gitattributes not seeded"
 grep -qx '.devenv' .gitignore || fail ".gitignore merge missing toolbox entries"
+grep -qx '\*' .gitignore && fail ".gitignore merge picked up a lone * from a fragment"
 grep -q '✔ git toolbox available' "$log" || fail "announce line not printed under a tty"
 
 devenv shell -- true >/dev/null 2>&1
@@ -47,5 +48,23 @@ for f in .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md .eca/skills
   [ -f "$f" ] || fail "$f missing"
 done
 grep -q "^name: git-commit" .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md || fail "git-commit skill content wrong"
+
+# The merge reads project.gitignore files only: a toolbox's own lone-* .gitignore stays out.
+mkdir -p .toolboxes/x_toolbox
+printf 'fromfrag\n' > .toolboxes/x_toolbox/project.gitignore
+printf '*\n' > .toolboxes/x_toolbox/.gitignore
+devenv shell -- true >/dev/null 2>&1
+grep -qx 'fromfrag' .gitignore || fail "project.gitignore not merged"
+grep -qx '\*' .gitignore && fail "a toolbox's own .gitignore leaked into the merge"
+
+# git_toolbox does not ignore itself. A stale generated .gitignore there is
+# removed; one the user wrote is left alone.
+printf '*\n' > .toolboxes/git_toolbox/.gitignore
+devenv shell -- true >/dev/null 2>&1
+[ ! -e .toolboxes/git_toolbox/.gitignore ] || fail "stale generated .gitignore not removed"
+printf 'mine\n' > .toolboxes/git_toolbox/.gitignore
+devenv shell -- true >/dev/null 2>&1
+[ "$(cat .toolboxes/git_toolbox/.gitignore)" = mine ] || fail "a user-written .gitignore was removed"
+
 
 echo "PASS: git toolbox"
