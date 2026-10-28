@@ -31,8 +31,10 @@ in
       {
         cat ${gitIgnore}
         echo
-        find "${root}" -path '*/.toolboxes/*' -name .gitignore -type f -exec cat {} \; -exec echo \;
-      } 2>/dev/null | grep -v '^$' | sort -u > "$tmp"
+        if [ -d "${root}/.toolboxes" ]; then
+          find "${root}/.toolboxes" -mindepth 2 -maxdepth 2 -name .gitignore -type f -exec cat {} \; -exec echo \;
+        fi
+      } | grep -v '^$' | sort -u > "$tmp"
       if [ ! -f "${dest}" ] || ! cmp -s "$tmp" "${dest}"; then
         mv "$tmp" "${dest}"
       else
