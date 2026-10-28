@@ -18,6 +18,12 @@ let
   # the store first). Use it for every value spliced into a shell snippet.
   q = x: lib.escapeShellArg "${x}";
 
+  practicesSync = pkgs.writeShellApplication {
+    name = "practices_sync";
+    runtimeInputs = with pkgs; [ coreutils diffutils gnugrep ];
+    text = builtins.readFile ./programs/practices_sync.sh;
+  };
+
   mkTask = { name, task, description, before ? [ ], status, exec }: {
     "${name}_toolbox:${task}" = {
       inherit description status exec;
@@ -85,13 +91,14 @@ rec {
   # .eca is shared by every toolbox, so only this toolbox's top-level items
   # (skills/<n>, agents/<f>, rules/<f>) are replaced there; the mirror is
   # replaced whole.
+  # The items installed are recorded in .toolboxes/<name>_toolbox/eca_manifest;
+  # items listed there but no longer shipped are removed from .eca, and nothing
+  # else is (other toolboxes' items and the user's own stay).
   practices = { name, local ? null, extra ? { }, postBuild ? "" }:
     let
       eca = "${root}/.eca";
       mirror = "${root}/.toolboxes/${name}_toolbox/practices";
-      ecaQ = q eca;
-      mirrorQ = q mirror;
-      builtQ = q built;
+      installed = "${root}/.toolboxes/${name}_toolbox/eca_manifest";
 
       built = pkgs.runCommandLocal "${name}-toolbox-practices" { } ''
         mkdir -p "$out"
@@ -109,29 +116,32 @@ rec {
         cd "$out" || exit 1
         ${postBuild}
       '';
+
+      # `built`'s top-level items (skills/<n>, agents/<f>, rules/<f>), one per
+      # line. Recorded in `installed` so a later run can remove the ones this
+      # toolbox stops shipping.
+      manifest = pkgs.runCommandLocal "${name}-eca-manifest" { } ''
+        cd ${q built}
+        for i in */*; do
+          if [ -e "$i" ]; then echo "$i"; fi
+        done | LC_ALL=C sort > "$out"
+      '';
+
+      sync = mode: lib.concatStringsSep " " [
+        (lib.getExe practicesSync)
+        mode
+        (q built)
+        (q manifest)
+        (q eca)
+        (q mirror)
+        (q installed)
+      ];
     in
     mkTask {
       inherit name;
       task = "copy_practices";
       description = "Refresh ${name} practices under .eca and .toolboxes/${name}_toolbox/practices";
-      status = ''
-        diff -r ${builtQ} ${mirrorQ} >/dev/null 2>&1 || exit 1
-        for i in ${builtQ}/*/*; do
-          [ -e "$i" ] || continue
-          diff -r "$i" ${ecaQ}/"''${i#${builtQ}/}" >/dev/null 2>&1 || exit 1
-        done
-      '';
-      exec = ''
-        rm -rf ${mirrorQ}
-        mkdir -p "$(dirname ${mirrorQ})" ${ecaQ}
-        cp -r --no-preserve=mode ${builtQ} ${mirrorQ}
-        for i in ${builtQ}/*/*; do
-          [ -e "$i" ] || continue
-          dest=${ecaQ}/"''${i#${builtQ}/}"
-          rm -rf "$dest"
-          mkdir -p "$(dirname "$dest")"
-          cp -r --no-preserve=mode "$i" "$dest"
-        done
-      '';
+      status = sync "status";
+      exec = sync "apply";
     };
 }
