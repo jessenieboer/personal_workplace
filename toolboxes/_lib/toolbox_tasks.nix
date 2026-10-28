@@ -24,6 +24,12 @@ let
     text = builtins.readFile ./programs/practices_sync.sh;
   };
 
+  removeGenerated = pkgs.writeShellApplication {
+    name = "remove_generated";
+    runtimeInputs = with pkgs; [ coreutils diffutils ];
+    text = builtins.readFile ./programs/remove_generated.sh;
+  };
+
   mkTask = { name, task, description, before ? [ ], status, exec }: {
     "${name}_toolbox:${task}" = {
       inherit description status exec;
@@ -70,13 +76,57 @@ rec {
       '';
     };
 
-  # The .toolboxes/<name>_toolbox/.gitignore fragment the git toolbox merges.
-  gitignore = name: src: refresh {
-    inherit name src;
-    task = "copy_gitignore";
-    dest = ".toolboxes/${name}_toolbox/.gitignore";
-    description = "Refresh the ${name}_toolbox gitignore fragment from the toolbox";
-  };
+  # The gitignore files a toolbox keeps in .toolboxes/<name>_toolbox/:
+  #   project.gitignore  src, the project ignores (.eca, node_modules/, ...)
+  #                      that the git toolbox merges into the root .gitignore.
+  #                      Written only when src is given.
+  #   .gitignore         a lone `*`, which keeps the toolbox's generated
+  #                      folder out of git. Written only when ignoreSelf is
+  #                      true (the default).
+  # Pass ignoreSelf = false for a toolbox whose folder holds files the user
+  # edits or commits. Then a leftover .gitignore is removed if it is exactly
+  # something an earlier version generated (a lone `*`, the old project
+  # ignores, or both together); any other .gitignore is left and reported.
+  gitignoreFor = { name, src ? null, ignoreSelf ? true }:
+    let
+      dir = ".toolboxes/${name}_toolbox";
+      body = lib.optionalString (src != null) (lib.removeSuffix "\n" (builtins.readFile src) + "\n");
+      text = pkgs.writeText "${name}-toolbox-project-gitignore" body;
+      star = pkgs.writeText "toolbox-gitignore-star" "*\n";
+      generated = [ star ]
+        ++ lib.optionals (src != null) [
+          text
+          "${src}"
+          (pkgs.writeText "${name}-toolbox-gitignore-combined" (body + "*\n"))
+        ];
+    in
+    lib.optionalAttrs (src != null) (refresh {
+      inherit name;
+      task = "copy_project_gitignore";
+      src = text;
+      dest = "${dir}/project.gitignore";
+      description = "Refresh the ${name}_toolbox project.gitignore from the toolbox";
+    })
+    // (if ignoreSelf then refresh {
+      inherit name;
+      task = "ignore_self";
+      src = star;
+      dest = "${dir}/.gitignore";
+      description = "Keep the ${name}_toolbox folder out of git";
+    } else mkTask {
+      inherit name;
+      task = "remove_stale_gitignore";
+      description = "Remove a stale generated ${dir}/.gitignore";
+      status = ''
+        [ ! -e ${q "${root}/${dir}/.gitignore"} ]
+      '';
+      exec = ''
+        ${lib.getExe removeGenerated} ${q "${root}/${dir}/.gitignore"} ${lib.concatMapStringsSep " " q generated}
+      '';
+    });
+
+  # gitignoreFor with the default ignoreSelf = true.
+  gitignore = name: src: gitignoreFor { inherit name src; };
 
   # ECA practices (skills, agents, rules). Builds one store directory shaped
   # like practices/ (skills/<n>/..., agents/..., rules/...) from the
