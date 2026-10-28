@@ -10,13 +10,13 @@ let
 in
 {
   config = {
-    # project_management_toolbox = {
-    #   project_name = "project_management_toolbox";
-    #   workers = [
-    #     { name = "jessenieboer"; email = "jessenieboer@protonmail.com"; }
-    #     { name = "Vizier"; }
-    #   ];
-    # };
+    project_management_toolbox = {
+      project_name = "project_management_toolbox";
+      workers = [
+        { name = "jessenieboer"; email = "jessenieboer@protonmail.com"; }
+        { name = "Vizier"; }
+      ];
+    };
 
     enterShell = ''
       ${tt.announce "project management"}
