@@ -2,3 +2,6 @@ inputs:
   nixos-ai-skill:
     flake: false
     url: github:marceloeatworld/nixos-ai-skill/
+
+imports:
+  - /toolboxes/bash

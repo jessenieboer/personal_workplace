@@ -17,6 +17,7 @@ grep -q '^name: nixos' "$s/SKILL.md" || fail "nixos skill content wrong"
 [ -f "$s/references/flakes.md" ] || fail "references not copied"
 [ -e "$s/install.sh" ] || [ -e "$s/scripts" ] && fail "repo scripts leaked into the skill"
 [ -f .eca/skills/nixos/SKILL.md ] || fail ".eca copy missing"
+[ -f .toolboxes/bash_toolbox/practices/skills/bash-script-validator/SKILL.md ] || fail "bash toolbox not imported"
 grep -q '✔ nixos toolbox available' "$log" || fail "announce line not printed under a tty"
 
 echo "PASS: nixos toolbox"
