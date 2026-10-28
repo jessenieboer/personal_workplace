@@ -14,6 +14,10 @@
 let
   root = config.devenv.root;
 
+  # Shell-escape any string or path (paths are interpolated, so they land in
+  # the store first). Use it for every value spliced into a shell snippet.
+  q = x: lib.escapeShellArg "${x}";
+
   mkTask = { name, task, description, before ? [ ], status, exec }: {
     "${name}_toolbox:${task}" = {
       inherit description status exec;
@@ -25,7 +29,7 @@ rec {
   # Bold green "✔ <name> toolbox available" line for enterShell, tty only.
   announce = name: ''
     if [ -t 1 ]; then
-      printf '\033[1;32m✔ %s toolbox available\033[0m\n' "${name}"
+      printf '\033[1;32m✔ %s toolbox available\033[0m\n' ${q name}
     fi
   '';
 
@@ -35,10 +39,10 @@ rec {
     mkTask {
       inherit name task description before;
       status = ''
-        [ -f "${root}/${dest}" ] && cmp -s ${src} "${root}/${dest}"
+        [ -f ${q "${root}/${dest}"} ] && cmp -s ${q src} ${q "${root}/${dest}"}
       '';
       exec = ''
-        install -D -m 0644 ${src} "${root}/${dest}"
+        install -D -m 0644 ${q src} ${q "${root}/${dest}"}
       '';
     };
 
@@ -49,12 +53,12 @@ rec {
     mkTask {
       inherit name task description before;
       status = ''
-        test -f "${root}/${dest}"
+        test -f ${q "${root}/${dest}"}
       '';
       exec = ''
-        dest="${root}/${dest}"
+        dest=${q "${root}/${dest}"}
         if [ ! -f "$dest" ]; then
-          install -D -m 0644 ${src} "$dest"
+          install -D -m 0644 ${q src} "$dest"
           ${postExec}
         fi
       '';
@@ -85,20 +89,24 @@ rec {
     let
       eca = "${root}/.eca";
       mirror = "${root}/.toolboxes/${name}_toolbox/practices";
+      ecaQ = q eca;
+      mirrorQ = q mirror;
+      builtQ = q built;
 
       built = pkgs.runCommandLocal "${name}-toolbox-practices" { } ''
-        mkdir -p $out
-        ${lib.optionalString (local != null) "cp -rL --no-preserve=mode ${local}/. $out/"}
+        mkdir -p "$out"
+        ${lib.optionalString (local != null) ''cp -rL --no-preserve=mode ${q "${local}/."} "$out/"''}
         ${lib.concatStrings (lib.mapAttrsToList (dest: src: ''
-          mkdir -p "$(dirname "$out/${dest}")"
-          if [ -d "${src}" ]; then
-            mkdir -p "$out/${dest}"
-            cp -rL --no-preserve=mode "${src}/." "$out/${dest}/"
+          d=${q dest}
+          mkdir -p "$(dirname "$out/$d")"
+          if [ -d ${q src} ]; then
+            mkdir -p "$out/$d"
+            cp -rL --no-preserve=mode ${q "${src}/."} "$out/$d/"
           else
-            cp -L --no-preserve=mode "${src}" "$out/${dest}"
+            cp -L --no-preserve=mode ${q src} "$out/$d"
           fi
         '') extra)}
-        cd $out
+        cd "$out" || exit 1
         ${postBuild}
       '';
     in
@@ -107,19 +115,19 @@ rec {
       task = "copy_practices";
       description = "Refresh ${name} practices under .eca and .toolboxes/${name}_toolbox/practices";
       status = ''
-        diff -r ${built} "${mirror}" >/dev/null 2>&1 || exit 1
-        for i in ${built}/*/*; do
+        diff -r ${builtQ} ${mirrorQ} >/dev/null 2>&1 || exit 1
+        for i in ${builtQ}/*/*; do
           [ -e "$i" ] || continue
-          diff -r "$i" "${eca}/''${i#${built}/}" >/dev/null 2>&1 || exit 1
+          diff -r "$i" ${ecaQ}/"''${i#${builtQ}/}" >/dev/null 2>&1 || exit 1
         done
       '';
       exec = ''
-        rm -rf "${mirror}"
-        mkdir -p "$(dirname "${mirror}")" "${eca}"
-        cp -r --no-preserve=mode ${built} "${mirror}"
-        for i in ${built}/*/*; do
+        rm -rf ${mirrorQ}
+        mkdir -p "$(dirname ${mirrorQ})" ${ecaQ}
+        cp -r --no-preserve=mode ${builtQ} ${mirrorQ}
+        for i in ${builtQ}/*/*; do
           [ -e "$i" ] || continue
-          dest="${eca}/''${i#${built}/}"
+          dest=${ecaQ}/"''${i#${builtQ}/}"
           rm -rf "$dest"
           mkdir -p "$(dirname "$dest")"
           cp -r --no-preserve=mode "$i" "$dest"
