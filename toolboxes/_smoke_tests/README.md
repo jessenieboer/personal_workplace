@@ -8,6 +8,7 @@ Run:
     toolboxes/_smoke_tests/emacs/check.sh
     toolboxes/_smoke_tests/git/check.sh
     toolboxes/_smoke_tests/glossary/check.sh
+    toolboxes/_smoke_tests/nixos/check.sh
     toolboxes/_smoke_tests/readme/check.sh
 
 The check wipes the fixture's generated files, enters the shell under a
