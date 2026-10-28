@@ -1,0 +1,4 @@
+inputs:
+  cc-devops-skills:
+    flake: false
+    url: github:akin-ozer/cc-devops-skills/276af751e659315aaf56d3ad13d7c26f4e72e28a

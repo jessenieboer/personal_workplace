@@ -5,6 +5,7 @@ checkout (`/toolboxes/<name>`), so uncommitted changes are tested.
 
 Run:
 
+    toolboxes/_smoke_tests/bash/check.sh
     toolboxes/_smoke_tests/emacs/check.sh
     toolboxes/_smoke_tests/git/check.sh
     toolboxes/_smoke_tests/glossary/check.sh
