@@ -133,8 +133,12 @@ rec {
   # .toolboxes/<name>_toolbox/project.gitattributes, where the git toolbox
   # merges it into the root .gitattributes. Keep only attribute lines in src;
   # git applies later lines over earlier ones, so a toolbox that needs a
-  # specific order should say so in its comments.
+  # specific order should say so in its comments. Not for the git
+  # toolbox: its project.gitattributes is the consumer's, seeded once and merged
+  # last.
   gitattributesFor = { name, src }:
+    assert lib.assertMsg (name != "git")
+      "gitattributesFor: git_toolbox/project.gitattributes belongs to the consumer project";
     refresh {
       inherit name;
       task = "copy_project_gitattributes";

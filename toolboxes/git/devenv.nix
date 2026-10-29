@@ -24,6 +24,12 @@ in
         name = "git"; task = "copy_gitconfig";
         src = ./settings/gitconfig; dest = gitconfig;
       }
+      // tt.seed {
+        name = "git"; task = "seed_project_gitattributes";
+        src = ./templates/project.gitattributes;
+        dest = ".toolboxes/git_toolbox/project.gitattributes";
+        description = "Seed the project's own .gitattributes lines once";
+      }
       // tt.practices {
         name = "git";
         extra = {

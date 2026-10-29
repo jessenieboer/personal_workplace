@@ -101,9 +101,27 @@ devenv shell -- true >/dev/null 2>&1
 grep -qx '\*.aa diff=aa' .gitattributes && fail "dropped fragment line stayed"
 grep -qx '\*.png binary' .gitattributes || fail "user line lost when a fragment line dropped"
 
+# The project's own .toolboxes/git_toolbox/project.gitattributes: seeded once
+# with a comment header, never written by gitattributesFor, merged last.
+pf=.toolboxes/git_toolbox/project.gitattributes
+[ -f "$pf" ] || fail "project.gitattributes not seeded"
+grep -q 'Project-specific' "$pf" || fail "seeded project.gitattributes lacks its header"
+grep -q 'Project-specific' .gitattributes || fail "seeded project header not merged"
+printf '*.zz diff=mine\n* text=auto eol=lf\n*.last -diff\n' > "$pf"
+cp "$pf" "$before"
+devenv shell -- true >/dev/null 2>&1
+devenv shell -- true >/dev/null 2>&1
+cmp -s "$pf" "$before" || fail "project.gitattributes overwritten after a user edit"
+[ "$(sed -n 2p .gitattributes)" = '* text=auto eol=lf' ] || fail "base line no longer first with a project file"
+[ "$(grep -cx '\*.last -diff' .gitattributes)" = 1 ] || fail "project line duplicated or missing"
+[ "$(grep -nx '\*.zz -diff' .gitattributes | cut -d: -f1)" -lt "$(grep -nx '\*.zz diff=mine' .gitattributes | cut -d: -f1)" ] || fail "project line does not come after the toolbox fragment it overrides"
+[ "$(grep -B1 -x '# <<< toolbox-managed <<<' .gitattributes | head -n1)" = '*.last -diff' ] || fail "project file is not last in the managed block"
+[ "$(grep -cx '\*.png binary' .gitattributes)" = 1 ] || fail "user line lost or duplicated"
+
 # An existing project with the old hand-seeded file: the base line moves into
 # the block, other lines are kept.
 rm -f "$before"
+printf '# mine\n' > "$pf"
 printf '* text=auto eol=lf\n*.svg text\n' > .gitattributes
 devenv shell -- true >/dev/null 2>&1
 [ "$(grep -cx '\* text=auto eol=lf' .gitattributes)" = 1 ] || fail "seeded base line duplicated"
