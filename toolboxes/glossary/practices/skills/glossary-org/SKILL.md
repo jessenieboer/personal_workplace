@@ -15,27 +15,4 @@ Edit glossary.org directly; it is git-tracked. Touch only glossary.org files. Ne
 6. Links are `[[id:<uuid>][wording as used]]`. Each glossary stands alone: link only to terms in the same file, and never link a term inside its own entry. When a term or alias is added or renamed, check the other definitions that use that word and link them; update `:PRIME:` where it applies. Flag circular, vague, or duplicate definitions you notice.
 7. Copying terms or a whole glossary into another file: give every copied term a fresh `:ID:` and rewrite its links to match. Duplicate ids make org jump to the wrong file. Tell the user to run `M-x org-id-update-id-locations`.
 8. Wording: the user decides what a term means. Ask questions to sharpen a definition, and propose new or changed definitions as a diff; write only after OK. If pasted text holds a stray secret-looking string (for example a YubiKey one-time code), leave it out and say so.
-9. Verify: run the check below on the file. It must print `ok`.
-
-```python
-import re,sys
-t=open(sys.argv[1]).read()
-hs=re.findall(r'^\* (.+)$',t,re.M); ss=re.split(r'^\* .+$',t,flags=re.M)[1:]
-ids={};bad=[]
-for h,s in zip(hs,ss):
-    m=re.search(r':ID:\s+(\S+)',s)
-    if not m: bad.append(h+': no ID'); continue
-    if m[1] in ids: bad.append(h+': duplicate ID')
-    ids[m[1]]=h
-    links=re.findall(r'\[\[id:([^\]]+)\]',s)
-    if m[1] in links: bad.append(h+': links itself')
-    if not re.search(r':ALIASES:',s): bad.append(h+': no ALIASES')
-    if not re.search(r':CONTEXT:\s+\S',s): bad.append(h+': no CONTEXT')
-    p=re.search(r':PRIME:\s+(\S+)',s)
-    if not p: bad.append(h+': no PRIME')
-    elif (p[1]=='true')==bool(links): bad.append(h+': PRIME mismatch')
-for h,s in zip(hs,ss):
-    bad+=[h+': dangling link' for l in re.findall(r'\[\[id:([^\]]+)\]',s) if l not in ids]
-if hs!=sorted(hs): bad.append('not alphabetical')
-print('\n'.join(bad) or 'ok')
-```
+9. Verify: run `glossary-check <file>`. It must print `ok`.

@@ -1,9 +1,16 @@
 { config, pkgs, ... }:
 let
   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
+  glossaryCheck = pkgs.writeShellApplication {
+    name = "glossary-check";
+    runtimeInputs = with pkgs; [ gawk ];
+    text = builtins.readFile ./programs/glossary-check.sh;
+  };
 in
 {
   config = {
+    packages = [ glossaryCheck ];
+
     enterShell = ''
       ${tt.announce "glossary"}
     '';
