@@ -12,6 +12,7 @@
 :PROPERTIES:
 :CUSTOM_ID: features
 :END:
+capture to journal
 * Why
 :PROPERTIES:
 :CUSTOM_ID: why
