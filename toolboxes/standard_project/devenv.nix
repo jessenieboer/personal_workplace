@@ -16,7 +16,7 @@ in
       ${tt.announce "standard project"}
     '';
 
-    tasks = tt.gitignoreFor { name = "standard_project"; }
+    tasks = tt.gitSettings "standard_project" ./settings
     // {
       "standard_project_toolbox:copy_templates" = {
         description = "Refresh each templates/ subdirectory under .toolboxes/standard_project_toolbox/templates when source changes";

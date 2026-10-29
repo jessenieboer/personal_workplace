@@ -26,7 +26,7 @@ in
       fi
     '';
 
-    tasks = tt.gitignore "racket" ./settings/.gitignore
+    tasks = tt.gitSettings "racket" ./settings
       // {
 
       "racket_toolbox:install_langserver" = {

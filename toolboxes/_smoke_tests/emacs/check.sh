@@ -60,9 +60,12 @@ EOF
 fi
 [ -f .envrc ] || fail ".envrc not seeded"
 cmp -s .envrc ../../emacs/programs/.envrc || fail ".envrc differs from template"
-[ -f .toolboxes/emacs_toolbox/project.gitignore ] || fail "project.gitignore missing"
-grep -qx '.dir-locals.el' .toolboxes/emacs_toolbox/project.gitignore || fail "project.gitignore lacks the toolbox ignores"
-[ "$(cat .toolboxes/emacs_toolbox/.gitignore)" = "*" ] || fail "emacs_toolbox/.gitignore is not a lone *"
+[ -f .toolboxes/emacs_toolbox/settings/.gitignore ] || fail "settings/.gitignore missing"
+cmp -s .toolboxes/emacs_toolbox/settings/.gitignore ../../emacs/settings/.gitignore || fail "settings/.gitignore differs from its source"
+[ "$(stat -c %a .toolboxes/emacs_toolbox/settings/.gitignore)" = 444 ] || fail "settings/.gitignore is not read-only"
+grep -qx '.dir-locals.el' .toolboxes/emacs_toolbox/settings/.gitignore || fail "settings/.gitignore lacks the toolbox ignores"
+grep -qx '.toolboxes/emacs_toolbox/' .toolboxes/emacs_toolbox/settings/.gitignore || fail "settings/.gitignore lacks the folder line"
+[ ! -e .toolboxes/emacs_toolbox/.gitignore ] || fail "emacs_toolbox wrote a folder .gitignore"
 grep -q '✔ emacs toolbox available' "$log" || fail "announce line not printed under a tty"
 devenv shell -- true 2>/dev/null | grep -q 'toolbox available' && fail "announce printed without a tty"
 

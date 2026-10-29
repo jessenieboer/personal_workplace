@@ -13,7 +13,8 @@ script -qec "devenv shell -- true" "$log" >/dev/null || { tail -30 "$log"; exit 
 fail() { echo "FAIL: $*"; exit 1; }
 
 [ -e .toolboxes/standard_project_toolbox/standard_project_toolbox_dir_locals ] && fail "standard_project still generates a dir-locals fragment"
-[ "$(cat .toolboxes/standard_project_toolbox/.gitignore)" = "*" ] || fail "standard_project_toolbox/.gitignore is not a lone *"
+grep -qx '.toolboxes/standard_project_toolbox/' .toolboxes/standard_project_toolbox/settings/.gitignore || fail "settings/.gitignore lacks the folder line"
+[ ! -e .toolboxes/standard_project_toolbox/.gitignore ] || fail "standard_project_toolbox wrote a folder .gitignore"
 grep -q '"Journal entry"' .dir-locals.el || fail "journal capture (from the emacs toolbox) missing from .dir-locals.el"
 [ "$(grep -c '"Journal entry"' .dir-locals.el)" = 1 ] || fail "journal template is not in .dir-locals.el exactly once"
 grep -q '✔ standard project toolbox available' "$log" || fail "announce line not printed under a tty"

@@ -9,8 +9,7 @@ in
     '';
 
     # readme.org is user-edited, so the folder stays visible to git.
-    tasks = tt.gitignoreFor { name = "readme"; ignoreSelf = false; }
-      // tt.seed {
+    tasks = tt.seed {
       name = "readme"; task = "copy_readme_template";
       src = ./templates/readme.org; dest = ".toolboxes/readme_toolbox/readme.org";
     };

@@ -20,6 +20,9 @@ pseudo-tty, and asserts what the toolbox should leave behind. Every check also a
 that no `.eca` directory and no `eca_manifest` is created: toolboxes install
 practices only under `.toolboxes/<name>_toolbox/practices`.
 
+The git fixture also covers the managed `.gitignore`/`.gitattributes` merge and the
+seeded, user-editable `settings/.gitconfig` (and its include migration).
+
 `tracked_paths` is not a fixture. It reads the git index and checks that every
 relative path a devenv.nix (and `_lib`) refers to is tracked, for the toolboxes
 the fixtures import and what those import. A path that exists only on disk

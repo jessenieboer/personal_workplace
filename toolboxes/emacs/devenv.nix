@@ -33,7 +33,7 @@ in
           ORG_DIRECTORY = root;
         };
       }
-      // tt.gitignore "emacs" ./settings/.gitignore
+      // tt.gitSettings "emacs" ./settings
       // tt.practices { name = "emacs"; local = ./practices; };
   };
 }

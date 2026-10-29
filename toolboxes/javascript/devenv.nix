@@ -47,7 +47,7 @@ in
     ];
 
     tasks = practicesTasks
-      // tt.gitignore "javascript" ./settings/.gitignore
+      // tt.gitSettings "javascript" ./settings
       // tt.seed {
         name = "javascript"; task = "copy_package_json_template";
         src = ./templates/package.json; dest = "package.json";

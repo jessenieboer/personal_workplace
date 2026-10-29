@@ -1,8 +1,6 @@
-# Per-project git settings from the git toolbox.
-# Rendered to .toolboxes/git_toolbox/gitconfig (refreshed on every shell entry,
-# so do not edit it) and pulled into .git/config with include.path. Project
-# overrides go in .toolboxes/git_toolbox/project.gitconfig, which is included
-# after this file.
+# Git settings for this project. The git toolbox seeds this file once from its
+# defaults and never overwrites it: it is yours, so edit it freely and commit it
+# with the project. It is pulled into .git/config with include.path.
 # No identity, signing or credentials here on purpose.
 [pull]
 	# Rebase local work on pull; refuse non-fast-forward merges.

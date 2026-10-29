@@ -25,16 +25,13 @@ for tool in shellcheck shfmt bats; do
 done
 grep -q '✔ bash toolbox available' "$log" || fail "announce line not printed under a tty"
 
-# The toolbox keeps its generated folder out of git by itself. Check in a
-# scratch repo: this fixture sits under a repo that already ignores .toolboxes.
-repo=$(mktemp -d)
-trap 'rm -f "$log"; rm -rf "$repo"' EXIT
-cp -r --no-preserve=mode .toolboxes "$repo/"
-git -C "$repo" init -q
-git -C "$repo" check-ignore -q .toolboxes/bash_toolbox/practices/skills/bash-pro/SKILL.md || fail "bash_toolbox is not ignored"
-[ -z "$(git -C "$repo" status --porcelain -uall)" ] || fail "bash_toolbox shows up in git status"
-[ "$(cat .toolboxes/bash_toolbox/.gitignore)" = "*" ] || fail "bash_toolbox/.gitignore is not a lone *"
-[ ! -e .toolboxes/bash_toolbox/project.gitignore ] || fail "bash_toolbox wrote a project.gitignore without project ignores"
+# The toolbox asks to be ignored through its settings/.gitignore, which the git
+# toolbox merges into the project .gitignore. This fixture does not import the
+# git toolbox, so the folder is not hidden here: check the copy and the absence
+# of a folder .gitignore.
+cmp -s .toolboxes/bash_toolbox/settings/.gitignore ../../bash/settings/.gitignore || fail "settings/.gitignore not copied from the toolbox"
+grep -qx '.toolboxes/bash_toolbox/' .toolboxes/bash_toolbox/settings/.gitignore || fail "settings/.gitignore lacks the folder line"
+[ ! -e .toolboxes/bash_toolbox/.gitignore ] || fail "bash_toolbox wrote a folder .gitignore"
 
 # Nothing is copied into .eca, and no eca manifest is kept.
 [ -e .eca ] && fail ".eca was created"

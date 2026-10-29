@@ -43,6 +43,6 @@ in
     '';
 
     tasks = tt.practices { name = "bash"; local = ./practices; inherit extra; }
-      // tt.gitignoreFor { name = "bash"; };
+      // tt.gitSettings "bash" ./settings;
   };
 }

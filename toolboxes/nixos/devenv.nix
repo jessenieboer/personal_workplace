@@ -18,6 +18,6 @@ in
         "skills/nixos/references" = "${skill}/references";
       };
     }
-    // tt.gitignoreFor { name = "nixos"; };
+    // tt.gitSettings "nixos" ./settings;
   };
 }

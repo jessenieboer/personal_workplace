@@ -43,6 +43,6 @@ in
     '';
 
     tasks = practicesTasks
-      // tt.gitignore "ai" ./settings/.gitignore;
+      // tt.gitSettings "ai" ./settings;
   };
 }

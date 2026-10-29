@@ -2,3 +2,4 @@ dist/
 build/
 .cache/
 *.log
+.toolboxes/html_toolbox/

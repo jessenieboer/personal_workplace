@@ -18,7 +18,7 @@ in
       vscode-langservers-extracted
     ];
 
-    tasks = tt.gitignore "html" ./settings/.gitignore
+    tasks = tt.gitSettings "html" ./settings
       // tt.seed {
         name = "html"; task = "copy_index_html_template";
         src = ./templates/index.html; dest = "index.html";

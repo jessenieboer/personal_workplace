@@ -2,8 +2,7 @@
 #
 #   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
 #   tasks = tt.practices { name = "python"; local = ./practices; }
-#     // tt.gitignore "python" ./settings/.gitignore
-#     // tt.gitattributesFor { name = "python"; src = ./settings/.gitattributes; }
+#     // tt.gitSettings "python" ./settings
 #     // tt.seed { name = "python"; task = "copy_pyproject_template";
 #                  src = ./templates/pyproject.toml; dest = "pyproject.toml"; }
 #     // { ...other tasks... };
@@ -25,12 +24,6 @@ let
     text = builtins.readFile ./programs/practices_sync.sh;
   };
 
-  removeGenerated = pkgs.writeShellApplication {
-    name = "remove_generated";
-    runtimeInputs = with pkgs; [ coreutils diffutils ];
-    text = builtins.readFile ./programs/remove_generated.sh;
-  };
-
   mkTask = { name, task, description, before ? [ ], status, exec }: {
     "${name}_toolbox:${task}" = {
       inherit description status exec;
@@ -46,16 +39,18 @@ rec {
     fi
   '';
 
-  # Keep dest identical to src; overwrite it whenever they differ.
-  refresh = { name, task, src, dest, before ? [ ]
+  # Keep dest identical to src; overwrite it whenever they differ. mode is the
+  # octal file mode ("444" for files the project must not edit).
+  refresh = { name, task, src, dest, mode ? "644", before ? [ ]
             , description ? "Refresh ${dest} from the ${name} toolbox" }:
     mkTask {
       inherit name task description before;
       status = ''
-        [ -f ${q "${root}/${dest}"} ] && cmp -s ${q src} ${q "${root}/${dest}"}
+        [ -f ${q "${root}/${dest}"} ] && cmp -s ${q src} ${q "${root}/${dest}"} \
+          && [ "$(stat -c %a ${q "${root}/${dest}"})" = ${mode} ]
       '';
       exec = ''
-        install -D -m 0644 ${q src} ${q "${root}/${dest}"}
+        install -D -m ${mode} ${q src} ${q "${root}/${dest}"}
       '';
     };
 
@@ -77,76 +72,23 @@ rec {
       '';
     };
 
-  # The gitignore files a toolbox keeps in .toolboxes/<name>_toolbox/:
-  #   project.gitignore  src, the project ignores (.eca, node_modules/, ...)
-  #                      that the git toolbox merges into the root .gitignore.
-  #                      Written only when src is given.
-  #   .gitignore         a lone `*`, which keeps the toolbox's generated
-  #                      folder out of git. Written only when ignoreSelf is
-  #                      true (the default).
-  # Pass ignoreSelf = false for a toolbox whose folder holds files the user
-  # edits or commits. Then a leftover .gitignore is removed if it is exactly
-  # something an earlier version generated (a lone `*`, the old project
-  # ignores, or both together); any other .gitignore is left and reported.
-  gitignoreFor = { name, src ? null, ignoreSelf ? true }:
+  # The git settings a toolbox ships: settings/.gitignore (ignore lines for the
+  # consumer project, including `.toolboxes/<name>_toolbox/` when the toolbox
+  # folder is all generated) and settings/.gitattributes. Each one that exists
+  # is kept identical to its source in .toolboxes/<name>_toolbox/settings/,
+  # read-only (mode 444). The git toolbox merges them all into the project's
+  # root .gitignore and .gitattributes. `settings` is the toolbox's ./settings.
+  gitSettings = name: settings:
     let
-      dir = ".toolboxes/${name}_toolbox";
-      body = lib.optionalString (src != null) (lib.removeSuffix "\n" (builtins.readFile src) + "\n");
-      text = pkgs.writeText "${name}-toolbox-project-gitignore" body;
-      star = pkgs.writeText "toolbox-gitignore-star" "*\n";
-      generated = [ star ]
-        ++ lib.optionals (src != null) [
-          text
-          "${src}"
-          (pkgs.writeText "${name}-toolbox-gitignore-combined" (body + "*\n"))
-        ];
+      one = file: task: lib.optionalAttrs (builtins.pathExists (settings + "/${file}")) (refresh {
+        inherit name task;
+        src = settings + "/${file}";
+        dest = ".toolboxes/${name}_toolbox/settings/${file}";
+        mode = "444";
+        description = "Refresh the ${name}_toolbox settings/${file} from the toolbox";
+      });
     in
-    lib.optionalAttrs (src != null) (refresh {
-      inherit name;
-      task = "copy_project_gitignore";
-      src = text;
-      dest = "${dir}/project.gitignore";
-      description = "Refresh the ${name}_toolbox project.gitignore from the toolbox";
-    })
-    // (if ignoreSelf then refresh {
-      inherit name;
-      task = "ignore_self";
-      src = star;
-      dest = "${dir}/.gitignore";
-      description = "Keep the ${name}_toolbox folder out of git";
-    } else mkTask {
-      inherit name;
-      task = "remove_stale_gitignore";
-      description = "Remove a stale generated ${dir}/.gitignore";
-      status = ''
-        [ ! -e ${q "${root}/${dir}/.gitignore"} ]
-      '';
-      exec = ''
-        ${lib.getExe removeGenerated} ${q "${root}/${dir}/.gitignore"} ${lib.concatMapStringsSep " " q generated}
-      '';
-    });
-
-  # gitignoreFor with the default ignoreSelf = true.
-  gitignore = name: src: gitignoreFor { inherit name src; };
-
-  # Write the toolbox's settings/.gitattributes (src) to
-  # .toolboxes/<name>_toolbox/project.gitattributes, where the git toolbox
-  # merges it into the root .gitattributes. Keep only attribute lines in src;
-  # git applies later lines over earlier ones, so a toolbox that needs a
-  # specific order should say so in its comments. Not for the git
-  # toolbox: its project.gitattributes is the consumer's, seeded once and merged
-  # last.
-  gitattributesFor = { name, src }:
-    assert lib.assertMsg (name != "git")
-      "gitattributesFor: git_toolbox/project.gitattributes belongs to the consumer project";
-    refresh {
-      inherit name;
-      task = "copy_project_gitattributes";
-      src = pkgs.writeText "${name}-toolbox-project-gitattributes"
-        (lib.removeSuffix "\n" (builtins.readFile src) + "\n");
-      dest = ".toolboxes/${name}_toolbox/project.gitattributes";
-      description = "Refresh the ${name}_toolbox project.gitattributes from the toolbox";
-    };
+    one ".gitignore" "refresh_gitignore" // one ".gitattributes" "refresh_gitattributes";
 
   # Practices (skills, agents, rules). Builds one store directory shaped like
   # practices/ (skills/<n>/..., agents/..., rules/...) from the toolbox's own
@@ -155,8 +97,7 @@ rec {
   # and, only when `eca = true`, also to
   #   .eca/                                  (where ECA loads it)
   # The git toolbox's default .gitignore ignores .toolboxes/*/practices/ in
-  # consumers, so the mirrors are never committed (including the folders of
-  # toolboxes that use gitignoreFor with ignoreSelf = false).
+  # consumers, so the mirrors are never committed.
   # No toolbox sets `eca`, so by default nothing is written to .eca.
   #
   #   extra: attrset of destination (relative to practices/) -> source.

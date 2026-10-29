@@ -29,7 +29,7 @@ in
       ];
     };
 
-    tasks = tt.gitignore "rust" ./settings/.gitignore
+    tasks = tt.gitSettings "rust" ./settings
       // tt.seed {
         name = "rust"; task = "copy_cargo_toml_template";
         src = ./templates/Cargo.toml; dest = "Cargo.toml";

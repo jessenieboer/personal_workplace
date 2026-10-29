@@ -26,7 +26,7 @@ in
     # ];
 
     tasks = practicesTasks
-      // tt.gitignore "code" ./settings/.gitignore
+      // tt.gitSettings "code" ./settings
       // {
 
       # "code_toolbox:copy_opencode_config" = {

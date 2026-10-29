@@ -59,7 +59,7 @@ in
     ];
 
     tasks = practicesTasks
-      // tt.gitignore "python" ./settings/.gitignore
+      // tt.gitSettings "python" ./settings
       // tt.seed {
         name = "python"; task = "copy_pyproject_template"; src = ./templates/pyproject.toml;
         dest = "pyproject.toml"; before = [ "devenv:python:uv" ];

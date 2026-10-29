@@ -10,3 +10,5 @@ result-*
 *.swo
 .DS_Store
 .toolboxes/*/practices/
+.toolboxes/*/settings/*
+!.toolboxes/*/settings/.gitconfig
