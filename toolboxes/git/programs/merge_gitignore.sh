@@ -22,8 +22,11 @@ trap 'rm -f "$tmp"' EXIT
 } | { grep -v '^$' || true; } | sort -u >"$tmp"
 
 if [ ! -f "$dest" ] || ! cmp -s "$tmp" "$dest"; then
+  chmod 0644 "$tmp"
   mv "$tmp" "$dest"
 fi
+# Older runs left it 0600 (mktemp default); fix in place.
+chmod 0644 "$dest"
 
 # Pull the toolbox gitconfig into this repo's local config, once.
 inc=$root/$gitconfig
