@@ -117,27 +117,25 @@ devenv shell -- true >/dev/null 2>&1
 grep -qx '\*.aa diff=aa' .gitattributes && fail "dropped fragment line stayed"
 grep -qx '\*.png binary' .gitattributes || fail "user line lost when a fragment line dropped"
 
-# The project's own .toolboxes/git_toolbox/project.gitattributes: seeded once
-# with a comment header, merged last.
-pf=.toolboxes/git_toolbox/project.gitattributes
-[ -f "$pf" ] || fail "project.gitattributes not seeded"
-grep -q 'Project-specific' "$pf" || fail "seeded project.gitattributes lacks its header"
-grep -q 'Project-specific' .gitattributes || fail "seeded project header not merged"
-printf '*.zz diff=mine\n* text=auto eol=lf\n*.last -diff\n' > "$pf"
-cp "$pf" "$before"
+# The project's own lines are the ones below the managed block. Nothing is
+# seeded for them, and a project.gitattributes left by an older toolbox is not
+# merged. A toolbox fragment that changes keeps the user lines in place, after
+# the block, and the base line stays first.
+[ -e .toolboxes/git_toolbox/project.gitattributes ] && fail "a project.gitattributes was seeded"
+printf '*.stale -diff\n' > .toolboxes/git_toolbox/project.gitattributes
+printf '*.bb diff=bb\n' >> .toolboxes/a_toolbox/settings/.gitattributes
 devenv shell -- true >/dev/null 2>&1
-devenv shell -- true >/dev/null 2>&1
-cmp -s "$pf" "$before" || fail "project.gitattributes overwritten after a user edit"
-[ "$(sed -n 2p .gitattributes)" = '* text=auto eol=lf' ] || fail "base line no longer first with a project file"
-[ "$(grep -cx '\*.last -diff' .gitattributes)" = 1 ] || fail "project line duplicated or missing"
-[ "$(grep -nx '\*.zz -diff' .gitattributes | cut -d: -f1)" -lt "$(grep -nx '\*.zz diff=mine' .gitattributes | cut -d: -f1)" ] || fail "project line does not come after the toolbox fragment it overrides"
-[ "$(grep -B1 -x '# <<< toolbox-managed <<<' .gitattributes | head -n1)" = '*.last -diff' ] || fail "project file is not last in the managed block"
+grep -qx '\*.stale -diff' .gitattributes && fail "an old project.gitattributes was merged"
+grep -qx '\*.bb diff=bb' .gitattributes || fail "changed fragment not merged"
+[ "$(sed -n 2p .gitattributes)" = '* text=auto eol=lf' ] || fail "base line no longer first in the block"
+[ "$(tail -n 2 .gitattributes | tr "\n" " ")" = "*.png binary *.lock -diff " ] || fail "user lines moved when a fragment changed"
+[ "$(grep -B1 -x '# <<< toolbox-managed <<<' .gitattributes | head -n1)" = '*.bb diff=bb' ] || fail "block does not end with the last fragment line"
 [ "$(grep -cx '\*.png binary' .gitattributes)" = 1 ] || fail "user line lost or duplicated"
+rm -f .toolboxes/git_toolbox/project.gitattributes
 
 # An existing project with the old hand-seeded file: the base line moves into
 # the block, other lines are kept.
 rm -f "$before"
-printf '# mine\n' > "$pf"
 printf '* text=auto eol=lf\n*.svg text\n' > .gitattributes
 devenv shell -- true >/dev/null 2>&1
 [ "$(grep -cx '\* text=auto eol=lf' .gitattributes)" = 1 ] || fail "seeded base line duplicated"
@@ -163,21 +161,18 @@ cmp -s "$inc" "$before" || fail "settings/.gitconfig overwritten after a user ed
 [ "$(git config --local --get-all include.path)" = "$inc" ] || fail "include.path changed on re-entry with an edited settings/.gitconfig"
 git check-ignore -q "$inc" && fail "edited settings/.gitconfig is gitignored"
 
-# Migration: the two files this one replaced are swapped out of include.path,
-# at the place the first one sat, and are left on disk.
+# Migration: the refreshed gitconfig this one replaced is swapped out of
+# include.path, at the place it sat, and is left on disk.
 old1="$here/.toolboxes/git_toolbox/gitconfig"
-old2="$here/.toolboxes/git_toolbox/project.gitconfig"
-printf '[pull]\n\trebase = true\n' > "$old1"
-printf '[user]\n\toldmarker = x\n' > "$old2"
+printf '[pull]\n\trebase = true\n[user]\n\toldmarker = x\n' > "$old1"
 git config --local --unset-all include.path
 git config --local --add include.path "/nonexistent/first.gitconfig"
 git config --local --add include.path "$old1"
-git config --local --add include.path "$old2"
 git config --local --add include.path "/nonexistent/last.gitconfig"
 devenv shell -- true >/dev/null 2>&1
 devenv shell -- true >/dev/null 2>&1
-[ "$(git config --local --get-all include.path | tr "\n" " ")" = "/nonexistent/first.gitconfig $inc /nonexistent/last.gitconfig " ] || fail "old includes not swapped for settings/.gitconfig in place"
-[ -f "$old1" ] && [ -f "$old2" ] || fail "an old gitconfig file was deleted"
+[ "$(git config --local --get-all include.path | tr "\n" " ")" = "/nonexistent/first.gitconfig $inc /nonexistent/last.gitconfig " ] || fail "old include not swapped for settings/.gitconfig in place"
+[ -f "$old1" ] || fail "the old gitconfig file was deleted"
 [ -z "$(cfg user.oldmarker)" ] || fail "an old file is still included"
 [ "$(cfg pull.rebase)" = false ] || fail "the replaced gitconfig still overrides settings/.gitconfig"
 # With no old includes, a repo that had none gets the single include; a repeat
@@ -189,7 +184,7 @@ git config --local --add include.path "$inc"
 git config --local --add include.path "/nonexistent/after.gitconfig"
 devenv shell -- true >/dev/null 2>&1
 [ "$(git config --local --get-all include.path | tr "\n" " ")" = "$inc /nonexistent/after.gitconfig " ] || fail "a duplicate include was not collapsed"
-rm -f "$before" "$old1" "$old2"
+rm -f "$before" "$old1"
 
 # Generated practices (skills, agents, rules) and the settings copies in every
 # toolbox's folder are ignored by the base .gitignore (.toolboxes/*/practices/,
@@ -210,7 +205,7 @@ printf 'x\n' > .toolboxes/q_toolbox/practices.org
 devenv shell -- true >/dev/null 2>&1
 git check-ignore -q .toolboxes/p_toolbox/practices/skills/s/SKILL.md || fail "a toolbox's practices mirror is not ignored"
 git check-ignore -q .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md || fail "git_toolbox practices mirror is not ignored"
-for f in .toolboxes/git_toolbox/settings/.gitconfig .toolboxes/git_toolbox/project.gitattributes \
+for f in .toolboxes/git_toolbox/settings/.gitconfig \
   .toolboxes/p_toolbox/notes.org .toolboxes/p_toolbox/settings.json; do
   git check-ignore -q "$f" && fail "$f is ignored but is project-owned"
 done

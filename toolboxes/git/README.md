@@ -18,16 +18,15 @@ do not.
 - Merges every `.toolboxes/*_toolbox/settings/.gitignore` into the project root
   `.gitignore`, and every `settings/.gitattributes` into the root
   `.gitattributes`. The merged lines sit in a managed block at the top; lines
-  you write below it are kept. Nested `.toolboxes` are not read.
+  you write below it, in either file, are kept and win over the block. Nested
+  `.toolboxes` are not read.
 - Its own `.gitignore` ignores `.toolboxes/*/practices/` and
   `.toolboxes/*/settings/*`, except `settings/.gitconfig`.
-- Seeds `.toolboxes/git_toolbox/project.gitattributes` once; it is merged last
-  into `.gitattributes`. It is yours.
 - Seeds `.toolboxes/git_toolbox/settings/.gitconfig` once from
   `templates/gitconfig` and includes it in `.git/config`. It is yours: edit it
-  and commit it. It is never refreshed. It replaces the earlier
-  `.toolboxes/git_toolbox/gitconfig` and `project.gitconfig`; those files are
-  left on disk but are no longer included, so move anything you set there.
+  and commit it. It is never refreshed. It replaces the earlier refreshed
+  `.toolboxes/git_toolbox/gitconfig`, which is left on disk but no longer
+  included.
 
 Toolboxes that do not import the git toolbox (directly or through another
 toolbox) still write their settings copy, but nothing merges it, so their
