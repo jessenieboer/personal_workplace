@@ -13,9 +13,9 @@ Checked against ECA 0.161.1. Do not invent a stricter schema.
 
 ## Land
 
-ECA scans `.eca/agents/*.md` and `~/.config/eca/agents/*.md` only. Not `practices/agents/`.
+ECA scans `.eca/agents/*.md` and `~/.config/eca/agents/*.md` only. Not `practices/agents/`; toolboxes no longer copy practices into `.eca`.
 
-Named path wins when it is one of those two. Else write the source a copy task installs, and make that task name this file. One hardcoded install does not install the next. No copy task: write `.eca/agents/<id>.md`. Gitignored `.eca/` is still loaded.
+Named path wins when it is one of those two. Else write the source a copy task installs, and make that task name this file. One hardcoded install does not install the next. No copy task: write `.eca/agents/<id>.md`.
 
 ## Contract
 
