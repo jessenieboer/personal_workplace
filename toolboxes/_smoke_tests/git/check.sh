@@ -174,6 +174,33 @@ devenv shell -- true >/dev/null 2>&1
 [ "$(git config --local --get-all include.path | tr "\n" " ")" = "$inc $pinc /nonexistent/later.gitconfig " ] || fail "a correctly ordered include.path list was rewritten"
 rm -f "$before"
 
+# Generated practices (skills, agents, rules) in every toolbox's folder are
+# ignored by the base .gitignore: .toolboxes/*/practices/. Most toolboxes also
+# hide their whole folder with a lone-* .gitignore, so for them the rule adds
+# nothing. It matters for the folders that stay visible to git (ignoreSelf =
+# false: git, readme, glossary, bdd, voxtype), which hold project-owned files
+# that must stay tracked.
+grep -qx '\.toolboxes/\*/practices/' .gitignore || fail "base .gitignore lacks .toolboxes/*/practices/"
+mkdir -p .toolboxes/p_toolbox/practices/skills/s .toolboxes/q_toolbox
+printf 'x\n' > .toolboxes/p_toolbox/practices/skills/s/SKILL.md
+printf 'x\n' > .toolboxes/p_toolbox/project.gitattributes
+printf 'x\n' > .toolboxes/p_toolbox/notes.org
+printf 'x\n' > .toolboxes/p_toolbox/settings.json
+printf '*\n' > .toolboxes/q_toolbox/.gitignore
+printf 'x\n' > .toolboxes/q_toolbox/practices.org
+devenv shell -- true >/dev/null 2>&1
+git check-ignore -q .toolboxes/p_toolbox/practices/skills/s/SKILL.md || fail "a toolbox's practices mirror is not ignored"
+git check-ignore -q .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md || fail "git_toolbox practices mirror is not ignored"
+for f in .toolboxes/git_toolbox/project.gitconfig .toolboxes/git_toolbox/project.gitattributes \
+  .toolboxes/p_toolbox/project.gitattributes .toolboxes/p_toolbox/notes.org .toolboxes/p_toolbox/settings.json; do
+  git check-ignore -q "$f" && fail "$f is ignored but is project-owned"
+done
+# A folder hidden by its own lone-* .gitignore stays hidden whole (the new rule is redundant there).
+git check-ignore -q .toolboxes/q_toolbox/practices.org || fail "lone-* .gitignore no longer hides its folder"
+# The rule is anchored to the project's own .toolboxes, not nested projects'.
+git check-ignore -q .toolboxes/n_toolbox/.toolboxes/inner_toolbox/practices/x && fail "practices rule reaches into a nested project"
+rm -rf .toolboxes/p_toolbox .toolboxes/q_toolbox
+
 # Nothing is copied into .eca, and no eca manifest is kept.
 [ -e .eca ] && fail ".eca was created"
 find .toolboxes -name eca_manifest 2>/dev/null | grep -q . && fail "eca_manifest was written"

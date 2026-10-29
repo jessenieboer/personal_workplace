@@ -154,6 +154,9 @@ rec {
   #   .toolboxes/<name>_toolbox/practices/   (a readable mirror)
   # and, only when `eca = true`, also to
   #   .eca/                                  (where ECA loads it)
+  # The git toolbox's default .gitignore ignores .toolboxes/*/practices/ in
+  # consumers, so the mirrors are never committed (including the folders of
+  # toolboxes that use gitignoreFor with ignoreSelf = false).
   # No toolbox sets `eca`, so by default nothing is written to .eca.
   #
   #   extra: attrset of destination (relative to practices/) -> source.

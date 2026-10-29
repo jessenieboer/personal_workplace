@@ -9,3 +9,4 @@ result-*
 *.swp
 *.swo
 .DS_Store
+.toolboxes/*/practices/
