@@ -3,6 +3,7 @@
 #   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
 #   tasks = tt.practices { name = "python"; local = ./practices; }
 #     // tt.gitignore "python" ./settings/.gitignore
+#     // tt.gitattributesFor { name = "python"; src = ./settings/.gitattributes; }
 #     // tt.seed { name = "python"; task = "copy_pyproject_template";
 #                  src = ./templates/pyproject.toml; dest = "pyproject.toml"; }
 #     // { ...other tasks... };
@@ -127,6 +128,21 @@ rec {
 
   # gitignoreFor with the default ignoreSelf = true.
   gitignore = name: src: gitignoreFor { inherit name src; };
+
+  # Write the toolbox's settings/.gitattributes (src) to
+  # .toolboxes/<name>_toolbox/project.gitattributes, where the git toolbox
+  # merges it into the root .gitattributes. Keep only attribute lines in src;
+  # git applies later lines over earlier ones, so a toolbox that needs a
+  # specific order should say so in its comments.
+  gitattributesFor = { name, src }:
+    refresh {
+      inherit name;
+      task = "copy_project_gitattributes";
+      src = pkgs.writeText "${name}-toolbox-project-gitattributes"
+        (lib.removeSuffix "\n" (builtins.readFile src) + "\n");
+      dest = ".toolboxes/${name}_toolbox/project.gitattributes";
+      description = "Refresh the ${name}_toolbox project.gitattributes from the toolbox";
+    };
 
   # ECA practices (skills, agents, rules). Builds one store directory shaped
   # like practices/ (skills/<n>/..., agents/..., rules/...) from the
