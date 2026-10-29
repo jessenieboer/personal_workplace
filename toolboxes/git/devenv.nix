@@ -26,7 +26,6 @@ in
       }
       // tt.practices {
         name = "git";
-        local = ./practices;
         extra = {
           "skills/git-commit" = "${inputs.awesome-copilot}/skills/git-commit";
         };
