@@ -10,7 +10,9 @@ Run:
     toolboxes/_smoke_tests/git/check.sh
     toolboxes/_smoke_tests/glossary/check.sh
     toolboxes/_smoke_tests/nixos/check.sh
+    toolboxes/_smoke_tests/project_management/check.sh
     toolboxes/_smoke_tests/readme/check.sh
+    toolboxes/_smoke_tests/standard_project/check.sh
 
 The check wipes the fixture's generated files, enters the shell under a
 pseudo-tty, and asserts what the toolbox should leave behind.
