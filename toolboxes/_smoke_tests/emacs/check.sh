@@ -66,4 +66,8 @@ grep -qx '.dir-locals.el' .toolboxes/emacs_toolbox/project.gitignore || fail "pr
 grep -q '✔ emacs toolbox available' "$log" || fail "announce line not printed under a tty"
 devenv shell -- true 2>/dev/null | grep -q 'toolbox available' && fail "announce printed without a tty"
 
+# Nothing is copied into .eca, and no eca manifest is kept.
+[ -e .eca ] && fail ".eca was created"
+find .toolboxes -name eca_manifest 2>/dev/null | grep -q . && fail "eca_manifest was written"
+
 echo "PASS: emacs toolbox"

@@ -43,11 +43,6 @@ in
     '';
 
     tasks = practicesTasks
-      // tt.gitignore "ai" ./settings/.gitignore
-      // tt.seed {
-        name = "ai"; task = "copy_setup_files"; src = ./settings/eca/config.json;
-        dest = ".eca/config.json"; description = "Seed ECA config once";
-        postExec = ''mkdir -p "$(dirname "$dest")/rules"'';
-      };
+      // tt.gitignore "ai" ./settings/.gitignore;
   };
 }

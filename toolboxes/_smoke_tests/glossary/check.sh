@@ -34,4 +34,8 @@ echo "* my term" >> "$f"
 devenv shell -- true >/dev/null 2>&1
 grep -qx '\* my term' "$f" || fail "re-entry overwrote glossary.org"
 
+# Nothing is copied into .eca, and no eca manifest is kept.
+[ -e .eca ] && fail ".eca was created"
+find .toolboxes -name eca_manifest 2>/dev/null | grep -q . && fail "eca_manifest was written"
+
 echo "PASS: glossary toolbox"

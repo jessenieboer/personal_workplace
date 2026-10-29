@@ -17,7 +17,6 @@ for n in bash-defensive-patterns bash-linux bash-pro bash-scripting; do
   grep -q "^name: $n" "$s/SKILL.md" 2>/dev/null || fail "$n SKILL.md missing or wrong"
   grep -q 'MIT License' "$s/LICENSE" 2>/dev/null || fail "$n lacks LICENSE"
   grep -q 'CC BY 4.0' "$s/LICENSE-CONTENT" 2>/dev/null || fail "$n lacks LICENSE-CONTENT"
-  [ -f ".eca/skills/$n/SKILL.md" ] || fail "$n .eca copy missing"
 done
 [ -f "$skills/bash-defensive-patterns/resources/implementation-playbook.md" ] || fail "defensive-patterns resources missing"
 [ -e "$skills/bash-script-validator" ] && fail "old bash-script-validator still shipped"
@@ -36,5 +35,9 @@ git -C "$repo" check-ignore -q .toolboxes/bash_toolbox/practices/skills/bash-pro
 [ -z "$(git -C "$repo" status --porcelain -uall)" ] || fail "bash_toolbox shows up in git status"
 [ "$(cat .toolboxes/bash_toolbox/.gitignore)" = "*" ] || fail "bash_toolbox/.gitignore is not a lone *"
 [ ! -e .toolboxes/bash_toolbox/project.gitignore ] || fail "bash_toolbox wrote a project.gitignore without project ignores"
+
+# Nothing is copied into .eca, and no eca manifest is kept.
+[ -e .eca ] && fail ".eca was created"
+find .toolboxes -name eca_manifest 2>/dev/null | grep -q . && fail "eca_manifest was written"
 
 echo "PASS: bash toolbox"

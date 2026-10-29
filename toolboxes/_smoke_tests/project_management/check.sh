@@ -32,4 +32,8 @@ if command -v emacs >/dev/null; then
   [ "$got" = "$want" ] || fail "capture templates are not the journal plus PM's: $got"
 fi
 
+# Nothing is copied into .eca, and no eca manifest is kept.
+[ -e .eca ] && fail ".eca was created"
+find .toolboxes -name eca_manifest 2>/dev/null | grep -q . && fail "eca_manifest was written"
+
 echo "PASS: project_management toolbox"

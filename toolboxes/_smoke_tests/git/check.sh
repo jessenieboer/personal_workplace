@@ -46,7 +46,7 @@ grep -q '✔ git toolbox available' "$log" || fail "announce line not printed un
 devenv shell -- true >/dev/null 2>&1
 [ "$(git config --local --get-all include.path | wc -l)" = 1 ] || fail "include.path duplicated on re-entry"
 
-for f in .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md .eca/skills/git-commit/SKILL.md; do
+for f in .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md; do
   [ -f "$f" ] || fail "$f missing"
 done
 grep -q "^name: git-commit" .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md || fail "git-commit skill content wrong"
@@ -108,5 +108,9 @@ printf '* text=auto eol=lf\n*.svg text\n' > .gitattributes
 devenv shell -- true >/dev/null 2>&1
 [ "$(grep -cx '\* text=auto eol=lf' .gitattributes)" = 1 ] || fail "seeded base line duplicated"
 grep -qx '\*.svg text' .gitattributes || fail "hand-written line lost on migration"
+
+# Nothing is copied into .eca, and no eca manifest is kept.
+[ -e .eca ] && fail ".eca was created"
+find .toolboxes -name eca_manifest 2>/dev/null | grep -q . && fail "eca_manifest was written"
 
 echo "PASS: git toolbox"

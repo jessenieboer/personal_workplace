@@ -144,27 +144,31 @@ rec {
       description = "Refresh the ${name}_toolbox project.gitattributes from the toolbox";
     };
 
-  # ECA practices (skills, agents, rules). Builds one store directory shaped
-  # like practices/ (skills/<n>/..., agents/..., rules/...) from the
-  # toolbox's own practices/ plus any extra sources, then copies it to both
-  #   .eca/                                  (where ECA loads it)
+  # Practices (skills, agents, rules). Builds one store directory shaped like
+  # practices/ (skills/<n>/..., agents/..., rules/...) from the toolbox's own
+  # practices/ plus any extra sources, then copies it to
   #   .toolboxes/<name>_toolbox/practices/   (a readable mirror)
+  # and, only when `eca = true`, also to
+  #   .eca/                                  (where ECA loads it)
+  # No toolbox sets `eca`, so by default nothing is written to .eca.
   #
   #   extra: attrset of destination (relative to practices/) -> source.
   #          A directory source is copied whole; a file source to that name.
   #   postBuild: shell run in $out after copying, for transforms.
   #
-  # .eca is shared by every toolbox, so only this toolbox's top-level items
+  #   eca: copy into .eca as well (default false).
+  #
+  # With eca on, .eca is shared by every toolbox, so only this toolbox's top-level items
   # (skills/<n>, agents/<f>, rules/<f>) are replaced there; the mirror is
   # replaced whole.
   # The items installed are recorded in .toolboxes/<name>_toolbox/eca_manifest;
   # items listed there but no longer shipped are removed from .eca, and nothing
   # else is (other toolboxes' items and the user's own stay).
-  practices = { name, local ? null, extra ? { }, postBuild ? "" }:
+  practices = { name, local ? null, extra ? { }, postBuild ? "", eca ? false }:
     let
-      eca = "${root}/.eca";
+      ecaDir = if eca then "${root}/.eca" else "";
       mirror = "${root}/.toolboxes/${name}_toolbox/practices";
-      installed = "${root}/.toolboxes/${name}_toolbox/eca_manifest";
+      installed = if eca then "${root}/.toolboxes/${name}_toolbox/eca_manifest" else "";
 
       built = pkgs.runCommandLocal "${name}-toolbox-practices" { } ''
         mkdir -p "$out"
@@ -198,7 +202,7 @@ rec {
         mode
         (q built)
         (q manifest)
-        (q eca)
+        (q ecaDir)
         (q mirror)
         (q installed)
       ];
@@ -206,7 +210,7 @@ rec {
     mkTask {
       inherit name;
       task = "copy_practices";
-      description = "Refresh ${name} practices under .eca and .toolboxes/${name}_toolbox/practices";
+      description = "Refresh ${name} practices under .toolboxes/${name}_toolbox/practices" + lib.optionalString eca " and .eca";
       status = sync "status";
       exec = sync "apply";
     };

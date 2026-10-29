@@ -15,4 +15,6 @@ Run:
     toolboxes/_smoke_tests/standard_project/check.sh
 
 The check wipes the fixture's generated files, enters the shell under a
-pseudo-tty, and asserts what the toolbox should leave behind.
+pseudo-tty, and asserts what the toolbox should leave behind. Every check also asserts
+that no `.eca` directory and no `eca_manifest` is created: toolboxes install
+practices only under `.toolboxes/<name>_toolbox/practices`.
