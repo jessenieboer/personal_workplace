@@ -14,4 +14,4 @@ result
 result-*
 *.swo
 *.swp
-.toolboxes/emacs_toolbox
+.toolboxes/*/practices/
