@@ -15,6 +15,7 @@ in
       name = "glossary"; task = "copy_glossary_template";
       src = ./templates/glossary.org; dest = ".toolboxes/glossary_toolbox/glossary.org";
       postExec = ''sed -i "s/00000000-0000-0000-0000-000000000000/$(cat /proc/sys/kernel/random/uuid)/" "$dest"'';
-    };
+    }
+      // tt.practices { name = "glossary"; local = ./practices; };
   };
 }
