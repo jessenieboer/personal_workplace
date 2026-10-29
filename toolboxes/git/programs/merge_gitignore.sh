@@ -1,10 +1,8 @@
 # Merge the toolbox .gitignore template and every toolbox's project.gitignore
-# into the project .gitignore, then pull the toolbox gitconfig into the repo's
-# config.
-# Usage: merge_gitignore <project-root> <template> <gitconfig-relative-path>
+# into the project .gitignore.
+# Usage: merge_gitignore <project-root> <template>
 root=$1
 template=$2
-gitconfig=$3
 dest=$root/.gitignore
 
 tmp=$(mktemp "$root/.gitignore.XXXXXX")
@@ -27,12 +25,3 @@ if [ ! -f "$dest" ] || ! cmp -s "$tmp" "$dest"; then
 fi
 # Older runs left it 0600 (mktemp default); fix in place.
 chmod 0644 "$dest"
-
-# Pull the toolbox gitconfig into this repo's local config, once.
-inc=$root/$gitconfig
-if [ -e "$root/.git" ] && git -C "$root" rev-parse --git-dir >/dev/null 2>&1; then
-  existing=$(git -C "$root" config --local --get-all include.path || true)
-  if ! grep -qxF "$inc" <<<"$existing"; then
-    git -C "$root" config --local --add include.path "$inc"
-  fi
-fi

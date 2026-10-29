@@ -25,7 +25,8 @@ inc="$here/.toolboxes/git_toolbox/gitconfig"
 for k in pull.rebase pull.ff merge.ff core.autocrlf core.safecrlf tag.sort push.followTags fetch.prune rebase.autoStash; do
   git config -f "$inc" --get "$k" >/dev/null || fail "gitconfig lacks $k"
 done
-[ "$(git config --local --get-all include.path)" = "$inc" ] || fail "include.path does not point to gitconfig"
+pinc="$here/.toolboxes/git_toolbox/project.gitconfig"
+[ "$(git config --local --get-all include.path | tr "\n" " ")" = "$inc $pinc " ] || fail "include.path is not the toolbox gitconfig then project.gitconfig"
 [ "$(cfg pull.rebase)" = true ] || fail "pull.rebase"
 [ "$(cfg pull.ff)" = only ] || fail "pull.ff"
 [ "$(cfg merge.ff)" = only ] || fail "merge.ff"
@@ -44,7 +45,7 @@ grep -qx '\*' .gitignore && fail ".gitignore merge picked up a lone * from a fra
 grep -q '✔ git toolbox available' "$log" || fail "announce line not printed under a tty"
 
 devenv shell -- true >/dev/null 2>&1
-[ "$(git config --local --get-all include.path | wc -l)" = 1 ] || fail "include.path duplicated on re-entry"
+[ "$(git config --local --get-all include.path | tr "\n" " ")" = "$inc $pinc " ] || fail "include.path duplicated or reordered on re-entry"
 
 for f in .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md; do
   [ -f "$f" ] || fail "$f missing"
@@ -126,6 +127,52 @@ printf '* text=auto eol=lf\n*.svg text\n' > .gitattributes
 devenv shell -- true >/dev/null 2>&1
 [ "$(grep -cx '\* text=auto eol=lf' .gitattributes)" = 1 ] || fail "seeded base line duplicated"
 grep -qx '\*.svg text' .gitattributes || fail "hand-written line lost on migration"
+
+# The project's own .toolboxes/git_toolbox/project.gitconfig: seeded once with
+# a comment-only header, included after the toolbox gitconfig, never
+# overwritten, and not ignored (it is committed with the project).
+pgc=.toolboxes/git_toolbox/project.gitconfig
+[ -f "$pgc" ] || fail "project.gitconfig not seeded"
+grep -q 'Project-specific' "$pgc" || fail "seeded project.gitconfig lacks its header"
+[ -z "$(grep -v '^#' "$pgc" || true)" ] || fail "seeded project.gitconfig is not comment-only"
+[ "$(stat -c %a "$pgc")" = 644 ] || fail "project.gitconfig is not mode 644"
+git check-ignore -q "$pgc" && fail "project.gitconfig is gitignored"
+[ "$(cfg pull.rebase)" = true ] || fail "seeded project.gitconfig changed pull.rebase"
+printf '[pull]\n\trebase = false\n[user]\n\tmarker = mine\n' > "$pgc"
+before=$(mktemp); cp "$pgc" "$before"
+devenv shell -- true >/dev/null 2>&1
+devenv shell -- true >/dev/null 2>&1
+cmp -s "$pgc" "$before" || fail "project.gitconfig overwritten after a user edit"
+[ "$(cfg pull.rebase)" = false ] || fail "project.gitconfig does not override the toolbox default"
+[ "$(cfg pull.ff)" = only ] || fail "toolbox default lost when project.gitconfig overrides another key"
+[ "$(cfg user.marker)" = mine ] || fail "project.gitconfig key not visible"
+[ "$(git config --local --get-all include.path | tr "\n" " ")" = "$inc $pinc " ] || fail "include.path changed on re-entry with an edited project.gitconfig"
+git check-ignore -q "$pgc" && fail "edited project.gitconfig is gitignored"
+
+# A repo that has only the toolbox include gets the project include after it.
+git config --local --unset-all include.path
+git config --local --add include.path "$inc"
+devenv shell -- true >/dev/null 2>&1
+[ "$(git config --local --get-all include.path | tr "\n" " ")" = "$inc $pinc " ] || fail "project include not added after the toolbox include"
+# A project include that comes first is moved after the toolbox include; other
+# includes stay put, and repeats collapse.
+git config --local --unset-all include.path
+git config --local --add include.path "$pinc"
+git config --local --add include.path "/nonexistent/other.gitconfig"
+git config --local --add include.path "$inc"
+git config --local --add include.path "$inc"
+devenv shell -- true >/dev/null 2>&1
+devenv shell -- true >/dev/null 2>&1
+[ "$(git config --local --get-all include.path | tr "\n" " ")" = "/nonexistent/other.gitconfig $inc $pinc " ] || fail "include.path not reordered with the project include last"
+[ "$(cfg pull.rebase)" = false ] || fail "project value does not win after reordering"
+# A project include already after the toolbox include is left where it is.
+git config --local --unset-all include.path
+git config --local --add include.path "$inc"
+git config --local --add include.path "$pinc"
+git config --local --add include.path "/nonexistent/later.gitconfig"
+devenv shell -- true >/dev/null 2>&1
+[ "$(git config --local --get-all include.path | tr "\n" " ")" = "$inc $pinc /nonexistent/later.gitconfig " ] || fail "a correctly ordered include.path list was rewritten"
+rm -f "$before"
 
 # Nothing is copied into .eca, and no eca manifest is kept.
 [ -e .eca ] && fail ".eca was created"
