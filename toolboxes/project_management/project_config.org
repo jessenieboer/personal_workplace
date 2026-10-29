@@ -52,9 +52,6 @@
       				   ("c" "Reference" entry
       				    (file+headline "@PROJECT_NAME@.org" "References")
       				    <<reference_capture_template>>)
-      				   ("b" "Journal entry" plain
-      				    (file+olp+datetree "journal.org")
-      				    "%?")
       				   ("h" "User story" entry
       				    (file+headline "@PROJECT_NAME@.org" "User stories")
       				    <<task_capture_template>>)

@@ -45,9 +45,6 @@
     				   ("c" "Reference" entry
     				    (file+headline "@PROJECT_NAME@.org" "References")
     				    "* %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:CAPTURED_BY: jessenieboer\n:REVIEWED: yes\n:END:\n%?")
-    				   ("b" "Journal entry" plain
-    				    (file+olp+datetree "journal.org")
-    				    "%?")
     				   ("h" "User story" entry
     				    (file+headline "@PROJECT_NAME@.org" "User stories")
     				    "* future %^{Title}\n:PROPERTIES:\n:CATEGORY: @PROJECT_NAME@\n:FREQUENCY: once\n:HARD_DATE: no\n:INTERNAL_DEPENDENCY: no\n:EXTERNAL_DEPENDENCY: no\n:TACTICAL_VALUE: average\n:ESTIMATED_EFFORT: average\n:CAPTURED_BY: jessenieboer\n:REVIEWED: yes\n:END:\n%?")

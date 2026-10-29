@@ -5,7 +5,9 @@ let
   toolboxDir = "${config.devenv.root}/.toolboxes/standard_project_toolbox";
   templateDest = "${toolboxDir}/templates";
 
-  templateDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir templatesRoot);
+  # templates/ holds one subdirectory per project template; it may be absent.
+  templateDirs = lib.optionalAttrs (builtins.pathExists templatesRoot)
+    (lib.filterAttrs (_: type: type == "directory") (builtins.readDir templatesRoot));
   templateNames = builtins.attrNames templateDirs;
 in
 {
@@ -14,15 +16,7 @@ in
       ${tt.announce "standard project"}
     '';
 
-    tasks = tt.refresh {
-      name = "standard_project"; task = "generate_dir_locals";
-      description = "Render standard_project_toolbox_dir_locals from the template";
-      dest = ".toolboxes/standard_project_toolbox/standard_project_toolbox_dir_locals";
-      src = pkgs.replaceVars ./templates/dir-locals.el.in {
-        STANDARD_PROJECT_DIRECTORY = config.devenv.root;
-      };
-    }
-    // tt.gitignoreFor { name = "standard_project"; }
+    tasks = tt.gitignoreFor { name = "standard_project"; }
     // {
       "standard_project_toolbox:copy_templates" = {
         description = "Refresh each templates/ subdirectory under .toolboxes/standard_project_toolbox/templates when source changes";
