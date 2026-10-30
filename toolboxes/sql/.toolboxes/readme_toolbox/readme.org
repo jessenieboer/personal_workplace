@@ -1,0 +1,40 @@
+#+TITLE: SQL Toolbox
+#+OPTIONS: toc:nil num:nil
+#+EXPORT_FILE_NAME: ../../README.md
+
+#+html: <h1 align="center">SQL Toolbox</h1>
+#+html: <p align="center">Tools, settings, templates and practices for SQL and PostgreSQL development.</p>
+
+* What
+** Features :noexport:
+* Why
+* For Whom :noexport:
+* How :noexport:
+** Requirements :noexport:
+** Installation :noexport:
+#+BEGIN_SRC yaml
+inputs:
+  nixpkgs:
+    url: github:NixOS/nixpkgs/nixpkgs-unstable
+  wshobson-agents:
+    flake: false
+    url: github:wshobson/agents
+#+END_SRC
+** Use :noexport:
+*** Details
+- .sqlfluff :: sqlfluff configuration (dialect, rules); seeded once
+- dialect :: the SQL flavor sqlfluff parses (postgres here)
+- migration :: a versioned, ordered change to a database schema
+- PGDATA :: the server data directory (.devenv/state/postgres when enabled)
+- PGHOST :: where psql connects; devenv points it at the project socket
+- psql :: the PostgreSQL command-line client
+- sql_toolbox.postgres.enable :: set to true in devenv.nix for a project-local server; start it with devenv up
+
+**** Troubleshooting
+**** License
+** Development :noexport:
+*** Process
+*** Important Decisions
+*** To Do
+*** Contributing
+* By Whom :noexport:
