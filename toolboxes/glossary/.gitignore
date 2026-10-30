@@ -19,4 +19,5 @@ result-*
 \#*\#
 .#*
 .toolboxes/emacs_toolbox/
+.toolboxes/standard_project_toolbox/
 # <<< toolbox-managed <<<

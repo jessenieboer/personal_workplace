@@ -1,0 +1,25 @@
+#+TITLE: Title
+#+OPTIONS: toc:nil num:nil ^:{}
+#+EXPORT_FILE_NAME: ../../README.md
+
+#+html: <h1 align="center">Title</h1>
+
+* What
+** Features :noexport:
+* Why
+* For Whom :noexport:
+* How :noexport:
+** Requirements :noexport:
+** Installation :noexport:
+** Use :noexport:
+*** Details
+**** Troubleshooting
+**** License
+** Development :noexport:
+*** Instructions
+**** For humans
+**** For bots
+*** Important Decisions
+*** To Do
+*** Contributing
+* By Whom :noexport:

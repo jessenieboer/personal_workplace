@@ -1,0 +1,9 @@
+[package]
+name = "my-rust-project"
+version = "0.1.0"
+edition = "2021"
+description = "my desc"
+license = "MIT"
+authors = ["Jesse Nieboer <jessenieboer@protonmail.com>"]
+
+[dependencies]
