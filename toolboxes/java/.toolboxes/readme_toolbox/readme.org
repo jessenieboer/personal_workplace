@@ -1,0 +1,40 @@
+#+TITLE: Java Toolbox
+#+OPTIONS: toc:nil num:nil
+#+EXPORT_FILE_NAME: ../../README.md
+
+#+html: <h1 align="center">Java Toolbox</h1>
+#+html: <p align="center">Tools, settings, templates and practices for Java development.</p>
+
+* What
+** Features :noexport:
+* Why
+* For Whom :noexport:
+* How :noexport:
+** Requirements :noexport:
+** Installation :noexport:
+#+BEGIN_SRC yaml
+inputs:
+  nixpkgs:
+    url: github:NixOS/nixpkgs/nixpkgs-unstable
+#+END_SRC
+** Use :noexport:
+*** Details
+- artifact :: a file Maven builds or downloads, named by groupId:artifactId:version
+- BOM :: a pom that only pins versions (e.g. junit-bom); import it under dependencyManagement
+- JAVA_HOME :: the JDK devenv puts on PATH (languages.java.jdk.package)
+- JDK :: Java Development Kit: compiler (javac), runtime (java) and tools
+- jdtls :: Eclipse JDT Language Server; the Java LSP devenv provides
+- lifecycle phase :: a step Maven runs in order (validate, compile, test, package, verify, install)
+- plugin :: Maven code bound to phases; pin versions under pluginManagement
+- pom.xml :: Project Object Model; the build, dependency and plugin configuration
+- target/ :: Maven build output
+- xmllint :: libxml2's XML checker; xmllint --noout pom.xml
+
+**** Troubleshooting
+**** License
+** Development :noexport:
+*** Process
+*** Important Decisions
+*** To Do
+*** Contributing
+* By Whom :noexport:
