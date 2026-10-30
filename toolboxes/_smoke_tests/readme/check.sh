@@ -16,7 +16,6 @@ f=.toolboxes/readme_toolbox/readme.org
 cmp -s "$f" ../../readme/templates/readme.org || fail "readme.org differs from template"
 grep -qx '#+EXPORT_FILE_NAME: ../../README.md' "$f" || fail "export target is not README.md in the project root"
 [ -e .toolboxes/readme_toolbox/glossary.org ] && fail "readme toolbox still seeds glossary.org"
-[ -e .toolboxes/glossary_toolbox ] && fail "readme toolbox seeded glossary files"
 grep -q '✔ readme toolbox available' "$log" || fail "announce line not printed under a tty"
 
 echo "* my section" >> "$f"

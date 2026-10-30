@@ -1,4 +1,2 @@
 imports:
-  - /toolboxes/emacs
-  - /toolboxes/git
-#   - /toolboxes/glossary
+  - /toolboxes/standard_project
