@@ -1,12 +1,174 @@
-#+title: Glossary
+#+title: Readme Glossary
 #+EXPORT_FILE_NAME: ../../GLOSSARY.md
 #+OPTIONS: toc:nil prop:nil
 
-* sample term
+* bot
 :PROPERTIES:
-:ID:       5aa5868e-b91a-4f25-b55a-84823ca8794d
-:ALIASES:  sample terms
+:ID:       06cbd290-6a88-4be8-8d36-d0b3b3f83fb9
+:ALIASES:  bots
 :CONTEXT:  readme_toolbox
 :PRIME:    true
 :END:
-A placeholder term. Replace it with a word or phrase that has a specific meaning in this project.
+An AI agent.
+
+* by whom
+:PROPERTIES:
+:ID:       15012aec-8c03-498c-b7f6-77e0e959ed6a
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+Who developed the project, with credit given to others for their contributions.
+
+* contributing
+:PROPERTIES:
+:ID:       21e52e33-ee65-4b71-bcb7-c9f0f33f69ed
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+High-level rules for how to help develop the project.
+
+* details
+:PROPERTIES:
+:ID:       82d92c4c-e817-4c43-8e69-715741d3d9b5
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+More specific directions for using the project.
+
+* development
+:PROPERTIES:
+:ID:       ad42c900-be89-48ba-a30a-acc7d9c3a470
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+High-level directions for working on the project.
+
+* features
+:PROPERTIES:
+:ID:       3338d2e4-b6dd-4545-93d8-0748b816c320
+:ALIASES:  feature
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+More granular descriptions of the major capabilities within the project.
+
+* for whom
+:PROPERTIES:
+:ID:       4b0edf69-5def-47fd-9592-31141983f881
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+The intended users of the project.
+
+* how
+:PROPERTIES:
+:ID:       77228f1e-37fe-4406-8286-9db77379d948
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+Generic directions for how to make use of or develop the project.
+
+* human
+:PROPERTIES:
+:ID:       170c390f-653e-4211-ac26-db25663bee23
+:ALIASES:  humans
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+A real person.
+
+* important decisions
+:PROPERTIES:
+:ID:       e039db07-e346-4a9b-8e5f-2f6e3e8f6f13
+:ALIASES:  "important decision"
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+The history of major project choices and the reasoning behind them.
+
+* installation
+:PROPERTIES:
+:ID:       50e97a0b-3c4d-495a-8ff7-67ebd61aaf2d
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+How to get the project up and running.
+
+* instructions
+:PROPERTIES:
+:ID:       3ce3d07b-4125-41c1-8d47-df90b2a0d3b3
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+The rules and processes to use when working on the project.
+
+* license
+:PROPERTIES:
+:ID:       7c60e8b1-6671-4ddd-bbd4-b038cad9d880
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+The terms under which the project may be used, shared, and modified.
+
+* requirements
+:PROPERTIES:
+:ID:       b50858f1-622c-4d41-b141-32153db9e52f
+:ALIASES:  requirement
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+What you need to use the project.
+
+* to do
+:PROPERTIES:
+:ID:       fe3d8d20-1bec-4fd9-86c3-0a8c3eb50000
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+High-level descriptions of what we plan to do in the future.
+
+* troubleshooting
+:PROPERTIES:
+:ID:       9745a93e-37d3-405c-9c1a-4f21b1c08907
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+Common problems and what to do about them.
+
+* use
+:PROPERTIES:
+:ID:       6e9a281e-ddeb-4be6-b4bf-f4e41a833d1b
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+A high-level overview of basic directions.
+
+* what
+:PROPERTIES:
+:ID:       7c274d17-7d30-4129-80c4-0630dcd55666
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+A high-level description of the project.
+
+* why
+:PROPERTIES:
+:ID:       b8e6bf19-3a20-4c71-ab01-81dd7b5355dc
+:ALIASES:  
+:CONTEXT:  readme_toolbox
+:PRIME:    true
+:END:
+The main benefits of the project.
