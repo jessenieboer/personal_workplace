@@ -12,6 +12,7 @@ in
     tasks = tt.seed {
       name = "readme"; task = "copy_readme_template";
       src = ./templates/readme.org; dest = ".toolboxes/readme_toolbox/readme.org";
-    };
+    }
+    // tt.practices { name = "readme"; local = ./practices; };
   };
 }
