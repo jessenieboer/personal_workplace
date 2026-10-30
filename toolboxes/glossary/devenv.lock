@@ -3,11 +3,11 @@
     "awesome-copilot": {
       "flake": false,
       "locked": {
-        "lastModified": 1793231603,
-        "narHash": "sha256-xuguAWsaOBxgeBZdkBZGjXquwWbmFiG9/8qeSjWrwWU=",
+        "lastModified": 1793320513,
+        "narHash": "sha256-Pni4IMcuZJc0Ny8DbyciFXnYfN32n2MY3L4kvtAcILo=",
         "owner": "github",
         "repo": "awesome-copilot",
-        "rev": "b6483db44fb602654bca6a097185fcaddb305f97",
+        "rev": "5269f7ea2d6c3a9bfda5ed878b6726cf509121fd",
         "type": "github"
       },
       "original": {

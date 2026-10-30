@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "awesome-copilot": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793320513,
+        "narHash": "sha256-Pni4IMcuZJc0Ny8DbyciFXnYfN32n2MY3L4kvtAcILo=",
+        "owner": "github",
+        "repo": "awesome-copilot",
+        "rev": "5269f7ea2d6c3a9bfda5ed878b6726cf509121fd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "github",
+        "repo": "awesome-copilot",
+        "type": "github"
+      }
+    },
     "devenv": {
       "locked": {
         "dir": "src/modules",
@@ -55,6 +71,7 @@
     },
     "root": {
       "inputs": {
+        "awesome-copilot": "awesome-copilot",
         "devenv": "devenv",
         "nixpkgs": "nixpkgs"
       }
