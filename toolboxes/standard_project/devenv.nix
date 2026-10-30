@@ -42,6 +42,7 @@ in
           '') templateNames}
         '';
       };
-    };
+    }
+    // tt.practices { name = "standard_project"; local = ./practices; };
   };
 }
