@@ -11,3 +11,4 @@ description: Use when starting or doing any work in a project that uses the stan
 5. **Prefer declarative changes.** Change the environment through the Nix and devenv files, not one-off installs or imperative fixes.
 6. **Expect the user's edits.** The user edits files directly, so unexpected changes in any file they can edit are normal. Don't flag them, undo them, or work around them; build on the current contents.
 7. **Never delete a file without the user's explicit OK** in this chat, even when it looks stale, generated, or redundant.
+8. **Retry once before calling the computer offline.** If a call to the user's NixOS computer fails with a connection error (unreachable or timed out), wait about 5 seconds and retry the same call once, even under time pressure. If the retry fails too, tell the user the computer is offline and stop. Don't retry again or quietly switch to another route like Dropbox. Offer alternatives only as options for the user to pick.
