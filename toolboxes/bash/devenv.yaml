@@ -1,2 +1,5 @@
 # The bash-scripting skill is fetched file by file in devenv.nix; the
 # agentic-awesome-skills repo is ~450 MB, too big to pull in as an input.
+
+imports:
+  - /toolboxes/standard_project

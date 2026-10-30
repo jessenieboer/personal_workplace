@@ -10,10 +10,8 @@ inputs:
     url: github:NeoLabHQ/context-engineering-kit
     
 imports:
+  - /toolboxes/standard_project
   - /toolboxes/ai
-  - /toolboxes/emacs
-  - /toolboxes/git
-  - /toolboxes/readme
   - /toolboxes/secrets
 
 nixpkgs:

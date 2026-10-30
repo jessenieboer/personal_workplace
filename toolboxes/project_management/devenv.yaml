@@ -1,5 +1,5 @@
 imports:
-  - /toolboxes/emacs
+  - /toolboxes/standard_project
 #  - /toolboxes/git
 #  - /toolboxes/glossary
 #  - /toolboxes/readme

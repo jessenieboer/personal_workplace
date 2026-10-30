@@ -4,8 +4,6 @@ inputs:
     url: github:NeoLabHQ/context-engineering-kit
 
 imports:
-  - personal_workplace/toolboxes/emacs
-  - personal_workplace/toolboxes/git
-  - personal_workplace/toolboxes/python
-  - personal_workplace/toolboxes/readme
+  - /toolboxes/python
+  - /toolboxes/standard_project
 

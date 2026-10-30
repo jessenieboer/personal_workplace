@@ -9,8 +9,6 @@ inputs:
     url: github:wshobson/agents
 
 imports:
+  - /toolboxes/standard_project
   - /toolboxes/ai
-  - /toolboxes/emacs
-  - /toolboxes/git
-  - /toolboxes/readme
   - /toolboxes/secrets

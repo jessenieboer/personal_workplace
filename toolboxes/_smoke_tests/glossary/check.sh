@@ -17,7 +17,6 @@ grep -qx '#+EXPORT_FILE_NAME: ../../GLOSSARY.md' "$f" || fail "export target is 
 grep -q '00000000-0000-0000-0000-000000000000' "$f" && fail "placeholder ID not replaced"
 grep -Eq '^:ID: +[0-9a-f]{8}-[0-9a-f]{4}-' "$f" || fail "seeded term lacks a UUID"
 out=$(devenv shell -- glossary-check "$f" 2>&1) || fail "glossary-check on seeded glossary: $out"
-[ -e .toolboxes/readme_toolbox ] && fail "glossary toolbox seeded readme files"
 grep -q '✔ glossary toolbox available' "$log" || fail "announce line not printed under a tty"
 
 

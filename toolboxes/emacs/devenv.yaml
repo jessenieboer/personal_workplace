@@ -2,3 +2,6 @@
 #  - /toolboxes/git
 #  - /toolboxes/glossary
 #  - /toolboxes/readme
+
+imports:
+  - /toolboxes/standard_project

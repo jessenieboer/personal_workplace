@@ -1,7 +1,4 @@
 imports:
+  - /toolboxes/standard_project
   - /toolboxes/bash
-  - /toolboxes/emacs
-  - /toolboxes/git
   - /toolboxes/nixos
-  - /toolboxes/glossary
-  - /toolboxes/readme

@@ -6,4 +6,5 @@ inputs:
     url: github:numtide/llm-agents.nix/assets
 
 imports:
+  - /toolboxes/standard_project
   - /toolboxes/ai

@@ -7,3 +7,6 @@ inputs:
 #  - /toolboxes/emacs
 #  - /toolboxes/glossary
 #  - /toolboxes/readme
+
+imports:
+  - /toolboxes/standard_project
