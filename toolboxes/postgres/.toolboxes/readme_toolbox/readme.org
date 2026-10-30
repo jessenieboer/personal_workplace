@@ -1,0 +1,47 @@
+#+TITLE: PostgreSQL Toolbox
+#+OPTIONS: toc:nil num:nil
+#+EXPORT_FILE_NAME: ../../README.md
+
+#+html: <h1 align="center">PostgreSQL Toolbox</h1>
+#+html: <p align="center">A project-local PostgreSQL 16 server, clients and practices.</p>
+
+* What
+** Features :noexport:
+* Why
+* For Whom :noexport:
+* How :noexport:
+** Requirements :noexport:
+** Installation :noexport:
+#+BEGIN_SRC yaml
+inputs:
+  nixpkgs:
+    url: github:NixOS/nixpkgs/nixpkgs-unstable
+  wshobson-agents:
+    flake: false
+    url: github:wshobson/agents
+#+END_SRC
+** Use :noexport:
+#+BEGIN_SRC sh
+devenv up -d            # start PostgreSQL 16; creates the database on first start
+psql                    # or pgcli; PGDATABASE is the project database
+devenv processes down   # stop it
+#+END_SRC
+*** Details
+- initialDatabases :: databases devenv creates on the first start; this toolbox adds postgres_toolbox.database
+- PGDATA :: the server data directory, .devenv/state/postgres
+- PGDATABASE :: the default database for psql and pgcli; set from postgres_toolbox.database (default culab)
+- PGHOST :: the Unix socket directory devenv gives the server
+- pgcli :: psql alternative with completion and syntax highlighting
+- postgres_toolbox.database :: the database name; set it in the project's devenv.nix
+- psql :: the PostgreSQL command-line client
+- services.postgres :: the devenv module behind the server; set more options in the project
+
+**** Troubleshooting
+- devenv processes logs postgres
+**** License
+** Development :noexport:
+*** Process
+*** Important Decisions
+*** To Do
+*** Contributing
+* By Whom :noexport:
