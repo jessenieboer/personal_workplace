@@ -1,16 +1,13 @@
-{ config, lib, pkgs, ...}: {
-  environment = {
-    systemPackages = with pkgs; [
-      git
-      home-manager
-    ];
-  };
+{ pkgs, ... }: {
+  environment.systemPackages = [ pkgs.home-manager ];
 
   nix = {
     gc = {
       automatic = true;
       dates = "weekly";
+      options = "--delete-older-than 14d";
     };
+    optimise.automatic = true;
     settings = {
       experimental-features = [
         "nix-command"
@@ -29,6 +26,4 @@
       ];
     };
   };
-
-  system.stateVersion = "26.05";
 }

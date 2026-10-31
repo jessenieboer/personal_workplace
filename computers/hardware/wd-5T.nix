@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ config, lib, ... }:
 {
   fileSystems."/var/lib/postgres_drive" = {
     device = "/dev/disk/by-uuid/3c4900a8-f63f-4df9-b39c-dc0078d50e10";

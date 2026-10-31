@@ -5,10 +5,9 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
-    nixosConfigurations."laptop" = nixpkgs.lib.nixosSystem {
-      modules = [
-        ./hardware/uiu57o6a.nix
+  outputs = { nixpkgs, ... }@inputs:
+    let
+      common = [
         ./networking.nix
         ./os/audio.nix
         ./os/linux.nix
@@ -18,25 +17,14 @@
         ./users.nix
         ./wifi.nix
       ];
-      specialArgs = { inherit inputs; };
-      system = "x86_64-linux";
+      mkHost = modules: nixpkgs.lib.nixosSystem {
+        modules = common ++ modules;
+        specialArgs = { inherit inputs; };
+      };
+    in {
+      nixosConfigurations = {
+        laptop = mkHost [ ./hardware/uiu57o6a.nix ];
+        nucbox = mkHost [ ./hardware/nucbox.nix ./hardware/wd-5T.nix ./llm.nix ];
+      };
     };
-    nixosConfigurations."nucbox" = nixpkgs.lib.nixosSystem {
-      modules = [
-        ./hardware/nucbox.nix
-        ./hardware/wd-5T.nix
-        ./llm.nix
-        ./networking.nix
-        ./os/audio.nix
-        ./os/linux.nix
-        ./os/nixos.nix
-        ./os/ui.nix
-        ./security.nix
-        ./users.nix
-        ./wifi.nix
-      ];
-      specialArgs = { inherit inputs; };
-      system = "x86_64-linux";
-    };
-  };
 }

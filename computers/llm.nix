@@ -1,12 +1,7 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 {
-  environment.systemPackages = with pkgs;
-  [
-    ollama-vulkan
-    vulkan-loader
-    vulkan-tools
-  ];
-  
+  environment.systemPackages = [ pkgs.vulkan-tools ];
+
   services.ollama = {
     enable = true;
     environmentVariables = {

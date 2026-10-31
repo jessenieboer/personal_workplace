@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   config = {
     nix.settings.trusted-users = [ "root" "@wheel" ];
     users = {
@@ -21,7 +21,7 @@
         };
         root = {
           hashedPasswordFile = "/root/secrets/root.hash";
-          packages = with pkgs; [ sops ];
+          packages = [ pkgs.sops ];
           shell = pkgs.bash;
         };
       };

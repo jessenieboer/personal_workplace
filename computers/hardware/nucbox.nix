@@ -1,4 +1,4 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, ... }:
 {
   config = {
     boot = {
@@ -18,13 +18,9 @@
         "usbcore.usbfs_snoop=0"  # Disable USB filesystem snooping
         "xhci_hcd.quirks=0x400"  # Add quirks for better hub handling (e.g., reduce polling delays)
       ];
-      loader = {
-        systemd-boot.enable = true;
-        efi.canTouchEfiVariables = true;
-      };
     };
 
-    environment.systemPackages = with pkgs; [ gamemode lm_sensors ]; # lm_sensors monitor thermal
+    environment.systemPackages = [ pkgs.gamemode pkgs.lm_sensors ]; # lm_sensors monitor thermal
 
     fileSystems."/" = {
       device = "/dev/disk/by-uuid/579ea923-076a-472f-9a79-c88870ecdf67";
@@ -42,11 +38,6 @@
       options = [ "fmask=0022" "dmask=0022" ];
     };
 
-    fileSystems."/var/lib/postgres_drive" = {
-      device = "/dev/disk/by-uuid/3c4900a8-f63f-4df9-b39c-dc0078d50e10";
-      fsType = "ext4";
-    };
-
     hardware = {
       bluetooth.enable = true;
       #enableAllFirmware = true;
@@ -55,12 +46,6 @@
       graphics = {
         enable = true;
         enable32Bit = true; # Important for some games/Flatpak
-        extraPackages = with pkgs; [
-          mesa # Usually pulled in, but explicit is good
-        ];
-        extraPackages32 = with pkgs; [
-          driversi686Linux.mesa
-        ];
       };
       # xone.enable = true; seems to not be necessary; boosteroid works
     };
@@ -106,9 +91,9 @@
 
     swapDevices = [ ]; # todo: i think the nucbox has a swap partition that i'm not using
 
-    time.timeZone = "America/Chicago";
-
     zramSwap.enable = true; # In-memory compressed swap
+
+    system.stateVersion = "26.05";
 
   };
 }

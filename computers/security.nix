@@ -1,9 +1,5 @@
-{ config, inputs, lib, pkgs, ...}: {
-
-  environment.systemPackages = with pkgs;
-  [
-    yubikey-manager
-  ];
+{ pkgs, ... }: {
+  environment.systemPackages = [ pkgs.yubikey-manager ];
 
   hardware.gpgSmartcards.enable = true;
 
