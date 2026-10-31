@@ -87,9 +87,9 @@
 
     Service = {
       Type = "simple";
-      ExecStart = "${pkgs.emacs-pgtk}/bin/emacs --fg-daemon";
+      ExecStart = "${config.programs.emacs.finalPackage}/bin/emacs --fg-daemon";
       ExecStartPre = "${pkgs.coreutils}/bin/sleep 4";
-      ExecStop = "${pkgs.emacs-pgtk}/bin/emacsclient --eval '(kill-emacs)'";
+      ExecStop = "${config.programs.emacs.finalPackage}/bin/emacsclient --eval '(kill-emacs)'";
       Restart = "on-failure";
       RestartSec = 2;
     };
