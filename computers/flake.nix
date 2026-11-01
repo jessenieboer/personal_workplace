@@ -16,6 +16,7 @@
         ./security.nix
         ./users.nix
         ./wifi.nix
+        ./hardware/wd-1T.nix
       ];
       mkHost = modules: nixpkgs.lib.nixosSystem {
         modules = common ++ modules;
