@@ -28,6 +28,8 @@
 
     Service = {
       Type = "simple";
+      # ~/Dropbox lives on wd-1T; never sync into an empty folder when the drive is out.
+      ExecCondition = "${pkgs.util-linux}/bin/mountpoint -q ${config.home.homeDirectory}/Dropbox";
       ExecStart = "${pkgs.maestral}/bin/maestral start --foreground";
       Restart = "on-failure";
       RestartSec = 5;
