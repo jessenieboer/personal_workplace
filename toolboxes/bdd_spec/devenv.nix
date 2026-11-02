@@ -12,8 +12,6 @@ let
     name = "bdd_spec";
     extra = {
       "rules/bdd-spec-paths.md" = ./settings/rules/bdd-spec-paths.md;
-      # Whole folder: upstream renamed CONTEXT-FORMAT.md to GLOSSARY-FORMAT.md, and
-      # with no version pin a copy file by file would break on such changes.
       "skills/domain-modeling" = "${mp}/engineering/domain-modeling";
       "skills/grilling/SKILL.md" = "${mp}/productivity/grilling/SKILL.md";
       "skills/grill-with-docs/SKILL.md" = "${mp}/engineering/grill-with-docs/SKILL.md";
