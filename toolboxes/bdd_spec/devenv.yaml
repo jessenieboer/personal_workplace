@@ -1,0 +1,10 @@
+inputs:
+  mattpocock-skills:
+    flake: false
+    url: github:mattpocock/skills
+  jzallen-fred-simulations:
+    flake: false
+    url: github:jzallen/fred_simulations
+
+imports:
+  - /toolboxes/standard_project
