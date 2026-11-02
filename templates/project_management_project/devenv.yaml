@@ -4,4 +4,5 @@ inputs:
     url: github:jessenieboer/personal_workplace/jn
 
 imports:
-  - personal_workplace/toolboxes/glossary
+  - personal_workplace/toolboxes/project_management
+  - personal_workplace/toolboxes/standard_project
