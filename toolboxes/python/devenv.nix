@@ -2,10 +2,24 @@
 let
   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
 
-  root = config.devenv.root;
-  venvBin = "${root}/.devenv/state/venv/bin";
-  tyExe = lib.getExe pkgs.ty;
-  ruffExe = lib.getExe pkgs.ruff;
+  venvBin = "${config.devenv.state}/venv/bin";
+
+  # uv drops manylinux ty/ruff into the venv. Those ELFs need Nix's dynamic
+  # linker. Point the venv shims at the nixpkgs binaries so Emacs ty-ls (which
+  # resolves venv/bin/ty) keeps working.
+  shims = {
+    ty = lib.getExe pkgs.ty;
+    ruff = lib.getExe pkgs.ruff;
+  };
+  shimNames = lib.attrNames shims;
+  # A shim is only touched when uv put something at its path (even a broken link).
+  forEachShim = body: lib.concatMapStringsSep "\n" (n: ''
+    shim=${lib.escapeShellArg "${venvBin}/${n}"}
+    want=${lib.escapeShellArg shims.${n}}
+    if [ -e "$shim" ] || [ -L "$shim" ]; then
+    ${body}
+    fi
+  '') shimNames;
 
   wshobson = "${inputs.wshobson-agents}/plugins/python-development/skills";
   practicesTasks = tt.practices {
@@ -26,12 +40,6 @@ in
   config = {
     enterShell = ''
       ${tt.announce "python"}
-      if [ -t 1 ]; then
-        echo "Python version: $(python --version)"
-        echo "uv version: $(uv --version)"
-        echo "ruff version: $(ruff --version)"
-        echo "ty version: $(ty --version)"
-      fi
     '';
 
     env = {
@@ -55,7 +63,6 @@ in
 
     packages = with pkgs; [
       ruff
-      ty
     ];
 
     tasks = practicesTasks
@@ -65,34 +72,20 @@ in
         dest = "pyproject.toml"; before = [ "devenv:python:uv" ];
       }
       // {
-      # uv drops manylinux ty/ruff into the venv. Those ELFs need Nix's
-      # dynamic linker. Point the venv shims at the nixpkgs binaries so
-      # Emacs ty-ls (which resolves venv/bin/ty) keeps working.
       "python_toolbox:nixos_venv_bins" = {
         description = "Point venv ty/ruff at nixpkgs binaries when those shims exist";
         before = [ "devenv:enterShell" ];
         after = [ "devenv:python:uv" ];
         status = ''
-          need=0
-          if [ -e "${venvBin}/ty" ] || [ -L "${venvBin}/ty" ]; then
-            [ "$(readlink -f "${venvBin}/ty")" = "${tyExe}" ] || need=1
-          fi
-          if [ -e "${venvBin}/ruff" ] || [ -L "${venvBin}/ruff" ]; then
-            [ "$(readlink -f "${venvBin}/ruff")" = "${ruffExe}" ] || need=1
-          fi
-          [ "$need" = 0 ]
+          ${forEachShim ''  [ "$(readlink -f "$shim")" = "$want" ] || exit 1''}
+          exit 0
         '';
         exec = ''
-          mkdir -p "${venvBin}"
-          if [ -e "${venvBin}/ty" ] || [ -L "${venvBin}/ty" ]; then
-            ln -sfn ${tyExe} "${venvBin}/ty"
-          fi
-          if [ -e "${venvBin}/ruff" ] || [ -L "${venvBin}/ruff" ]; then
-            ln -sfn ${ruffExe} "${venvBin}/ruff"
-          fi
+          set -eu
+          mkdir -p ${lib.escapeShellArg venvBin}
+          ${forEachShim ''  ln -sfn "$want" "$shim"''}
         '';
       };
-
     };
   };
 }

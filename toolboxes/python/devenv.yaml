@@ -1,24 +1,12 @@
 inputs:
-  llm-agents:
-    url: github:numtide/llm-agents.nix/assets
-  neolabhq-cek:
-    flake: false
-    url: github:NeoLabHQ/context-engineering-kit
   nixpkgs:
     url: github:NixOS/nixpkgs/nixpkgs-unstable
-  nixpkgs-python:
-    url: github:cachix/nixpkgs-python
-    inputs:
-      nixpkgs:
-        follows: nixpkgs
   trailofbits-skills:
     flake: false
     url: github:trailofbits/skills
   wshobson-agents:
     flake: false
     url: github:wshobson/agents
-    
+
 imports:
   - /toolboxes/standard_project
-  - /toolboxes/ai
-  - /toolboxes/secrets
