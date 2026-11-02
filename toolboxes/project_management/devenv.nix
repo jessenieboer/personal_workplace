@@ -10,13 +10,13 @@ let
 in
 {
   config = {
-    project_management_toolbox = {
-      project_name = "project_management_toolbox";
-      workers = [
-        { name = "jessenieboer"; email = "jessenieboer@protonmail.com"; }
-        { name = "Vizier"; }
-      ];
-    };
+    # project_management_toolbox = {
+    #   project_name = "project_management_toolbox";
+    #   workers = [
+    #     { name = "jessenieboer"; email = "jessenieboer@protonmail.com"; }
+    #     { name = "Vizier"; }
+    #   ];
+    # };
 
     enterShell = ''
       ${tt.announce "project management"}
@@ -40,13 +40,14 @@ in
   options = {
     project_management_toolbox = {
       project_name = lib.mkOption {
+        default = baseNameOf config.devenv.root;
         description = "The name of this project";
         example = "My cool project";
         type = lib.types.strMatching "[^[:space:]]+";
       };
 
       project_benefit = lib.mkOption {
-        default = [ ];
+        default = "";
         description = "The good this project is aiming at";
         example = "My cool project";
         type = lib.types.str;
