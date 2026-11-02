@@ -11,8 +11,6 @@ inputs:
     
 imports:
   - /toolboxes/standard_project
-  - /toolboxes/ai
-  - /toolboxes/secrets
 
 nixpkgs:
     permitted_unfree_packages:
