@@ -2,9 +2,8 @@
 name: jesse-hardware
 description: >-
   Use when a task touches the user's own machines: their NixOS computer being
-  offline, the ~/Dropbox and ~/kingdoms drive mounts, where projects and
-  learning projects live, Proton Bridge on the box, or the Drive sign-in on the
-  box.
+  offline, the ~/Dropbox and ~/kingdoms drive mounts, holds when the computer or
+  drive is down, Proton Bridge on the box, or the Drive sign-in on the box.
 ---
 # Jesse's hardware
 
@@ -19,8 +18,7 @@ The user's ~/Dropbox and ~/kingdoms are bind mounts from an external drive (wd-1
 2. If it fails, or reads error out, tell the user the drive isn't mounted. Then don't create, write or edit any of their files, there or through the Dropbox connector, and don't hand the work to another bot, even if it's urgent or files look present. Empty folders there are the bare SSD.
 
 ## 3. Where things live
-- Projects: `~/Dropbox/_kingdom_management` on the user's NixOS computer. Check `~/Dropbox` first (section 2).
-- Learning projects: `~/kingdoms/Household/Jesse/_learning_projects/`, not Dropbox. Check `~/kingdoms` first (section 2). If the check fails, tell the user the drive isn't mounted and stop.
+See jesse-preferences rule 7. Check the mount (section 2) before using those paths; if it fails, stop.
 
 ## 4. Holds
 - Capture (capture-item): if the computer is offline, the drive isn't mounted, or reads error out, hold the capture. Don't write through the Dropbox connector or anywhere else, even if it's urgent. Tell the user it's held until the computer and drive are back.
