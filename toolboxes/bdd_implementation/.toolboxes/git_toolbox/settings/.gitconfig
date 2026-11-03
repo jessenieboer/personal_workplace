@@ -1,0 +1,35 @@
+# Git settings for this project. The git toolbox seeds this file once from its
+# defaults and never overwrites it: it is yours, so edit it freely and commit it
+# with the project. It is pulled into .git/config with include.path.
+# No identity, signing or credentials here on purpose.
+[pull]
+	# Rebase local work on pull; refuse non-fast-forward merges.
+	rebase = true
+	ff = only
+[merge]
+	ff = only
+[rebase]
+	autoStash = true
+[rerere]
+	enabled = true
+[core]
+	autocrlf = false
+	safecrlf = true
+[diff]
+	algorithm = histogram
+[init]
+	defaultBranch = main
+[tag]
+	# SemVer ordering in `git tag` (v1.10.0 after v1.9.0).
+	sort = version:refname
+[versionsort]
+	# Pre-releases sort before their release: alpha < beta < rc < final.
+	suffix = -alpha
+	suffix = -beta
+	suffix = -rc
+[push]
+	# Push annotated release tags reachable from pushed commits.
+	followTags = true
+[fetch]
+	prune = true
+	pruneTags = false
