@@ -1,10 +1,10 @@
 { pkgs, lib, config, inputs, ... }:
 let
   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
-  # Org files (<project>.org, its _archive) live at the project root so
-  # Dropbox/beorg can see them. Only the generated dir-locals fragment
-  # stays under .toolboxes/project_management_toolbox.
-  orgDir = config.devenv.root;
+  # Org files (<project>.org, its _archive, journal.org) live in the toolbox
+  # directory, next to the generated dir-locals fragment. Syncthing sends only
+  # **/project_management_toolbox/*.org to the phone, so keep them directly there.
+  orgDir = "${config.devenv.root}/.toolboxes/project_management_toolbox";
   subprojectAgendaFiles = lib.concatMapStringsSep " " (s: "\"${s}\"") config.project_management_toolbox.subproject_agenda_files;
   workerList = lib.concatMapStringsSep " " (w: w.name) config.project_management_toolbox.workers;
 in
@@ -57,7 +57,10 @@ in
         type = lib.types.listOf lib.types.str;
         default = [ ];
         description = "List of project management directories of subprojects";
-        example = [ "/path/to/subproj1/subproj1.org" "/path/to/subproj2/subproj2.org" ];
+        example = [
+          "/path/to/subproj1/.toolboxes/project_management_toolbox/subproj1.org"
+          "/path/to/subproj2/.toolboxes/project_management_toolbox/subproj2.org"
+        ];
       };
 
       workers = lib.mkOption {

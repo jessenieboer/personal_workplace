@@ -28,7 +28,7 @@ if command -v emacs >/dev/null; then
     (princ (format "%S %S" org-directory (mapcar (function car) org-capture-templates))))' 2>/dev/null)
   # PM's 11 templates and the journal one, in one list.
   tab=$'\t'
-  want="\"$(pwd)/\" (\"b\" \"s\" \"y\" \"$tab\" \"e\" \"i\" \"z\" \"n\" \"p\" \"c\" \"h\" \"o\")"
+  want="\"$(pwd)/.toolboxes/project_management_toolbox/\" (\"b\" \"s\" \"y\" \"$tab\" \"e\" \"i\" \"z\" \"n\" \"p\" \"c\" \"h\" \"o\")"
   [ "$got" = "$want" ] || fail "capture templates are not the journal plus PM's: $got"
 fi
 
