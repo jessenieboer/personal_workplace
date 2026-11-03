@@ -1,95 +1,61 @@
-# update all my _project_management stuff to the latest version of my toolbox
-# Continues on failure and shows full error output.
-# At the end, lists directories that had errors.
+#!/usr/bin/env bash
+# update all my devenv projects under ~/kingdoms to the latest version of my toolboxes
+# Usage: refresh_devenv.sh [ROOT_DIR]   (default: the directory this script lives in)
+# For each project (a directory with devenv.yaml), runs devenv update, refreshes the
+# devenv caches, and runs direnv allow if there is an .envrc and direnv is installed.
+# Continues on failure and shows full error output. At the end, lists directories that had errors.
 
-set -uo pipefail
+set -euo pipefail
 
-# ==================== Configuration ====================
-MAT_NAME_IN_PASS="bws/nucbox_access_token"
-SECRET_ID="2e5149d3-f58c-4e43-87ef-b42601056f73"
+ROOT_DIR="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 
-ROOT_DIR="${1:-.}"
+# ~/kingdoms is a bind mount from the external drive; refuse to run on the bare mount point.
+if ! mountpoint -q "$HOME/kingdoms"; then
+    echo "❌ ~/kingdoms is not mounted (wd-1T missing?). Nothing done." >&2
+    exit 1
+fi
 
-# ==================== Error tracking ====================
 ERROR_LOG=$(mktemp /tmp/devenv-refresh-errors.XXXXXX)
+trap 'rm -f "$ERROR_LOG"' EXIT
 
-# ==================== Fetch tokens once at the start ====================
-echo "🔑 Fetching GitHub Personal Access Token via pass + Bitwarden..."
-
-BWS_TOKEN=$(pass show "$MAT_NAME_IN_PASS" 2>/dev/null | head -n1)
-
-if [ -z "$BWS_TOKEN" ]; then
-    echo "❌ ERROR: Failed to retrieve BWS access token from pass."
-    exit 1
-fi
-
-echo "   ✓ Loaded BWS machine access token from pass"
-
-NIX_GITHUB_PAT=$(bws secret get "$SECRET_ID" --output json -t "$BWS_TOKEN" | jq -r '.value')
-
-if [ -z "$NIX_GITHUB_PAT" ] || [ "$NIX_GITHUB_PAT" = "null" ]; then
-    echo "❌ ERROR: Failed to fetch GitHub token from Bitwarden Secrets Manager."
-    exit 1
-fi
-
-echo "   ✓ Successfully loaded GitHub token from Bitwarden Secrets Manager"
-echo
-
-# ==================== Start processing ====================
 echo "🚀 Starting devenv refresh under: $ROOT_DIR"
 echo "==================================================="
 
-find "$ROOT_DIR" -type d -exec test -f {}/devenv.nix \; -print0 |
-while IFS= read -r -d '' dir; do
+# Skip git internals, generated toolbox dirs, node_modules and devenv/direnv state.
+while IFS= read -r -d '' file; do
+    dir=$(dirname "$file")
     echo "📁 Processing: $dir"
-    local_failed=0
 
-    (
-        cd "$dir" || {
-            echo "❌ ERROR: Failed to cd into $dir" >&2
-            exit 1
-        }
+    if (
+        cd "$dir" || { echo "❌ ERROR: Failed to cd into $dir" >&2; exit 1; }
 
         echo "   🔄 Running: devenv update"
-        if ! NIX_CONFIG="access-tokens = github.com=$NIX_GITHUB_PAT" devenv update; then
-            echo "   ❌ Failed: devenv update" >&2
-            exit 1   # exit subshell on failure
-        else
-            echo "   ✅ Success: devenv update"
-        fi
+        devenv update || { echo "   ❌ Failed: devenv update" >&2; exit 1; }
 
         echo "   🔄 Running: devenv shell --refresh-eval-cache --refresh-task-cache"
-        if ! devenv shell --refresh-eval-cache --refresh-task-cache -- \
-             echo "✅ devenv shell cache refreshed successfully"; then
-            echo "   ❌ Failed: devenv shell --refresh-eval-cache --refresh-task-cache" >&2
-            exit 1
-        else
-            echo "   ✅ Success: devenv shell --refresh-eval-cache --refresh-task-cache"
-        fi
-    )
+        devenv shell --refresh-eval-cache --refresh-task-cache -- true ||
+            { echo "   ❌ Failed: devenv shell refresh" >&2; exit 1; }
 
-    if [ $? -ne 0 ]; then
+        # The emacs/standard_project toolboxes write .envrc on shell entry, so allow it last.
+        if [ -f .envrc ] && command -v direnv >/dev/null; then
+            echo "   🔄 Running: direnv allow"
+            direnv allow . || { echo "   ❌ Failed: direnv allow" >&2; exit 1; }
+        fi
+    ); then
+        echo "   ✅ Finished successfully"
+    else
         echo "$dir" >> "$ERROR_LOG"
         echo "   ⚠️  Recorded as FAILED"
-    else
-        echo "   ✅ Finished successfully"
     fi
-
     echo "---------------------------------------------------"
-done
+done < <(find "$ROOT_DIR" \
+    \( -name .git -o -name .toolboxes -o -name node_modules -o -name .devenv -o -name .direnv -o -name personal_workplace \) -prune \
+    -o -type f -name devenv.yaml -print0 | sort -z)
 
-# ==================== Final Report ====================
 echo "==================================================="
-echo "🎉 All directories processed!"
-
 if [ -s "$ERROR_LOG" ]; then
     echo "⚠️  The following directories had errors:"
-    cat "$ERROR_LOG" | sort | uniq | sed 's/^/   • /'
-    echo
-    echo "You may want to check these directories manually."
+    sort -u "$ERROR_LOG" | sed 's/^/   • /'
 else
     echo "✅ No errors occurred. All refreshes completed successfully!"
 fi
-
-rm -f "$ERROR_LOG"
-echo "Done."
