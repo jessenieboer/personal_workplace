@@ -12,6 +12,7 @@
         ./os/audio.nix
         ./os/linux.nix
         ./os/nixos.nix
+        ./os/syncthing.nix
         ./os/ui.nix
         ./security.nix
         ./users.nix
