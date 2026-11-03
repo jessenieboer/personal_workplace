@@ -1,2 +1,6 @@
+inputs:
+  nixpkgs:
+    url: github:NixOS/nixpkgs/nixpkgs-unstable
+
 imports:
   - /toolboxes/standard_project

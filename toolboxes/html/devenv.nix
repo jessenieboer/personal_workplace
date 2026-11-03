@@ -1,24 +1,28 @@
 { config, pkgs, ... }:
 let
   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
+
+  # No skills yet; add them under extra.
+  practicesTasks = tt.practices {
+    name = "html";
+  };
 in
 {
   config = {
     enterShell = ''
       ${tt.announce "html"}
-      if [ -t 1 ]; then
-        echo "html-ls: $(command -v vscode-html-language-server)"
-        echo "css-ls: $(command -v vscode-css-language-server)"
-        echo "prettier: $(command -v prettier)"
-      fi
     '';
 
+    # devenv has no languages.html. These are the HTML and CSS language
+    # servers (vscode-html-language-server, vscode-css-language-server) and
+    # the formatter.
     packages = with pkgs; [
       prettier
       vscode-langservers-extracted
     ];
 
-    tasks = tt.gitSettings "html" ./settings
+    tasks = practicesTasks
+      // tt.gitSettings "html" ./settings
       // tt.seed {
         name = "html"; task = "copy_index_html_template";
         src = ./templates/index.html; dest = "index.html";

@@ -26,6 +26,3 @@ build/
 .toolboxes/html_toolbox/
 .toolboxes/standard_project_toolbox/
 # <<< toolbox-managed <<<
-
-.direnv
-.toolboxes/emacs_toolbox
