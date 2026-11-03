@@ -23,3 +23,7 @@ result-*
 .toolboxes/nixos_toolbox/
 .toolboxes/standard_project_toolbox/
 # <<< toolbox-managed <<<
+.toolboxes/project_management_toolbox/
+.toolboxes/voxtype_toolbox/initial_prompt.txt
+.toolboxes/voxtype_toolbox/post_process_prompt.txt
+*.bak*

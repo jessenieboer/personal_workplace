@@ -1,4 +1,0 @@
-# Project-specific git attributes. Merged last into the root .gitattributes,
-# after the git toolbox's base line and every other toolbox's attributes, so
-# these lines win. Seeded once by the git toolbox; this file is yours to edit.
-# Example: *.lock -diff

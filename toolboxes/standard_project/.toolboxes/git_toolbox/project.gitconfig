@@ -1,7 +1,0 @@
-# Project-specific git settings. This file is yours: the git toolbox seeds it
-# once and never overwrites it, so edit it freely and commit it with the
-# project. It is included after the toolbox defaults
-# (.toolboxes/git_toolbox/gitconfig), so values set here win.
-# Example:
-# [pull]
-# 	rebase = false
