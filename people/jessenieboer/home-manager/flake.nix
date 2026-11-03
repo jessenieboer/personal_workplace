@@ -23,6 +23,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    sanyuan-skills = {
+      url = "github:sanyuan0704/sanyuan-skills";
+      flake = false; # provenance only for software/grok-bot/practices/skills/sigma, not wired into outputs
+    };
     voxtype = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:peteonrails/voxtype/v1.0.0-rc4";

@@ -400,6 +400,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "plasma-manager": "plasma-manager",
+        "sanyuan-skills": "sanyuan-skills",
         "voxtype": "voxtype"
       }
     },
@@ -421,6 +422,22 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "sanyuan-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778484103,
+        "narHash": "sha256-PnYd5ZNqAS2r3uIjbij7sJb/icrT5zgSYI1KnoFuLtg=",
+        "owner": "sanyuan0704",
+        "repo": "sanyuan-skills",
+        "rev": "08b6572ef108f22d4e8a3ecf9182a4bbef097744",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sanyuan0704",
+        "repo": "sanyuan-skills",
         "type": "github"
       }
     },
