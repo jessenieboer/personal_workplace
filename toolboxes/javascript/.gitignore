@@ -13,7 +13,6 @@ result-*
 .toolboxes/*/practices/
 .toolboxes/*/settings/*
 !.toolboxes/*/settings/.gitconfig
-.toolboxes/ai_toolbox/
 .dir-locals.el
 .envrc
 *~
@@ -29,24 +28,5 @@ coverage/
 *.log
 npm-debug.log*
 .toolboxes/javascript_toolbox/
-.venv/
-__pycache__/
-*.py[cod]
-*$py.class
-*.egg-info/
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-htmlcov/
-.toolboxes/python_toolbox/
-.toolboxes/secrets_toolbox/
 .toolboxes/standard_project_toolbox/
 # <<< toolbox-managed <<<
-
-.direnv
-.eca
-.toolboxes/ai_toolbox
-.toolboxes/emacs_toolbox
-.toolboxes/javascript_toolbox
-.toolboxes/secrets_toolbox
