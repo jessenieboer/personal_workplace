@@ -23,6 +23,14 @@ in
     '';
 
     tasks = tt.gitSettings "project_management" ./settings
+    # Everything in .toolboxes/project_management_toolbox is kept out of git: the
+    # org files travel by Syncthing, and the dir-locals fragment is generated.
+    // tt.refresh {
+      name = "project_management"; task = "refresh_gitignore_dir";
+      description = "Keep .toolboxes/project_management_toolbox/.gitignore ignoring everything";
+      dest = ".toolboxes/project_management_toolbox/.gitignore";
+      src = pkgs.writeText "project_management_toolbox_gitignore" "*\n";
+    }
     // tt.refresh {
       name = "project_management"; task = "generate_dir_locals";
       description = "Render project_management_toolbox_dir_locals from devenv options";

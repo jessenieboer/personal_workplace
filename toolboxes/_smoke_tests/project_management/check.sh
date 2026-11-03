@@ -13,6 +13,8 @@ script -qec "devenv shell -- true" "$log" >/dev/null || { tail -30 "$log"; exit 
 fail() { echo "FAIL: $*"; exit 1; }
 
 [ -f .toolboxes/project_management_toolbox/project_management_toolbox_dir_locals ] || fail "PM fragment not generated"
+[ -f .toolboxes/project_management_toolbox/.gitignore ] || fail "PM toolbox dir .gitignore not generated"
+[ "$(cat .toolboxes/project_management_toolbox/.gitignore)" = "*" ] || fail "PM toolbox dir .gitignore is not exactly *"
 [ -f .toolboxes/emacs_toolbox/emacs_toolbox_dir_locals ] || fail "emacs journal fragment not generated"
 [ -f .dir-locals.el ] || fail ".dir-locals.el missing"
 grep -q '"Journal entry"' .toolboxes/project_management_toolbox/project_management_toolbox_dir_locals && fail "PM fragment still defines the journal template"
