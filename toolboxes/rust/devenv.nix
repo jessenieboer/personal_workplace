@@ -1,35 +1,26 @@
 { config, pkgs, ... }:
 let
   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
+
+  # No skills yet; add them under extra.
+  practicesTasks = tt.practices {
+    name = "rust";
+  };
 in
 {
   config = {
     enterShell = ''
       ${tt.announce "rust"}
-      if [ -t 1 ]; then
-        echo "rustc version: $(rustc --version)"
-        echo "cargo version: $(cargo --version)"
-      fi
     '';
 
-    env = {
-      RUST_BACKTRACE = "1";
-    };
+    env.RUST_BACKTRACE = "1";
 
-    languages.rust = {
-      enable = true;
-      channel = "stable";
-      version = "latest";
-      components = [
-        "rustc"
-        "cargo"
-        "clippy"
-        "rustfmt"
-        "rust-analyzer"
-      ];
-    };
+    # The default channel is the nixpkgs toolchain, with cargo, rustc, clippy,
+    # rustfmt and rust-analyzer.
+    languages.rust.enable = true;
 
-    tasks = tt.gitSettings "rust" ./settings
+    tasks = practicesTasks
+      // tt.gitSettings "rust" ./settings
       // tt.seed {
         name = "rust"; task = "copy_cargo_toml_template";
         src = ./templates/Cargo.toml; dest = "Cargo.toml";
