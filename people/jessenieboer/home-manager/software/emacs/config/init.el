@@ -677,12 +677,9 @@
 (require 'project)
 
   (defun my-tab-bar-tab-name ()
-  "Name the tab after the current project, with a marker for which tree it's in."
-  (let* ((dir (expand-file-name default-directory))
-         (proj (project-current))
-         (marker (cond ((file-in-directory-p dir my-projects-directory) "♔ ")
-                       (t ""))))
-    (concat marker (if proj (project-name proj) "No project"))))
+  "Name the tab after the current project."
+  (let ((proj (project-current)))
+    (if proj (project-name proj) "No project")))
 
   (setq my-projects-directory (file-name-as-directory "~/kingdoms")
         project-mode-line nil ;; causes some slowdown if not nil
