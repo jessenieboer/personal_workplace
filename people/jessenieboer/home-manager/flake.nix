@@ -69,7 +69,7 @@
           ./software/kde/plasma.nix
           ./software/kde/programs.nix
           ./software/libreoffice/libreoffice.nix
-          ./software/maestral/maestral.nix
+          # ./software/maestral/maestral.nix
           ./software/opencode/opencode.nix
         ];
         extraSpecialArgs = {
@@ -93,7 +93,7 @@
           ./software/kde/plasma.nix
           ./software/kde/programs.nix
           ./software/libreoffice/libreoffice.nix
-          ./software/maestral/maestral.nix
+          # ./software/maestral/maestral.nix
           ./software/opencode/opencode.nix
           ./software/voxtype/voxtype.nix
         ];
