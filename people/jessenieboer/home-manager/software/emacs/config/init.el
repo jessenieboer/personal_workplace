@@ -680,31 +680,33 @@
   "Name the tab after the current project, with a marker for which tree it's in."
   (let* ((dir (expand-file-name default-directory))
          (proj (project-current))
-         (marker (cond ((file-in-directory-p dir my-project-management-directory) "♔ ")
+         (marker (cond ((file-in-directory-p dir my-projects-directory) "♔ ")
                        (t ""))))
     (concat marker (if proj (project-name proj) "No project"))))
 
-  (setq my-project-management-directory (file-name-as-directory "~/Dropbox/_kingdom_management")
-        my-projects-directory (file-name-as-directory "~/kingdoms")
+  (setq my-projects-directory (file-name-as-directory "~/kingdoms")
         project-mode-line nil ;; causes some slowdown if not nil
         project-switch-commands 'project-find-file
-        project-vc-extra-root-markers '(".project" "devenv.nix" "flake.nix")
-        project-vc-ignores '(".devenv/")
+        project-vc-extra-root-markers '(".project" "devenv.nix")
+        project-vc-ignores '("**/.devenv/" "**/.toolboxes/")
+        project-vc-include-untracked nil
         project-vc-use-cache t
         tab-bar-tab-name-function #'my-tab-bar-tab-name)
 
-  (defun my-reset-projects ()
-    (interactive)
-    (project-forget-zombie-projects)
-    (project-forget-projects-under my-project-management-directory t)
-    (project-forget-projects-under my-projects-directory t)
-    (project-remember-projects-under my-project-management-directory t)
-    (project-remember-projects-under my-projects-directory t)
-    (dolist (proj project--list)
-      (let* ((root (car proj))
-  	   (envrc (when root (expand-file-name ".envrc" root))))
-        (add-to-list 'safe-local-variable-directories root))))
+;; remove all projects
+;; (progn (project--ensure-read-project-list)
+;;      (setq project--list nil)
+;;      (project--write-project-list))
 
+(defun my-reset-projects ()
+(interactive)
+(project-forget-zombie-projects)
+(project-forget-projects-under my-projects-directory t)
+(project-remember-projects-under my-projects-directory t)
+(dolist (root (project-known-project-roots))
+  (if (string-match-p "/\\.\\(toolboxes\\|devenv\\|direnv\\)/" root)
+      (project-forget-project root)
+    (add-to-list 'safe-local-variable-directories root))))
 
   (defun my-get-project-root-at-point ()
     "Return the project root directory at point, or nil if none found."
@@ -722,7 +724,7 @@
   "Auto-revert file buffers under the kingdom-management tree."
   (when (and buffer-file-name
              (file-in-directory-p buffer-file-name
-                                  my-project-management-directory))
+                                  my-projects-directory))
     (auto-revert-mode 1)))
 (add-hook 'find-file-hook #'my-auto-revert-kingdom-management)
 

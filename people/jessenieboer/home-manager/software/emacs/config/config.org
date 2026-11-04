@@ -844,57 +844,59 @@ Contains some caching stuff to speed up buffer grouping for tab line, which is a
 :ID:       df2c1df4-74ae-4c5f-ad0d-54423465c003
 :END:
 #+begin_src emacs-lisp
-  (require 'project)
+    (require 'project)
 
-  (defun my-tab-bar-tab-name ()
-  "Name the tab after the current project, with a marker for which tree it's in."
-  (let* ((dir (expand-file-name default-directory))
-         (proj (project-current))
-         (marker (cond ((file-in-directory-p dir my-project-management-directory) "♔ ")
-                       (t ""))))
-    (concat marker (if proj (project-name proj) "No project"))))
+    (defun my-tab-bar-tab-name ()
+    "Name the tab after the current project, with a marker for which tree it's in."
+    (let* ((dir (expand-file-name default-directory))
+           (proj (project-current))
+           (marker (cond ((file-in-directory-p dir my-projects-directory) "♔ ")
+                         (t ""))))
+      (concat marker (if proj (project-name proj) "No project"))))
 
-  (setq my-project-management-directory (file-name-as-directory "~/Dropbox/_kingdom_management")
-        my-projects-directory (file-name-as-directory "~/kingdoms")
-        project-mode-line nil ;; causes some slowdown if not nil
-        project-switch-commands 'project-find-file
-        project-vc-extra-root-markers '(".project" "devenv.nix" "flake.nix")
-        project-vc-ignores '(".devenv/")
-        project-vc-use-cache t
-        tab-bar-tab-name-function #'my-tab-bar-tab-name)
+    (setq my-projects-directory (file-name-as-directory "~/kingdoms")
+          project-mode-line nil ;; causes some slowdown if not nil
+          project-switch-commands 'project-find-file
+          project-vc-extra-root-markers '(".project" "devenv.nix")
+          project-vc-ignores '("**/.devenv/" "**/.toolboxes/")
+          project-vc-include-untracked nil
+          project-vc-use-cache t
+          tab-bar-tab-name-function #'my-tab-bar-tab-name)
+
+  ;; remove all projects
+  ;; (progn (project--ensure-read-project-list)
+  ;;      (setq project--list nil)
+  ;;      (project--write-project-list))
 
   (defun my-reset-projects ()
-    (interactive)
-    (project-forget-zombie-projects)
-    (project-forget-projects-under my-project-management-directory t)
-    (project-forget-projects-under my-projects-directory t)
-    (project-remember-projects-under my-project-management-directory t)
-    (project-remember-projects-under my-projects-directory t)
-    (dolist (proj project--list)
-      (let* ((root (car proj))
-  	   (envrc (when root (expand-file-name ".envrc" root))))
-        (add-to-list 'safe-local-variable-directories root))))
+  (interactive)
+  (project-forget-zombie-projects)
+  (project-forget-projects-under my-projects-directory t)
+  (project-remember-projects-under my-projects-directory t)
+  (dolist (root (project-known-project-roots))
+    (if (string-match-p "/\\.\\(toolboxes\\|devenv\\|direnv\\)/" root)
+        (project-forget-project root)
+      (add-to-list 'safe-local-variable-directories root))))
 
+    (defun my-get-project-root-at-point ()
+      "Return the project root directory at point, or nil if none found."
+      (interactive)
+      (let* ((dir (my-get-dir-at-point))
+    	 (project (project-current nil dir)))
+        (if project
+    	(let ((root (project-root project)))
+              (message "Project root: %s" root)
+    	  root)
+          (message "No project root found at point")
+          nil)))
 
-  (defun my-get-project-root-at-point ()
-    "Return the project root directory at point, or nil if none found."
-    (interactive)
-    (let* ((dir (my-get-dir-at-point))
-  	 (project (project-current nil dir)))
-      (if project
-  	(let ((root (project-root project)))
-            (message "Project root: %s" root)
-  	  root)
-        (message "No project root found at point")
-        nil)))
-
-  (defun my-auto-revert-kingdom-management ()
-  "Auto-revert file buffers under the kingdom-management tree."
-  (when (and buffer-file-name
-             (file-in-directory-p buffer-file-name
-                                  my-project-management-directory))
-    (auto-revert-mode 1)))
-(add-hook 'find-file-hook #'my-auto-revert-kingdom-management)
+    (defun my-auto-revert-kingdom-management ()
+    "Auto-revert file buffers under the kingdom-management tree."
+    (when (and buffer-file-name
+               (file-in-directory-p buffer-file-name
+                                    my-projects-directory))
+      (auto-revert-mode 1)))
+  (add-hook 'find-file-hook #'my-auto-revert-kingdom-management)
 #+end_src
 *** project controls
 :PROPERTIES:
