@@ -2,26 +2,28 @@
 name: jesse-hardware
 description: >-
   Use when a task touches the user's own machines: their NixOS computer being
-  offline, the ~/Dropbox and ~/kingdoms drive mounts, holds when the computer or
-  drive is down, Proton Bridge on the box, or the Drive sign-in on the box.
+  offline, the ~/kingdoms drive mount, holds when the computer or drive is down,
+  Proton Bridge on the box, or the Drive sign-in on the box.
 ---
 # Jesse's hardware
 
 Rules that fit the user's own machines, not projects in general.
 
 ## 1. NixOS computer offline: retry once
-If a call to the user's NixOS computer fails with a connection error (unreachable or timed out), wait about 5 seconds and retry the same call once, even under time pressure. If the retry fails too, tell the user the computer is offline and stop. Don't retry again or quietly switch to another route like Dropbox. Offer alternatives only as options for the user to pick.
+If a call to the user's NixOS computer fails with a connection error (unreachable or timed out), wait about 5 seconds and retry the same call once, even under time pressure. If the retry fails too, tell the user the computer is offline and stop. Don't retry again or quietly switch to another route like a connector. Offer alternatives only as options for the user to pick.
 
-## 2. Drive mounts: check before reading or writing
-The user's ~/Dropbox and ~/kingdoms are bind mounts from an external drive (wd-1T).
-1. Before reading or writing under either, run `mountpoint -q ~/kingdoms` or `mountpoint -q ~/Dropbox` on the user's computer, not the box. Check that root, not a subpath.
-2. If it fails, or reads error out, tell the user the drive isn't mounted. Then don't create, write or edit any of their files, there or through the Dropbox connector, and don't hand the work to another bot, even if it's urgent or files look present. Empty folders there are the bare SSD.
+## 2. Drive mount: check before reading or writing
+The user's ~/kingdoms is a bind mount from an external drive (wd-1T).
+1. Before reading or writing under it, run `mountpoint -q ~/kingdoms` on the user's computer, not the box. Check that root, not a subpath.
+2. If it fails, or reads error out, tell the user the drive isn't mounted. Then don't create, write or edit any of their files, there or through any connector, and don't hand the work to another bot, even if it's urgent or files look present. Empty folders there are the bare SSD.
+
+Reference (wd-1T): the drive mounts at `/media/wd-1T`, nofail, on nucbox and the laptop; config is `computers/hardware/wd-1T.nix` in personal_workplace. Backups from the Oct 31, 2026 move: `/media/wd-1T/home-backup-2026-07-31` and `~/backups/2026-10-31-pre-wd-1T` (on nucbox).
 
 ## 3. Where things live
 See jesse-preferences rule 7. Check the mount (section 2) before using those paths; if it fails, stop.
 
 ## 4. Holds
-- Capture (capture-item): if the computer is offline, the drive isn't mounted, or reads error out, hold the capture. Don't write through the Dropbox connector or anywhere else, even if it's urgent. Tell the user it's held until the computer and drive are back.
+- Capture (capture-item): if the computer is offline, the drive isn't mounted, or reads error out, hold the capture. Don't write through a connector or anywhere else, even if it's urgent. Tell the user it's held until the computer and drive are back.
 - Daily pass (kingdom-daily-pass): if the NixOS computer is offline, hold the whole pass: no captures and no state changes, written nowhere. Tell the user it's held until the computer is back.
 
 ## 5. Proton Bridge check
