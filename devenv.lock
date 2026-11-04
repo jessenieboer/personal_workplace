@@ -3,11 +3,11 @@
     "awesome-copilot": {
       "flake": false,
       "locked": {
-        "lastModified": 1793320513,
-        "narHash": "sha256-Pni4IMcuZJc0Ny8DbyciFXnYfN32n2MY3L4kvtAcILo=",
+        "lastModified": 1793765529,
+        "narHash": "sha256-Cj1odBa0TmzoZas27Yv4CGE2PP2n2nG3hxARyeOMByM=",
         "owner": "github",
         "repo": "awesome-copilot",
-        "rev": "5269f7ea2d6c3a9bfda5ed878b6726cf509121fd",
+        "rev": "7e408815ddcb64889a3683799a85399331cfd4ef",
         "type": "github"
       },
       "original": {
@@ -19,11 +19,11 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1793199252,
-        "narHash": "sha256-LRgdAdMHL3uIX+kix/oyMzG+gMxzSYOzLrrRaoZthog=",
+        "lastModified": 1793731702,
+        "narHash": "sha256-WlVNaWXVTYaGBNey2Z+20sY1lT7BvzJEECb+VlDDdk0=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "0d6c556e5f862c14a75a543e2ee4fdb7acc005ad",
+        "rev": "9655d320b8f9df74dbecf681f52a7334574606c3",
         "type": "github"
       },
       "original": {
@@ -36,11 +36,11 @@
     "nixos-ai-skill": {
       "flake": false,
       "locked": {
-        "lastModified": 1793341054,
-        "narHash": "sha256-TuRrGwiEVAICrKU4YYET3QJxR8gC+m9n0jimU06T3qI=",
+        "lastModified": 1793772893,
+        "narHash": "sha256-xiY89K5+czAtqMl9nuDMEqNcmrdef+OIP5GX9MrTByg=",
         "owner": "marceloeatworld",
         "repo": "nixos-ai-skill",
-        "rev": "1304e2b5d2c95c10ab86fa7242ed96d8dd707110",
+        "rev": "c636ddb94571d3b161a9448799c97bacdb59769e",
         "type": "github"
       },
       "original": {
