@@ -49,8 +49,8 @@ imports:
     project_name = "my_project_name";
     project_benefit = "The benefit this project aims at";
     subproject_agenda_files = [
-      "${config.devenv.root}/sub1/.toolboxes/project_management_toolbox/sub1.org"
-      "${config.devenv.root}/sub2/.toolboxes/project_management_toolbox/sub2.org"
+      "${config.devenv.root}/sub1/sub1.org"
+      "${config.devenv.root}/sub2/sub2.org"
     ];
     workers = [
       { name = "myname"; email = "myemail@email.com"; } # 
