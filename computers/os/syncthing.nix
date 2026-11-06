@@ -10,6 +10,8 @@ let
   # declarative. Until then add it in the GUI; folder devices reset on the next restart.
   iphoneId = "AACNMOR-Y7T65IT-YDTY2AP-FD7TY3K-QGRVR3V-VX3ERDI-M65EIGY-TUNKFA5";
   stignore = pkgs.writeText "stignore" ''
+    !/beorg-*.org
+    !/init.org
     !**/project_management_toolbox/*.org
     *
   '';
