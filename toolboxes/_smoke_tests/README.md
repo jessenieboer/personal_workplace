@@ -13,6 +13,7 @@ Run:
     toolboxes/_smoke_tests/glossary/check.sh
     toolboxes/_smoke_tests/nixos/check.sh
     toolboxes/_smoke_tests/project_management/check.sh
+    toolboxes/_smoke_tests/project_management/discover_agenda_files.sh
     toolboxes/_smoke_tests/readme/check.sh
     toolboxes/_smoke_tests/standard_project/check.sh
     toolboxes/_smoke_tests/tracked_paths/check.sh
@@ -24,6 +25,11 @@ practices only under `.toolboxes/<name>_toolbox/practices`.
 
 The git fixture also covers the managed `.gitignore`/`.gitattributes` merge and the
 seeded, user-editable `settings/.gitconfig` (and its include migration).
+
+`project_management/discover_agenda_files.sh` needs Nix. It fetches the nixpkgs
+revision pinned in `toolboxes/project_management/devenv.lock`, builds a nested
+fixture, and evaluates the toolbox both from this checkout and from a copy
+laid out under `.toolboxes/`.
 
 `tracked_paths` is not a fixture. It reads the git index and checks that every
 relative path a devenv.nix (and `_lib`) refers to is tracked, for the toolboxes
