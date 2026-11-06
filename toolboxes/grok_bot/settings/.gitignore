@@ -1,0 +1,6 @@
+# Consumer bot files under practices/_bots are source-controlled.
+# Un-ignore that leaf despite the git toolbox ignoring practices mirrors.
+!.toolboxes/grok_bot_toolbox/practices/
+.toolboxes/grok_bot_toolbox/practices/*
+!.toolboxes/grok_bot_toolbox/practices/_bots/
+!.toolboxes/grok_bot_toolbox/practices/_bots/**

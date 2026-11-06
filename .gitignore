@@ -20,6 +20,12 @@ result-*
 \#*\#
 .#*
 .toolboxes/emacs_toolbox/
+# Consumer bot files under practices/_bots are source-controlled.
+# Un-ignore that leaf despite the git toolbox ignoring practices mirrors.
+!.toolboxes/grok_bot_toolbox/practices/
+.toolboxes/grok_bot_toolbox/practices/*
+!.toolboxes/grok_bot_toolbox/practices/_bots/
+!.toolboxes/grok_bot_toolbox/practices/_bots/**
 .toolboxes/nixos_toolbox/
 .toolboxes/standard_project_toolbox/
 # <<< toolbox-managed <<<
