@@ -1,6 +1,8 @@
 { pkgs, lib, config, inputs, ... }:
 let
   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
+  # Live absolute paths. An explicit subproject_agenda_files list replaces this.
+  discoverSubprojectAgendaFiles = import ../_lib/subproject_agenda_files.nix { inherit lib; };
   # Org files (<project>.org, its _archive, journal.org) live in the toolbox
   # directory, next to the generated dir-locals fragment. Syncthing sends only
   # **/project_management_toolbox/*.org to the phone, so keep them directly there.
@@ -63,8 +65,8 @@ in
 
       subproject_agenda_files = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = [ ];
-        description = "List of project management directories of subprojects";
+        default = discoverSubprojectAgendaFiles config.devenv.root;
+        description = "Org files of subprojects, added to org-agenda-files. When unset, regular .org files directly inside nested .toolboxes/project_management_toolbox directories, excluding this project's own. An explicit list is used as given.";
         example = [
           "/path/to/subproj1/.toolboxes/project_management_toolbox/subproj1.org"
           "/path/to/subproj2/.toolboxes/project_management_toolbox/subproj2.org"
