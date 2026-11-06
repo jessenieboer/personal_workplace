@@ -1,17 +1,17 @@
 { pkgs, lib, config, inputs, ... }:
 
 {
-  # config = {
-  #   voxtype_toolbox = {
-  #     initial_prompt = "Jesse Nieboer, voxtype, Emacs, NixOS, devenv";
-  #     post_process_prompt = ''
-  #       You are a careful text corrector for a user dictating text by voice.
+  enterShell = ''
+    echo "managing ${config.project_management_toolbox.project_name}"
+  '';
 
-  #       - Common terms in this project: Jesse Nieboer, Voxtype, NixOS, devenv, emacs
-  #       - If any terms in the original dictation are similar (only a few letters difference) to those common project terms, replace the original term with the common project term, even if the difference is only in capitalization
-  #       - Do NOT add explanations, quotes, or markdown fences.
-  #       - Output ONLY the corrected dictation (that is, the original dictation with corrected terms).
-  #     '';
-  #   };
-  # };
+  project_management_toolbox = {
+    project_name = "personal_workplace";
+    project_benefit = "Build and maintain my personal computer environment";
+    workers = [
+      { name = "jessenieboer"; email = "jessenieboer@protonmail.com"; }
+      { name = "Vizier"; }
+      { name = "CaptureBot"; }
+    ];
+  };
 }
