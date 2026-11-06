@@ -11,6 +11,15 @@
 :END:
 Something good.
 
+* bot
+:PROPERTIES:
+:ID:       4a67c209-b556-4ed5-bdef-1dde6f18f5cd
+:ALIASES:
+:CONTEXT:  personal_workplace
+:PRIME:    true
+:END:
+an AI agent capable of doing work.
+
 * configuration
 :PROPERTIES:
 :ID:       63c2b683-bf4c-403a-b4da-b3e3a4426bf0
