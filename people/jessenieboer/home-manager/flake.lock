@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "ai-labs-claude-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1762845734,
+        "narHash": "sha256-mxJDXFX2K0yGQGOYfeLzrduQHtYvBcL2yQzAJ1yAm2g=",
+        "owner": "ailabs-393",
+        "repo": "ai-labs-claude-skills",
+        "rev": "1a12bc7aadcc7b211f77a7455db454b77a71f827",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ailabs-393",
+        "repo": "ai-labs-claude-skills",
+        "rev": "1a12bc7aadcc7b211f77a7455db454b77a71f827",
+        "type": "github"
+      }
+    },
     "crate2nix": {
       "flake": false,
       "locked": {
@@ -392,6 +409,7 @@
     },
     "root": {
       "inputs": {
+        "ai-labs-claude-skills": "ai-labs-claude-skills",
         "devenv": "devenv",
         "emacs-overlay": "emacs-overlay",
         "grok-bot": "grok-bot",

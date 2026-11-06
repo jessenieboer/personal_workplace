@@ -2,6 +2,10 @@
   description = "Home Manager configuration of jessenieboer";
 
   inputs = {
+    ai-labs-claude-skills = {
+      url = "github:ailabs-393/ai-labs-claude-skills/1a12bc7aadcc7b211f77a7455db454b77a71f827";
+      flake = false; # provenance only for software/grok-bot/practices/skills/finance-manager, not wired into outputs
+    };
     devenv.url = "github:cachix/devenv"; # main branch
     emacs-overlay = {
       inputs.nixpkgs.follows = "nixpkgs";
