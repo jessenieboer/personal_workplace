@@ -701,7 +701,7 @@
 (project-forget-projects-under my-projects-directory t)
 (project-remember-projects-under my-projects-directory t)
 (dolist (root (project-known-project-roots))
-  (if (string-match-p "/\\.\\(toolboxes\\|devenv\\|direnv\\)/" root)
+  (if (string-match-p "/\\(\\.\\(toolboxes\\|devenv\\|direnv\\)\\|_smoke_tests\\)/" root)
       (project-forget-project root)
     (add-to-list 'safe-local-variable-directories root))))
 
