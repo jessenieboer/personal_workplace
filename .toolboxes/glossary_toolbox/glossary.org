@@ -29,6 +29,15 @@ an AI agent capable of doing work.
 :END:
 A [[id:afbc980d-a768-49f9-b495-ec1946999e44][unit]] of [[id:91e1b13a-d765-4ddb-b013-d7e393da152a][order]] that applies to some object.
 
+* domain
+:PROPERTIES:
+:ID:       ef169bca-9df9-44c4-9d2a-b569b43938ef
+:ALIASES:
+:CONTEXT:  personal_workplace
+:PRIME:    true
+:END:
+The conceptual area in which a bot serves.
+
 * effort
 :PROPERTIES:
 :ID:       676ab9e1-5d28-447f-8ce2-7a6876b72fc6

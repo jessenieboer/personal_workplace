@@ -68,13 +68,13 @@ using toolboxes in a project:
 directories for programs, settings, templates, and practices
 
 **** AI use
-Bots are AI agents.
+Bots are AI agents. Different kinds of bots serve in different domains.
 
-Personal Bots serve an individual. Exports live in ~/_bots (source controlled through home-manager)
+Personal Bots serve an individual. Exports live in ~/bots/ (source controlled through home-manager)
 
-Local Bots serve a Kingdom. Their exports live in _bots directories. Importing the grok_bot toolbox just gives you a source-controlled _bots directory where you can export bot definitions.
+Local Bots serve a Kingdom or a project within it. Their exports live in bots/ directories. Importing the grok_bot toolbox just gives you a source-controlled bots directory where you can export bot definitions.
 
-Skills are instructions for doing a specific kind of work. Skills live in the _practices directory of certain toolboxes, kingdoms, or ~/
+Skills are instructions for doing a specific kind of work. Skills live in the practices/ directory of certain toolboxes, kingdoms, projects, or ~/
 **** Troubleshooting :noexport:
 Failed to install bootloader error:
 

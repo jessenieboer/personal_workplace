@@ -41,11 +41,9 @@ Myself, and anyone who finds something useful in here
 
 This is mostly to remind myself how to do this:
 
-bootstrapping from a new nixos install:
-as root user, type the following into /etc/nixos/configuration.nix:
-<a id="org794077e"></a>
+bootstrapping from a new nixos install: as root user, type the following into /etc/nixos/configuration.nix: <a id="org2104937"></a>
 
-then cd into .ssh,  ssh-keygen -K to get the stub file, rename the stub file to id\_ed25519\_sk, delete the .pub file (assuming this is in github already. making this a public repo probably renders this unnecessary)
+then cd into .ssh, ssh-keygen -K to get the stub file, rename the stub file to id\_ed25519\_sk, delete the .pub file (assuming this is in github already. making this a public repo probably renders this unnecessary)
 
 nixos rebuild switch
 
@@ -57,8 +55,7 @@ nixos-generate-config &ndash;show-hardware-config >> hardware/hardware-configura
 
 combine hardware/hardware-configuration.nix with the appropriate machine nix file in hardware/ (if putting this on hardware you haven't before)
 
-mkpasswd -m sha-512 > /root/secrets/root.hash
-mkpasswd -m sha-512 > /root/secrets/username.hash
+mkpasswd -m sha-512 > /root/secrets/root.hash mkpasswd -m sha-512 > /root/secrets/username.hash
 
 nixos-rebuild switch &ndash;flake .#configname
 
@@ -67,9 +64,7 @@ nixos-rebuild switch &ndash;flake .#configname
 
 updating (as root in ~/)
 
-cp -r *home/jessenieboer/kingdoms/Household/Jesse/personal\_workplace* .
-cp /root/secrets/wifi-passwords.nix /root/personal\_workplace/computers/wifi.nix
-nixos-rebuild switch &ndash;flake /root/personal\_workplace/computers#configname
+cp -r *home/jessenieboer/kingdoms/Household/Jesse/personal\_workplace* . cp /root/secrets/wifi-passwords.nix /root/personal\_workplace/computers/wifi.nix nixos-rebuild switch &ndash;flake /root/personal\_workplace/computers#configname
 
 using toolboxes in a project:
 
@@ -86,7 +81,13 @@ using toolboxes in a project:
 
 -   AI use
 
-    skills are included in practices/skills in a toolbox; agents should be able to pick them up. my personal suite of agents is in the grok bot toolbox.
+    Bots are AI agents.
+    
+    Personal Bots serve an individual. Exports live in ~/bots/ (source controlled through home-manager)
+    
+    Local Bots serve a Kingdom or a project within it. Their exports live in bots/ directories. Importing the grok\_bot toolbox just gives you a source-controlled bots directory where you can export bot definitions.
+    
+    Skills are instructions for doing a specific kind of work. Skills live in the practices/ directory of certain toolboxes, kingdoms, projects, or ~/
 
 -   License
 
@@ -96,4 +97,3 @@ using toolboxes in a project:
 # By Whom
 
 Myself, with gratitude to basically everyone on the internet who shares info about NixOS, Emacs, and the other technologies in use. I doubt I've seen further than anyone else, but I'm definitely standing on the shoulders of giants.
-
