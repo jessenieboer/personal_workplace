@@ -29,6 +29,17 @@ keep=$bots/.gitkeep
 [ ! -e .toolboxes/grok_bot_toolbox/practices/bots ] || fail "stale practices/bots path still present"
 [ ! -e .toolboxes/grok_bot_toolbox/practices/_bots ] || fail "stale practices/_bots path still present"
 
+template=.toolboxes/grok_bot_toolbox/templates/grok_bot_template.org
+[ -f "$template" ] || fail "bot template not seeded"
+[ ! -L "$template" ] || fail "bot template is a symlink"
+[ -w "$template" ] || fail "bot template is not writable"
+cmp -s "$template" ../../grok_bot/templates/grok_bots_template.org || fail "seeded template differs from source"
+grok_bots=.toolboxes/grok_bot_toolbox/grok_bots.org
+[ -f "$grok_bots" ] || fail "grok_bots.org not seeded"
+[ ! -L "$grok_bots" ] || fail "grok_bots.org is a symlink"
+[ -w "$grok_bots" ] || fail "grok_bots.org is not writable"
+cmp -s "$grok_bots" ../../grok_bot/templates/grok_bots_template.org || fail "grok_bots.org differs from source"
+
 grep -q '✔ grok_bot toolbox available' "$log" || fail "announce line not printed under a tty"
 
 # Ignore exceptions must be merged so bot files are trackable.
@@ -45,10 +56,14 @@ git -C "$repo" check-ignore -q "$bots/smoke-bot.md" && fail "bot file is ignored
 git -C "$repo" add "$bots/smoke-bot.md"
 git -C "$repo" status --porcelain | grep -qF "$bots/smoke-bot.md" || fail "bot file not staged in disposable repo"
 
-# Consumer-created file survives a second enterShell (seed must not wipe).
+# Consumer-created and edited files survive a second enterShell (seed must not wipe).
 echo 'keep-me' >"$bots/consumer-bot.md"
+echo 'edited' >>"$template"
+echo 'edited' >>"$grok_bots"
 devenv shell -- true >/dev/null 2>&1
 grep -qx 'keep-me' "$bots/consumer-bot.md" || fail "re-entry removed consumer bot file"
+tail -n1 "$template" | grep -qx 'edited' || fail "re-entry overwrote edited template"
+tail -n1 "$grok_bots" | grep -qx 'edited' || fail "re-entry overwrote edited grok_bots.org"
 [ -f "$keep" ] || fail ".gitkeep missing after re-entry"
 [ ! -e .toolboxes/grok_bot_toolbox/practices/_bots ] || fail "re-entry created stale _bots"
 
