@@ -1,0 +1,202 @@
+#+title: Grok Bot template
+# Tangle (C-c C-v t) to write <name-slug>.json beside this file, in the same shape as dr-eggbot.json.
+# Fill the src blocks; guidance bullets stay out of the JSON. Empty blocks are skipped.
+# Each block's :json header names the property it feeds. Description blocks are
+# joined with blank lines; memory takes one fact per line. Under Skills, Routines
+# and Plugins, each 3rd-level heading is one object and each 4th-level heading
+# names one of its keys.
+
+* Bot
+** name
+#+begin_src text :json name
+
+#+end_src
+** description
+- The model will see this every turn.
+- Standing behavior
+- specific, not vague
+*** Job description / role / responsibilities
+- what you do here
+- think employment role, not granular tasks
+- responsibilities: focused, but not too granular
+#+begin_src text :json description
+
+#+end_src
+*** Anti Jobs
+- what you don't do here
+#+begin_src text :json description
+
+#+end_src
+*** Sources of truth / sources
+- What system wins when two disagree?
+#+begin_src text :json description
+
+#+end_src
+*** Output format / deliverable
+- Exact structure
+#+begin_src text :json description
+
+#+end_src
+*** Approval Rules
+- What the bot may never do without you
+- send and spend
+#+begin_src text :json description
+
+#+end_src
+*** Escalation Rule
+- What to do when it is blocked or uncertain
+- what to do when info is missing
+#+begin_src text :json description
+
+#+end_src
+*** Skill Use
+When to use skills
+#+begin_src text :json description
+
+#+end_src
+*** Plugin Use / Tool use
+When to use plugins
+#+begin_src text :json description
+#+end_src
+*** Voice
+#+begin_src text :json description
+
+#+end_src
+*** When it wakes up
+#+begin_src text :json description
+
+#+end_src
+
+** memory
+- stable facts, not changing facts
+- one line per fact
+#+begin_src text :json memory
+  mem1
+  mem2
+
+#+end_src
+
+** Skills
+*** Skill 1
+**** name
+#+begin_src text :json skills
+
+#+end_src
+**** description
+#+begin_src text :json skills
+
+#+end_src
+**** content
+#+begin_src text :json skills
+
+#+end_src
+*** Skill 2
+**** name
+#+begin_src text :json skills
+
+#+end_src
+**** description
+#+begin_src text :json skills
+
+#+end_src
+**** content
+#+begin_src text :json skills
+
+#+end_src
+** Routines
+*** Routine 1
+**** slug
+#+begin_src text :json routines
+
+#+end_src
+**** schedule
+#+begin_src text :json routines
+
+#+end_src
+**** description
+#+begin_src text :json routines
+
+#+end_src
+**** content
+#+begin_src text :json routines
+
+#+end_src
+*** Routine 2
+**** slug
+#+begin_src text :json routines
+
+#+end_src
+**** schedule
+#+begin_src text :json routines
+
+#+end_src
+**** description
+#+begin_src text :json routines
+
+#+end_src
+**** content
+#+begin_src text :json routines
+
+#+end_src
+** Plugins
+*** Plugin 1
+**** pluginId
+#+begin_src text :json plugins
+
+#+end_src
+**** name
+#+begin_src text :json plugins
+
+#+end_src
+*** Plugin 2
+**** pluginId
+#+begin_src text :json plugins
+
+#+end_src
+**** name
+#+begin_src text :json plugins
+
+#+end_src
+
+* Tangle :noexport:
+#+name: template-json
+#+begin_src emacs-lisp :results value
+(require 'json)
+(let (name description memory groups)
+  ;; groups: ((SECTION . GROUP-HEADING) . FIELDS), newest first
+  (org-babel-map-src-blocks nil
+    (let ((field (cdr (assq :json (org-babel-parse-header-arguments header-args))))
+          (text (string-trim (org-unescape-code-in-string (or body "")))))
+      (when (and field (not (string-empty-p text)))
+        (pcase (format "%s" field)
+          ("name" (setq name text))
+          ("description" (push text description))
+          ("memory"
+           (dolist (line (split-string text "\n" t "[ \t]+"))
+             (push line memory)))
+          ((and section (or "skills" "routines" "plugins"))
+           ;; Key is this block's heading; the object is its parent heading.
+           (let* ((key (org-get-heading t t t t))
+                  (id (cons section (car (last (org-get-outline-path)))))
+                  (cell (assoc id groups)))
+             (unless cell
+               (setq cell (list id))
+               (push cell groups))
+             (setcdr cell (append (cdr cell) (list (cons key text))))))))))
+  (let ((objects (lambda (section)
+                   (vconcat (mapcar #'cdr
+                                    (seq-filter (lambda (g) (equal (caar g) section))
+                                                (reverse groups))))))
+        (json-encoding-pretty-print t))
+    (json-encode
+     `((profile . ((name . ,(or name ""))
+                   (description . ,(string-join (nreverse description) "\n\n"))))
+       (memory . ,(vconcat (nreverse memory)))
+       (skills . ,(funcall objects "skills"))
+       (routines . ,(funcall objects "routines"))
+       (plugins . ,(funcall objects "plugins"))))))
+#+end_src
+
+#+begin_src json :tangle (concat (save-excursion (goto-char (point-min)) (re-search-forward ":json name\n[ \t\n]*\\([^#\n].*\\)") (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase (string-trim (match-string 1))))) ".json") :noweb yes
+<<template-json()>>
+#+end_src

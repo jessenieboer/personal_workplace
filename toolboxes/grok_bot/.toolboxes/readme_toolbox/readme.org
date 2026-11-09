@@ -1,0 +1,34 @@
+#+TITLE: Title
+#+OPTIONS: toc:nil num:nil ^:{}
+#+EXPORT_FILE_NAME: ../../README.md
+
+#+html: <h1 align="center">Title</h1>
+
+* What
+Templates for creating grok bots
+** Features :noexport:
+* Why
+* For Whom :noexport:
+* How :noexport:
+Writing grok bot exports
+** Requirements :noexport:
+** Installation :noexport:
+** Use :noexport:
+*** Details
+*** Bot Anatomy
+desc
+memory
+skills
+plugins
+**** Troubleshooting
+**** License
+** Development :noexport:
+*** Instructions
+**** For humans
+**** For bots
+*** Important Decisions
+*** To Do
+*** Contributing
+* By Whom :noexport:
+https://crevio.co/blog/grok-bot-best-practices
+https://flaviocopes.com/grok-bot/
