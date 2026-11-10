@@ -1,3 +1,0 @@
-# Consumer bot exports are writable, source-controlled files, not practices mirrors.
-!.toolboxes/grok_bot_toolbox/bots/
-!.toolboxes/grok_bot_toolbox/bots/**

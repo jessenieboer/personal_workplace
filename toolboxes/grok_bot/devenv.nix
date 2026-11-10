@@ -1,6 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
+  q = lib.escapeShellArg;
+  # used so journeyman can write skills
+  skillSrc = "${inputs.mattpocock-skills}/skills/productivity/writing-for-agents";
+  skillDest = "${config.devenv.root}/.toolboxes/grok_bot_toolbox/skills/writing-for-agents";
 in
 {
   config = {
@@ -8,21 +12,15 @@ in
       ${tt.announce "grok_bot"}
     '';
 
-    # Seed a placeholder so Git can keep an empty bots directory.
-    # seed copies only when the dest file is missing, so consumer bot files stay.
-    tasks = tt.seed {
+    # templates/grok_bot.org tracks the toolbox template (overwritten whenever
+    # it changes, read-only); grok_bots.org is the consumer's copy, seeded once.
+    tasks = tt.refresh {
       name = "grok_bot";
-      task = "seed_bots_dir";
-      src = ./templates/bots/.gitkeep;
-      dest = ".toolboxes/grok_bot_toolbox/bots/.gitkeep";
-      description = "Seed .toolboxes/grok_bot_toolbox/bots once for source-controlled bot files";
-    }
-    // tt.seed {
-      name = "grok_bot";
-      task = "seed_bot_template";
+      task = "refresh_bot_template";
       src = ./templates/grok_bots_template.org;
-      dest = ".toolboxes/grok_bot_toolbox/templates/grok_bot_template.org";
-      description = "Seed an editable bot template once; it tangles to <bot-name>.json beside itself";
+      dest = ".toolboxes/grok_bot_toolbox/templates/grok_bots.org";
+      mode = "444";
+      description = "Keep .toolboxes/grok_bot_toolbox/templates/grok_bots.org identical to the toolbox template";
     }
     // tt.seed {
       name = "grok_bot";
@@ -31,6 +29,21 @@ in
       dest = ".toolboxes/grok_bot_toolbox/grok_bots.org";
       description = "Seed an editable grok_bots.org once from the bot template";
     }
-    // tt.gitSettings "grok_bot" ./settings;
+    # Upstream skill, kept identical to the pinned copy; files are read-only.
+    // {
+      "grok_bot_toolbox:refresh_writing_for_agents" = {
+        description = "Refresh .toolboxes/grok_bot_toolbox/skills/writing-for-agents from mattpocock/skills";
+        before = [ "devenv:enterShell" ];
+        status = ''
+          diff -r ${q skillSrc} ${q skillDest} >/dev/null 2>&1
+        '';
+        exec = ''
+          rm -rf ${q skillDest}
+          mkdir -p "$(dirname ${q skillDest})"
+          cp -rL --no-preserve=mode ${q skillSrc} ${q skillDest}
+          find ${q skillDest} -type f -exec chmod 444 {} +
+        '';
+      };
+    };
   };
 }

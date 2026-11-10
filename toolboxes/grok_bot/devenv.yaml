@@ -1,2 +1,7 @@
+inputs:
+  mattpocock-skills:
+    flake: false
+    url: github:mattpocock/skills
+
 imports:
   - /toolboxes/standard_project

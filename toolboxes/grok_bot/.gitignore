@@ -19,8 +19,5 @@ result-*
 \#*\#
 .#*
 .toolboxes/emacs_toolbox/
-# Consumer bot exports are writable, source-controlled files, not practices mirrors.
-!.toolboxes/grok_bot_toolbox/bots/
-!.toolboxes/grok_bot_toolbox/bots/**
 .toolboxes/standard_project_toolbox/
 # <<< toolbox-managed <<<
