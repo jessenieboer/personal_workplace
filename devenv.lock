@@ -3,11 +3,11 @@
     "awesome-copilot": {
       "flake": false,
       "locked": {
-        "lastModified": 1793765529,
-        "narHash": "sha256-Cj1odBa0TmzoZas27Yv4CGE2PP2n2nG3hxARyeOMByM=",
+        "lastModified": 1794194681,
+        "narHash": "sha256-p8+/x2gQiW2+CdlWTh2xZYd6t8E5GJCGGTHaMh5O3zg=",
         "owner": "github",
         "repo": "awesome-copilot",
-        "rev": "7e408815ddcb64889a3683799a85399331cfd4ef",
+        "rev": "b13e55f85ffdf451d40d09839cb1e337bf3eda98",
         "type": "github"
       },
       "original": {
@@ -36,11 +36,11 @@
     "nixos-ai-skill": {
       "flake": false,
       "locked": {
-        "lastModified": 1793772893,
-        "narHash": "sha256-xiY89K5+czAtqMl9nuDMEqNcmrdef+OIP5GX9MrTByg=",
+        "lastModified": 1794238252,
+        "narHash": "sha256-CBK34CW4Qn74BX/GvsKy6o5+qQsU0URDsHvCpDRyQn0=",
         "owner": "marceloeatworld",
         "repo": "nixos-ai-skill",
-        "rev": "c636ddb94571d3b161a9448799c97bacdb59769e",
+        "rev": "03ce39576c560ff9823c96980bac4c55ee925032",
         "type": "github"
       },
       "original": {
