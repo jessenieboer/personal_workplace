@@ -13,9 +13,7 @@ Required. The bot's display name.
 
 #+end_src
 ** description
-Required. The persona; the bot sees this every turn. Subsection blocks are joined with blank lines into one description.
-
-- The model will see this every turn.
+Required. Fixed instructions the bot sees every turn. Subsection blocks are joined with blank lines into one description.
 - Standing behavior
 - specific, not vague
 
@@ -107,14 +105,45 @@ Required. The skill's name, used to load it.
 
 #+end_src
 **** description
-Optional. When to use this skill.
+Optional (technically). What it does and when to use it. Write in third person.
 #+begin_src text :json skills
 
 #+end_src
 **** content
-Required. The full skill body. Keep When to use; add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
-***** When to use
-Part of the required content. Further sibling subheadings also join into content.
+Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
+***** Purpose and expected outcome
+#+begin_src text :json skills
+
+#+end_src
+***** Required inputs
+#+begin_src text :json skills
+
+#+end_src
+***** Source priority
+#+begin_src text :json skills
+
+#+end_src
+***** Exact workflow
+#+begin_src text :json skills
+
+#+end_src
+***** Validation checks
+#+begin_src text :json skills
+
+#+end_src
+***** Expected output
+#+begin_src text :json skills
+
+#+end_src
+***** Failure behavior
+#+begin_src text :json skills
+
+#+end_src
+***** Approval boundaries
+#+begin_src text :json skills
+
+#+end_src
+***** Examples of a correct result
 #+begin_src text :json skills
 
 #+end_src
