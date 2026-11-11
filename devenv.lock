@@ -3,11 +3,11 @@
     "awesome-copilot": {
       "flake": false,
       "locked": {
-        "lastModified": 1794194681,
-        "narHash": "sha256-p8+/x2gQiW2+CdlWTh2xZYd6t8E5GJCGGTHaMh5O3zg=",
+        "lastModified": 1794284553,
+        "narHash": "sha256-McAV4ACTWMFMBoy1jxlS5vj5cBRAkxunGavv78+cML0=",
         "owner": "github",
         "repo": "awesome-copilot",
-        "rev": "b13e55f85ffdf451d40d09839cb1e337bf3eda98",
+        "rev": "227949a7542a55d2155c00e7cdb998d9a0fee4f3",
         "type": "github"
       },
       "original": {
@@ -19,11 +19,11 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1793731702,
-        "narHash": "sha256-WlVNaWXVTYaGBNey2Z+20sY1lT7BvzJEECb+VlDDdk0=",
+        "lastModified": 1794307783,
+        "narHash": "sha256-ks05AJY27rCF6KzuXIlmky0eZzNGgbSTfHKTr4j2rdg=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "9655d320b8f9df74dbecf681f52a7334574606c3",
+        "rev": "4a1138b49c3b0503c214e4b6e59102dbdd3282ca",
         "type": "github"
       },
       "original": {
@@ -33,14 +33,30 @@
         "type": "github"
       }
     },
+    "mattpocock-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793456610,
+        "narHash": "sha256-3vhd77xfZjKUYJsIwPFevIZPUAzUgZXr0RYj5NQrBwk=",
+        "owner": "mattpocock",
+        "repo": "skills",
+        "rev": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpocock",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "nixos-ai-skill": {
       "flake": false,
       "locked": {
-        "lastModified": 1794238252,
-        "narHash": "sha256-CBK34CW4Qn74BX/GvsKy6o5+qQsU0URDsHvCpDRyQn0=",
+        "lastModified": 1794320998,
+        "narHash": "sha256-dHl4iQ/S0a/Wftx4iJPmn+0vYTz0kX/+M3PD5hgc0uc=",
         "owner": "marceloeatworld",
         "repo": "nixos-ai-skill",
-        "rev": "03ce39576c560ff9823c96980bac4c55ee925032",
+        "rev": "18e0b79e8b56164c237e52389042b1561a156734",
         "type": "github"
       },
       "original": {
@@ -89,6 +105,7 @@
       "inputs": {
         "awesome-copilot": "awesome-copilot",
         "devenv": "devenv",
+        "mattpocock-skills": "mattpocock-skills",
         "nixos-ai-skill": "nixos-ai-skill",
         "nixpkgs": "nixpkgs"
       }

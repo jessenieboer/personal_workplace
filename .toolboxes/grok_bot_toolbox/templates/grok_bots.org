@@ -1,0 +1,392 @@
+#+title: Grok Bot Template
+# Tangle to write one <name-slug>.json per top-level heading beside this file.
+# Copy a Template subtree and delete the :noexport: to add a bot/skill/routine/plugin.
+# Description blocks are joined with blank lines.
+# Memory: one fact per line, under profile or log; emitted as {content, kind}.
+# Skill content subheadings are joined with blank lines into one content field.
+# Routine schedule is folded into content as the first line: Schedule: <cron> (local time).
+# Empty blocks and :noexport: subtrees are skipped.
+* Bot Template                                                     :noexport:
+** name
+Required. The bot's display name.
+#+begin_src text :json name
+
+#+end_src
+** description
+Required. The persona; the bot sees this every turn. Subsection blocks are joined with blank lines into one description.
+
+- The model will see this every turn.
+- Standing behavior
+- specific, not vague
+
+*** Job description
+- what you do here
+- think employment role, not granular tasks
+- responsibilities: focused, but not too granular
+#+begin_src text :json description
+
+#+end_src
+*** Anti-jobs
+- what you don't do here
+#+begin_src text :json description
+
+#+end_src
+*** Sources of truth
+- What system wins when two disagree?
+#+begin_src text :json description
+
+#+end_src
+*** Output format / deliverable
+- Exact structure
+#+begin_src text :json description
+
+#+end_src
+*** Approval rules
+- What the bot may never do without you
+- send and spend
+#+begin_src text :json description
+
+#+end_src
+*** Escalation rule
+- What to do when it is blocked or uncertain
+- what to do when info is missing
+
+#+begin_src text :json description
+
+#+end_src
+*** Skill use
+When to use skills
+
+#+begin_src text :json description
+
+#+end_src
+*** Plugin use / Tool use
+When to use plugins
+
+#+begin_src text :json description
+
+#+end_src
+*** Voice
+Tone and register.
+#+begin_src text :json description
+
+#+end_src
+*** When it wakes up
+When the bot should start work or stay quiet.
+#+begin_src text :json description
+
+#+end_src
+** avatarShape
+Optional. One of: blob pebble bean egg squircle tablet capsule cylinder hex gem crystal wedge shield dome arch cloud teardrop leaf square sparkle clover flower heart house star
+#+begin_src text :json avatarShape
+
+#+end_src
+** avatarColor
+Optional. One of: black brown red orange yellow green cyan blue violet magenta gray
+#+begin_src text :json avatarColor
+
+#+end_src
+** memory
+Optional. Stable facts, not changing ones. One fact per line. Each line is emitted as {content, kind}.
+*** profile
+Optional. Standing conventions and lasting facts, seen every turn.
+#+begin_src text :json memory
+
+#+end_src
+*** log
+Optional. Episodic notes that make up a history.
+#+begin_src text :json memory
+
+#+end_src
+** Skills
+*** Skill Template :noexport:
+https://agentskills.io/skill-creation/best-practices
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+
+#+end_src
+**** description
+Optional. When to use this skill.
+#+begin_src text :json skills
+
+#+end_src
+**** content
+Required. The full skill body. Keep When to use; add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
+***** When to use
+Part of the required content. Further sibling subheadings also join into content.
+#+begin_src text :json skills
+
+#+end_src
+** Routines
+*** Routine Template :noexport:
+**** slug
+Required. Stable id for the routine.
+#+begin_src text :json routines
+
+#+end_src
+**** name
+Optional. Display name.
+#+begin_src text :json routines
+
+#+end_src
+**** schedule
+Optional. 5-field cron in local time. Not a JSON field; folded into content as the first line `Schedule: <cron> (local time)`.
+#+begin_src text :json routines
+
+#+end_src
+**** description
+Required. One sentence on why it fires.
+#+begin_src text :json routines
+
+#+end_src
+**** content
+Required. The job text. A filled schedule heading is prepended as the first line.
+#+begin_src text :json routines
+
+#+end_src
+** Plugins
+*** Plugin Template :noexport:
+**** pluginId
+Required. Marketplace plugin id (the same id for every user).
+#+begin_src text :json plugins
+
+#+end_src
+**** name
+Optional. Plugin name.
+#+begin_src text :json plugins
+
+#+end_src
+**** description
+Optional. What this plugin is for.
+#+begin_src text :json plugins
+
+#+end_src
+** gettingStarted
+Optional. Emitted only when set, as {skill: "..."}.
+*** skill
+Optional. Name of one skill in this bot's skills list.
+#+begin_src text :json gettingStarted
+
+#+end_src
+** visibility
+Optional. One of: public | team
+#+begin_src text :json visibility
+
+#+end_src
+* Tangle :noexport:
+:PROPERTIES:
+:ID:       13e8bbca-f0fa-4a57-8ac2-5342f91f40fe
+:END:
+# Tangling runs write-bots: one <name-slug>.json per top-level heading, beside this file.
+# The tangle block below itself tangles nowhere; its :tangle header does the writing.
+#+name: write-bots
+#+begin_src emacs-lisp
+(require 'json)
+(require 'seq)
+(require 'cl-lib)
+(require 'subr-x)
+(let* ((dir (file-name-directory (buffer-file-name)))
+       (written nil)
+       (avatar-shapes '("blob" "pebble" "bean" "egg" "squircle" "tablet"
+                        "capsule" "cylinder" "hex" "gem" "crystal" "wedge"
+                        "shield" "dome" "arch" "cloud" "teardrop" "leaf"
+                        "square" "sparkle" "clover" "flower" "heart"
+                        "house" "star"))
+       (avatar-colors '("black" "brown" "red" "orange" "yellow" "green"
+                        "cyan" "blue" "violet" "magenta" "gray"))
+       (heading-at-point
+        (lambda ()
+          (substring-no-properties (org-get-heading t t t t))))
+       (in-noexport-p
+        (lambda ()
+          (save-excursion
+            (org-back-to-heading t)
+            (catch 'found
+              (while t
+                (when (member "noexport" (org-get-tags nil t))
+                  (throw 'found t))
+                (unless (org-up-heading-safe)
+                  (throw 'found nil)))))))
+       (section-instance-field
+        (lambda (section)
+          (let* ((path (mapcar (lambda (h)
+                                 (substring-no-properties (or h "")))
+                               (append (org-get-outline-path)
+                                       (list (funcall heading-at-point)))))
+                 (idx (cl-position section path :test #'cl-equalp)))
+            (when (and idx (nth (1+ idx) path) (nth (+ 2 idx) path))
+              (list (nth (1+ idx) path) (nth (+ 2 idx) path))))))
+       (push-field
+        (lambda (cell key text)
+          (let ((existing (assoc key (cdr cell))))
+            (if existing
+                (setcdr existing (concat (cdr existing) "\n\n" text))
+              (setcdr cell (append (cdr cell) (list (cons key text))))))))
+       (alist-keep
+        (lambda (fields keys)
+          (let (out)
+            (dolist (k keys)
+              (let ((v (cdr (assoc k fields))))
+                (when (and v (not (string-empty-p (string-trim v))))
+                  (push (cons (intern k) (string-trim v)) out))))
+            (nreverse out))))
+       (require-keys
+        (lambda (bot kind label fields keys)
+          (dolist (k keys)
+            (let ((v (cdr (assoc k fields))))
+              (unless (and v (not (string-empty-p (string-trim v))))
+                (user-error "%s: %s %S missing %s" bot kind label k)))))))
+  (save-excursion
+    (save-restriction
+      (widen)
+      (org-map-entries
+       (lambda ()
+         (save-restriction
+           (org-narrow-to-subtree)
+           (let (name description avatar-shape avatar-color memory groups
+                      getting-started visibility)
+             (org-babel-map-src-blocks nil
+               (let ((field (cdr (assq :json (org-babel-parse-header-arguments header-args))))
+                     (text (string-trim (org-unescape-code-in-string (or body "")))))
+                 (when (and field
+                            (not (string-empty-p text))
+                            (not (funcall in-noexport-p)))
+                   (pcase (format "%s" field)
+                     ("name" (setq name text))
+                     ("description" (push text description))
+                     ("avatarShape" (setq avatar-shape text))
+                     ("avatarColor" (setq avatar-color text))
+                     ("gettingStarted" (setq getting-started text))
+                     ("visibility" (setq visibility text))
+                     ("memory"
+                      (let* ((h (funcall heading-at-point))
+                             (kind (cond
+                                    ((cl-equalp h "profile") "profile")
+                                    ((cl-equalp h "log") "log")
+                                    (t nil))))
+                        (dolist (line (split-string text "\n" t "[ \t]+"))
+                          (push (if kind
+                                    `((content . ,line) (kind . ,kind))
+                                  `((content . ,line)))
+                                memory))))
+                     ((and section (or "skills" "routines" "plugins"))
+                      (let ((place (funcall section-instance-field section)))
+                        (unless place
+                          (user-error "%s: a :json %s block is not under a field heading"
+                                      (or name (funcall heading-at-point))
+                                      section))
+                        (let* ((instance (car place))
+                               (key (cadr place))
+                               (id (cons section instance))
+                               (cell (assoc id groups)))
+                          (unless cell
+                            (setq cell (list id))
+                            (push cell groups))
+                          (funcall push-field cell key text))))))))
+             (if (not name)
+                 (message "Skipping %s: empty name" (org-get-heading t t t t))
+               (when avatar-shape
+                 (setq avatar-shape (string-trim avatar-shape))
+                 (unless (member avatar-shape avatar-shapes)
+                   (user-error "%s: avatarShape %S is not allowed (%s)"
+                               name avatar-shape (string-join avatar-shapes " "))))
+               (when avatar-color
+                 (setq avatar-color (string-trim avatar-color))
+                 (unless (member avatar-color avatar-colors)
+                   (user-error "%s: avatarColor %S is not allowed (%s)"
+                               name avatar-color (string-join avatar-colors " "))))
+               (setq description (string-join (nreverse description) "\n\n"))
+               (when (string-empty-p (or description ""))
+                 (user-error "%s: profile is missing a description" name))
+               (when visibility
+                 (setq visibility (string-trim visibility))
+                 (unless (member visibility '("public" "team"))
+                   (user-error "%s: visibility %S is not allowed (public, team)"
+                               name visibility)))
+               (when getting-started
+                 (setq getting-started (string-trim getting-started)))
+               (let* ((skill-names nil)
+                      (objects
+                       (lambda (section required keys)
+                         (let (acc)
+                           (dolist (g (reverse groups))
+                             (when (equal (caar g) section)
+                               (let* ((instance (cdar g))
+                                      (fields (cdr g)))
+                                 (when (equal section "routines")
+                                   (let* ((schedule (string-trim (or (cdr (assoc "schedule" fields)) "")))
+                                          (content (cdr (assoc "content" fields))))
+                                     (setq fields (cl-remove "schedule" fields :test #'equal :key #'car))
+                                     (unless (string-empty-p schedule)
+                                       (let ((line (format "Schedule: %s (local time)" schedule)))
+                                         (when content
+                                           (setcdr (assoc "content" fields)
+                                                   (concat line "\n" content)))))))
+                                 (funcall require-keys
+                                          name
+                                          (pcase section
+                                            ("skills" "skill")
+                                            ("routines" "routine")
+                                            ("plugins" "plugin"))
+                                          (or (cdr (assoc (pcase section
+                                                            ("skills" "name")
+                                                            ("routines" "slug")
+                                                            ("plugins" "pluginId"))
+                                                          fields))
+                                              instance)
+                                          fields
+                                          required)
+                                 (when (equal section "skills")
+                                   (push (string-trim (cdr (assoc "name" fields)))
+                                         skill-names))
+                                 (push (funcall alist-keep fields keys) acc))))
+                           (vconcat (nreverse acc)))))
+                      (skills (funcall objects "skills"
+                                       '("name" "content")
+                                       '("name" "content" "description")))
+                      (routines (funcall objects "routines"
+                                         '("slug" "description" "content")
+                                         '("slug" "description" "content" "name")))
+                      (plugins (funcall objects "plugins"
+                                        '("pluginId")
+                                        '("pluginId" "name" "description")))
+                      (file (concat (replace-regexp-in-string
+                                     "[^a-z0-9]+" "-" (downcase name))
+                                    ".json"))
+                      (profile `((name . ,name)
+                                 (description . ,description)))
+                      (json-encoding-pretty-print t)
+                      (coding-system-for-write 'utf-8)
+                      obj)
+                 (when getting-started
+                   (unless (member getting-started skill-names)
+                     (user-error "%s: gettingStarted names missing skill %S"
+                                 name getting-started)))
+                 (when avatar-shape
+                   (setq profile (append profile (list (cons 'avatarShape avatar-shape)))))
+                 (when avatar-color
+                   (setq profile (append profile (list (cons 'avatarColor avatar-color)))))
+                 (setq obj `((profile . ,profile)
+                             (memory . ,(vconcat (nreverse memory)))
+                             (skills . ,skills)
+                             (routines . ,routines)
+                             (plugins . ,plugins)))
+                 (when getting-started
+                   (setq obj (append obj (list (cons 'gettingStarted
+                                                     (list (cons 'skill getting-started)))))))
+                 (when visibility
+                   (setq obj (append obj (list (cons 'visibility visibility)))))
+                 (when (member file written)
+                   (user-error "Two bots tangle to %s" file))
+                 (push file written)
+                 (with-temp-file (expand-file-name file dir)
+                   (insert (json-encode obj) "\n")))))))
+       "LEVEL=1-noexport")))
+  (message "Wrote %s" (if written (string-join (reverse written) ", ") "no bot files"))
+  written)
+#+end_src
+
+#+begin_src emacs-lisp :tangle (save-excursion (org-babel-goto-named-src-block "write-bots") (eval (car (read-from-string (concat "(progn " (org-element-property :value (org-element-at-point)) ")"))) t) "no")
+;; Placeholder: tangling evaluates the :tangle header above, which runs write-bots.
+#+end_src
