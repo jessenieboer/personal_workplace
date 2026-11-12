@@ -115,9 +115,10 @@ Required. The full skill body. add sibling subheadings as needed. Blocks under c
 #+begin_src text :json skills
 
 #+end_src
-***** Required inputs
+***** Inputs
 #+begin_src text :json skills
-
+  ## Inputs
+  
 #+end_src
 ***** Source priority
 #+begin_src text :json skills
@@ -125,7 +126,8 @@ Required. The full skill body. add sibling subheadings as needed. Blocks under c
 #+end_src
 ***** Exact workflow
 #+begin_src text :json skills
-
+  ## Workflow
+  
 #+end_src
 ***** Validation checks
 #+begin_src text :json skills
