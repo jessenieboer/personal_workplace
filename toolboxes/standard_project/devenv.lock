@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "awesome-copilot": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1793320513,
-        "narHash": "sha256-Pni4IMcuZJc0Ny8DbyciFXnYfN32n2MY3L4kvtAcILo=",
-        "owner": "github",
-        "repo": "awesome-copilot",
-        "rev": "5269f7ea2d6c3a9bfda5ed878b6726cf509121fd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "github",
-        "repo": "awesome-copilot",
-        "type": "github"
-      }
-    },
     "devenv": {
       "locked": {
         "dir": "src/modules",
@@ -30,22 +14,6 @@
         "dir": "src/modules",
         "owner": "cachix",
         "repo": "devenv",
-        "type": "github"
-      }
-    },
-    "mattpocock-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1794472958,
-        "narHash": "sha256-AYSRCvBL8TDDdW3rgKu2T7gl4YYDoDId0jYbabEFyfs=",
-        "owner": "mattpocock",
-        "repo": "skills",
-        "rev": "5863806dd4e15c63174bee4e7515a4256792ecfa",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mattpocock",
-        "repo": "skills",
         "type": "github"
       }
     },
@@ -87,9 +55,7 @@
     },
     "root": {
       "inputs": {
-        "awesome-copilot": "awesome-copilot",
         "devenv": "devenv",
-        "mattpocock-skills": "mattpocock-skills",
         "nixpkgs": "nixpkgs"
       }
     }

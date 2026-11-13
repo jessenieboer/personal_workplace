@@ -21,11 +21,7 @@ Required. Fixed instructions the bot sees every turn. Subsection blocks are join
 - what you do here
 - think employment role, not granular tasks
 - responsibilities: focused, but not too granular
-#+begin_src text :json description
-
-#+end_src
-*** Anti-jobs
-- what you don't do here
+- what's out of scope
 #+begin_src text :json description
 
 #+end_src
@@ -34,43 +30,8 @@ Required. Fixed instructions the bot sees every turn. Subsection blocks are join
 #+begin_src text :json description
 
 #+end_src
-*** Output format / deliverable
-- Exact structure
-#+begin_src text :json description
-
-#+end_src
-*** Approval rules
-- What the bot may never do without you
-- send and spend
-#+begin_src text :json description
-
-#+end_src
-*** Escalation rule
-- What to do when it is blocked or uncertain
-- what to do when info is missing
-
-#+begin_src text :json description
-
-#+end_src
-*** Skill use
-When to use skills
-
-#+begin_src text :json description
-
-#+end_src
-*** Plugin use / Tool use
-When to use plugins
-
-#+begin_src text :json description
-
-#+end_src
 *** Voice
 Tone and register.
-#+begin_src text :json description
-
-#+end_src
-*** When it wakes up
-When the bot should start work or stay quiet.
 #+begin_src text :json description
 
 #+end_src
@@ -111,43 +72,18 @@ Optional (technically). What it does and when to use it. Write in third person.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
-***** Purpose and expected outcome
-#+begin_src text :json skills
-
-#+end_src
 ***** Inputs
 #+begin_src text :json skills
   ## Inputs
   
 #+end_src
-***** Source priority
-#+begin_src text :json skills
-
-#+end_src
 ***** Exact workflow
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
 #+begin_src text :json skills
   ## Workflow
   
-#+end_src
-***** Validation checks
-#+begin_src text :json skills
-
-#+end_src
-***** Expected output
-#+begin_src text :json skills
-
-#+end_src
-***** Failure behavior
-#+begin_src text :json skills
-
-#+end_src
-***** Approval boundaries
-#+begin_src text :json skills
-
-#+end_src
-***** Examples of a correct result
-#+begin_src text :json skills
-
 #+end_src
 ** Routines
 *** Routine Template :noexport:
@@ -279,7 +215,16 @@ Optional. One of: public | team
                       getting-started visibility)
              (org-babel-map-src-blocks nil
                (let ((field (cdr (assq :json (org-babel-parse-header-arguments header-args))))
-                     (text (string-trim (org-unescape-code-in-string (or body "")))))
+                     (text (string-trim
+                             (if (assq :noweb (org-babel-parse-header-arguments header-args))
+                                 ;; Expand <<refs>> against the whole file, not the narrowed bot.
+                                 (save-excursion
+                                   (save-match-data
+                                     (save-restriction
+                                       (widen)
+                                       (org-babel-expand-noweb-references
+                                        (org-babel-get-src-block-info)))))
+                               (org-unescape-code-in-string (or body ""))))))
                  (when (and field
                             (not (string-empty-p text))
                             (not (funcall in-noexport-p)))
