@@ -1,8 +1,3 @@
-inputs:
-  awesome-copilot:
-    flake: false
-    url: github:github/awesome-copilot
-
 # imports:
 #  - /toolboxes/emacs
 #  - /toolboxes/glossary

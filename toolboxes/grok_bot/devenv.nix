@@ -1,10 +1,6 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, ... }:
 let
   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
-  q = lib.escapeShellArg;
-  # used so journeyman can write skills
-  skillSrc = "${inputs.mattpocock-skills}/skills/productivity/writing-for-agents";
-  skillDest = "${config.devenv.root}/.toolboxes/grok_bot_toolbox/skills/writing-for-agents";
 in
 {
   config = {
@@ -29,21 +25,9 @@ in
       dest = ".toolboxes/grok_bot_toolbox/grok_bots.org";
       description = "Seed an editable grok_bots.org once from the bot template";
     }
-    # Upstream skill, kept identical to the pinned copy; files are read-only.
-    // {
-      "grok_bot_toolbox:refresh_writing_for_agents" = {
-        description = "Refresh .toolboxes/grok_bot_toolbox/skills/writing-for-agents from mattpocock/skills";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          diff -r ${q skillSrc} ${q skillDest} >/dev/null 2>&1
-        '';
-        exec = ''
-          rm -rf ${q skillDest}
-          mkdir -p "$(dirname ${q skillDest})"
-          cp -rL --no-preserve=mode ${q skillSrc} ${q skillDest}
-          find ${q skillDest} -type f -exec chmod 444 {} +
-        '';
-      };
+    // tt.practices {
+      name = "grok_bot";
+      local = ./practices;
     };
   };
 }

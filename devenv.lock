@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "awesome-copilot": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1794284553,
-        "narHash": "sha256-McAV4ACTWMFMBoy1jxlS5vj5cBRAkxunGavv78+cML0=",
-        "owner": "github",
-        "repo": "awesome-copilot",
-        "rev": "227949a7542a55d2155c00e7cdb998d9a0fee4f3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "github",
-        "repo": "awesome-copilot",
-        "type": "github"
-      }
-    },
     "devenv": {
       "locked": {
         "dir": "src/modules",
@@ -30,38 +14,6 @@
         "dir": "src/modules",
         "owner": "cachix",
         "repo": "devenv",
-        "type": "github"
-      }
-    },
-    "mattpocock-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1793456610,
-        "narHash": "sha256-3vhd77xfZjKUYJsIwPFevIZPUAzUgZXr0RYj5NQrBwk=",
-        "owner": "mattpocock",
-        "repo": "skills",
-        "rev": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mattpocock",
-        "repo": "skills",
-        "type": "github"
-      }
-    },
-    "nixos-ai-skill": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1794320998,
-        "narHash": "sha256-dHl4iQ/S0a/Wftx4iJPmn+0vYTz0kX/+M3PD5hgc0uc=",
-        "owner": "marceloeatworld",
-        "repo": "nixos-ai-skill",
-        "rev": "18e0b79e8b56164c237e52389042b1561a156734",
-        "type": "github"
-      },
-      "original": {
-        "owner": "marceloeatworld",
-        "repo": "nixos-ai-skill",
         "type": "github"
       }
     },
@@ -103,10 +55,7 @@
     },
     "root": {
       "inputs": {
-        "awesome-copilot": "awesome-copilot",
         "devenv": "devenv",
-        "mattpocock-skills": "mattpocock-skills",
-        "nixos-ai-skill": "nixos-ai-skill",
         "nixpkgs": "nixpkgs"
       }
     }

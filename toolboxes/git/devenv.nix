@@ -1,4 +1,4 @@
-{ pkgs, lib, config, inputs, ... }:
+{ pkgs, lib, config, ... }:
 let
   tt = import ../_lib/toolbox_tasks.nix { inherit config pkgs; };
   root = config.devenv.root;
@@ -46,9 +46,7 @@ in
       }
       // tt.practices {
         name = "git";
-        extra = {
-          "skills/git-commit" = "${inputs.awesome-copilot}/skills/git-commit";
-        };
+        local = ./practices;
       }
       // {
         "git_toolbox:merge_gitignore" = mergeTask ".gitignore";
