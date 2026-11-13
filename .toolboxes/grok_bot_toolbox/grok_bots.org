@@ -7,14 +7,6 @@
 # Routine schedule is folded into content as the first line: Schedule: <cron> (local time).
 # Empty blocks and :noexport: subtrees are skipped.
 
-general skill: selective memory: for a stable fact that a bot wants to remember, see if it holds true for many projects (if so, it's shared memory), if it's user-stable (shared memory) or if it only holds true for one project and its subdirectories (put it in that AGENTS.md)
-
-memory audit: ready shared memory and bot memories and apply selective memory
-
-bot audit: make sure bots aren't fighting eachother?
-
-routing audit: make sure tasks are going to the right bots
-
 * Vizier
 ** name
 Required. The bot's display name.
@@ -67,71 +59,16 @@ Optional. Episodic notes that make up a history.
 
 #+end_src
 ** Skills
-*** clone-journeyman
+*** appoint-skill-librarian
 **** name
 Required. The skill's name, used to load it.
 #+begin_src text :json skills
-clone-journeyman
+appoint-skill-librarian
 #+end_src
 **** description
 Optional (technically). What it does and when to use it. Write in third person.
 #+begin_src text :json skills
-Clone or create a Journeyman for a named project or directory. For Vizier only.
-#+end_src
-**** content
-Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
-Generated: the template below pulls from the * Journeyman heading via noweb. Edit there, not here.
-***** Required inputs
-#+begin_src text :json skills
-  ## Required Inputs
-    A project name and its root directory.
-#+end_src
-***** Journeyman template
-#+begin_src text :json skills :noweb yes
-  ## Journeyman template
-    Use this copy. Don't look up a file.
-
-    Name: `<project> Journeyman`
-
-    Description (use verbatim):
-      <<journeyman-job>>
-
-      <<journeyman-truth>>
-
-      <<journeyman-voice>>
-
-    Always install `grok-project` with this exact description and body, overwriting any existing copy, so it stays current.
-
-    Description: <<grok-project-description>>
-
-    Body:
-      <<grok-project-inputs>>
-
-      <<grok-project-workflow>>
-#+end_src
-***** Exact workflow
-- each step ends on a checkable done condition
-- write cases as `case -> action`
-- last step: what to report
-#+begin_src text :json skills :noweb yes
-  ## Workflow
-    1. If the project name or its directory is missing, ask. If you already have the directory for that name, use it. Don't guess a path.
-    2. Check the user's bots for one named `<project> Journeyman`. If one exists, stop and tell the user. Don't create a second one unless they say to.
-    3. Create a new bot named `<project> Journeyman` using the description in this skill.
-    4. Install `grok-project` from the copy in this skill, overwriting any existing copy.
-    5. Send the new bot one message: update its profile to avatar_shape <<journeyman-avatar-shape>> and avatar_color <<journeyman-avatar-color>>, then run grok-project for <project name> at <root directory>. Don't wait for its reply in this turn.
-    6. Confirm to the user: the new bot's name, that it was asked to grok the project, and the project directory.
-#+end_src
-*** create-skill-librarian
-**** name
-Required. The skill's name, used to load it.
-#+begin_src text :json skills
-create-skill-librarian
-#+end_src
-**** description
-Optional (technically). What it does and when to use it. Write in third person.
-#+begin_src text :json skills
-For Vizier only. Use once, on this bot's first run, to create a Skill Librarian. Do not use it on later requests.
+For Vizier only. Use once, on this bot's first run, to appoint a Skill Librarian. Do not use it on later requests.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
@@ -151,14 +88,12 @@ Generated: the template below pulls from the * Skill Librarian heading via noweb
     Description (use verbatim):
       <<librarian-job>>
 
-    Always install `procure-skill` with this exact description and body, overwriting any existing copy, so it stays current.
+    Always install `open-library` with this exact description and body, overwriting any existing copy, so it stays current.
 
-    Description: <<procure-skill-description>>
+    Description: <<open-library-description>>
 
     Body:
-      <<procure-skill-inputs>>
-
-      <<procure-skill-workflow>>
+      <<open-library-body>>
 #+end_src
 ***** Exact workflow
 - each step ends on a checkable done condition
@@ -168,9 +103,9 @@ Generated: the template below pulls from the * Skill Librarian heading via noweb
   ## Workflow
     1. Check the user's bots for one named `Skill Librarian`. If one exists, stop and tell the user. Don't create a second one unless they say to.
     2. Create a new bot named `Skill Librarian` using the description in this skill.
-    3. Install `procure-skill` from the copy in this skill, overwriting any existing copy.
-    4. Message the new bot to update its profile to avatar_shape <<librarian-avatar-shape>> and avatar_color <<librarian-avatar-color>>.
-    5. Confirm to the user: the new bot's name, and that `procure-skill` is in the shared library.
+    3. Install `open-library` from the copy in this skill, overwriting any existing copy.
+    4. Send the new bot one message: update its profile to avatar_shape <<librarian-avatar-shape>> and avatar_color <<librarian-avatar-color>>, then run open-library. Don't wait for its reply in this turn.
+    5. Confirm to the user: the new bot's name, and that it was asked to run open-library.
 #+end_src
 *** Skill Template :noexport:
 https://agentskills.io/skill-creation/best-practices
@@ -246,7 +181,7 @@ Optional. Emitted only when set, as {skill: "..."}.
 *** skill
 Optional. Name of one skill in this bot's skills list.
 #+begin_src text :json gettingStarted
-create-skill-librarian
+appoint-skill-librarian
 #+end_src
 ** visibility
 Optional. One of: public | team
@@ -273,7 +208,9 @@ Required. The persona; the bot sees this every turn. Subsection blocks are joine
 - what's out of scope
 #+name: journeyman-job
 #+begin_src text :json description
-Job description: Given a project, load project-specific facts, then assist in project-specific work as you are directed by the user.
+  Job description: Given a project, load project-specific facts, then assist in project-specific work as you are directed by the user.
+
+  Do not edit any files outside of your own project directory and its subdirectories.
 #+end_src
 *** Sources of truth
 - What system wins when two disagree?
@@ -342,11 +279,53 @@ Required. The full skill body. add sibling subheadings as needed. Blocks under c
     1. Find the project's root directory.
       - Path given and it exists -> use it.
       - Name only, or path not found -> ask. Don't guess.
-    2. Search the project recursively for AGENTS.md files.
-    3. Read each file into this conversation once. Don't copy them into memory.
-      - None found -> tell the user, and stop.
-      - Many found -> read the root one first, then the rest, and list them.
-    4. Confirm the project is grokked: name, root directory, and which AGENTS.md files were read.
+    2. Merge every AGENTS.md under the root into one file. Files go shallowest first. Sections with the same heading path are combined, and each chunk is marked with its source file. "skill-librarian" sections are dropped; they list skill sources for the Skill Librarian, not project rules. Run this on the computer the project lives on. First write this script to /tmp/merge_md.awk:
+      ````awk
+      # Merge Markdown files. Sections with the same heading path are combined:
+# bodies are appended in file order, each chunk marked with its source file.
+# Headings inside ``` or ~~~ fences are ignored. A "skill-librarian" heading
+# and its text, up to the next heading, are dropped.
+FNR == 1 { cur = 0; depth = 0; path[0] = 0; fence = 0; skip = 0 }
+/^(```|~~~)/ { fence = !fence }
+!fence && /^#+ / {
+  match($0, /^#+/); l = RLENGTH
+  if (l <= 6) {
+    t = tolower($0); sub(/^#+[ \t]+/, "", t); sub(/[ \t#]+$/, "", t); gsub(/[ \t]+/, "-", t)
+    skip = (t == "skill-librarian"); if (skip) next
+    while (depth > 0 && lvl[path[depth]] >= l) depth--
+    k = path[depth] SUBSEP $0
+    if (!(k in id)) { id[k] = ++n; title[n] = $0; lvl[n] = l; kids[path[depth]] = kids[path[depth]] " " n }
+    path[++depth] = id[k]; cur = id[k]; next
+  }
+}
+skip { next }
+{
+  if (src[cur] != FILENAME) {
+    if ($0 ~ /^[ \t]*$/) next
+    src[cur] = FILENAME; sub(/\n+$/, "\n", body[cur]); body[cur] = body[cur] (body[cur] == "" ? "" : "\n") "<!-- from " FILENAME " -->\n"
+  }
+  body[cur] = body[cur] $0 "\n"
+}
+function emit(i,   a, m, j, b) {
+  if (i) print title[i] "\n"
+  b = body[i]; sub(/\n+$/, "", b)
+  if (b != "") print b "\n"
+  m = split(kids[i], a, " ")
+  for (j = 1; j <= m; j++) emit(a[j])
+}
+END { emit(0) }
+      ````
+      Then merge:
+      ```
+      cd <root> && find . -name AGENTS.md -not -path '*/.git/*' -not -path '*/node_modules/*' \
+        | awk -F/ '{print NF "\t" $0}' | sort -n | cut -f2- | tr '\n' '\0' \
+        | xargs -0 -r awk -f /tmp/merge_md.awk > /tmp/agents-merged.md
+      ```
+      - Output empty -> tell the user no AGENTS.md was found, and stop.
+    3. Read /tmp/agents-merged.md into this conversation in full. Don't copy it into memory. Done when all of it has been read.
+    4. Quick-check what you read for contradictions: two chunks giving opposite rules, or a rule that conflicts with this bot's description or memory. A deeper file narrowing a shallower one is not a contradiction.
+      - Any found -> list each one with both source paths (from the `<!-- from ... -->` markers) and the conflicting lines, and ask the user which wins. Don't guess.
+    5. Confirm the project is grokked: name, root directory, the AGENTS.md files read, and any contradictions still open.
 #+end_src
 *** Skill Template :noexport:
 https://agentskills.io/skill-creation/best-practices
@@ -484,6 +463,70 @@ Optional. Episodic notes that make up a history.
 
 #+end_src
 ** Skills
+*** open-library
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+open-library
+#+end_src
+**** description
+#+name: open-library-description
+#+begin_src text :json skills
+For Skill Librarian only. Use once, on this bot's first run, to install its skills in the shared library. Do not use it on later requests.
+#+end_src
+**** content
+Generated: pulls each skill's description and body via noweb. Edit those skills, not this.
+#+name: open-library-body
+#+begin_src text :json skills :noweb yes
+  ## Skills
+    Use these copies. Don't look up files.
+
+    ### procure-skill
+      Description: <<procure-skill-description>>
+
+      Body:
+        <<procure-skill-body>>
+
+    ### clone-journeyman
+      Description: <<clone-journeyman-description>>
+
+      Body:
+        <<clone-journeyman-body>>
+
+    ### memory-audit
+      Description: <<memory-audit-description>>
+
+      Body:
+        <<memory-audit-body>>
+
+    ### bot-audit
+      Description: <<bot-audit-description>>
+
+      Body:
+        <<bot-audit-body>>
+
+    ### handoff
+      Description: <<handoff-description>>
+
+      Body:
+        <<handoff-body>>
+
+    ### team-audit
+      Description: <<team-audit-description>>
+
+      Body:
+        <<team-audit-body>>
+
+    ### stock-library
+      Description: <<stock-library-description>>
+
+      Body:
+        <<stock-library-body>>
+
+  ## Workflow
+    1. Install every skill above with its exact name, description, and body, overwriting any existing copy.
+    2. Confirm to the user: which skills were installed.
+#+end_src
 *** procure-skill
 **** name
 Required. The skill's name, used to load it.
@@ -491,25 +534,16 @@ Required. The skill's name, used to load it.
 procure-skill
 #+end_src
 **** description
-Optional (technically). What it does and when to use it. Write in third person.
 #+name: procure-skill-description
 #+begin_src text :json skills
 For Skill Librarian only. Use when the user names a skill to install, or when an AGENTS.md names a skill that is not already in the library.
 #+end_src
 **** content
-Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
-***** Inputs
-#+name: procure-skill-inputs
+#+name: procure-skill-body
 #+begin_src text :json skills
   ## Inputs
     A skill name, plus a URL or path to its directory when you have one.
-#+end_src
-***** Exact workflow
-- each step ends on a checkable done condition
-- write cases as `case -> action`
-- last step: what to report
-#+name: procure-skill-workflow
-#+begin_src text :json skills
+
   ## Workflow
     1. Find the skill directory (the folder that contains SKILL.md).
       - already have a URL or path -> use it
@@ -519,6 +553,349 @@ Required. The full skill body. add sibling subheadings as needed. Blocks under c
     4. Copy every companion file and subdirectory from the source folder into the saved skill's folder (references/, scripts/, and anything else SKILL.md points to). Skip files that are clearly for another product, such as an OpenAI Codex config.
     5. Confirm to the user: the skill name, that it is in the shared library, and which companion files were copied. Don't run the skill.
 #+end_src
+*** clone-journeyman
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+clone-journeyman
+#+end_src
+**** description
+#+name: clone-journeyman-description
+#+begin_src text :json skills
+Clone or create a Journeyman for a named project or directory. For Vizier only.
+#+end_src
+**** content
+Generated in part: the template pulls from the * Journeyman heading via noweb. Edit there, not here.
+#+name: clone-journeyman-body
+#+begin_src text :json skills :noweb yes
+  ## Required Inputs
+    A project name and its root directory.
+
+  ## Journeyman template
+    Use this copy. Don't look up a file.
+
+    Name: `<project> Journeyman`
+
+    Description (use verbatim):
+      <<journeyman-job>>
+
+      <<journeyman-truth>>
+
+      <<journeyman-voice>>
+
+    Always install `grok-project` with this exact description and body, overwriting any existing copy, so it stays current.
+
+    Description: <<grok-project-description>>
+
+    Body:
+      <<grok-project-inputs>>
+
+      <<grok-project-workflow>>
+
+  ## Workflow
+    1. If the project name or its directory is missing, ask. If you already have the directory for that name, use it. Don't guess a path.
+    2. Check the user's bots for one named `<project> Journeyman`. If one exists, stop and tell the user. Don't create a second one unless they say to.
+    3. Create a new bot named `<project> Journeyman` using the description in this skill.
+    4. Install `grok-project` from the copy in this skill, overwriting any existing copy.
+    5. Send the new bot one message: update its profile to avatar_shape <<journeyman-avatar-shape>> and avatar_color <<journeyman-avatar-color>>, then run grok-project for <project name> at <root directory>. Don't wait for its reply in this turn.
+    6. Confirm to the user: the new bot's name, that it was asked to grok the project, and the project directory.
+#+end_src
+*** memory-audit
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+memory-audit
+#+end_src
+**** description
+#+name: memory-audit-description
+#+begin_src text :json skills
+Audit this bot's memory: sort each fact into shared memory, a project's AGENTS.md, delete, or keep. Use when a memory-audit routine fires or the user asks for a memory audit.
+#+end_src
+**** content
+#+name: memory-audit-body
+#+begin_src text :json skills
+  ## Required Inputs
+    None. The audit covers this bot's own memory and the shared facts this bot recorded.
+
+  ## Workflow
+    1. List every fact in this bot's profile and journal memory, and every shared fact this bot recorded. Done when each fact is listed with its exact recorded text.
+    2. Sort each fact into one bucket:
+      - About the user, or true across many projects -> promote to shared memory.
+      - True only for one project and its subdirectories -> move to the AGENTS.md at that project's root, or the deepest subdirectory it applies to.
+      - Stale, wrong, or a duplicate -> delete.
+      - Specific to this bot's role -> keep.
+    3. Send the user one proposal grouped by bucket: each fact quoted, and for AGENTS.md moves the target file and the line to add. Change nothing until the user approves.
+    4. Apply only the approved changes:
+      - Promote -> write the shared fact, then forget the original.
+      - AGENTS.md -> add the line, following that project's rules for agent-facing documents, then forget the original. Drive not mounted -> skip it and say so.
+      - Delete -> forget it.
+    5. Report: the count per bucket, what changed, and what was skipped and why.
+#+end_src
+*** bot-audit
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+bot-audit
+#+end_src
+**** description
+#+name: bot-audit-description
+#+begin_src text :json skills
+Audit one bot's transcripts for inefficiencies and report only the problems found. Use when the user asks to audit a bot, or a bot-audit routine fires.
+#+end_src
+**** content
+#+name: bot-audit-body
+#+begin_src text :json skills
+  ## Required Inputs
+    The bot to audit and a time window. Missing window -> the last 7 days.
+
+  ## Workflow
+    1. Read the bot's description, skills, and memory, and the AGENTS.md of any project it works in. Done when you can state its job, its sources of truth, its tools, and its standing rules.
+    2. Read the bot's transcripts in the window. Done when every session in the window is read.
+    3. Check each session against these questions:
+      - Does it know what result it owns, and does it deliver that result?
+      - Does it use the tools, sources, and skills it's instructed to?
+      - Does it follow its standing rules (voice, commit rules, mount checks, days off)?
+      - Does it get stuck: stall, loop, or wait on something that won't come?
+      - Does it repeat steps: rereads, reruns, or re-asks for what it already has?
+      - Does it get confused: misread the ask, lose track of state, or contradict itself?
+      - Does it ask the user for what it could find itself, or guess where it should ask?
+      - Does it claim done without checking the real result?
+      - Does it stray outside its job?
+    4. Report problems only. Don't suggest fixes. For each problem: the question it fails, the session and date, and a short quote or step that shows it. No problems -> say so.
+#+end_src
+*** handoff
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+handoff
+#+end_src
+**** description
+#+name: handoff-description
+#+begin_src text :json skills
+Pass work to another bot, or take work from one. Use whenever a task belongs to another bot, or another bot hands you one.
+#+end_src
+**** content
+#+name: handoff-body
+#+begin_src text :json skills
+  ## Required Inputs
+    The task, and the bot whose job covers it.
+
+  ## Workflow
+    Sending:
+    1. Check the receiving bot's job covers the task. Not covered -> tell the user instead of sending.
+    2. Send one message with:
+      - Result: what done looks like, and that the receiver owns it.
+      - Context: why, and what the user asked, quoted when it matters.
+      - Inputs: exact names, paths, IDs, and links. No "the file" or "that project".
+      - Constraints: user rules that apply (don't push, check the mount, no Sundays).
+      - Report: what to send back, and to whom (you or the user).
+    3. Stop working on the task. Don't redo or check over the receiver's work unless the user asks.
+    4. Tell the user who has it.
+
+    Receiving:
+    1. Check the task is in your job. Not in it -> say so to the sender, and name the right bot if you know it.
+    2. Check you have every input. Missing one -> ask the sender once, listing everything missing.
+    3. Do the work and report as the handoff asks.
+#+end_src
+*** team-audit
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+team-audit
+#+end_src
+**** description
+#+name: team-audit-description
+#+begin_src text :json skills
+For Vizier only. Audit how the user's bots work together: routing, lanes, conflicts, and handoffs. Report only the problems found. Use when the user asks for a team audit, or a team-audit routine fires.
+#+end_src
+**** content
+#+name: team-audit-body
+#+begin_src text :json skills
+  ## Required Inputs
+    A time window. Missing -> the last 7 days.
+
+  ## Workflow
+    1. List the user's bots and read each one's description. Done when each bot's lane is stated in one line.
+    2. Read every bot's transcripts in the window. Done when every session is read.
+    3. Check routing and lanes:
+      - Did each task go to the bot whose lane covers it?
+      - Did a bot do work in another bot's lane?
+      - Is a task with no bot's lane covering it?
+      - Do two lanes overlap enough to cause doubt?
+    4. Check conflicts:
+      - Did bots work the same task at once, or redo each other's work?
+      - Did one bot undo or overwrite another's changes?
+      - Did bots give the user conflicting answers?
+    5. Check each handoff against the handoff skill:
+      - Did the receiver get the result it owns, the context, exact inputs, the constraints, and what to report?
+      - Did the receiver have to ask for anything, guess, or look it up again?
+      - Did the sender stop working on it once handed off?
+      - Did the work bounce more than once, or stall between bots?
+      - Did the result make it back to whoever needed it?
+    6. Report problems only. Don't suggest fixes. For each problem: the check it fails, the bots, the session and date, and a short quote or step that shows it. No problems -> say so.
+#+end_src
+*** stock-library
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+stock-library
+#+end_src
+**** description
+#+name: stock-library-description
+#+begin_src text :json skills
+For Skill Librarian only. Scan projects' AGENTS.md files for "skill-librarian" sections and stock the library with the skills they list. Use when the user asks to stock the library, or names projects to scan for skills.
+#+end_src
+**** content
+#+name: stock-library-body
+#+begin_src text :json skills
+  ## Required Inputs
+    One or more project root directories.
+
+  ## Workflow
+    1. Get the project roots. Missing -> ask. Don't guess a path.
+    2. Pull every "skill-librarian" section from the AGENTS.md files under each root. Run this on the computer the projects live on:
+      ```
+      find <root> -name AGENTS.md -not -path '*/.git/*' -not -path '*/node_modules/*' -exec awk 'FNR == 1 { s = 0 } /^#+ / { t = tolower($0); sub(/^#+[ \t]+/, "", t); sub(/[ \t#]+$/, "", t); gsub(/[ \t]+/, "-", t); s = (t == "skill-librarian"); if (s) print "===== " FILENAME; next } s' {} +
+      ```
+      - No output -> tell the user no skill-librarian sections were found, and stop.
+    3. List each skill named there with its exact source: a URL, or a path resolved against the directory of the AGENTS.md that lists it. Done when every entry has a name and a source that exists.
+      - Entry unclear, or source not found -> list it as unresolved. Don't guess.
+    4. Install each skill not already in the library with procure-skill, using that source. Skills already in the library -> skip; don't overwrite unless the user says to.
+    5. Report: skills installed with their sources, skills skipped as already present, and unresolved entries with their AGENTS.md paths.
+#+end_src
+*** Skill Template :noexport:
+https://agentskills.io/skill-creation/best-practices
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+
+#+end_src
+**** description
+Optional (technically). What it does and when to use it. Write in third person.
+#+begin_src text :json skills
+
+#+end_src
+**** content
+Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
+***** Required inputs
+#+begin_src text :json skills
+
+#+end_src
+***** Exact workflow
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
+#+begin_src text :json skills
+
+#+end_src
+** Routines
+*** Routine Template :noexport:
+**** slug
+Required. Stable id for the routine.
+#+begin_src text :json routines
+
+#+end_src
+**** name
+Optional. Display name.
+#+begin_src text :json routines
+
+#+end_src
+**** schedule
+Optional. 5-field cron in local time. Not a JSON field; folded into content as the first line `Schedule: <cron> (local time)`.
+#+begin_src text :json routines
+
+#+end_src
+**** description
+Required. One sentence on why it fires.
+#+begin_src text :json routines
+
+#+end_src
+**** content
+Required. The job text. A filled schedule heading is prepended as the first line.
+#+begin_src text :json routines
+
+#+end_src
+** Plugins
+*** Plugin Template :noexport:
+**** pluginId
+Required. Marketplace plugin id (the same id for every user).
+#+begin_src text :json plugins
+
+#+end_src
+**** name
+Optional. Plugin name.
+#+begin_src text :json plugins
+
+#+end_src
+**** description
+Optional. What this plugin is for.
+#+begin_src text :json plugins
+
+#+end_src
+** gettingStarted
+Optional. Emitted only when set, as {skill: "..."}.
+*** skill
+Optional. Name of one skill in this bot's skills list.
+#+begin_src text :json gettingStarted
+open-library
+#+end_src
+** visibility
+Optional. One of: public | team
+#+begin_src text :json visibility
+
+#+end_src
+* Bot Template                                                     :noexport:
+** name
+Required. The bot's display name.
+#+begin_src text :json name
+
+#+end_src
+** description
+Required. Fixed instructions the bot sees every turn. Subsection blocks are joined with blank lines into one description.
+- Standing behavior
+- specific, not vague
+
+*** Job description
+- what you do here
+- think employment role, not granular tasks
+- responsibilities: focused, but not too granular
+- what's out of scope
+#+begin_src text :json description
+
+#+end_src
+*** Sources of truth
+- What system wins when two disagree?
+#+begin_src text :json description
+
+#+end_src
+*** Voice
+Tone and register.
+#+begin_src text :json description
+
+#+end_src
+** avatarShape
+Optional. One of: blob pebble bean egg squircle tablet capsule cylinder hex gem crystal wedge shield dome arch cloud teardrop leaf square sparkle clover flower heart house star
+#+begin_src text :json avatarShape
+
+#+end_src
+** avatarColor
+Optional. One of: black brown red orange yellow green cyan blue violet magenta gray
+#+begin_src text :json avatarColor
+
+#+end_src
+** memory
+Optional. Stable facts, not changing ones. One fact per line. Each line is emitted as {content, kind}.
+*** profile
+Optional. Standing conventions and lasting facts, seen every turn.
+#+begin_src text :json memory
+
+#+end_src
+*** log
+Optional. Episodic notes that make up a history.
+#+begin_src text :json memory
+
+#+end_src
+** Skills
 *** Skill Template :noexport:
 https://agentskills.io/skill-creation/best-practices
 **** name
