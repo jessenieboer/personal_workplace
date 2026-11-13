@@ -47,11 +47,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1794505935,
-        "narHash": "sha256-V9kPRUmASiEPPDEQ1rlqoRZbJKVAAhWT+CSs62Eto/s=",
+        "lastModified": 1794562632,
+        "narHash": "sha256-MOb8lrEUUki0Kxe+LNLuhj3DbPsjcurZWq3eG3R0Z9U=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "9eaaab8d32d853b30823f56997ec3d7c106c358c",
+        "rev": "6c954cc1c04f1d0b2f6ad689c9dffd835fa4d928",
         "type": "github"
       },
       "original": {
@@ -68,11 +68,11 @@
         "nixpkgs-stable": "nixpkgs-stable"
       },
       "locked": {
-        "lastModified": 1794501470,
-        "narHash": "sha256-S+velBpiFoPs2oEsf3teqYVSyK0DM9rEtpX5q4dVPqg=",
+        "lastModified": 1794585524,
+        "narHash": "sha256-TQCuJv27nJFlkX8tQ0A5eeK194OlkhJaHKAxB+1HBCE=",
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "343438460b17add5f4f5d287caf407babfa11d32",
+        "rev": "fe6d779d60725c83a056946d3cfd08d99bedfdbe",
         "type": "github"
       },
       "original": {
@@ -185,11 +185,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794482932,
-        "narHash": "sha256-Ay3O49IhUiRnds8A6GHJWiC7Ie9SZKrwFhJpTtdO398=",
+        "lastModified": 1794568376,
+        "narHash": "sha256-gatFDgkDU+wndSmaWi5WtJPjNnwqtjIVYg+Imwk2A/A=",
         "owner": "jordangarrison",
         "repo": "grok-bot-flake",
-        "rev": "d4f2c12ee9c9cf27076e7ea574ae10ef7a4dae04",
+        "rev": "8ab717641989eb1752cbf8915bf65a0010992495",
         "type": "github"
       },
       "original": {
