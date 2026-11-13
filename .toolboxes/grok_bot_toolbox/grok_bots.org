@@ -59,6 +59,59 @@ Optional. Episodic notes that make up a history.
 
 #+end_src
 ** Skills
+*** assume-position
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+assume-position
+#+end_src
+**** description
+#+name: assume-position-description
+#+begin_src text :json skills
+For Vizier only. Use once, on this bot's first run, to learn the user's projects and appoint a Skill Librarian. Do not use it on later requests.
+#+end_src
+**** content
+#+name: assume-position-body
+#+begin_src text :json skills
+  ## Required Inputs
+    None. This runs when the bot first starts.
+
+  ## Workflow
+    1. Run grok-kingdom. Done when the user has confirmed the project list and it is saved.
+      - User stops partway -> save what was confirmed, say what's missing, and go on.
+    2. Run appoint-skill-librarian.
+    3. Report: the number of projects saved, and the Skill Librarian's status.
+#+end_src
+*** grok-kingdom
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+grok-kingdom
+#+end_src
+**** description
+#+name: grok-kingdom-description
+#+begin_src text :json skills
+For Vizier only. Learn what counts as a project for this user and where each project's root directory is, and save them. Use when assume-position runs it, or the user asks to map or update their projects.
+#+end_src
+**** content
+#+name: grok-kingdom-body
+#+begin_src text :json skills
+  ## Required Inputs
+    None. The user supplies the answers.
+
+  ## Workflow
+    1. Ask the user, in one message:
+      - What counts as a project? For example, a directory with a marker file, or just the ones they name.
+      - Where do the projects live: a parent directory to scan, explicit root paths, or both? On which computer?
+      Done when both are answered.
+    2. Build the project list on that computer.
+      - Rule plus a parent directory -> find the directories that match the rule.
+      - Explicit paths -> check each one exists.
+      - Drive not mounted, or a path not found -> say so. Don't guess a path.
+    3. Show the user the list as `name -> root directory`, and ask them to confirm, add, rename, or drop entries. Done when they confirm.
+    4. Save to shared memory: what counts as a project, and one fact per project with its name and root directory. Replace any older project facts these contradict.
+    5. Report: the rule, the projects saved, and any paths that couldn't be checked.
+#+end_src
 *** appoint-skill-librarian
 **** name
 Required. The skill's name, used to load it.
@@ -68,7 +121,7 @@ appoint-skill-librarian
 **** description
 Optional (technically). What it does and when to use it. Write in third person.
 #+begin_src text :json skills
-For Vizier only. Use once, on this bot's first run, to appoint a Skill Librarian. Do not use it on later requests.
+For Vizier only. Appoint a Skill Librarian. Use when assume-position runs it, or the user asks to appoint a Skill Librarian.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
@@ -76,7 +129,7 @@ Generated: the template below pulls from the * Skill Librarian heading via noweb
 ***** Required inputs
 #+begin_src text :json skills
   ## Required Inputs
-    None. This runs when the bot first starts.
+    None.
 #+end_src
 ***** Skill Librarian template
 #+begin_src text :json skills :noweb yes
@@ -181,7 +234,7 @@ Optional. Emitted only when set, as {skill: "..."}.
 *** skill
 Optional. Name of one skill in this bot's skills list.
 #+begin_src text :json gettingStarted
-appoint-skill-librarian
+assume-position
 #+end_src
 ** visibility
 Optional. One of: public | team
