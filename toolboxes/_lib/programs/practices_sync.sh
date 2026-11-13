@@ -37,6 +37,7 @@ is_item() {
 status() {
   local item
   diff -r "$built" "$mirror" >/dev/null 2>&1 || return 1
+  [ -z "$(find "$mirror" -type f -perm /222 -print -quit)" ] || return 1
   [ -n "$eca" ] || return 0
   cmp -s "$manifest" "$installed" || return 1
   while IFS= read -r item; do
@@ -69,6 +70,8 @@ apply() {
   rm -rf -- "$mirror"
   mkdir -p "$(dirname "$mirror")"
   cp -r --no-preserve=mode "$built" "$mirror"
+  # Read-only so users don't edit the mirror; dirs stay writable so the next refresh can replace it.
+  find "$mirror" -type f -exec chmod a-w {} +
   [ -n "$eca" ] || return 0
   mkdir -p "$eca"
   while IFS= read -r item; do

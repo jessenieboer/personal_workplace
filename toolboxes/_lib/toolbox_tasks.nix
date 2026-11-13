@@ -20,7 +20,7 @@ let
 
   practicesSync = pkgs.writeShellApplication {
     name = "practices_sync";
-    runtimeInputs = with pkgs; [ coreutils diffutils gnugrep ];
+    runtimeInputs = with pkgs; [ coreutils diffutils findutils gnugrep ];
     text = builtins.readFile ./programs/practices_sync.sh;
   };
 
