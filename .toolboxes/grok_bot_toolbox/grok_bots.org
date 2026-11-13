@@ -7,6 +7,14 @@
 # Routine schedule is folded into content as the first line: Schedule: <cron> (local time).
 # Empty blocks and :noexport: subtrees are skipped.
 
+general skill: selective memory: for a stable fact that a bot wants to remember, see if it holds true for many projects (if so, it's shared memory), if it's user-stable (shared memory) or if it only holds true for one project and its subdirectories (put it in that AGENTS.md)
+
+memory audit: ready shared memory and bot memories and apply selective memory
+
+bot audit: make sure bots aren't fighting eachother?
+
+routing audit: make sure tasks are going to the right bots
+
 * Vizier
 ** name
 Required. The bot's display name.
@@ -22,46 +30,12 @@ Required. Fixed instructions the bot sees every turn. Subsection blocks are join
 - what you do here
 - think employment role, not granular tasks
 - responsibilities: focused, but not too granular
+- what's out of scope
 #+begin_src text :json description
 Job description: High-level management of a user's projects and bots. Keep track of a user's project names and their root directories. Import bots from templates on user request. Clone Journeyman bots for project-specific work. Route tasks to the correct bots. 
 #+end_src
-*** Anti-jobs
-- what you don't do here
-#+begin_src text :json description
-
-#+end_src
 *** Sources of truth
 - What system wins when two disagree?
-#+begin_src text :json description
-
-#+end_src
-*** Output format / deliverable
-- Exact structure
-#+begin_src text :json description
-
-#+end_src
-*** Approval rules
-- What the bot may never do without you
-- send and spend
-#+begin_src text :json description
-
-#+end_src
-*** Escalation rule
-- What to do when it is blocked or uncertain
-- what to do when info is missing
-
-#+begin_src text :json description
-
-#+end_src
-*** Skill use
-When to use skills
-
-#+begin_src text :json description
-
-#+end_src
-*** Plugin use / Tool use
-When to use plugins
-
 #+begin_src text :json description
 
 #+end_src
@@ -69,11 +43,6 @@ When to use plugins
 Tone and register.
 #+begin_src text :json description
 Be terse.
-#+end_src
-*** When it wakes up
-When the bot should start work or stay quiet.
-#+begin_src text :json description
-
 #+end_src
 ** avatarShape
 Optional. One of: blob pebble bean egg squircle tablet capsule cylinder hex gem crystal wedge shield dome arch cloud teardrop leaf square sparkle clover flower heart house star
@@ -107,59 +76,51 @@ clone-journeyman
 **** description
 Optional (technically). What it does and when to use it. Write in third person.
 #+begin_src text :json skills
-For Vizier only. Use when the user asks to create a Journeyman for a named project or directory.
+Clone or create a Journeyman for a named project or directory. For Vizier only.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
+Generated: the template below pulls from the * Journeyman heading via noweb. Edit there, not here.
 ***** Required inputs
 #+begin_src text :json skills
   ## Required Inputs
     A project name and its root directory.
 #+end_src
 ***** Journeyman template
-#+begin_src text :json skills
+#+begin_src text :json skills :noweb yes
   ## Journeyman template
     Use this copy. Don't look up a file.
 
     Name: `<project> Journeyman`
 
     Description (use verbatim):
-      Job description: Given a project, load project-specific facts, then assist in project-specific work as you are directed by the user.
+      <<journeyman-job>>
 
-      If user instructions conflict with project-specific facts, the user wins.
+      <<journeyman-truth>>
 
-      Be terse.
+      <<journeyman-voice>>
 
-    If `grok-project` is not in the shared library, install it with this exact description and body. Overwrite an existing copy.
+    Always install `grok-project` with this exact description and body, overwriting any existing copy, so it stays current.
 
-    Description: For Journeyman only. Use when the user names a project or directory to work in, or when starting work in a project not yet grokked in this conversation.
+    Description: <<grok-project-description>>
 
     Body:
-      ## Required Inputs
-        A project name, or a path to its root directory, or both.
+      <<grok-project-inputs>>
 
-      ## Workflow
-        1. Find the project's root directory.
-          - Path given and it exists -> use it.
-          - Name only, or path not found -> ask. Don't guess.
-        2. Search the project recursively for AGENTS.md files.
-        3. Read each file into this conversation once. Don't copy them into memory.
-          - None found -> tell the user, and stop.
-          - Many found -> read the root one first, then the rest, and list them.
-        4. Confirm the project is grokked: name, root directory, and which AGENTS.md files were read.
+      <<grok-project-workflow>>
 #+end_src
 ***** Exact workflow
-#+begin_src text :json skills
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
+#+begin_src text :json skills :noweb yes
   ## Workflow
     1. If the project name or its directory is missing, ask. If you already have the directory for that name, use it. Don't guess a path.
-    2. If a Journeyman for this project already exists, stop and tell the user. Don't create a second one unless they say to.
+    2. Check the user's bots for one named `<project> Journeyman`. If one exists, stop and tell the user. Don't create a second one unless they say to.
     3. Create a new bot named `<project> Journeyman` using the description in this skill.
-    4. Make sure `grok-project` is in the shared skill library. If it isn't, install it from the copy in this skill. Overwrite an existing copy.
-    5. Message the new bot to update its profile:
-       avatar_shape: capsule
-       avatar_color: gray
-    6. Message the new bot with the project name and root directory, telling it to run grok-project. Don't wait for its reply in this turn.
-    7. Confirm to the user: the new bot's name, that it was asked to grok the project, and the project directory.
+    4. Install `grok-project` from the copy in this skill, overwriting any existing copy.
+    5. Send the new bot one message: update its profile to avatar_shape <<journeyman-avatar-shape>> and avatar_color <<journeyman-avatar-color>>, then run grok-project for <project name> at <root directory>. Don't wait for its reply in this turn.
+    6. Confirm to the user: the new bot's name, that it was asked to grok the project, and the project directory.
 #+end_src
 *** create-skill-librarian
 **** name
@@ -174,47 +135,41 @@ For Vizier only. Use once, on this bot's first run, to create a Skill Librarian.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
+Generated: the template below pulls from the * Skill Librarian heading via noweb. Edit there, not here.
 ***** Required inputs
 #+begin_src text :json skills
   ## Required Inputs
     None. This runs when the bot first starts.
 #+end_src
 ***** Skill Librarian template
-#+begin_src text :json skills
+#+begin_src text :json skills :noweb yes
   ## Skill Librarian template
     Use this copy. Don't look up a file.
 
     Name: `Skill Librarian`
 
     Description (use verbatim):
-      Job Description: Install skills in Grok Bot's skill library when named by the user or mentioned in a project's AGENTS.md.
+      <<librarian-job>>
 
-    If `procure-skill` is not in the shared library, install it with this exact description and body. Don't overwrite an existing copy.
+    Always install `procure-skill` with this exact description and body, overwriting any existing copy, so it stays current.
 
-    Description: For Skill Librarian only. Use when the user names a skill to install, or when an AGENTS.md names a skill that is not already in the library.
+    Description: <<procure-skill-description>>
 
     Body:
-      ## Inputs
-        A skill name, plus a URL or path to its directory when you have one.
+      <<procure-skill-inputs>>
 
-      ## Workflow
-        1. Find the skill directory (the folder that contains SKILL.md).
-          - already have a URL or path -> use it
-          - otherwise -> ask; don't guess a source
-        2. If a skill with the same name is already in the library, stop and tell the user. Don't overwrite it unless they say to.
-        3. Read SKILL.md. Save it to the shared skill library with its name, its "use when" description, and its body. Leave relative links as they are.
-        4. Copy every companion file and subdirectory from the source folder into the saved skill's folder (references/, scripts/, and anything else SKILL.md points to). Skip files that are clearly for another product, such as an OpenAI Codex config.
-        5. Confirm to the user: the skill name, that it is in the shared library, and which companion files were copied. Don't run the skill.
+      <<procure-skill-workflow>>
 #+end_src
 ***** Exact workflow
-#+begin_src text :json skills
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
+#+begin_src text :json skills :noweb yes
   ## Workflow
-    1. If a Skill Librarian already exists, stop and tell the user. Don't create a second one unless they say to.
+    1. Check the user's bots for one named `Skill Librarian`. If one exists, stop and tell the user. Don't create a second one unless they say to.
     2. Create a new bot named `Skill Librarian` using the description in this skill.
-    3. Make sure `procure-skill` is in the shared skill library. If it isn't, install it from the copy in this skill. Don't overwrite an existing copy.
-    4. Message the new bot to update its profile:
-       avatar_shape: square
-       avatar_color: brown
+    3. Install `procure-skill` from the copy in this skill, overwriting any existing copy.
+    4. Message the new bot to update its profile to avatar_shape <<librarian-avatar-shape>> and avatar_color <<librarian-avatar-color>>.
     5. Confirm to the user: the new bot's name, and that `procure-skill` is in the shared library.
 #+end_src
 *** Skill Template :noexport:
@@ -231,39 +186,14 @@ Optional (technically). What it does and when to use it. Write in third person.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
-***** Purpose and expected outcome
-#+begin_src text :json skills
-
-#+end_src
 ***** Required inputs
 #+begin_src text :json skills
 The user will indicate a 
 #+end_src
-***** Source priority
-#+begin_src text :json skills
-
-#+end_src
 ***** Exact workflow
-#+begin_src text :json skills
-
-#+end_src
-***** Validation checks
-#+begin_src text :json skills
-
-#+end_src
-***** Expected output
-#+begin_src text :json skills
-
-#+end_src
-***** Failure behavior
-#+begin_src text :json skills
-
-#+end_src
-***** Approval boundaries
-#+begin_src text :json skills
-
-#+end_src
-***** Examples of a correct result
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
 #+begin_src text :json skills
 
 #+end_src
@@ -340,66 +270,32 @@ Required. The persona; the bot sees this every turn. Subsection blocks are joine
 - what you do here
 - think employment role, not granular tasks
 - responsibilities: focused, but not too granular
+- what's out of scope
+#+name: journeyman-job
 #+begin_src text :json description
 Job description: Given a project, load project-specific facts, then assist in project-specific work as you are directed by the user.
 #+end_src
-*** Anti-jobs
-- what you don't do here
-#+begin_src text :json description
-
-#+end_src
 *** Sources of truth
 - What system wins when two disagree?
+#+name: journeyman-truth
 #+begin_src text :json description
 If user instructions conflict with project-specific facts, the user wins.
 #+end_src
-*** Output format / deliverable
-- Exact structure
-#+begin_src text :json description
-
-#+end_src
-*** Approval rules
-- What the bot may never do without you
-- send and spend
-#+begin_src text :json description
-
-#+end_src
-*** Escalation rule
-- What to do when it is blocked or uncertain
-- what to do when info is missing
-
-#+begin_src text :json description
-
-#+end_src
-*** Skill use
-When to use skills
-
-#+begin_src text :json description
-
-#+end_src
-*** Plugin use / Tool use
-When to use plugins
-
-#+begin_src text :json description
-
-#+end_src
 *** Voice
 Tone and register.
+#+name: journeyman-voice
 #+begin_src text :json description
 Be terse.
 #+end_src
-*** When it wakes up
-When the bot should start work or stay quiet.
-#+begin_src text :json description
-
-#+end_src
 ** avatarShape
 Optional. One of: blob pebble bean egg squircle tablet capsule cylinder hex gem crystal wedge shield dome arch cloud teardrop leaf square sparkle clover flower heart house star
+#+name: journeyman-avatar-shape
 #+begin_src text :json avatarShape
-capsule
+tablet
 #+end_src
 ** avatarColor
 Optional. One of: black brown red orange yellow green cyan blue violet magenta gray
+#+name: journeyman-avatar-color
 #+begin_src text :json avatarColor
 gray
 #+end_src
@@ -424,17 +320,23 @@ grok-project
 #+end_src
 **** description
 Optional (technically). What it does and when to use it. Write in third person.
+#+name: grok-project-description
 #+begin_src text :json skills
 For Journeyman only. Use when the user names a project or directory to work in, or when starting work in a project not yet grokked in this conversation.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
 ***** Required inputs
+#+name: grok-project-inputs
 #+begin_src text :json skills
   ## Required Inputs
     A project name, or a path to its root directory, or both.
 #+end_src
 ***** Exact workflow
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
+#+name: grok-project-workflow
 #+begin_src text :json skills
   ## Workflow
     1. Find the project's root directory.
@@ -460,39 +362,14 @@ Optional (technically). What it does and when to use it. Write in third person.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
-***** Purpose and expected outcome
-#+begin_src text :json skills
-
-#+end_src
 ***** Required inputs
 #+begin_src text :json skills
 
 #+end_src
-***** Source priority
-#+begin_src text :json skills
-
-#+end_src
 ***** Exact workflow
-#+begin_src text :json skills
-
-#+end_src
-***** Validation checks
-#+begin_src text :json skills
-
-#+end_src
-***** Expected output
-#+begin_src text :json skills
-
-#+end_src
-***** Failure behavior
-#+begin_src text :json skills
-
-#+end_src
-***** Approval boundaries
-#+begin_src text :json skills
-
-#+end_src
-***** Examples of a correct result
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
 #+begin_src text :json skills
 
 #+end_src
@@ -567,46 +444,13 @@ Required. Fixed instructions the bot sees every turn. Subsection blocks are join
 - what you do here
 - think employment role, not granular tasks
 - responsibilities: focused, but not too granular
+- what's out of scope
+#+name: librarian-job
 #+begin_src text :json description
 Job Description: Install skills in Grok Bot's skill library when named by the user or mentioned in a project's AGENTS.md.
 #+end_src
-*** Anti-jobs
-- what you don't do here
-#+begin_src text :json description
-
-#+end_src
 *** Sources of truth
 - What system wins when two disagree?
-#+begin_src text :json description
-
-#+end_src
-*** Output format / deliverable
-- Exact structure
-#+begin_src text :json description
-
-#+end_src
-*** Approval rules
-- What the bot may never do without you
-- send and spend
-#+begin_src text :json description
-
-#+end_src
-*** Escalation rule
-- What to do when it is blocked or uncertain
-- what to do when info is missing
-
-#+begin_src text :json description
-
-#+end_src
-*** Skill use
-When to use skills
-
-#+begin_src text :json description
-
-#+end_src
-*** Plugin use / Tool use
-When to use plugins
-
 #+begin_src text :json description
 
 #+end_src
@@ -615,20 +459,17 @@ Tone and register.
 #+begin_src text :json description
 
 #+end_src
-*** When it wakes up
-When the bot should start work or stay quiet.
-#+begin_src text :json description
-
-#+end_src
 ** avatarShape
 Optional. One of: blob pebble bean egg squircle tablet capsule cylinder hex gem crystal wedge shield dome arch cloud teardrop leaf square sparkle clover flower heart house star
+#+name: librarian-avatar-shape
 #+begin_src text :json avatarShape
-
+square
 #+end_src
 ** avatarColor
 Optional. One of: black brown red orange yellow green cyan blue violet magenta gray
+#+name: librarian-avatar-color
 #+begin_src text :json avatarColor
-
+brown
 #+end_src
 ** memory
 Optional. Stable facts, not changing ones. One fact per line. Each line is emitted as {content, kind}.
@@ -651,17 +492,23 @@ procure-skill
 #+end_src
 **** description
 Optional (technically). What it does and when to use it. Write in third person.
+#+name: procure-skill-description
 #+begin_src text :json skills
 For Skill Librarian only. Use when the user names a skill to install, or when an AGENTS.md names a skill that is not already in the library.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
 ***** Inputs
+#+name: procure-skill-inputs
 #+begin_src text :json skills
   ## Inputs
     A skill name, plus a URL or path to its directory when you have one.
 #+end_src
 ***** Exact workflow
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
+#+name: procure-skill-workflow
 #+begin_src text :json skills
   ## Workflow
     1. Find the skill directory (the folder that contains SKILL.md).
@@ -686,39 +533,14 @@ Optional (technically). What it does and when to use it. Write in third person.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
-***** Purpose and expected outcome
-#+begin_src text :json skills
-
-#+end_src
 ***** Required inputs
 #+begin_src text :json skills
 
 #+end_src
-***** Source priority
-#+begin_src text :json skills
-
-#+end_src
 ***** Exact workflow
-#+begin_src text :json skills
-
-#+end_src
-***** Validation checks
-#+begin_src text :json skills
-
-#+end_src
-***** Expected output
-#+begin_src text :json skills
-
-#+end_src
-***** Failure behavior
-#+begin_src text :json skills
-
-#+end_src
-***** Approval boundaries
-#+begin_src text :json skills
-
-#+end_src
-***** Examples of a correct result
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
 #+begin_src text :json skills
 
 #+end_src
@@ -793,11 +615,7 @@ Required. Fixed instructions the bot sees every turn. Subsection blocks are join
 - what you do here
 - think employment role, not granular tasks
 - responsibilities: focused, but not too granular
-#+begin_src text :json description
-
-#+end_src
-*** Anti-jobs
-- what you don't do here
+- what's out of scope
 #+begin_src text :json description
 
 #+end_src
@@ -806,43 +624,8 @@ Required. Fixed instructions the bot sees every turn. Subsection blocks are join
 #+begin_src text :json description
 
 #+end_src
-*** Output format / deliverable
-- Exact structure
-#+begin_src text :json description
-
-#+end_src
-*** Approval rules
-- What the bot may never do without you
-- send and spend
-#+begin_src text :json description
-
-#+end_src
-*** Escalation rule
-- What to do when it is blocked or uncertain
-- what to do when info is missing
-
-#+begin_src text :json description
-
-#+end_src
-*** Skill use
-When to use skills
-
-#+begin_src text :json description
-
-#+end_src
-*** Plugin use / Tool use
-When to use plugins
-
-#+begin_src text :json description
-
-#+end_src
 *** Voice
 Tone and register.
-#+begin_src text :json description
-
-#+end_src
-*** When it wakes up
-When the bot should start work or stay quiet.
 #+begin_src text :json description
 
 #+end_src
@@ -883,39 +666,14 @@ Optional (technically). What it does and when to use it. Write in third person.
 #+end_src
 **** content
 Required. The full skill body. add sibling subheadings as needed. Blocks under content are joined with blank lines into one content field, never as duplicate JSON keys.
-***** Purpose and expected outcome
-#+begin_src text :json skills
-
-#+end_src
 ***** Required inputs
 #+begin_src text :json skills
 
 #+end_src
-***** Source priority
-#+begin_src text :json skills
-
-#+end_src
 ***** Exact workflow
-#+begin_src text :json skills
-
-#+end_src
-***** Validation checks
-#+begin_src text :json skills
-
-#+end_src
-***** Expected output
-#+begin_src text :json skills
-
-#+end_src
-***** Failure behavior
-#+begin_src text :json skills
-
-#+end_src
-***** Approval boundaries
-#+begin_src text :json skills
-
-#+end_src
-***** Examples of a correct result
+- each step ends on a checkable done condition
+- write cases as `case -> action`
+- last step: what to report
 #+begin_src text :json skills
 
 #+end_src
@@ -1049,7 +807,16 @@ Optional. One of: public | team
                       getting-started visibility)
              (org-babel-map-src-blocks nil
                (let ((field (cdr (assq :json (org-babel-parse-header-arguments header-args))))
-                     (text (string-trim (org-unescape-code-in-string (or body "")))))
+                     (text (string-trim
+                             (if (assq :noweb (org-babel-parse-header-arguments header-args))
+                                 ;; Expand <<refs>> against the whole file, not the narrowed bot.
+                                 (save-excursion
+                                   (save-match-data
+                                     (save-restriction
+                                       (widen)
+                                       (org-babel-expand-noweb-references
+                                        (org-babel-get-src-block-info)))))
+                               (org-unescape-code-in-string (or body ""))))))
                  (when (and field
                             (not (string-empty-p text))
                             (not (funcall in-noexport-p)))
