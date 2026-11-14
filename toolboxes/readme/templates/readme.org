@@ -17,8 +17,6 @@
 **** License
 ** Development :noexport:
 *** Instructions
-**** For humans
-**** For bots
 *** Important Decisions
 *** To Do
 *** Contributing
