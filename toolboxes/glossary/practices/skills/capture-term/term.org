@@ -1,0 +1,19 @@
+# Entry template for glossary.org. Copy from the heading down and fill each <...>.
+# ID: a fresh uuid from `cat /proc/sys/kernel/random/uuid`.
+# ALIASES: space-separated; double-quote multi-word aliases.
+# CONTEXT: the owning project, as <project_name>.
+# PRIME: false when the definition links another term, true when it links none.
+# Links: [[id:<uuid>][wording as used]], only to terms in the same file, never to the entry itself.
+# Example and See also are optional.
+* <term>
+:PROPERTIES:
+:ID:       <uuid>
+:ALIASES:  <aliases>
+:CONTEXT:  <project_name>
+:PRIME:    <true|false>
+:END:
+<definition>
+
+Example: <example>
+
+See also: <links>

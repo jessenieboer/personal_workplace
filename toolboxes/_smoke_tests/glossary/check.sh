@@ -20,10 +20,11 @@ out=$(devenv shell -- glossary-check "$f" 2>&1) || fail "glossary-check on seede
 grep -q '✔ glossary toolbox available' "$log" || fail "announce line not printed under a tty"
 
 
-# The glossary-org skill is installed under the toolbox folder and matches the source.
-skill=skills/glossary-org/SKILL.md
-[ -f ".toolboxes/glossary_toolbox/practices/$skill" ] || fail "glossary-org skill not installed"
-cmp -s ".toolboxes/glossary_toolbox/practices/$skill" "../../glossary/practices/$skill" || fail "installed glossary-org skill differs from toolboxes/glossary/practices/$skill"
+# The glossary skills are installed under the toolbox folder and match the source.
+for skill in skills/capture-term/SKILL.md skills/capture-term/term.org skills/maintain-glossary/SKILL.md; do
+	[ -f ".toolboxes/glossary_toolbox/practices/$skill" ] || fail "$skill not installed"
+	cmp -s ".toolboxes/glossary_toolbox/practices/$skill" "../../glossary/practices/$skill" || fail "installed $skill differs from toolboxes/glossary/practices/$skill"
+done
 
 # glossary.org is user-edited: the toolbox must not ignore its own folder.
 repo=$(mktemp -d)
