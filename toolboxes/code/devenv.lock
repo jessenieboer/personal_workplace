@@ -3,11 +3,11 @@
     "atomic": {
       "flake": false,
       "locked": {
-        "lastModified": 1794670451,
-        "narHash": "sha256-5gZbS/vVBEsL3mbuILpWx7Y2+mIOhkxLvABtOgDrBVg=",
+        "lastModified": 1794677226,
+        "narHash": "sha256-yS9TEan2Sw6x9htXA+bwzkb9swZY2pA34bmk2YXydFU=",
         "owner": "bastani-inc",
         "repo": "atomic",
-        "rev": "68186c37d2b02dc34b82ca6954a15ae25faed7c4",
+        "rev": "da4cce343e151b95b480837d662d8dc445cae8f4",
         "type": "github"
       },
       "original": {
