@@ -463,9 +463,10 @@ The merge script lives only here, inline in the command, so no script file is wr
      - Path given and it exists -> use it.
      - Name only -> look up its root in the project map; shared memory gives the map's path.
      - Not listed, or path not found -> ask. Don't guess.
-  2. Merge every AGENTS.md under the root into /tmp/agents-merged.md. Files go shallowest first. Sections with the same heading path are combined, and each chunk is marked with its source file. "skill-librarian" sections are dropped; they list skill sources for the Skill Librarian, not project rules. Run this one command as written, with `<root>` filled in, on the computer the project lives on:
+  2. Merge every AGENTS.md in the project's domain (under the root, outside nested projects) into /tmp/agents-merged.md. Files go shallowest first. Sections with the same heading path are combined, and each chunk is marked with its source file. "skill-librarian" sections are dropped; they list skill sources for the Skill Librarian, not project rules. Run this one command as written, with `<root>` and `<nested>` filled in, on the computer the project lives on:
+     `<nested>`: one `-not -path './<rel>/*'` for each project-map entry under `<root>`, where `<rel>` is its path relative to `<root>`. None -> leave it empty.
      ````sh
-     cd <root> && find . -name AGENTS.md -not -path '*/.git/*' -not -path '*/node_modules/*' \
+     cd <root> && find . -name AGENTS.md -not -path '*/.git/*' -not -path '*/node_modules/*' <nested> \
        | awk -F/ '{print NF "\t" $0}' | sort -n | cut -f2- | tr '\n' '\0' \
        | xargs -0 -r awk '
      # Merge Markdown files. Sections with the same heading path are combined:
@@ -611,6 +612,7 @@ Required. The persona; the bot sees this every turn. Subsection blocks are joine
 #+name: journeyman-job
 #+begin_src text :json description
 Job description: Given a project, load project-specific facts, then assist in project-specific work as you are directed by the user.
+Your domain is the project's root directory and everything under it, up to any subdirectory that is another project (listed in the project map). That subdirectory and everything under it belong to that project's Journeyman. Asked to work there -> name that project's Journeyman and stop.
 #+end_src
 *** Sources of truth
 - What system wins when two disagree?
