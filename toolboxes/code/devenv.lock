@@ -3,32 +3,16 @@
     "atomic": {
       "flake": false,
       "locked": {
-        "lastModified": 1793339277,
-        "narHash": "sha256-qht7scqFDimWRL1c29T7DT3d2PO3N91rK/fbx2oJsUY=",
+        "lastModified": 1794670451,
+        "narHash": "sha256-5gZbS/vVBEsL3mbuILpWx7Y2+mIOhkxLvABtOgDrBVg=",
         "owner": "bastani-inc",
         "repo": "atomic",
-        "rev": "3ec7e1e8b50535aa4de4ec1d352ca1673a0f1413",
+        "rev": "68186c37d2b02dc34b82ca6954a15ae25faed7c4",
         "type": "github"
       },
       "original": {
         "owner": "bastani-inc",
         "repo": "atomic",
-        "type": "github"
-      }
-    },
-    "awesome-copilot": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1793320513,
-        "narHash": "sha256-Pni4IMcuZJc0Ny8DbyciFXnYfN32n2MY3L4kvtAcILo=",
-        "owner": "github",
-        "repo": "awesome-copilot",
-        "rev": "5269f7ea2d6c3a9bfda5ed878b6726cf509121fd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "github",
-        "repo": "awesome-copilot",
         "type": "github"
       }
     },
@@ -57,33 +41,17 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1793199252,
-        "narHash": "sha256-LRgdAdMHL3uIX+kix/oyMzG+gMxzSYOzLrrRaoZthog=",
+        "lastModified": 1794562632,
+        "narHash": "sha256-MOb8lrEUUki0Kxe+LNLuhj3DbPsjcurZWq3eG3R0Z9U=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "0d6c556e5f862c14a75a543e2ee4fdb7acc005ad",
+        "rev": "6c954cc1c04f1d0b2f6ad689c9dffd835fa4d928",
         "type": "github"
       },
       "original": {
         "dir": "src/modules",
         "owner": "cachix",
         "repo": "devenv",
-        "type": "github"
-      }
-    },
-    "flake-compat": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1767039857,
-        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
-        "type": "github"
-      },
-      "original": {
-        "owner": "edolstra",
-        "repo": "flake-compat",
         "type": "github"
       }
     },
@@ -140,34 +108,13 @@
         "type": "github"
       }
     },
-    "nixpkgs-python": {
-      "inputs": {
-        "flake-compat": "flake-compat",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1793292708,
-        "narHash": "sha256-HN+U/q/abv8iyvOte1t0H7m+G746ZnbP8l4caEjfDY0=",
-        "owner": "cachix",
-        "repo": "nixpkgs-python",
-        "rev": "8c7d2fa4a57b4168d7aa8fa656fa5bcb4d2c6d4c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cachix",
-        "repo": "nixpkgs-python",
-        "type": "github"
-      }
-    },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1793225069,
-        "narHash": "sha256-sx1f99WGrDfJ83KKuQrqGPmot0rnDgmpLJDzpU2oHQQ=",
+        "lastModified": 1794495034,
+        "narHash": "sha256-E0hYoioqUtM2XmPPvYYpJgdADF5AW9oOoPSEiM9dTHQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e62746b0b472753ef019baceab6f1e2e52014980",
+        "rev": "2074cc672349f14240fb7ea90d509e0b643e9dd4",
         "type": "github"
       },
       "original": {
@@ -180,12 +127,10 @@
     "root": {
       "inputs": {
         "atomic": "atomic",
-        "awesome-copilot": "awesome-copilot",
         "devenv": "devenv",
         "llm-agents": "llm-agents",
         "neolabhq-cek": "neolabhq-cek",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-python": "nixpkgs-python",
         "trailofbits-skills": "trailofbits-skills",
         "wshobson-agents": "wshobson-agents"
       }
@@ -208,11 +153,11 @@
     "trailofbits-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1793212734,
-        "narHash": "sha256-vQiXAEv3+VsLweirfFaN1nD/PWuiDOlT5LeSLwIa304=",
+        "lastModified": 1794505727,
+        "narHash": "sha256-8NBnk9sFW1IMkd+qmTvLKweh3CkeJaALEZBLs3GaxlM=",
         "owner": "trailofbits",
         "repo": "skills",
-        "rev": "2be6433b39e009cd2b6fd3be1895f6b1faa5af9a",
+        "rev": "149d7b21f4067765b82e67029730b42d228ef4b4",
         "type": "github"
       },
       "original": {
@@ -245,11 +190,11 @@
     "wshobson-agents": {
       "flake": false,
       "locked": {
-        "lastModified": 1792273157,
-        "narHash": "sha256-v4Qt1zPrIp0rlmEWh+3qrTRbx6oVvY0ci80WbkmXzWg=",
+        "lastModified": 1794143653,
+        "narHash": "sha256-jGy5K8FP9MnA5qsGgltCmfFy1jJX1mtc1j5+67m1N7Y=",
         "owner": "wshobson",
         "repo": "agents",
-        "rev": "0874a27b17a22e2b7c2e2bcd725768e0803cad06",
+        "rev": "9c61ab243def98f72da12abd41cfcf5bcd91af9d",
         "type": "github"
       },
       "original": {

@@ -3,43 +3,27 @@
     "addyosmani-agent-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1793561089,
-        "narHash": "sha256-ewVxgb5GqtUeWcGydFz3GbzUkM0p+cuRfP+tlPAg4PY=",
+        "lastModified": 1794630835,
+        "narHash": "sha256-SZchINcyIB46aT5JYLAv2fW2DoChCHQsckq51kUNoEw=",
         "owner": "addyosmani",
         "repo": "agent-skills",
-        "rev": "301b02b12bff98e4688e6984af6556802322bbde",
+        "rev": "39b723ceebf81474d0557c1fecd01eddab585563",
         "type": "github"
       },
       "original": {
         "owner": "addyosmani",
         "repo": "agent-skills",
-        "type": "github"
-      }
-    },
-    "awesome-copilot": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1793591551,
-        "narHash": "sha256-+QoWBaVY/oXVPef8RO0oVdm58w24YkSNF33Cyr3qVqE=",
-        "owner": "github",
-        "repo": "awesome-copilot",
-        "rev": "61fa1fa8fcc63d6dbd2f07a75aeb8e214df5acfb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "github",
-        "repo": "awesome-copilot",
         "type": "github"
       }
     },
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1793199252,
-        "narHash": "sha256-LRgdAdMHL3uIX+kix/oyMzG+gMxzSYOzLrrRaoZthog=",
+        "lastModified": 1794562632,
+        "narHash": "sha256-MOb8lrEUUki0Kxe+LNLuhj3DbPsjcurZWq3eG3R0Z9U=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "0d6c556e5f862c14a75a543e2ee4fdb7acc005ad",
+        "rev": "6c954cc1c04f1d0b2f6ad689c9dffd835fa4d928",
         "type": "github"
       },
       "original": {
@@ -88,7 +72,6 @@
     "root": {
       "inputs": {
         "addyosmani-agent-skills": "addyosmani-agent-skills",
-        "awesome-copilot": "awesome-copilot",
         "devenv": "devenv",
         "nixpkgs": "nixpkgs"
       }
