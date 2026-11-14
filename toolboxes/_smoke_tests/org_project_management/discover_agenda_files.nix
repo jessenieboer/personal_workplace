@@ -1,5 +1,5 @@
 # Eval-time checks for subproject agenda discovery, plus a derivation that
-# builds the project_management dir-locals fragment and checks its text.
+# builds the org_project_management dir-locals fragment and checks its text.
 #
 # The module is loaded twice: from the repo (source layout) and from a copied
 # .toolboxes/ tree (deployed layout). Both must import ../_lib by relative
@@ -12,7 +12,7 @@
 }:
 let
   pkgs = import (builtins.fetchTarball {
-    # nixpkgs-src rev pinned in toolboxes/project_management/devenv.lock
+    # nixpkgs-src rev pinned in toolboxes/org_project_management/devenv.lock
     url = "https://github.com/NixOS/nixpkgs/archive/674a2028661e550a97400c1cc992b9cca9a668a1.tar.gz";
     sha256 = "sha256-T2+XBfNbf9pecLUWS4+RtuVNZ3W8K5taG5QdV71mWlk=";
   }) { };
@@ -25,14 +25,14 @@ let
   # Literal ascending order. Not passed through lib.sort first: that would hide
   # a reversed comparator shared with the implementation.
   baseRels = [
-    "a_first/.toolboxes/project_management_toolbox/a_first_inbox.org"
-    "a_first/.toolboxes/project_management_toolbox/z.org"
-    "a_first/nested/.toolboxes/project_management_toolbox/nested.org"
-    "m_mid/.toolboxes/project_management_toolbox/m.org"
-    "spiritual_formation/.toolboxes/project_management_toolbox/spiritual_formation.org"
-    "spiritual_formation/.toolboxes/project_management_toolbox/spiritual_formation_inbox.org"
+    "a_first/.toolboxes/org_project_management_toolbox/a_first_inbox.org"
+    "a_first/.toolboxes/org_project_management_toolbox/z.org"
+    "a_first/nested/.toolboxes/org_project_management_toolbox/nested.org"
+    "m_mid/.toolboxes/org_project_management_toolbox/m.org"
+    "spiritual_formation/.toolboxes/org_project_management_toolbox/spiritual_formation.org"
+    "spiritual_formation/.toolboxes/org_project_management_toolbox/spiritual_formation_inbox.org"
   ];
-  newRel = "nested_new/deep/.toolboxes/project_management_toolbox/brand_new.org";
+  newRel = "nested_new/deep/.toolboxes/org_project_management_toolbox/brand_new.org";
   rels =
     if expectNew then
       lib.take 4 baseRels ++ [ newRel ] ++ lib.drop 4 baseRels
@@ -60,7 +60,7 @@ let
       default = { };
     };
     config.devenv.root = fixture;
-    config.project_management_toolbox = {
+    config.org_project_management_toolbox = {
       project_name = "empire_capitol";
       project_benefit = "Oversight of all kingdoms I have responsibility in";
       workers = [
@@ -78,19 +78,19 @@ let
   sourceDefault = eval sourceModule { };
   deployedDefault = eval deployedModule { };
   sourceOverride = eval sourceModule {
-    config.project_management_toolbox.subproject_agenda_files = explicit;
+    config.org_project_management_toolbox.subproject_agenda_files = explicit;
   };
   deployedOverride = eval deployedModule {
-    config.project_management_toolbox.subproject_agenda_files = explicit;
+    config.org_project_management_toolbox.subproject_agenda_files = explicit;
   };
   sourceEmpty = eval sourceModule {
-    config.project_management_toolbox.subproject_agenda_files = [ ];
+    config.org_project_management_toolbox.subproject_agenda_files = [ ];
   };
   deployedEmpty = eval deployedModule {
-    config.project_management_toolbox.subproject_agenda_files = [ ];
+    config.org_project_management_toolbox.subproject_agenda_files = [ ];
   };
 
-  filesOf = ev: ev.config.project_management_toolbox.subproject_agenda_files;
+  filesOf = ev: ev.config.org_project_management_toolbox.subproject_agenda_files;
   helperFiles = (load deployedHelper) { inherit lib; } fixture;
 
   assertList = label: got: want:
@@ -105,7 +105,7 @@ let
 
   assertMeta = label: ev:
     let
-      pm = ev.config.project_management_toolbox;
+      pm = ev.config.org_project_management_toolbox;
       workers = pm.workers;
     in
     if pm.project_name != "empire_capitol" then die "${label}: project_name ${pm.project_name}"
@@ -149,7 +149,7 @@ let
   # escapeShellArg leaves a path unquoted when it has no shell metacharacters.
   rendered = ev:
     let
-      exec = ev.config.tasks."project_management_toolbox:generate_dir_locals".exec or
+      exec = ev.config.tasks."org_project_management_toolbox:generate_dir_locals".exec or
         (die "generate_dir_locals task missing");
       unquote = s:
         if lib.hasPrefix "'" s && lib.hasSuffix "'" s then
@@ -164,20 +164,20 @@ let
     else if builtins.getContext path == { } then die "rendered template is not a build dependency: ${path}\n${exec}"
     else path;
 
-  ownFile = "${fixture}/.toolboxes/project_management_toolbox/empire_capitol.org";
+  ownFile = "${fixture}/.toolboxes/org_project_management_toolbox/empire_capitol.org";
   quotedExpected = lib.concatMapStringsSep " " (s: "\"${s}\"") expected;
   quotedExplicit = lib.concatMapStringsSep " " (s: "\"${s}\"") explicit;
 
   absent = [
-    "${fixture}/.toolboxes/project_management_toolbox/empire_inbox.org"
-    "${fixture}/a_first/.toolboxes/project_management_toolbox/.#lock.org"
-    "${fixture}/a_first/.toolboxes/project_management_toolbox/#autosave.org#"
-    "${fixture}/a_first/.toolboxes/project_management_toolbox/backup.org~"
-    "${fixture}/a_first/.toolboxes/project_management_toolbox/linked.org"
-    "${fixture}/a_first/.toolboxes/project_management_toolbox/extra/deep.org"
-    "${fixture}/linked_dir/.toolboxes/project_management_toolbox/hidden.org"
-    "${fixture}/node_modules/nested/.toolboxes/project_management_toolbox/no.org"
-    "${fixture}/.git/nested/.toolboxes/project_management_toolbox/no.org"
+    "${fixture}/.toolboxes/org_project_management_toolbox/empire_inbox.org"
+    "${fixture}/a_first/.toolboxes/org_project_management_toolbox/.#lock.org"
+    "${fixture}/a_first/.toolboxes/org_project_management_toolbox/#autosave.org#"
+    "${fixture}/a_first/.toolboxes/org_project_management_toolbox/backup.org~"
+    "${fixture}/a_first/.toolboxes/org_project_management_toolbox/linked.org"
+    "${fixture}/a_first/.toolboxes/org_project_management_toolbox/extra/deep.org"
+    "${fixture}/linked_dir/.toolboxes/org_project_management_toolbox/hidden.org"
+    "${fixture}/node_modules/nested/.toolboxes/org_project_management_toolbox/no.org"
+    "${fixture}/.git/nested/.toolboxes/org_project_management_toolbox/no.org"
   ];
 
   require = file: text: ''
@@ -211,14 +211,14 @@ pkgs.runCommand "discover-agenda-files-test" { } ''
   ${require "\"$over\"" ownFile}
   ${require "\"$over\"" quotedExplicit}
   ${require "\"$over\"" "jessenieboer CaptureBot"}
-  ${reject "\"$over\"" (abs "spiritual_formation/.toolboxes/project_management_toolbox/spiritual_formation.org")}
-  ${reject "\"$over\"" (abs "a_first/.toolboxes/project_management_toolbox/a_first_inbox.org")}
+  ${reject "\"$over\"" (abs "spiritual_formation/.toolboxes/org_project_management_toolbox/spiritual_formation.org")}
+  ${reject "\"$over\"" (abs "a_first/.toolboxes/org_project_management_toolbox/a_first_inbox.org")}
   ${reject "\"$over\"" (abs newRel)}
 
   ${require "\"$empty\"" ownFile}
   ${require "\"$empty\"" "jessenieboer CaptureBot"}
-  ${reject "\"$empty\"" (abs "spiritual_formation/.toolboxes/project_management_toolbox/spiritual_formation.org")}
-  ${reject "\"$empty\"" (abs "a_first/.toolboxes/project_management_toolbox/a_first_inbox.org")}
+  ${reject "\"$empty\"" (abs "spiritual_formation/.toolboxes/org_project_management_toolbox/spiritual_formation.org")}
+  ${reject "\"$empty\"" (abs "a_first/.toolboxes/org_project_management_toolbox/a_first_inbox.org")}
   ${reject "\"$empty\"" (abs newRel)}
   ${lib.concatMapStrings (t: reject "\"$empty\"" t) absent}
 

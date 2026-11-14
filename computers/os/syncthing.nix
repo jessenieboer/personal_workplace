@@ -12,7 +12,7 @@ let
   stignore = pkgs.writeText "stignore" ''
     !/beorg-*.org
     !/init.org
-    !**/project_management_toolbox/*.org
+    !**/org_project_management_toolbox/*.org
     *
   '';
   # Copy, not symlink: Syncthing does not follow a link into the store. Only write on change.

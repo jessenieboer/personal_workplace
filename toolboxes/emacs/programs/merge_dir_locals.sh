@@ -8,7 +8,7 @@ trap 'rm -f "$tmp"' EXIT
 
 # Fragments in path order. A repeated variable takes the value from the
 # later fragment, so emacs_toolbox's org-directory yields to
-# project_management_toolbox's.
+# org_project_management_toolbox's.
 fragments=()
 if [ -d "$root/.toolboxes" ]; then
   while IFS= read -r -d '' f; do

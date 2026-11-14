@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Smoke test for the project_management toolbox together with emacs: the
+# Smoke test for the org_project_management toolbox together with emacs: the
 # merged .dir-locals.el holds the journal template once plus PM's templates.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -12,12 +12,12 @@ script -qec "devenv shell -- true" "$log" >/dev/null || { tail -30 "$log"; exit 
 
 fail() { echo "FAIL: $*"; exit 1; }
 
-[ -f .toolboxes/project_management_toolbox/project_management_toolbox_dir_locals ] || fail "PM fragment not generated"
-[ -f .toolboxes/project_management_toolbox/.gitignore ] || fail "PM toolbox dir .gitignore not generated"
-[ "$(cat .toolboxes/project_management_toolbox/.gitignore)" = "*" ] || fail "PM toolbox dir .gitignore is not exactly *"
+[ -f .toolboxes/org_project_management_toolbox/org_project_management_toolbox_dir_locals ] || fail "PM fragment not generated"
+[ -f .toolboxes/org_project_management_toolbox/.gitignore ] || fail "PM toolbox dir .gitignore not generated"
+[ "$(cat .toolboxes/org_project_management_toolbox/.gitignore)" = "*" ] || fail "PM toolbox dir .gitignore is not exactly *"
 [ -f .toolboxes/emacs_toolbox/emacs_toolbox_dir_locals ] || fail "emacs journal fragment not generated"
 [ -f .dir-locals.el ] || fail ".dir-locals.el missing"
-grep -q '"Journal entry"' .toolboxes/project_management_toolbox/project_management_toolbox_dir_locals && fail "PM fragment still defines the journal template"
+grep -q '"Journal entry"' .toolboxes/org_project_management_toolbox/org_project_management_toolbox_dir_locals && fail "PM fragment still defines the journal template"
 [ "$(grep -c '"Journal entry"' .dir-locals.el)" = 1 ] || fail "journal template is not in .dir-locals.el exactly once"
 grep -q 'org-agenda-custom-commands' .dir-locals.el || fail "PM agenda commands missing from .dir-locals.el"
 grep -q '@[A-Z_]*@' .dir-locals.el && fail "unfilled placeholder in .dir-locals.el"
@@ -30,7 +30,7 @@ if command -v emacs >/dev/null; then
     (princ (format "%S %S" org-directory (mapcar (function car) org-capture-templates))))' 2>/dev/null)
   # PM's 11 templates and the journal one, in one list.
   tab=$'\t'
-  want="\"$(pwd)/.toolboxes/project_management_toolbox/\" (\"b\" \"s\" \"y\" \"$tab\" \"e\" \"i\" \"z\" \"n\" \"p\" \"c\" \"h\" \"o\")"
+  want="\"$(pwd)/.toolboxes/org_project_management_toolbox/\" (\"b\" \"s\" \"y\" \"$tab\" \"e\" \"i\" \"z\" \"n\" \"p\" \"c\" \"h\" \"o\")"
   [ "$got" = "$want" ] || fail "capture templates are not the journal plus PM's: $got"
 fi
 
@@ -38,4 +38,4 @@ fi
 [ -e .eca ] && fail ".eca was created"
 find .toolboxes -name eca_manifest 2>/dev/null | grep -q . && fail "eca_manifest was written"
 
-echo "PASS: project_management toolbox"
+echo "PASS: org_project_management toolbox"

@@ -5,7 +5,7 @@
 #
 # Scans the live tree at `root` (not a Nix store copy of this toolbox). Returns
 # sorted absolute path strings built from `root`. Only regular .org files that
-# sit directly in a .toolboxes/project_management_toolbox directory are
+# sit directly in a .toolboxes/org_project_management_toolbox directory are
 # collected. The root project's own directory is left out; the toolbox template
 # adds that project's file itself. Symlinks are not followed.
 { lib }:
@@ -30,10 +30,10 @@ let
     && !(lib.hasPrefix "#" name)
     && !(lib.hasSuffix "~" name);
 
-  # Only files directly in .../.toolboxes/project_management_toolbox/
+  # Only files directly in .../.toolboxes/org_project_management_toolbox/
   isPmtDir = rel:
-    rel == ".toolboxes/project_management_toolbox"
-    || lib.hasSuffix "/.toolboxes/project_management_toolbox" rel;
+    rel == ".toolboxes/org_project_management_toolbox"
+    || lib.hasSuffix "/.toolboxes/org_project_management_toolbox" rel;
 
   # Recurse with readDir; type "symlink" is skipped, so directory links are not followed.
   walk = rel:
@@ -57,7 +57,7 @@ let
       ) entries
     );
 
-  ownPrefix = "${root}/.toolboxes/project_management_toolbox/";
+  ownPrefix = "${root}/.toolboxes/org_project_management_toolbox/";
 in
 lib.sort (a: b: a < b) (
   builtins.filter (p: !lib.hasPrefix ownPrefix p) (walk "")

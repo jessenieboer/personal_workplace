@@ -32,10 +32,10 @@ imports:
 { pkgs, lib, config, inputs, ... }:
 {
   enterShell = ''
-    echo "managing ${config.project_management_toolbox.project_name}"
+    echo "managing ${config.org_project_management_toolbox.project_name}"
   '';
 
-  project_management_toolbox = {
+  org_project_management_toolbox = {
     project_name = "my_project_name";
     project_benefit = "The benefit this project aims at";
     subproject_agenda_files = [

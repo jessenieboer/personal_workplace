@@ -1,4 +1,4 @@
-<h1 align="center">Project Management Toolbox</h1>
+<h1 align="center">Org Project Management Toolbox</h1>
 
 
 # What
@@ -35,17 +35,17 @@ inputs:
     url: github:jessenieboer/personal_workplace/jn
 
 imports:
-  - personal_workplace/toolboxes/project_management
+  - personal_workplace/toolboxes/org_project_management
 ```
 
 ```nix
 { pkgs, lib, config, inputs, ... }:
 {
   enterShell = ''
-    echo "managing ${config.project_management_toolbox.project_name}"
+    echo "managing ${config.org_project_management_toolbox.project_name}"
   '';
 
-  project_management_toolbox = {
+  org_project_management_toolbox = {
     project_name = "my_project_name";
     project_benefit = "The benefit this project aims at";
     subproject_agenda_files = [
