@@ -30,7 +30,7 @@ Job description: High-level management of a user's projects and bots. Keep track
 - What system wins when two disagree?
 #+begin_src text :json description
 The user's most recent instruction in this conversation wins over every other source.
-The project list in shared memory wins over your own memory.
+The project map wins over your own memory.
 When blocked on something you can't find or resolve yourself, stop and ask the user. Don't retry the same step.
 #+end_src
 *** Voice
@@ -100,18 +100,12 @@ For Vizier only. Learn what counts as a project for this user and where each pro
   None. The user supplies the answers.
 
   ## Workflow
-  1. Ask the user, in one message:
-     - What counts as a project? For example, a directory with a marker file, or just the ones they name.
-     - Where do the projects live: a parent directory to scan, explicit root paths, or both? On which computer?
-
-     Done when both are answered.
-  2. Build the project list on that computer.
-     - Rule plus a parent directory -> find the directories that match the rule.
-     - Explicit paths -> check each one exists.
-     - Drive not mounted, or a path not found -> say so. Don't guess a path.
-  3. Show the user the list as `name -> root directory`, and ask them to confirm, add, rename, or drop entries. Done when they confirm.
-  4. Save to shared memory: what counts as a project, and one fact per project with its name and root directory. Replace any older project facts these contradict.
-  5. Report: the rule, the projects saved, and any paths that couldn't be checked.
+  1. Ask the user, in one message: what counts as a project (e.g. a marker file, or only ones they name); where projects live (a parent directory, explicit roots, or both) and on which computer; and the full path for project_map.md. Done when all three are answered.
+  2. List the projects on that computer: match the rule under the parent directory, and check each explicit path exists. Unmounted drive or missing path -> say so; don't guess.
+  3. Show the list as `name -> root directory`; the user confirms, adds, renames, or drops entries. Done when they confirm.
+  4. Write project_map.md: a first line with the rule, then `- name -> root directory` per project, overwriting any old map. Done when it reads back with every confirmed project.
+  5. Save one shared fact, "The project map at <computer>:<path> lists every project's name and root directory; read it whenever you need where a project is.", and forget older project facts and map pointers.
+  6. Report: the rule, the map path, the projects written, and any unchecked paths.
 #+end_src
 *** appoint-skill-librarian
 **** name
@@ -250,7 +244,7 @@ Generated in part: the description pulls from the * Journeyman heading via noweb
 
   ## Workflow
   1. Get the project name and its root directory.
-     - Name only -> use its root from the project list in shared memory.
+     - Name only -> look up its root in the project map; shared memory gives the map's path.
      - Not listed -> ask. Don't guess a path.
   2. Check the user's bots for one named `<project> Journeyman`. One exists -> stop and tell the user. Create a second one only if they say to.
   3. Create a new bot named `<project> Journeyman` with the description above.
@@ -418,6 +412,28 @@ For Skill Librarian only. Scan projects' AGENTS.md files for "skill-librarian" s
   4. Install each skill not already in the library with procure-skill, one at a time, using that source. Skills already in the library -> skip them; overwrite only if the user says to.
   5. Report: skills installed with their sources, skills skipped as already present, and unresolved entries with their AGENTS.md paths.
 #+end_src
+*** find-skills
+**** name
+Required. The skill's name, used to load it.
+#+begin_src text :json skills
+find-skills
+#+end_src
+**** description
+#+begin_src text :json skills
+For Skill Librarian only. Search the open skills ecosystem and return links to skills that fit a need. Use when the user asks to find a skill for a task.
+#+end_src
+**** content
+#+begin_src text :json skills
+  ## Required Inputs
+  What the user wants a skill for. Missing -> ask.
+
+  ## Workflow
+  1. Turn the need into two or three keyword queries naming the domain and the task (for example "react testing", "changelog").
+  2. Search the [skills.sh leaderboard](https://skills.sh/) first, then `npx skills find <query>` for each query. Done when every query has run.
+  3. Vet each candidate: installs (prefer 1K+, drop under 100), owner reputation (official orgs such as vercel-labs, anthropics, microsoft rank highest), and the source repo's GitHub stars (under 100 -> drop). Done when each kept candidate has all three.
+  4. Resolve each kept skill to the GitHub URL of its directory, the folder holding SKILL.md, and fetch it to confirm it exists.
+  5. Report links only; installing goes through the user's skill-librarian sections and stock-library. Give one `<skill name>: <url>` line per skill in a code block, ready to paste under a `## skill-librarian` heading, then one line each with what it does, installs, owner, and stars. Nothing fits -> say so with the queries tried.
+#+end_src
 *** grok-project
 **** name
 Required. The skill's name, used to load it.
@@ -445,7 +461,7 @@ The merge script lives only here, inline in the command, so no script file is wr
   ## Workflow
   1. Find the project's root directory.
      - Path given and it exists -> use it.
-     - Name only -> use its root from the project list in shared memory.
+     - Name only -> look up its root in the project map; shared memory gives the map's path.
      - Not listed, or path not found -> ask. Don't guess.
   2. Merge every AGENTS.md under the root into /tmp/agents-merged.md. Files go shallowest first. Sections with the same heading path are combined, and each chunk is marked with its source file. "skill-librarian" sections are dropped; they list skill sources for the Skill Librarian, not project rules. Run this one command as written, with `<root>` filled in, on the computer the project lives on:
      ````sh
@@ -734,13 +750,13 @@ Required. Fixed instructions the bot sees every turn. Subsection blocks are join
 - what's out of scope
 #+name: librarian-job
 #+begin_src text :json description
-Job description: Install skills in Grok Bot's skill library when named by the user or listed in a project's AGENTS.md.
+Job description: Install skills in Grok Bot's skill library when named by the user or listed in a project's AGENTS.md, and find skills for the user to list there.
 #+end_src
 *** Sources of truth
 - What system wins when two disagree?
 #+name: librarian-truth
 #+begin_src text :json description
-Skill sources come from the "skill-librarian" sections of AGENTS.md files in the user's projects. The project list in shared memory says where the projects are.
+Skill sources come from the "skill-librarian" sections of AGENTS.md files in the user's projects. The project map says where the projects are; shared memory gives its path.
 The user's most recent instruction in this conversation wins over every other source.
 When blocked on something you can't find or resolve yourself, stop and ask the user. Don't retry the same step.
 #+end_src
