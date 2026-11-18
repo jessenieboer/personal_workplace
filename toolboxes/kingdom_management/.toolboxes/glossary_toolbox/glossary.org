@@ -1,0 +1,66 @@
+#+title: Glossary
+#+EXPORT_FILE_NAME: ../../GLOSSARY.md
+#+OPTIONS: toc:nil prop:nil
+
+* benefit
+:PROPERTIES:
+:ID:       712e6264-993a-4f53-9ce0-ad84321fad51
+:ALIASES:
+:CONTEXT:  kingdoms
+:PRIME:    true
+:END:
+Something good.
+
+* collection
+:PROPERTIES:
+:ID:       dfcb50c8-a814-404e-970a-5608d15bf307
+:ALIASES:
+:CONTEXT:  kingdoms
+:PRIME:    true
+:END:
+Multiple things: files, documents, projects, objects, etc...
+
+* goal
+:PROPERTIES:
+:ID:       e3fac843-4288-49c6-891b-34298865443b
+:ALIASES:
+:CONTEXT:  kingdoms
+:PRIME:    false
+:END:
+A [[id:712e6264-993a-4f53-9ce0-ad84321fad51][benefit]] someone intends to create or achieve within a [[id:b62b75a1-423b-48f9-93c4-69072d128c42][kingdom]].
+
+* kingdom
+:PROPERTIES:
+:ID:       b62b75a1-423b-48f9-93c4-69072d128c42
+:ALIASES:
+:CONTEXT:  kingdoms
+:PRIME:    true
+:END:
+A domain over which a specific person or group has responsibility.
+
+* project
+:PROPERTIES:
+:ID:       eefd362e-5a27-4cb5-bf32-2c2dc9eb2687
+:ALIASES:
+:CONTEXT:  kingdoms
+:PRIME:    false
+:END:
+An organization of effort towards a specific [[id:e3fac843-4288-49c6-891b-34298865443b][goal]].
+
+* region
+:PROPERTIES:
+:ID:       50bae85f-e8d7-41a6-a448-b01aea942d37
+:ALIASES:
+:CONTEXT:  kingdoms
+:PRIME:    false
+:END:
+A meaningful subdivision of a [[id:b62b75a1-423b-48f9-93c4-69072d128c42][kingdom]].
+
+* task
+:PROPERTIES:
+:ID:       187bdea0-91c1-41f4-8bed-9c728c6446fa
+:ALIASES:
+:CONTEXT:  kingdoms
+:PRIME:    false
+:END:
+An action aimed at a [[id:712e6264-993a-4f53-9ce0-ad84321fad51][benefit]].

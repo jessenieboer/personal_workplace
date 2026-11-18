@@ -1,4 +1,4 @@
-<h1 align="center">Project Management Toolbox</h1>
+<h1 align="center">Kingdom Management Toolbox</h1>
 
 
 # What
@@ -13,4 +13,4 @@ being phased out.
 In a project's `devenv.yaml`:
 
     imports:
-      - personal_workplace/toolboxes/project_management
+      - personal_workplace/toolboxes/kingdom_management

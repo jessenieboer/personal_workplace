@@ -1,0 +1,44 @@
+#+TITLE: Kingdom Management Toolbox
+#+OPTIONS: toc:nil num:nil ^:{}
+#+EXPORT_FILE_NAME: ../../README.md
+
+#+html: <h1 align="center">Kingdom Management Toolbox</h1>
+
+* What
+Tools, settings, templates, and instructions for managing projects
+** Features :noexport:
+* Why
+* For Whom :noexport:
+* How :noexport:
+we use map language, but since kingdoms are about responsibility, will, and bringing about good things, it's goals and projects, not cities, that live on our map
+
+** Requirements :noexport:
+** Installation :noexport:
+** Use
+*** Details
+**** coneceptual organization:
+Each kingdom and region has a person or group that reigns over it.
+Kingdoms can contain regions, goals, tasks, projects and collections.
+Tasks and projects are aimed at goals.
+Tasks begin with verbs; goals are noun phrases.
+Projects can contain tasks, but tasks can be independent of projects.
+Collections can contain files, documents, projects, and/or objects.
+**** practical organization
+A kingdom is represented by a top-level container with a hierarchy of sub-containers for its regions.
+
+The kingdom structure exists in a project management tool and is mirrored in a local directory structure. Source of truth is the tool; local directory structure can have extra stuff in it.
+Tasks exist 
+Project content and collections exist in local directories. Projects are the connection between tool and local.
+**** griply implementation
+life areas are regions; top-level kingdoms are tags (because no life-area heirarchy in griply)
+
+sync skill
+**** specific implementation
+**** Troubleshooting
+**** License
+** Development :noexport:
+*** Instructions
+*** Important Decisions
+*** To Do
+*** Contributing
+* By Whom :noexport:
