@@ -43,6 +43,10 @@ in
         '';
       };
     }
-    // tt.practices { name = "standard_project"; local = ./practices; };
+    // tt.practices {
+      name = "standard_project";
+      # practices/ may be empty, and git drops empty directories.
+      local = if builtins.pathExists ./practices then ./practices else null;
+    };
   };
 }
