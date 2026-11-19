@@ -2,5 +2,4 @@ imports:
   - /toolboxes/emacs
   - /toolboxes/git
   - /toolboxes/glossary
-  - /toolboxes/grok_bot
   - /toolboxes/readme
