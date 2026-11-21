@@ -34,6 +34,10 @@ in
         };
       }
       // tt.gitSettings "emacs" ./settings
-      // tt.practices { name = "emacs"; local = ./practices; };
+      // tt.practices {
+        name = "emacs";
+        # practices/ may be empty, and git drops empty directories.
+        local = if builtins.pathExists ./practices then ./practices else null;
+      };
   };
 }
