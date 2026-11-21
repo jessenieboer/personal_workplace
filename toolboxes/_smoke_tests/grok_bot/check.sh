@@ -36,14 +36,11 @@ grok_bots=$box/grok_bots.org
 [ -w "$grok_bots" ] || fail "grok_bots.org is not writable"
 cmp -s "$grok_bots" "$src" || fail "grok_bots.org differs from source"
 
-skill=$box/skills/writing-for-agents
-[ -f "$skill/SKILL.md" ] || fail "writing-for-agents skill not installed"
-[ -f "$skill/SKILL-MECHANICS.md" ] || fail "writing-for-agents SKILL-MECHANICS.md missing"
-[ -d "$skill/agents" ] || fail "writing-for-agents agents/ missing"
-[ ! -L "$skill" ] || fail "writing-for-agents is a symlink"
-[ "$(stat -c %a "$skill/SKILL.md")" = 444 ] || fail "writing-for-agents files are not read-only"
-grep -q '^name: writing-for-agents' "$skill/SKILL.md" || fail "writing-for-agents SKILL.md has no name"
-skill_before=$(cat "$skill/SKILL.md")
+lib=$box/practices/LIBRARIAN.md
+[ -f "$lib" ] || fail "LIBRARIAN.md missing from the mirror"
+cmp -s "$lib" ../../grok_bot/practices/LIBRARIAN.md || fail "installed LIBRARIAN.md differs from source"
+grep -qxF 'writing-for-agents: https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents' "$lib" || fail "LIBRARIAN.md missing writing-for-agents URL"
+[ ! -e "$box/practices/AGENTS.md" ] || fail "stale AGENTS.md skill-librarian list still present"
 
 grep -q '✔ grok_bot toolbox available' "$log" || fail "announce line not printed under a tty"
 
@@ -51,15 +48,11 @@ grep -q '✔ grok_bot toolbox available' "$log" || fail "announce line not print
 chmod u+w "$template"
 echo 'drift' >>"$template"
 echo 'edited' >>"$grok_bots"
-chmod u+w "$skill/SKILL.md"
-echo 'drift' >>"$skill/SKILL.md"
-echo 'stray' >"$skill/stray.md"
 devenv shell -- true >/dev/null 2>&1
 cmp -s "$template" "$src" || fail "re-entry did not refresh bot template"
 tail -n1 "$grok_bots" | grep -qx 'edited' || fail "re-entry overwrote edited grok_bots.org"
 [ ! -e "$box/bots" ] || fail "re-entry created bots directory"
-[ "$(cat "$skill/SKILL.md")" = "$skill_before" ] || fail "re-entry did not refresh writing-for-agents"
-[ ! -e "$skill/stray.md" ] || fail "re-entry kept a stray file in writing-for-agents"
+cmp -s "$lib" ../../grok_bot/practices/LIBRARIAN.md || fail "re-entry drifted LIBRARIAN.md"
 
 # No practices mirror wipe / eca side effects from this toolbox.
 [ -e .eca ] && fail ".eca was created"

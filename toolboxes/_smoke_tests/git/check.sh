@@ -73,10 +73,10 @@ grep -qx 'my-own-ignore' .gitignore || fail "a user line in .gitignore was remov
 devenv shell -- true >/dev/null 2>&1
 [ "$(git config --local --get-all include.path)" = "$inc" ] || fail "include.path duplicated or changed on re-entry"
 
-for f in .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md; do
-  [ -f "$f" ] || fail "$f missing"
-done
-grep -q "^name: git-commit" .toolboxes/git_toolbox/practices/skills/git-commit/SKILL.md || fail "git-commit skill content wrong"
+lib=.toolboxes/git_toolbox/practices/LIBRARIAN.md
+[ -f "$lib" ] || fail "LIBRARIAN.md missing from the mirror"
+cmp -s "$lib" ../../git/practices/LIBRARIAN.md || fail "installed LIBRARIAN.md differs from source"
+grep -qxF 'git-commit: https://github.com/github/awesome-copilot/tree/main/skills/git-commit' "$lib" || fail "LIBRARIAN.md missing git-commit URL"
 
 # The merge reads each toolbox's settings/.gitignore only.
 mkdir -p .toolboxes/x_toolbox/settings

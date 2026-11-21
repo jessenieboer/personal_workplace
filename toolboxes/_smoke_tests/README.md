@@ -11,6 +11,7 @@ Run:
     toolboxes/_smoke_tests/emacs/check.sh
     toolboxes/_smoke_tests/git/check.sh
     toolboxes/_smoke_tests/glossary/check.sh
+    toolboxes/_smoke_tests/grok_bot/check.sh
     toolboxes/_smoke_tests/nixos/check.sh
     toolboxes/_smoke_tests/org_project_management/check.sh
     toolboxes/_smoke_tests/org_project_management/discover_agenda_files.sh
