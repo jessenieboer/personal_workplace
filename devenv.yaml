@@ -1,5 +1,4 @@
 imports:
   - /toolboxes/standard_project
-  - /toolboxes/org_project_management
   - /toolboxes/bash
   - /toolboxes/nixos
