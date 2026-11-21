@@ -1,4 +1,3 @@
-## skill-librarian
 bash-defensive-patterns: https://github.com/wshobson/agents/tree/main/plugins/shell-scripting/skills/bash-defensive-patterns
 shellcheck-configuration: https://github.com/wshobson/agents/tree/main/plugins/shell-scripting/skills/shellcheck-configuration
 bats-testing-patterns: https://github.com/wshobson/agents/tree/main/plugins/shell-scripting/skills/bats-testing-patterns

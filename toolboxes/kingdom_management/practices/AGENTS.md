@@ -23,5 +23,3 @@ collection: starts with underscore
 
 #### task platform content
 
-
-## skill-librarian
